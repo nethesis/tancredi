@@ -9,8 +9,7 @@ class Scope {
     private $scopeType;
     public $displayName;
 
-    function __construct($name, $scopeType, $inheritFrom = null) {
-        $this->setParent($inheritFrom);
+    function __construct($name, $scopeType) {
         $this->name = $name;
         $this->scopeType = $scopeType;
         
@@ -18,10 +17,14 @@ class Scope {
         if (array_key_exists('data',$ini_array)) {
             $this->vars = $ini_array['data'];
         }
+        if (array_key_exists('metadata',$ini_array) and array_key_exists('inheritFrom',$ini_array['metadata'])) {
+            $this->inheritFrom = $ini_array['metadata']['inheritFrom'];
+        }
     }
 
     public function setParent($parent) {
         $this->inheritFrom = $parent;
+        return setVars(array());
     }
 
     /* Get variables from current scope and from all parents*/
@@ -68,7 +71,7 @@ class Scope {
             ),
             'data' => $this->vars
         );
-        return $this->write_ini_file(DATA_DIR . '/scopes/' . $this->name . '.ini',$ini_array);
+        return $this->writeIniFile(DATA_DIR . '/scopes/' . $this->name . '.ini',$ini_array);
     }
 
     /**
@@ -78,7 +81,7 @@ class Scope {
      * @param array  $array
      * @return bool
      */
-    private function write_ini_file($file, $array = []) {
+    private function writeIniFile($file, $array = []) {
         // check first argument is string
         if (!is_string($file)) {
             throw new \InvalidArgumentException('Function argument 1 must be a string.');
