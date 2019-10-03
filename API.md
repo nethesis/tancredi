@@ -4,6 +4,7 @@ Tancredi exposes an API endpoint that allows to read and write variables used in
 * GET /variables/NAME return variable "NAME"
 
 * GET /phones return all configured phones with: mac address, model (if known), brand, UUID
+* GET /phones/MAC_ADDRESS return the phone instance with the given key MAC_ADDRESS
 * POST /phones uuid, mac, [model], ...value+
 * PATCH /phones/MAC_ADDRESS value+
 * DELETE /phones/MAC_ADDRESS\
