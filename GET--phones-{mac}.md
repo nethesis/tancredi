@@ -1,5 +1,0 @@
-Sample response:
-
-```json
-{}
-```
