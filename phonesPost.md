@@ -9,7 +9,7 @@ properties are assigned automatically and must not be supplied:
 * `tok2`
 * `model_url`
 
-
+.
 
     POST /tancredi/api/v1/phones
 
