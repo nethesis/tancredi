@@ -1,1 +1,41 @@
 # POST /phones
+
+## Example 1
+
+Create a new phone instance and add it to the phone inventory, omitting
+properties `tok1` and `tok2`.
+
+    GET /tancredi/api/v1/phones
+
+```json
+{
+    "mac": "01-23-45-67-89-AB",
+    "model": "acme19.2",
+    "display_name": "Acme",
+    "variables": {
+        "var1": "value1",
+        "var2": "value2"
+    }
+}
+```
+
+Success response:
+
+    Status: 201 Created
+    Location: /tancredi/api/v1/phones/01-23-45-67-89-AB
+
+```json
+{
+    "mac": "01-23-45-67-89-AB",
+    "model": "acme19.2",
+    "display_name": "Acme",
+    "tok1": "3cb63010-6e80-41ff-9437-c4b1413975db",
+    "tok2": "88eebf1d-b860-498f-8bfa-4947e170873b",
+    "model_url": "/tancredi/api/v1/models/acme19.2",
+    "variables": {
+        "var1": "value1",
+        "var2": "value2"
+    }
+}
+```
+
