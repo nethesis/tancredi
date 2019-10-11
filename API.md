@@ -31,16 +31,16 @@ Error responses use media type `application/problem+json` as defined by [RFC
 
 ### phones/
 
-* [GET /phones](getPhones) return the collection of configured phones
-* [GET /phones/{mac}](getPhonesMac) return the phone instance with the given `mac` address
-* [POST /phones](postPhones) add a phone to inventory specifying mac, model and variables
-* [PATCH /phones/{mac}](patchPhonesMac) change `variables` of phone with given `mac`
-* [DELETE /phones/{mac}](deletePhonesMac) delete the phone with given `mac` from inventory
+* [GET /phones](phonesGet) return the collection of configured phones
+* [GET /phones/{mac}](phonesMacGet) return the phone instance with the given `mac` address
+* [POST /phones](phonesPost) add a phone to inventory specifying mac, model and variables
+* [PATCH /phones/{mac}](phonesMacPatch) change `variables` of phone with given `mac`
+* [DELETE /phones/{mac}](phonesMacDelete) delete the phone with given `mac` from inventory
 
 ### models/
 
-* [GET /models](getModels)
-* [GET /models/{name}](getModelsName) return the model with given `name` (e.g. `snom720`)
-* [POST /models](postModels) add a new model instance name, display_name, variables
-* [PATCH /models/{name}](patchModelsName) change `variables` and other properties of model `name`
-* [DELETE /models/{name}](deleteModel) delete model `name` (if not used, if possible)
+* [GET /models](modelsGet)
+* [GET /models/{name}](modelsNameGet) return the model with given `name` (e.g. `snom720`)
+* [POST /models](modelsPost) add a new model instance name, display_name, variables
+* [PATCH /models/{name}](modelsNamePatch) change `variables` and other properties of model `name`
+* [DELETE /models/{name}](modelsNameDelete) delete model `name` (if not used, if possible)

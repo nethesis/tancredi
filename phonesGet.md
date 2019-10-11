@@ -3,7 +3,7 @@
 ## Example 1
 
 Retrieve the complete phone inventory. See also [GET
-/phones/{mac}](getPhonesMac).
+/phones/{mac}](phonesMacGet).
 
     GET /tancredi/api/v1/phones
 
