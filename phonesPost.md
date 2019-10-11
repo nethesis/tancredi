@@ -10,7 +10,8 @@ properties are assigned automatically and must not be supplied:
 * `model_url`
 
 
-    GET /tancredi/api/v1/phones
+
+    POST /tancredi/api/v1/phones
 
 ```json
 {
