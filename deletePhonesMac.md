@@ -6,7 +6,7 @@ Remove a phone from the inventory.
 
     DELETE /tancredi/api/v1/phones/01-23-45-67-89-AB
 
-Empty request body
+(empty request body)
 
 Success response:
 

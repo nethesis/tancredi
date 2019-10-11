@@ -2,8 +2,13 @@
 
 ## Example 1
 
-Create a new phone instance and add it to the phone inventory, omitting
-properties `tok1` and `tok2`.
+Create a new phone instance and add it to the phone inventory. The following
+properties are assigned automatically and must not be supplied:
+
+* `tok1`
+* `tok2`
+* `model_url`
+
 
     GET /tancredi/api/v1/phones
 
@@ -39,3 +44,15 @@ Success response:
 }
 ```
 
+Failed response:
+
+    Status: 409 Conflict
+    Content-Type: application/problem+json
+    Content-Language: en
+
+```json
+{
+    "type": "https://github.com/nethesis/tancredi/wiki/problems#phone-exists",
+    "title": "The phone mac address is already registered"
+}
+```

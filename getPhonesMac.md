@@ -6,7 +6,7 @@ Get a phone with the given MAC address.
 
     GET /tancredi/api/v1/phones/01-23-45-67-89-AB
 
-Empty request body
+(empty request body)
 
 Success response:
 
