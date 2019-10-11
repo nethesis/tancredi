@@ -16,4 +16,4 @@ The following paths basically expects the `application/json` media type header i
 * [GET /models/{name}](getModelsName) return the model with given `name` (e.g. `snom720`)
 * [POST /models](postModels) add a new model instance name, display_name, variables
 * [PATCH /models/{name}](patchModelsName) change `variables` and other attributes of model `name`
-* [DELETE /models/{name}] delete model `name` (if not used, if possible)
+* [DELETE /models/{name}](deleteModel) delete model `name` (if not used, if possible)
