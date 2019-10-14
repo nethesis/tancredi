@@ -1,6 +1,6 @@
 # GET /phones/{mac}
 
-## Example 1
+## Simple query
 
 Get a phone with the given MAC address.
 
@@ -26,6 +26,10 @@ Success response:
     }
 }
 ```
+
+It is possible to query `model_url` with parameter `inherit=1` to obtain the
+default values for the items in `variables`. See also [GET
+/models/{name}](modelsNameGet).
 
 Failed response:
 

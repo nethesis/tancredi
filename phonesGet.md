@@ -1,6 +1,6 @@
 # GET /phones
 
-## Example 1
+## Retrieve all phones
 
 Retrieve the complete phone inventory. See also [GET
 /phones/{mac}](phonesMacGet).

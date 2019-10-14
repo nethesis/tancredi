@@ -1,6 +1,6 @@
 # PATCH /phones/{mac}
 
-## Example 1
+## Change variable values
 
 Change the `variables` value.
 
@@ -22,7 +22,7 @@ Success response:
 Empty response - the new `variables` value corresponds to the object passed in
 the request body.
 
-## Example 2
+## Change the model
 
 Change the `model` value
 
@@ -56,7 +56,7 @@ Success response:
 The `model_uriref` changes with `model` automatically, so the new resource state
 is returned in the response.
 
-## Example 3
+## Read only variables
 
 Properties `mac`, `tok1`, `tok3` are read-only. Attempt to change their values
 cause the whole request to fail.

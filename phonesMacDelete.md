@@ -1,6 +1,6 @@
 # DELETE /phones/{mac}
 
-## Example 1 
+## Delete a phone
 
 Remove a phone from the inventory.
 

@@ -1,6 +1,6 @@
 # GET /models
 
-## Example 1
+## Retrieve all models
 
 Retrieve the complete (phone) models collection.
 
@@ -24,7 +24,9 @@ Response:
 }]
 ```
 
-## Example 2
+## Collection filtering
+
+### Filter by usage
 
 Select the models that are referenced by phone instances (The phone property
 `model` is equal to the model `name` property).
@@ -41,7 +43,7 @@ Response:
 []
 ```
 
-## Example 3
+### Filter by name
 
 Select the models which name starts with `acme`
 

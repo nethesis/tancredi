@@ -1,6 +1,6 @@
 # POST /phones
 
-## Example 1
+## Create a new phone
 
 Create a new phone instance and add it to the phone inventory. The following
 properties are assigned automatically and must not be supplied:
