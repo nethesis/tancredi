@@ -1,8 +1,10 @@
 # PATCH /defaults
 
-## Change an existing variable
+Each entity attribute represents a **variable** for phones and models templates.
 
-To change the value of an existing variable, just set it to the new value.
+## Change an existing attribute
+
+To change the value of an existing attribute, just set it to the new value.
 
     PATCH /defaults
 
@@ -18,9 +20,9 @@ Success response:
 
 Empty response - the new defaults resource differs only by the `var2` value.
 
-## Remove an existing variable
+## Remove an existing attribute
 
-To remove an existing default value for a variable set it to `null`.
+To remove an existing default value for a attribute set it to `null`.
 
     PATCH /defaults
 
@@ -42,9 +44,9 @@ Success response:
 
 The new resource state is returned in the response payload.
 
-## Create a new variable
+## Create a new attribute
 
-To create a new variable, just assign a variable to it.
+To create a new attribute, just assign a attribute to it.
 
     PATCH /defaults
 

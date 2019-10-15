@@ -28,8 +28,8 @@ Response:
 
 ### Filter by usage
 
-Select the models that are referenced by phone instances (The phone property
-`model` is equal to the model `name` property).
+Select the models that are referenced by phone instances (The phone attribute
+`model` is equal to the model `name` attribute).
 
     GET /tancredi/api/v1/models?filter[used]
 

@@ -2,7 +2,7 @@
 
 ## Change variable values
 
-Change the `variables` property value, by assigning a completely new object.
+Change the `variables` attribute value, by assigning a completely new object.
 
     PATCH /tancredi/api/v1/phones/01-23-45-67-89-AB
 
@@ -56,9 +56,9 @@ Success response:
 The `model_uriref` changes with `model` automatically, so the new resource state
 is returned in the response.
 
-## Read only variables
+## Read only attributes
 
-Properties `mac`, `tok1`, `tok3` are read-only. Attempt to change their values
+Attributes `mac`, `tok1`, `tok3` are read-only. Attempt to change their values
 causes the whole request to fail.
 
     PATCH /tancredi/api/v1/phones/01-23-45-67-89-AB
@@ -80,7 +80,7 @@ Failed response:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#read-only-property",
-    "title": "Cannot change a read-only property"
+    "type": "https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute",
+    "title": "Cannot change a read-only attribute"
 }
 ```

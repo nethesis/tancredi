@@ -24,9 +24,9 @@ Success response:
 Empty response - the new `variables` value corresponds to the object passed in
 the request body and the `display_name` is set to a new string.
 
-## Read only variables
+## Read only attributes
 
-The property `name` is read-only. Attempt to change its value causes the whole
+The attribute `name` is read-only. Attempt to change its value causes the whole
 request to fail.
 
     PATCH /tancredi/api/v1/models/acme19.2
@@ -46,7 +46,7 @@ Failed response:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#read-only-property",
-    "title": "Cannot change a read-only property"
+    "type": "https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute",
+    "title": "Cannot change a read-only attribute"
 }
 ```

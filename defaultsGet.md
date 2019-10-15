@@ -18,3 +18,5 @@ Success response:
     "var2": "value2"
 }
 ```
+
+Each entity attribute represents a **variable** for phones and models templates.

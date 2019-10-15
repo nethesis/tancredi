@@ -8,7 +8,7 @@ for security.
 
 The Tancredi data model has two main entities: **phone** and (phone) **model**.
 
-Both entities have the **variables** property, that is a collection of settings
+Both entities have the **variables** attribute, that is a collection of settings
 required to generate the phone provisioning files.
 
 A **phone** can be related to a **model**. If this relationship is not defined,

@@ -11,9 +11,9 @@ This is the reference index of error types, as required by [RFC
 
     Resource not found
 
-## Read only property
+## Read only attribute
 
-    Cannot change a read-only property
+    Cannot change a read-only attribute
 
 ## Resource in use
 
