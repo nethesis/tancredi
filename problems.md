@@ -14,3 +14,7 @@ This is the reference index of error types, as required by [RFC
 ## Read only property
 
     Cannot change a read-only property
+
+## Resource in use
+
+    The resource is in use by other resources and cannot be deleted

@@ -14,6 +14,19 @@ Success response:
 
 Failed response 1:
 
+    Status: 409 Conflict
+    Content-Type: application/problem+json
+    Content-Language: en
+
+```json
+{
+    "type": "https://github.com/nethesis/tancredi/wiki/problems#resource-in-use",
+    "title": "The resource is in use by other resources and cannot be deleted"
+}
+```
+
+Failed response 2:
+
     Status: 404 Not found
     Content-Type: application/problem+json
     Content-Language: en
@@ -24,4 +37,3 @@ Failed response 1:
     "title": "Resource not found"
 }
 ```
-
