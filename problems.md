@@ -18,3 +18,7 @@ This is the reference index of error types, as required by [RFC
 ## Resource in use
 
     The resource is in use by other resources and cannot be deleted
+
+## Model exists
+
+    The model name is already registered
