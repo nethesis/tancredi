@@ -59,7 +59,7 @@ is returned in the response.
 ## Read only variables
 
 Properties `mac`, `tok1`, `tok3` are read-only. Attempt to change their values
-cause the whole request to fail.
+causes the whole request to fail.
 
     PATCH /tancredi/api/v1/phones/01-23-45-67-89-AB
 
