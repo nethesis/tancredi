@@ -1,0 +1,20 @@
+# GET /defaults
+
+## Simple query
+
+Get the default values of known variables.
+
+    GET /defaults
+
+(empty request body)
+
+Success response:
+
+    Status: 200 OK
+
+```json
+{
+    "var1": "value1",
+    "var2": "value2"
+}
+```

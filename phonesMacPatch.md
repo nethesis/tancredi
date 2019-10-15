@@ -2,7 +2,7 @@
 
 ## Change variable values
 
-Change the `variables` value.
+Change the `variables` property value, by assigning a completely new object.
 
     PATCH /tancredi/api/v1/phones/01-23-45-67-89-AB
 

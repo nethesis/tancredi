@@ -39,8 +39,13 @@ Error responses use media type `application/problem+json` as defined by [RFC
 
 ### models/
 
-* [GET /models](modelsGet)
+* [GET /models](modelsGet) return the phone models collection
 * [GET /models/{name}](modelsNameGet) return the model with given `name` (e.g. `snom720`)
 * [POST /models](modelsPost) add a new model instance name, display_name, variables
 * [PATCH /models/{name}](modelsNamePatch) change `variables` and other properties of model `name`
 * [DELETE /models/{name}](modelsNameDelete) delete model `name` (if not used, if possible)
+
+### defaults/
+
+* [GET /defaults](defaultsGet) return the default values for known variables
+* [PATCH /defaults](defaultsPatch) change the default value of some variables
