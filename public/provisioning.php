@@ -1,73 +1,135 @@
 <?php namespace Tancredi;
 
+define ("TEMPLATES_DIR", "/usr/share/nethvoice/tancredi/data/templates/");
+define ("PATTERNS_DIR", "/usr/share/nethvoice/tancredi/data/patterns.d/");
+define ("TEMPLATES_CUSTOM_DIR", "/usr/share/nethvoice/tancredi/data/templates-custom/");
+define ("NOT_FOUND_SCOPES", "/usr/share/nethvoice/tancredi/data/not_found_scopes");
+
 require '../vendor/autoload.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 
+use \Monolog\Logger;
+
+use \Monolog\Handler\StreamHandler;
+
+ini_set('date.timezone', 'UTC');
+
+$log = new Logger('Tancredi');
+
+$log->pushHandler(new StreamHandler('/var/log/pbx/tancredi.log', Logger::DEBUG));
+
 $app = new \Slim\Slim();
 
+$app->get('/:token/:file', function($token,$filename) use ($app) {
+    global $log;
+    $log->info('Received a token and file request. Token: ' .$token . '. File: ' . $filename);
+    $id = \Tancredi\Entity\TokenManager::getIdFromToken($token);
+    if ($id === FALSE) {
+        // Token doesn't exists
+        $log->error('Invalid token requested. Token: ' . $token);
+        $app->response->setStatus(403);
+        return;
+    }
 
-$app->get('/:data+', function ($data) use ($app) { 
-      //echo print_r($data,true);
-      //echo json_encode($app->request()->headers()->all());
-      $request_filename = array_pop($data);
-      if (!empty($data) and count($data) === 3) {
-          $mac_address = array_pop($data);
-          $model = array_pop($data);
-          $brand = array_pop($data);
-      }
-
-      // Get data from filename
-      $pattern_dir = '../data/patterns.d/';
-      if (isset($brand) && !empty($brand) && file_exists($pattern_dir . $brand . '.php')) {
-          // Brand already known, use file specific for brand
-          include($pattern_dir . $brand . '.php');
-      } else {
-          // search for a pattern in all pattern files
-          foreach (scandir($pattern_dir) as $pattern_file) {
-              if ($pattern_file === '.' or $pattern_file === '..') continue;
-              include($pattern_dir . $pattern_file);
-          }
-      }
-
-      //DEBUG
-      foreach (['brand','model','mac_address','template'] as $var) {
-          if (isset($$var)) {
-              echo "$var: ".$$var."</br>\n";
-          }
-      }
-
-      // TODO Get specific template file
-      $template_dir = '../data/templates-custom/';
-      $files = scandir($template_dir);
-      $tmp_template_name = $template;
-      if (isset($model)) $tmp_template_name = strstr('${MODEL}',$model,$tmp_template_name);
-      if (isset($mac_address)) $tmp_template_name = strstr('${MAC_ADDRESS}',$mac_address,$tmp_template_name);
-      foreach ($files as $file) {
-          if ($file === $tmp_template_name) $template_name = $template_dir . $file;
-      }
-      // TODO Get generic template file
-
-      
-
-      // Get data
-      if (isset($mac_address)) {
-          $scope = new \Tancredi\Entity\Scope($mac_address,'phone');
-          if (!isset($scope->vars['metadata']['inheritFrom']) or $scope->vars['metadata']['inheritFrom'] == "" and isset($model)) {
-              $scope->setParent($brand.'-'.$model);
-          } else {
-              $scope->setParent('global');
-          }
-      } elseif (isset($model)){
-          $scope = new \Tancredi\Entity\Scope($brand.'-'.$model,'model','global');
-      } else {
-          $scope = new \Tancredi\Entity\Scope('global','global');
-      }
-
-      // TODO return result
-      // DEBUG
-      echo print_r($scope->getVariables(),true);
+    $log->debug('Token '.$token.' is valid');
+    // Instantiate scope
+    $log->debug("New scope id: \"$id\"");
+    $scope = new \Tancredi\Entity\Scope($id);
+    $log->debug("Scope $id last edit time: " . $scope->getLastEditTime() . " last_read_time: " . $scope->getLastReadTime());
+    // Get template variable name from file
+    $data = getDataFromFilename($filename);
+    $log->debug(print_r($data,true));
+    $template_var_name = $data['template'];
+    $scope_data = $scope->getVariables();
+    $log->debug(print_r($scope_data,true));
+    if (array_key_exists($template_var_name,$scope_data)) {
+        $template = $scope_data[$template_var_name];
+    } else {
+        // Missing template
+        $log->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $scope->id );
+        $app->response->setStatus(404);
+        return;
+    }
+    // Load twig template
+    $loader = new \Twig\Loader\FilesystemLoader(TEMPLATES_DIR);
+    $twig = new \Twig\Environment($loader);
+    $out = $twig->render($template,$scope_data);
+    echo $out;
 });
+
+$app->get('/:file', function($filename) use ($app) {
+    global $log;
+    $log->info('Received a file request without token. File: ' . $filename);
+
+    $data = getDataFromFilename($filename);
+    $log->debug(print_r($data,true));
+    if (array_key_exists('scope_id',$data) and !empty($data['scope_id'])) {
+        $id = $data['scope_id'];
+    } else {
+        $log->error('Can\'t get id from filename');
+        $app->response->setStatus(403);
+        return;
+    }
+    // Instantiate scope
+    $log->debug("New scope id: \"$id\"");
+    $scope = new \Tancredi\Entity\Scope($id);
+    $log->debug("Scope $id last edit time: " . $scope->getLastEditTime() . " last_read_time: " . $scope->getLastReadTime());
+    // Get template variable name from file
+    $template_var_name = $data['template'];
+    $scope_data = $scope->getVariables();
+    // Save scope id into not found scopes if it has empty data
+    if (empty($scope_data)) {
+        saveNotFoundScopes($id);
+    }
+    $log->debug(print_r($scope_data,true));
+    if (array_key_exists($template_var_name,$scope_data)) {
+        $template = $scope_data[$template_var_name];
+    } else {
+        // Missing template
+        $log->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $scope->id );
+        $app->response->setStatus(404);
+        return;
+    }
+    // Load twig template
+    $loader = new \Twig\Loader\FilesystemLoader(TEMPLATES_DIR);
+    $twig = new \Twig\Environment($loader);
+    $out = $twig->render($template,$scope_data);
+    echo $out;
+});
+
+function getDataFromFilename($filename) {
+    global $log;
+    $result = array();
+    $patterns = array();
+    foreach (scandir(PATTERNS_DIR) as $pattern_file) {
+        if ($pattern_file === '.' or $pattern_file === '..' or substr($pattern_file,-4) !== '.ini') continue;
+        $patterns = array_merge($patterns,parse_ini_file(PATTERNS_DIR.$pattern_file,true));
+    }
+    foreach ($patterns as $pattern) {
+        if (preg_match('/'.$pattern['pattern'].'/', $filename, $tmp)) {
+            $result['template'] = $pattern['template'];
+            $log->debug($pattern['pattern'].' '.$pattern['scopeid'] .' '.  $filename);
+            $result['scope_id'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
+            break;
+        }
+    }
+    return $result;
+}
+
+function saveNotFoundScopes($scope_id){
+    if (preg_match('/[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}/', $scope_id)) {
+        // Provided scope id is a MAC address
+        $data = array();
+        if (file_exists(NOT_FOUND_SCOPES)) {
+            $data = (array) json_decode(file_get_contents(NOT_FOUND_SCOPES));
+        }
+        // add MAC to NOT_FOUND_SCOPES file
+        $data[$scope_id] = time();
+        file_put_contents(NOT_FOUND_SCOPES, json_encode($data));
+    }
+}
 
 // Run app
 $app->run();
+

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+{{ include('snom-includes.twig') }}<?xml version="1.0" encoding="utf-8"?>
 <setting-files>
   <file url="{{provisioning_type}}://{{provisioning_path}}/provisioning/{% if token %}{{token}}/{% endif %}general.xml"/>
   <file url="{{provisioning_type}}://{{provisioning_path}}/provisioning/{% if token %}{{token}}/{% endif %}general_custom.xml"/>
