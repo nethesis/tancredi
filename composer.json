@@ -1,20 +1,23 @@
 {
-    "name": "slim/slim-skeleton",
-    "description": "A Slim Framework skeleton application for rapid development",
-    "keywords": ["microframework","rest","router"],
-    "homepage": "http://github.com/codeguy/Slim-Skeleton",
-    "license": "MIT",
+    "name": "nethesis/tancredi",
+    "description": "Tancredi is the ultimate provisioning manager",
+    "keywords": ["provisioning","rest","voip"],
+    "homepage": "http://github.com/nethesis/tancredi",
+    "license": "GPL3",
     "authors": [
         {
-            "name": "Josh Lockhart",
-            "email": "info@joshlockhart.com",
-            "homepage": "http://www.joshlockhart.com/"
+            "name": "Stefano Fancello",
+            "email": "stefano.fancello@nethesis.it"
+        },
+        {
+            "name": "Davide Principi",
+            "email": "davide.principi@nethesis.it"
         }
     ],
     "require": {
-        "php": ">=5.3.0",
-        "slim/slim": "2.*",
-        "twig/twig": "1.*",
+        "php": ">=7.2",
+        "slim/slim": "4.*",
+        "twig/twig": "2.*",
         "monolog/monolog": "^1.25"
     },
     "autoload": {
