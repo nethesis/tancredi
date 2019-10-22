@@ -29,7 +29,7 @@ Success response:
 
 It is possible to query `model_url` with parameter `inherit=1` to obtain the
 default values for the items in `variables`. See also [GET
-/models/{name}](modelsNameGet).
+/models/{name}](modelsNameGet.md).
 
 Failed response:
 

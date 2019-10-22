@@ -16,7 +16,7 @@ The phone and model variables can be managed with a private API endpoint.
 Tancredi does not provide an administrative user interface, however you can
 build one based on its management endpoint.
 
-See [API](./API) for details.
+See [API](./API.md) for details.
 
 ## Installation
 
