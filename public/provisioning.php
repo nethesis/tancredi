@@ -8,6 +8,7 @@ define ("NOT_FOUND_SCOPES", "/usr/share/nethvoice/tancredi/data/not_found_scopes
 require '../vendor/autoload.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
 
 use \Monolog\Logger;
 
@@ -19,16 +20,18 @@ $log = new Logger('Tancredi');
 
 $log->pushHandler(new StreamHandler('/var/log/pbx/tancredi.log', Logger::DEBUG));
 
-$app = new \Slim\Slim();
+$app = new \Slim\App;
 
-$app->get('/:token/:file', function($token,$filename) use ($app) {
+$app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     global $log;
+    $filename = $args['filename'];
+    $token = $args['token'];
     $log->info('Received a token and file request. Token: ' .$token . '. File: ' . $filename);
     $id = \Tancredi\Entity\TokenManager::getIdFromToken($token);
     if ($id === FALSE) {
         // Token doesn't exists
         $log->error('Invalid token requested. Token: ' . $token);
-        $app->response->setStatus(403);
+        return $response->withStatus(403);
         return;
     }
 
@@ -48,18 +51,17 @@ $app->get('/:token/:file', function($token,$filename) use ($app) {
     } else {
         // Missing template
         $log->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $scope->id );
-        $app->response->setStatus(404);
-        return;
+        return $response->withStatus(404);
     }
     // Load twig template
     $loader = new \Twig\Loader\FilesystemLoader(TEMPLATES_DIR);
     $twig = new \Twig\Environment($loader);
-    $out = $twig->render($template,$scope_data);
-    echo $out;
+    return $response->getBody()->write($twig->render($template,$scope_data));
 });
 
-$app->get('/:file', function($filename) use ($app) {
+$app->get('/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     global $log;
+    $filename = $args['filename'];
     $log->info('Received a file request without token. File: ' . $filename);
 
     $data = getDataFromFilename($filename);
@@ -68,8 +70,7 @@ $app->get('/:file', function($filename) use ($app) {
         $id = $data['scope_id'];
     } else {
         $log->error('Can\'t get id from filename');
-        $app->response->setStatus(403);
-        return;
+        return $response->withStatus(403);
     }
     // Instantiate scope
     $log->debug("New scope id: \"$id\"");
@@ -88,14 +89,12 @@ $app->get('/:file', function($filename) use ($app) {
     } else {
         // Missing template
         $log->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $scope->id );
-        $app->response->setStatus(404);
-        return;
+        return $response->withStatus(404);
     }
     // Load twig template
     $loader = new \Twig\Loader\FilesystemLoader(TEMPLATES_DIR);
     $twig = new \Twig\Environment($loader);
-    $out = $twig->render($template,$scope_data);
-    echo $out;
+    return $response->getBody()->write($twig->render($template,$scope_data));
 });
 
 function getDataFromFilename($filename) {
