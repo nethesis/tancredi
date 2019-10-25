@@ -79,7 +79,6 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $response = $response->withHeader('Status', '409 Conflict');
         return $response->withJson($results,409);
     }
     $scope = new \Tancredi\Entity\Scope($mac);
@@ -92,6 +91,52 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , FALSE); // create token
     return $response->withJson(getPhoneScope($mac),201);
 });
+
+/*********************************
+* PATCH /phones/{mac}
+**********************************/
+$app->patch('/phones/{mac}', function (Request $request, Response $response, $args) {
+    global $log;
+    $mac = $args['mac'];
+    $patch_data = $request->getParsedBody();
+    $log->debug("PATCH /phones/" .$mac . " " . json_encode($patch_data));
+
+    if (!scopeExists($mac)) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'title' => 'Resource not found'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,404);
+    }
+
+    if (array_key_exists('mac',$patch_data) or array_key_exists('model_url',$patch_data) or array_key_exists('tok1',$patch_data) or array_key_exists('tok2',$patch_data)) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute',
+            'title' => 'Cannot change a read-only attribute'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,403);
+    }
+
+    if (array_key_exists('model',$patch_data)) {
+        $scope = new \Tancredi\Entity\Scope($mac);
+        $scope->metadata['inheritFrom'] = $patch_data['model'];
+        $scope->metadata['model'] = $patch_data['model'];
+        $scope->setVariables();
+        return $response->withJson(getPhoneScope($mac),200);
+    }
+    if (array_key_exists('variables',$patch_data)) {
+        $scope = new \Tancredi\Entity\Scope($mac);
+        $scope->setVariables($patch_data['variables']);
+        return $response->withStatus(204);
+    }
+    return $response->withStatus(400);
+});
+
+
 
 function getScope($id) {
     $scope = new \Tancredi\Entity\Scope($id);
