@@ -96,3 +96,26 @@ function _writeIniFile($file, $array = []) {
     return true;
 } 
 
+function _getScopeType($scope){
+    $vars = _readIniFile(SCOPES_DIR . $scope . '.ini');
+    if (array_key_exists('metadata', $vars) and is_array($vars['metadata']) and array_key_exists('scopeType',$vars['metadata'])) {
+        return $vars['metadata']['scopeType'];
+    }
+    return null;
+}
+
+function listScopes($typeFilter = null){
+    $scopes = array();
+    foreach (scandir(SCOPES_DIR) as $filename) {
+        if ($filename === '.' or $filename === '..' or preg_match('/\.ini$/',$filename) === FALSE) continue;
+        $scope = preg_replace('/\.ini$/','',$filename);
+        if (is_null($typeFilter) or _getScopeType($scope) === $typeFilter) {
+            $scopes[] = $scope;
+        }
+    }
+    return $scopes;
+}
+
+
+
+
