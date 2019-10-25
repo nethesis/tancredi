@@ -22,6 +22,8 @@ $app = new \Slim\App;
 * GET /phones
 **********************************/
 $app->get('/phones', function(Request $request, Response $response) use ($app) {
+    global $log;
+    $log->debug("GET /phones/");
     $scopes = listScopes('phone');
     $results = array();
     foreach ($scopes as $scopeId) {
@@ -42,11 +44,11 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
 * GET /phones/{mac}
 **********************************/
 $app->get('/phones/{mac}', function(Request $request, Response $response, array $args) use ($app) {
+    global $log;
     $mac = $args['mac'];
+    $log->debug("GET /phones/" . $mac);
     // get all scopes of type "phone"
-    $scope = new \Tancredi\Entity\Scope($mac);
-    $scope_data = $scope->getVariables();
-    if (empty($scope_data)) {
+    if (!scopeExists($mac)) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
@@ -55,28 +57,62 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
         $response = $response->withHeader('Content-Language', 'en');
         return $response->withJson($results,404);
     }
-    $results = array(
-            'mac' => $mac,
-            'model' => $scope->metadata['inheritFrom'],
-            'display_name' => $scope->metadata['displayName'],
-            'tok1' => \Tancredi\Entity\TokenManager::getToken1($mac),
-            'tok2' => \Tancredi\Entity\TokenManager::getToken2($mac),
-            'model_url' => "/tancredi/api/v1/models/" . $scope->metadata['inheritFrom'],
-            'variables' => $scope_data
-        );
-    return $response->withJson($results,200);
+    return $response->withJson(getPhoneScope($mac),200);
 });
 
+/*********************************
+* POST /phones
+**********************************/
+$app->post('/phones', function (Request $request, Response $response, $args) {
+    global $log;
+    $post_data = $request->getParsedBody();
+    $log->debug("POST /phones " . json_encode($post_data));
+    $mac = $post_data['mac'];
+    $model = $post_data['model'];
+    $display_name = ($post_data['display_name'] ? $post_data['display_name'] : "" );
+    $variables = $post_data['variables'];
+    if (scopeExists($mac)) {
+        // Error: scope is already configured
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#phone-exists',
+            'title' => 'The phone mac address is already registered'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        $response = $response->withHeader('Status', '409 Conflict');
+        return $response->withJson($results,409);
+    }
+    $scope = new \Tancredi\Entity\Scope($mac);
+    $scope->metadata['displayName'] = $display_name;
+    $scope->metadata['inheritFrom'] = $model;
+    $scope->metadata['model'] = $model;
+    $scope->metadata['scopeType'] = "phone";
+    $scope->setVariables($variables);
+    \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , TRUE); // create first time access token
+    \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , FALSE); // create token
+    return $response->withJson(getPhoneScope($mac),201);
+});
 
+function getScope($id) {
+    $scope = new \Tancredi\Entity\Scope($id);
+    $scope_data = $scope->getVariables();
+    $results = array(
+            'inheritFrom' => $scope->metadata['inheritFrom'],
+            'display_name' => $scope->metadata['displayName'],
+            'variables' => $scope_data
+        );
+    return $results;
+}
 
-
-
-
-
-
-
-
-
+function getPhoneScope($mac) {
+    $results = getScope($mac);
+    $results['mac'] = $mac;
+    $results['model'] = $results['inheritFrom'];
+    $results['tok1'] = \Tancredi\Entity\TokenManager::getToken1($mac);
+    $results['tok2'] = \Tancredi\Entity\TokenManager::getToken2($mac);
+    $results['model_url'] = "/tancredi/api/v1/models/" . $results['inheritFrom'];
+    return $results;
+}
 
 
 

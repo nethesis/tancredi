@@ -116,6 +116,8 @@ function listScopes($typeFilter = null){
     return $scopes;
 }
 
-
+function scopeExists($id) {
+    return file_exists(SCOPES_DIR . $id . '.ini');
+}
 
 
