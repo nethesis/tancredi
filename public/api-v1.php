@@ -47,7 +47,13 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
     $scope = new \Tancredi\Entity\Scope($mac);
     $scope_data = $scope->getVariables();
     if (empty($scope_data)) {
-        return $response->withStatus(404);
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'title' => 'Resource not found'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,404);
     }
     $results = array(
             'mac' => $mac,
