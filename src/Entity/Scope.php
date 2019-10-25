@@ -1,16 +1,16 @@
 <?php namespace Tancredi\Entity;
 
+include_once(__DIR__.'/../functions.inc.php');
+
 class Scope {
     public $id;
     public $data = array();
     public $metadata = array();
-    private $storage;
 
     function __construct($id, $scopeType = null) {
         $this->id = $id;
 
-        $this->storage = new FileStorage($id);
-        $ini_array = $this->storage->read();
+        $ini_array = storageRead($id);
 
         if (array_key_exists('data',$ini_array)) {
             $this->data = $ini_array['data'];
@@ -39,8 +39,7 @@ class Scope {
         }
 
         while (!empty($parent) && $parent !== null) {
-            $parentFileStorage = new FileStorage($parent);
-            $variables = $parentFileStorage->read();
+            $variables = storageRead($parent);
             if (array_key_exists('metadata',$variables) and array_key_exists('inheritFrom',$variables['metadata'])) {
                 $parent = $variables['metadata']['inheritFrom'];
             } else {
@@ -75,7 +74,7 @@ class Scope {
     }
 
     private function writeToStorage() {
-        return $this->storage->write(array('metadata' => $this->metadata, 'data' => $this->data));
+        return storageWrite($this->id,array('metadata' => $this->metadata, 'data' => $this->data));
     }
 
     public function setLastReadTime() {
