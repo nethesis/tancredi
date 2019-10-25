@@ -136,6 +136,29 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
     return $response->withStatus(400);
 });
 
+/*********************************
+* DELETE /phones/{mac}
+**********************************/
+$app->delete('/phones/{mac}', function (Request $request, Response $response, $args) {
+    global $log;
+    $mac = $args['mac'];
+    $log->debug("DELETE /phones/" .$mac);
+
+    if (!scopeExists($mac)) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'title' => 'Resource not found'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,404);
+    }
+    \Tancredi\Entity\TokenManager::deleteTok1ForId($mac);
+    \Tancredi\Entity\TokenManager::deleteTok2ForId($mac);
+    deleteScope($mac);
+    return $response->withStatus(204);
+});
+
 
 
 function getScope($id) {
