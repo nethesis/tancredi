@@ -18,9 +18,10 @@ $log->pushHandler(new StreamHandler('/var/log/pbx/tancredi.log', Logger::DEBUG))
 
 $app = new \Slim\App;
 
+/*********************************
+* GET /phones
+**********************************/
 $app->get('/phones', function(Request $request, Response $response) use ($app) {
-    global $log;
-    // get all scopes of type "phone"
     $scopes = listScopes('phone');
     $results = array();
     foreach ($scopes as $scopeId) {
@@ -34,6 +35,29 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
             'phone_url' => "/tancredi/api/v1/models/" . $scopeId
         );
     }
+    return $response->withJson($results,200);
+});
+
+/*********************************
+* GET /phones/{mac}
+**********************************/
+$app->get('/phones/{mac}', function(Request $request, Response $response, array $args) use ($app) {
+    $mac = $args['mac'];
+    // get all scopes of type "phone"
+    $scope = new \Tancredi\Entity\Scope($mac);
+    $scope_data = $scope->getVariables();
+    if (empty($scope_data)) {
+        return $response->withStatus(404);
+    }
+    $results = array(
+            'mac' => $mac,
+            'model' => $scope->metadata['inheritFrom'],
+            'display_name' => $scope->metadata['displayName'],
+            'tok1' => \Tancredi\Entity\TokenManager::getToken1($mac),
+            'tok2' => \Tancredi\Entity\TokenManager::getToken2($mac),
+            'model_url' => "/tancredi/api/v1/models/" . $scope->metadata['inheritFrom'],
+            'variables' => $scope_data
+        );
     return $response->withJson($results,200);
 });
 

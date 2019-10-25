@@ -35,4 +35,22 @@ class TokenManager {
         TokenManager::deleteTokenForId($id,$dir);
         return file_put_contents($dir.$token,$id);
     }
+
+    private static function getTokenFromId($id,$dir) {
+        foreach (scandir($dir) as $token) {
+            if ($token === '.' or $token === '..') continue;
+            if (trim(file_get_contents($dir.$token)) === $id) {
+                return $token;
+            }
+        }
+        return null;
+    }
+
+    public static function getToken1($id) {
+        return TokenManager::getTokenFromId($id,FIRST_ACCESS_TOKENS_DIR);
+    }
+
+    public static function getToken2($id) {
+        return TokenManager::getTokenFromId($id,TOKENS_DIR);
+    }
 }
