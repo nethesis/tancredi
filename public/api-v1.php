@@ -185,7 +185,8 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
 $app->get('/models/{id}', function(Request $request, Response $response, array $args) use ($app) {
     global $log;
     $id = $args['id'];
-    $log->debug("GET /models/" . $id);
+    $query = $request->getQueryParams();
+    $log->debug("GET /models/" . $id . " " . json_encode($query));
     // get all scopes of type "model"
     if (!scopeExists($id)) {
         $results = array(
@@ -196,7 +197,11 @@ $app->get('/models/{id}', function(Request $request, Response $response, array $
         $response = $response->withHeader('Content-Language', 'en');
         return $response->withJson($results,404);
     }
-    $results = getModelScope($id);
+    if (array_key_exists('inherit',$query) and $query['inherit'] == 1) {
+        $results = getModelScope($id, true);
+    } else {
+        $results = getModelScope($id, false);
+    }
     return $response->withJson($results,200);
 });
 
@@ -308,9 +313,13 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
 
 
 
-function getModelScope($id) {
+function getModelScope($id,$inherit = false) {
     $scope = new \Tancredi\Entity\Scope($id);
-    $scope_data = $scope->getVariables();
+    if ($inherit) {
+        $scope_data = $scope->getVariables();
+    } else {
+        $scope_data = $scope->data;
+    }
     $results = array(
         'name' => $id,
         'display_name' => $scope->metadata['displayName'],
@@ -321,9 +330,13 @@ function getModelScope($id) {
 }
 
 
-function getPhoneScope($mac) {
+function getPhoneScope($mac,$inherit = false) {
     $scope = new \Tancredi\Entity\Scope($mac);
-    $scope_data = $scope->getVariables();
+    if ($inherit) {
+        $scope_data = $scope->getVariables();
+    } else {
+        $scope_data = $scope->data;
+    }
     $results = array(
         'mac' => $mac,
         'model' => $scope->metadata['inheritFrom'],
