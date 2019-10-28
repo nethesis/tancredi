@@ -159,53 +159,182 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
     return $response->withStatus(204);
 });
 
+/*********************************
+* GET /models
+**********************************/
+$app->get('/models', function(Request $request, Response $response) use ($app) {
+    global $log;
+    $log->debug("GET /models/");
+    $scopes = listScopes('model');
+    $results = array();
+    foreach ($scopes as $scopeId) {
+        $scope = new \Tancredi\Entity\Scope($scopeId);
+        $scope_data = $scope->getVariables();
+        $results[] = array(
+            'name' => $scopeId,
+            'display_name' => $scope->metadata['displayName'],
+            'model_url' => "/tancredi/api/v1/models/" . $scopeId
+        );
+    }
+    return $response->withJson($results,200);
+});
+
+/*********************************
+* GET /models/{id}
+**********************************/
+$app->get('/models/{id}', function(Request $request, Response $response, array $args) use ($app) {
+    global $log;
+    $id = $args['id'];
+    $log->debug("GET /models/" . $id);
+    // get all scopes of type "model"
+    if (!scopeExists($id)) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'title' => 'Resource not found'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,404);
+    }
+    $results = getModelScope($id);
+    return $response->withJson($results,200);
+});
+
+/*********************************
+* POST /models
+**********************************/
+$app->post('/models', function (Request $request, Response $response, $args) {
+    global $log;
+    $post_data = $request->getParsedBody();
+    $log->debug("POST /models " . json_encode($post_data));
+    $id = $post_data['name'];
+    $display_name = ($post_data['display_name'] ? $post_data['display_name'] : "" );
+    $variables = $post_data['variables'];
+    if (scopeExists($id)) {
+        // Error: scope is already configured
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#phone-exists',
+            'title' => 'The model name is already registered'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,409);
+    }
+    $scope = new \Tancredi\Entity\Scope($id);
+    $scope->metadata['displayName'] = $display_name;
+    $scope->metadata['inheritFrom'] = 'globals';
+    $scope->metadata['scopeType'] = "model";
+    $scope->setVariables($variables);
+    return $response->withJson(getPhoneScope($mac),201);
+});
+
+/*********************************
+* PATCH /models/{id}
+**********************************/
+$app->patch('/models/{id}', function (Request $request, Response $response, $args) {
+    global $log;
+    $mac = $args['id'];
+    $patch_data = $request->getParsedBody();
+    $log->debug("PATCH /models/" .$id . " " . json_encode($patch_data));
+
+    if (!scopeExists($id)) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'title' => 'Resource not found'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,404);
+    }
+
+    if (array_key_exists('name',$patch_data)) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute',
+            'title' => 'Cannot change a read-only attribute'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,403);
+    }
+
+    if (array_key_exists('variables',$patch_data) or array_key_exists('display_name',$patch_data)) {
+        $scope = new \Tancredi\Entity\Scope($id);
+        if (array_key_exists('display_name',$patch_data)) {
+            $scope->metadata['displayName'] = $patch_data['display_name'];
+        }
+        if (array_key_exists('variables',$patch_data)) {
+             $scope->setVariables($patch_data['variables']);
+        } else {
+             $scope->setVariables();
+        }
+        return $response->withStatus(204);
+    }
+    return $response->withStatus(400);
+});
+
+/*********************************
+* DELETE /models/{id}
+**********************************/
+$app->delete('/models/{id}', function (Request $request, Response $response, $args) {
+    global $log;
+    $mac = $args['id'];
+    $log->debug("DELETE /models/" .$id);
+
+    if (!scopeExists($id)) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'title' => 'Resource not found'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,404);
+    }
+
+    if (scopeInUse($id)) {
+         $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#resource-in-use',
+            'title' => 'The resource is in use by other resources and cannot be deleted'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,409);
+    }
+
+    deleteScope($id);
+    return $response->withStatus(204);
+});
 
 
-function getScope($id) {
+
+
+
+function getModelScope($id) {
     $scope = new \Tancredi\Entity\Scope($id);
     $scope_data = $scope->getVariables();
     $results = array(
-            'inheritFrom' => $scope->metadata['inheritFrom'],
-            'display_name' => $scope->metadata['displayName'],
-            'variables' => $scope_data
-        );
+        'name' => $id,
+        'display_name' => $scope->metadata['displayName'],
+        'variables' => $scope_data,
+        'model_url' => "/tancredi/api/v1/models/" . $scope->metadata['inheritFrom']
+    );
     return $results;
 }
+
 
 function getPhoneScope($mac) {
-    $results = getScope($mac);
-    $results['mac'] = $mac;
-    $results['model'] = $results['inheritFrom'];
-    $results['tok1'] = \Tancredi\Entity\TokenManager::getToken1($mac);
-    $results['tok2'] = \Tancredi\Entity\TokenManager::getToken2($mac);
-    $results['model_url'] = "/tancredi/api/v1/models/" . $results['inheritFrom'];
+    $scope = new \Tancredi\Entity\Scope($mac);
+    $scope_data = $scope->getVariables();
+    $results = array(
+        'mac' => $mac,
+        'model' => $scope->metadata['inheritFrom'],
+        'display_name' => $scope->metadata['displayName'],
+        'tok1' => \Tancredi\Entity\TokenManager::getToken1($mac),
+        'tok2' => \Tancredi\Entity\TokenManager::getToken2($mac),
+        'variables' => $scope_data,
+        'model_url' => "/tancredi/api/v1/models/" . $scope->metadata['inheritFrom']
+    );
     return $results;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Run app
 $app->run();

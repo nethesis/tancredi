@@ -96,10 +96,10 @@ function _writeIniFile($file, $array = []) {
     return true;
 } 
 
-function _getScopeType($scope){
+function _getScopeMeta($scope, $varname) {
     $vars = _readIniFile(SCOPES_DIR . $scope . '.ini');
-    if (array_key_exists('metadata', $vars) and is_array($vars['metadata']) and array_key_exists('scopeType',$vars['metadata'])) {
-        return $vars['metadata']['scopeType'];
+    if (array_key_exists('metadata', $vars) and is_array($vars['metadata']) and array_key_exists($varname,$vars['metadata'])) {
+        return $vars['metadata'][$varname];
     }
     return null;
 }
@@ -109,7 +109,7 @@ function listScopes($typeFilter = null){
     foreach (scandir(SCOPES_DIR) as $filename) {
         if ($filename === '.' or $filename === '..' or preg_match('/\.ini$/',$filename) === FALSE) continue;
         $scope = preg_replace('/\.ini$/','',$filename);
-        if (is_null($typeFilter) or _getScopeType($scope) === $typeFilter) {
+        if (is_null($typeFilter) or _getScopeMeta($scope,'scopeType') === $typeFilter) {
             $scopes[] = $scope;
         }
     }
@@ -119,5 +119,15 @@ function listScopes($typeFilter = null){
 function scopeExists($id) {
     return file_exists(SCOPES_DIR . $id . '.ini');
 }
+
+function scopeInUse($id) {
+    foreach (listScopes() as $scope) {
+        if (_getScopeMeta($scope, 'inheritFrom') === $id) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 
 
