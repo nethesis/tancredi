@@ -9,10 +9,27 @@ for security.
 The Tancredi data model has two main entities: **phone** and (phone) **model**.
 
 Both entities have the **variables** attribute, that is a collection of settings
-required to generate the phone provisioning files.
+required to generate the phone provisioning files. A variable value must be
+expressed as a JSON string.
 
 A **phone** can be related to a **model**. If this relationship is not defined,
 global default values are assumed.
+
+A third entity, **defaults** contains the global default values.
+
+## Phone variables inheritance
+
+During the provisioning files generation each of the above entities acts like a
+variables *scope*. A variable value is generally defined by the *most specific
+scope rule*, in the following order:
+
+1. phone
+2. model
+3. defaults
+
+If the most specific *scope* does not define a variable the next one is
+considered. Thus a variable value can be **inherited** from the general scope to
+the specific one.
 
 ## Media types
 
