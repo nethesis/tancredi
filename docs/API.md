@@ -31,21 +31,21 @@ Error responses use media type `application/problem+json` as defined by [RFC
 
 ### phones/
 
-* [GET /phones](phonesGet.md) return the collection of configured phones
-* [GET /phones/{mac}](phonesMacGet.md) return the phone instance with the given `mac` address
-* [POST /phones](phonesPost.md) add a phone to inventory specifying mac, model and variables
-* [PATCH /phones/{mac}](phonesMacPatch.md) change `variables` of phone with given `mac`
-* [DELETE /phones/{mac}](phonesMacDelete.md) delete the phone with given `mac` from inventory
+* [GET /phones](phonesGet) return the collection of configured phones
+* [GET /phones/{mac}](phonesMacGet) return the phone instance with the given `mac` address
+* [POST /phones](phonesPost) add a phone to inventory specifying mac, model and variables
+* [PATCH /phones/{mac}](phonesMacPatch) change `variables` of phone with given `mac`
+* [DELETE /phones/{mac}](phonesMacDelete) delete the phone with given `mac` from inventory
 
 ### models/
 
-* [GET /models](modelsGet.md) return the phone models collection
-* [GET /models/{name}](modelsNameGet.md) return the model with given `name` (e.g. `snom720`)
-* [POST /models](modelsPost.md) add a new model instance name, display_name, variables
-* [PATCH /models/{name}](modelsNamePatch.md) change `variables` and other properties of model `name`
-* [DELETE /models/{name}](modelsNameDelete.md) delete model `name` (if not used, if possible)
+* [GET /models](modelsGet) return the phone models collection
+* [GET /models/{name}](modelsNameGet) return the model with given `name` (e.g. `snom720`)
+* [POST /models](modelsPost) add a new model instance name, display_name, variables
+* [PATCH /models/{name}](modelsNamePatch) change `variables` and other properties of model `name`
+* [DELETE /models/{name}](modelsNameDelete) delete model `name` (if not used, if possible)
 
 ### defaults/
 
-* [GET /defaults](defaultsGet.md) return the default values for known variables
-* [PATCH /defaults](defaultsPatch.md) change the default value of some variables
+* [GET /defaults](defaultsGet) return the default values for known variables
+* [PATCH /defaults](defaultsPatch) change the default value of some variables
