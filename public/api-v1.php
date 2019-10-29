@@ -177,7 +177,7 @@ $app->get('/models/{id}', function(Request $request, Response $response, array $
     $query = $request->getQueryParams();
     $log->debug("GET /models/" . $id . " " . json_encode($query));
     // get all scopes of type "model"
-    if (!scopeExists($id)) {
+    if (!scopeExists($id) or _getScopeMeta($id,'scopeType') !== 'model') {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
