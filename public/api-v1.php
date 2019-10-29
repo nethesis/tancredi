@@ -298,6 +298,37 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
     return $response->withStatus(204);
 });
 
+/*********************************
+* GET /defaults
+**********************************/
+$app->get('/defaults', function(Request $request, Response $response) use ($app) {
+    global $log;
+    $log->debug("GET /defaults");
+    $scope = new \Tancredi\Entity\Scope('globals');
+    $scope_data = $scope->getVariables();
+    return $response->withJson($scope_data,200);
+});
+
+/*********************************
+* PATCH /defaults
+**********************************/
+$app->patch('/defaults', function (Request $request, Response $response, $args) {
+    global $log;
+    $patch_data = $request->getParsedBody();
+    $log->debug("PATCH /defaults" . json_encode($patch_data));
+
+    $scope = new \Tancredi\Entity\Scope('globals');
+    foreach ($patch_data as $patch_key => $patch_value) {
+        if (is_null($patch_value)) {
+            unset($scope->data[$patch_key]);
+            unset($patch_data[$patch_key]);
+        }
+    }
+
+    $scope->setVariables($patch_data);
+
+    return $response->withStatus(204);
+});
 
 
 
