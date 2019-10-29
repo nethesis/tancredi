@@ -50,17 +50,17 @@ function _writeIniFile($file, $array = []) {
                 if (is_array($sval)) {
                     foreach ($sval as $_skey => $_sval) {
                         if (is_numeric($_skey)) {
-                            $data[] = $skey.'[] = '.(is_numeric($_sval) ? $_sval : (ctype_upper($_sval) ? $_sval : '"'.$_sval.'"'));
+                            $data[] = $skey.'[] = '.(is_numeric($_sval) ? $_sval : (ctype_upper($_sval) ? $_sval : '"'.str_replace('"','\"',$_sval).'"'));
                         } else {
-                            $data[] = $skey.'['.$_skey.'] = '.(is_numeric($_sval) ? $_sval : (ctype_upper($_sval) ? $_sval : '"'.$_sval.'"'));
+                            $data[] = $skey.'['.$_skey.'] = '.(is_numeric($_sval) ? $_sval : (ctype_upper($_sval) ? $_sval : '"'.str_replace('"','\"',$_sval).'"'));
                         }
                     }
                 } else {
-                    $data[] = $skey.' = '.(is_numeric($sval) ? $sval : (ctype_upper($sval) ? $sval : '"'.$sval.'"'));
+                    $data[] = $skey.' = '.(is_numeric($sval) ? $sval : (ctype_upper($sval) ? $sval : '"'.str_replace('"','\"',$_sval).'"'));
                 }
             }
         } else {
-            $data[] = $key.' = '.(is_numeric($val) ? $val : (ctype_upper($val) ? $val : '"'.$val.'"'));
+            $data[] = $key.' = '.(is_numeric($val) ? $val : (ctype_upper($val) ? $val : '"'.str_replace('"','\"',$_sval).'"'));
         }
         // empty line
         $data[] = null;
