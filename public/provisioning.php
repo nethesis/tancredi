@@ -1,24 +1,9 @@
 <?php namespace Tancredi;
 
-define ("TEMPLATES_DIR", "/usr/share/nethvoice/tancredi/data/templates/");
-define ("PATTERNS_DIR", "/usr/share/nethvoice/tancredi/data/patterns.d/");
-define ("TEMPLATES_CUSTOM_DIR", "/usr/share/nethvoice/tancredi/data/templates-custom/");
-define ("NOT_FOUND_SCOPES", "/usr/share/nethvoice/tancredi/data/not_found_scopes");
-
-require '../vendor/autoload.php';
+include_once(__DIR__ . '/../src/init.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-
-use \Monolog\Logger;
-
-use \Monolog\Handler\StreamHandler;
-
-ini_set('date.timezone', 'UTC');
-
-$log = new Logger('Tancredi');
-
-$log->pushHandler(new StreamHandler('/var/log/pbx/tancredi.log', Logger::DEBUG));
 
 $app = new \Slim\App;
 
@@ -54,7 +39,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         return $response->withStatus(404);
     }
     // Load twig template
-    $loader = new \Twig\Loader\FilesystemLoader(TEMPLATES_DIR);
+    $loader = new \Twig\Loader\FilesystemLoader($config['templates_dir']);
     $twig = new \Twig\Environment($loader);
     return $response->getBody()->write($twig->render($template,$scope_data));
 });
@@ -92,7 +77,7 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         return $response->withStatus(404);
     }
     // Load twig template
-    $loader = new \Twig\Loader\FilesystemLoader(TEMPLATES_DIR);
+    $loader = new \Twig\Loader\FilesystemLoader($config['templates_dir']);
     $twig = new \Twig\Environment($loader);
     return $response->getBody()->write($twig->render($template,$scope_data));
 });
@@ -101,9 +86,9 @@ function getDataFromFilename($filename) {
     global $log;
     $result = array();
     $patterns = array();
-    foreach (scandir(PATTERNS_DIR) as $pattern_file) {
+    foreach (scandir($config['patterns_dir']) as $pattern_file) {
         if ($pattern_file === '.' or $pattern_file === '..' or substr($pattern_file,-4) !== '.ini') continue;
-        $patterns = array_merge($patterns,parse_ini_file(PATTERNS_DIR.$pattern_file,true));
+        $patterns = array_merge($patterns,parse_ini_file($config['patterns_dir'].$pattern_file,true));
     }
     foreach ($patterns as $pattern) {
         if (preg_match('/'.$pattern['pattern'].'/', $filename, $tmp)) {
@@ -120,12 +105,12 @@ function saveNotFoundScopes($scope_id){
     if (preg_match('/[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}/', $scope_id)) {
         // Provided scope id is a MAC address
         $data = array();
-        if (file_exists(NOT_FOUND_SCOPES)) {
-            $data = (array) json_decode(file_get_contents(NOT_FOUND_SCOPES));
+        if (file_exists($config['not_found_scopes'])) {
+            $data = (array) json_decode(file_get_contents($config['not_found_scopes']));
         }
-        // add MAC to NOT_FOUND_SCOPES file
+        // add MAC to $config['not_found_scopes'] file
         $data[$scope_id] = time();
-        file_put_contents(NOT_FOUND_SCOPES, json_encode($data));
+        file_put_contents($config['not_found_scopes'], json_encode($data));
     }
 }
 

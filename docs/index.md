@@ -26,4 +26,7 @@ Tancredi requires at least PHP 5.6 to run.
 
 ## Configuration
 
-[...]
+Tancredi can be configured unsing '/etc/tancredi.conf' configuration file. 
+there is a tancredi.conf.sample configuration file in the root directory that can be copied and renamed in /etc and used as template.
+
+

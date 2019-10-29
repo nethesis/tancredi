@@ -1,20 +1,9 @@
 <?php namespace Tancredi;
 
-require '../vendor/autoload.php';
-include_once(__DIR__ . '/../src/functions.inc.php');
+include_once(__DIR__ . '/../src/init.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-
-use \Monolog\Logger;
-
-use \Monolog\Handler\StreamHandler;
-
-ini_set('date.timezone', 'UTC');
-
-$log = new Logger('Tancredi');
-
-$log->pushHandler(new StreamHandler('/var/log/pbx/tancredi.log', Logger::DEBUG));
 
 $app = new \Slim\App;
 

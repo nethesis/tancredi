@@ -1,6 +1,6 @@
 <?php namespace Tancredi\Entity;
 
-include_once(__DIR__.'/../functions.inc.php');
+include_once(__DIR__.'/../init.php');
 
 class Scope {
     public $id;

@@ -1,14 +1,16 @@
 <?php
 
-define ("SCOPES_DIR", "/usr/share/nethvoice/tancredi/data/scopes/");
+include_once('init.php');
 
 function storageRead($id) {
-    $inifile = SCOPES_DIR . $id . '.ini';
+    global $config;
+    $inifile = $config['scopes_dir'] . $id . '.ini';
     return _readIniFile($inifile);
 }
 
 function storageWrite($id,$data) {
-    $inifile = SCOPES_DIR . $id . '.ini';
+    global $config;
+    $inifile = $config['scopes_dir'] . $id . '.ini';
     return _writeIniFile($inifile,$data);
 }
 
@@ -97,7 +99,8 @@ function _writeIniFile($file, $array = []) {
 } 
 
 function _getScopeMeta($scope, $varname) {
-    $vars = _readIniFile(SCOPES_DIR . $scope . '.ini');
+    global $config;
+    $vars = _readIniFile($config['scopes_dir'] . $scope . '.ini');
     if (array_key_exists('metadata', $vars) and is_array($vars['metadata']) and array_key_exists($varname,$vars['metadata'])) {
         return $vars['metadata'][$varname];
     }
@@ -105,8 +108,9 @@ function _getScopeMeta($scope, $varname) {
 }
 
 function listScopes($typeFilter = null){
+    global $config;
     $scopes = array();
-    foreach (scandir(SCOPES_DIR) as $filename) {
+    foreach (scandir($config['scopes_dir']) as $filename) {
         if ($filename === '.' or $filename === '..' or preg_match('/\.ini$/',$filename) === FALSE) continue;
         $scope = preg_replace('/\.ini$/','',$filename);
         if (is_null($typeFilter) or _getScopeMeta($scope,'scopeType') === $typeFilter) {
@@ -117,7 +121,8 @@ function listScopes($typeFilter = null){
 }
 
 function scopeExists($id) {
-    return file_exists(SCOPES_DIR . $id . '.ini');
+    global $config;
+    return file_exists($config['scopes_dir'] . $id . '.ini');
 }
 
 function scopeInUse($id) {

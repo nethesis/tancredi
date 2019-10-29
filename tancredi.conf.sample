@@ -1,0 +1,26 @@
+; Tancredi sample configuration file
+
+; Tancredi log file. Make sure user Tancredi run with (apache probably) has write permission
+logfile = "/var/log/tancredi.log"
+
+; Tancredi loglevel. Allowed levels are DEBUG,INFO,WARNING,ERROR
+loglevel = "DEBUG"
+
+; Templates dir. The directory where phones templates are
+templates_dir = "/usr/share/tancredi/data/templates/"
+; User customized templates goes here
+templates_custom_dir = "/usr/share/tancredi/data/templates-custom/"
+
+; In this directory there are the patterns Tancredi uses to recognize phone brand, model and template file to use
+patterns_dir = "/usr/share/tancredi/data/patterns.d/"
+
+; In this file Tancredi saves scopes requested but not found
+not_found_scopes = "/usr/share/tancredi/data/not_found_scopes"
+
+; In this directory there are scopes Tancredi searches for. Tancredi needs write permission to this directory
+scopes_dir = "/usr/share/tancredi/data/scopes/"
+
+; Directories where tokens are saved. Tancredi needs write permission to those directories 
+first_access_tokens_dir = "/usr/share/tancredi/data/first_access_token"
+tokens_dir = "/usr/share/tancredi/data/tokens/"
+
