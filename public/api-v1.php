@@ -26,7 +26,7 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
             'phone_url' => "/tancredi/api/v1/models/" . $scopeId
         );
     }
-    return $response->withJson($results,200);
+    return $response->withJson($results,200,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************
@@ -44,9 +44,9 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404);
+        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
     }
-    return $response->withJson(getPhoneScope($mac),200);
+    return $response->withJson(getPhoneScope($mac),200,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************
@@ -60,6 +60,15 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $model = $post_data['model'];
     $display_name = ($post_data['display_name'] ? $post_data['display_name'] : "" );
     $variables = $post_data['variables'];
+    if (empty($mac)) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+            'title' => 'Missing MAC address'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,400,JSON_UNESCAPED_SLASHES);
+    }
     if (scopeExists($mac)) {
         // Error: scope is already configured
         $results = array(
@@ -68,7 +77,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,409);
+        return $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
     }
     $scope = new \Tancredi\Entity\Scope($mac);
     $scope->metadata['displayName'] = $display_name;
@@ -78,7 +87,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $scope->setVariables($variables);
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , TRUE); // create first time access token
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , FALSE); // create token
-    return $response->withJson(getPhoneScope($mac),201);
+    return $response->withJson(getPhoneScope($mac),201,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************
@@ -97,7 +106,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404);
+        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
     }
 
     if (array_key_exists('mac',$patch_data) or array_key_exists('model_url',$patch_data) or array_key_exists('tok1',$patch_data) or array_key_exists('tok2',$patch_data)) {
@@ -107,7 +116,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,403);
+        return $response->withJson($results,403,JSON_UNESCAPED_SLASHES);
     }
 
     if (array_key_exists('model',$patch_data)) {
@@ -115,7 +124,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         $scope->metadata['inheritFrom'] = $patch_data['model'];
         $scope->metadata['model'] = $patch_data['model'];
         $scope->setVariables();
-        return $response->withJson(getPhoneScope($mac),200);
+        return $response->withJson(getPhoneScope($mac),200,JSON_UNESCAPED_SLASHES);
     }
     if (array_key_exists('variables',$patch_data)) {
         $scope = new \Tancredi\Entity\Scope($mac);
@@ -140,7 +149,7 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404);
+        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
     }
     \Tancredi\Entity\TokenManager::deleteTok1ForId($mac);
     \Tancredi\Entity\TokenManager::deleteTok2ForId($mac);
@@ -165,7 +174,7 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
             'model_url' => "/tancredi/api/v1/models/" . $scopeId
         );
     }
-    return $response->withJson($results,200);
+    return $response->withJson($results,200,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************
@@ -184,14 +193,14 @@ $app->get('/models/{id}', function(Request $request, Response $response, array $
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404);
+        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
     }
     if (array_key_exists('inherit',$query) and $query['inherit'] == 1) {
         $results = getModelScope($id, true);
     } else {
         $results = getModelScope($id, false);
     }
-    return $response->withJson($results,200);
+    return $response->withJson($results,200,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************
@@ -204,7 +213,16 @@ $app->post('/models', function (Request $request, Response $response, $args) {
     $id = $post_data['name'];
     $display_name = ($post_data['display_name'] ? $post_data['display_name'] : "" );
     $variables = $post_data['variables'];
-    if (scopeExists($id)) {
+    if (empty($id)) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+            'title' => 'Missing model name'
+        );
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response->withJson($results,400,JSON_UNESCAPED_SLASHES);
+   }
+   if (scopeExists($id)) {
         // Error: scope is already configured
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#phone-exists',
@@ -212,14 +230,14 @@ $app->post('/models', function (Request $request, Response $response, $args) {
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,409);
+        return $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
     }
     $scope = new \Tancredi\Entity\Scope($id);
     $scope->metadata['displayName'] = $display_name;
     $scope->metadata['inheritFrom'] = 'globals';
     $scope->metadata['scopeType'] = "model";
     $scope->setVariables($variables);
-    return $response->withJson(getPhoneScope($mac),201);
+    return $response->withJson(getModelScope($mac),201,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************
@@ -238,7 +256,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404);
+        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
     }
 
     if (array_key_exists('name',$patch_data)) {
@@ -248,7 +266,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,403);
+        return $response->withJson($results,403,JSON_UNESCAPED_SLASHES);
     }
 
     if (array_key_exists('variables',$patch_data) or array_key_exists('display_name',$patch_data)) {
@@ -281,7 +299,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404);
+        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
     }
 
     if (scopeInUse($id)) {
@@ -291,7 +309,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
         );
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,409);
+        return $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
     }
 
     deleteScope($id);
@@ -306,7 +324,7 @@ $app->get('/defaults', function(Request $request, Response $response) use ($app)
     $log->debug("GET /defaults");
     $scope = new \Tancredi\Entity\Scope('globals');
     $scope_data = $scope->getVariables();
-    return $response->withJson($scope_data,200);
+    return $response->withJson($scope_data,200,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************
