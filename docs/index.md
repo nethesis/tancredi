@@ -41,6 +41,8 @@ chown -R root:apache data/{first_access_tokens,not_found_scopes,scopes,templates
 chmod g+w data/{first_access_tokens,not_found_scopes,scopes,templates-custom,tokens}
 ```
 
+You can change the base path of read/write data directories and read only data directories by changing those variables into `/etc/tancredi.conf`
+
 Create log file and make sure Tancredi user is allowe to write into it
 ```
 mkdir -p /var/log/tancredi
