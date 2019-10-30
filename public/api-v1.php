@@ -289,7 +289,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
 **********************************/
 $app->delete('/models/{id}', function (Request $request, Response $response, $args) {
     global $log;
-    $mac = $args['id'];
+    $id = $args['id'];
     $log->debug("DELETE /models/" .$id);
 
     if (!scopeExists($id)) {
