@@ -39,7 +39,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         return $response->withStatus(404);
     }
     // Load twig template
-    $loader = new \Twig\Loader\FilesystemLoader($config['templates_dir']);
+    $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
     $twig = new \Twig\Environment($loader);
     return $response->getBody()->write($twig->render($template,$scope_data));
 });
@@ -77,7 +77,7 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         return $response->withStatus(404);
     }
     // Load twig template
-    $loader = new \Twig\Loader\FilesystemLoader($config['templates_dir']);
+    $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
     $twig = new \Twig\Environment($loader);
     return $response->getBody()->write($twig->render($template,$scope_data));
 });
@@ -86,9 +86,9 @@ function getDataFromFilename($filename) {
     global $log;
     $result = array();
     $patterns = array();
-    foreach (scandir($config['patterns_dir']) as $pattern_file) {
+    foreach (scandir($config['ro_dir'] . 'patterns.d/') as $pattern_file) {
         if ($pattern_file === '.' or $pattern_file === '..' or substr($pattern_file,-4) !== '.ini') continue;
-        $patterns = array_merge($patterns,parse_ini_file($config['patterns_dir'].$pattern_file,true));
+        $patterns = array_merge($patterns,parse_ini_file($config['ro_dir'] . 'patterns.d/'.$pattern_file,true));
     }
     foreach ($patterns as $pattern) {
         if (preg_match('/'.$pattern['pattern'].'/', $filename, $tmp)) {
@@ -105,12 +105,12 @@ function saveNotFoundScopes($scope_id){
     if (preg_match('/[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}/', $scope_id)) {
         // Provided scope id is a MAC address
         $data = array();
-        if (file_exists($config['not_found_scopes'])) {
-            $data = (array) json_decode(file_get_contents($config['not_found_scopes']));
+        if (file_exists($config['rw_dir'] . 'not_found_scopes')) {
+            $data = (array) json_decode(file_get_contents($config['rw_dir'] . 'not_found_scopes'));
         }
-        // add MAC to $config['not_found_scopes'] file
+        // add MAC to $config['rw_dir'] . 'not_found_scopes' file
         $data[$scope_id] = time();
-        file_put_contents($config['not_found_scopes'], json_encode($data));
+        file_put_contents($config['rw_dir'] . 'not_found_scopes', json_encode($data));
     }
 }
 

@@ -5,11 +5,11 @@ include_once(__DIR__.'/../init.php');
 class TokenManager {
     public static function getIdFromToken($token){
         global $config;
-        if (file_exists($config['first_access_tokens_dir'].$token)) {
-            return trim(file_get_contents($config['first_access_tokens_dir'].$token));
-        } elseif (file_exists($config['tokens_dir'].$token)) {
-            $id = trim(file_get_contents($config['tokens_dir'].$token));
-            TokenManager::deleteTokenForId($id,$config['first_access_tokens_dir']);
+        if (file_exists($config['rw_dir'] . 'first_access_token/'.$token)) {
+            return trim(file_get_contents($config['rw_dir'] . 'first_access_token/'.$token));
+        } elseif (file_exists($config['rw_dir'] . 'tokens/'.$token)) {
+            $id = trim(file_get_contents($config['rw_dir'] . 'tokens/'.$token));
+            TokenManager::deleteTokenForId($id,$config['rw_dir'] . 'first_access_token/');
             return $id;
         } else {
             // Token not found
@@ -29,9 +29,9 @@ class TokenManager {
     public static function createToken($token,$id,$first_time_access = FALSE) {
         global $config;
         if ($first_time_access) {
-            $dir = $config['first_access_tokens_dir'];
+            $dir = $config['rw_dir'] . 'first_access_token/';
         } else {
-            $dir = $config['tokens_dir'];
+            $dir = $config['rw_dir'] . 'tokens/';
         }
         TokenManager::deleteTokenForId($id,$dir);
         return file_put_contents($dir.$token,$id);
@@ -49,11 +49,11 @@ class TokenManager {
 
     public static function getToken1($id) {
         global $config;
-        return TokenManager::getTokenFromId($id,$config['first_access_tokens_dir']);
+        return TokenManager::getTokenFromId($id,$config['rw_dir'] . 'first_access_token/');
     }
 
     public static function getToken2($id) {
         global $config;
-        return TokenManager::getTokenFromId($id,$config['tokens_dir']);
+        return TokenManager::getTokenFromId($id,$config['rw_dir'] . 'tokens/');
     }
 }

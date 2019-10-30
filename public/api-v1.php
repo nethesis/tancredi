@@ -237,7 +237,7 @@ $app->post('/models', function (Request $request, Response $response, $args) {
     $scope->metadata['inheritFrom'] = 'globals';
     $scope->metadata['scopeType'] = "model";
     $scope->setVariables($variables);
-    return $response->withJson(getModelScope($mac),201,JSON_UNESCAPED_SLASHES);
+    return $response->withJson(getModelScope($id),201,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************

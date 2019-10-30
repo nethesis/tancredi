@@ -9,13 +9,8 @@ ini_set('date.timezone', 'UTC');
 $default_config = array(
     'logfile' => "/var/log/tancredi.log",
     'loglevel' => "ERROR",
-    'templates_dir' => __DIR__ . "/../data/templates/",
-    'patterns_dir' => __DIR__ . "/../data/patterns.d/",
-    'templates_custom_dir' => __DIR__ . "/../data/templates-custom/",
-    'not_found_scopes' => __DIR__ . "/../data/not_found_scopes",
-    'scopes_dir' => __DIR__ . "/../data/scopes/",
-    'first_access_tokens_dir' => __DIR__ . "/../data/first_access_token",
-    'tokens_dir' => __DIR__ . "/../data/tokens/"
+    'ro_dir' => __DIR__ . "/../data/",
+    'rw_dir' => __DIR__ . "/../data/"
 );
 
 // Read configration 
