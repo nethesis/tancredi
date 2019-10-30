@@ -6,11 +6,16 @@ class Scope {
     public $id;
     public $data = array();
     public $metadata = array();
+    private $storage;
+    private $logger;
 
-    function __construct($id, $scopeType = null) {
+    function __construct($id, $storage, $logger, $scopeType = null) {
         $this->id = $id;
 
-        $ini_array = storageRead($id);
+        $this->storage = $storage;
+        $this->logger = $logger;
+
+        $ini_array = $this->storage->storageRead($id);
 
         if (array_key_exists('data',$ini_array)) {
             $this->data = $ini_array['data'];
@@ -39,7 +44,7 @@ class Scope {
         }
 
         while (!empty($parent) && $parent !== null) {
-            $variables = storageRead($parent);
+            $variables = $this->storage->storageRead($parent);
             if (array_key_exists('metadata',$variables) and array_key_exists('inheritFrom',$variables['metadata'])) {
                 $parent = $variables['metadata']['inheritFrom'];
             } else {
@@ -74,7 +79,7 @@ class Scope {
     }
 
     private function writeToStorage() {
-        return storageWrite($this->id,array('metadata' => $this->metadata, 'data' => $this->data));
+        return $this->storage->storageWrite($this->id,array('metadata' => $this->metadata, 'data' => $this->data));
     }
 
     public function setLastReadTime() {
