@@ -26,9 +26,31 @@ See [API](API) for details.
 
 Tancredi requires at least PHP 5.6 to run.
 
-[...]
+Clone the repository with 
+`git clone https://github.com/nethesis/tancredi.git`
+Go into directory and install dependencies with Composer
+```
+cd tancredi
+curl -sS https://getcomposer.org/installer | php
+php composer.phar install
+```
+
+Tancredi needs write access to data/first_access_tokens, data/not_found_scopes, data/scopes, data/templates-custom, data/tokens. If you use apache as http server, give apache user write permission to those files and directories:
+```
+chown -R root:apache data/{first_access_tokens,not_found_scopes,scopes,templates-custom,tokens}
+chmod g+w data/{first_access_tokens,not_found_scopes,scopes,templates-custom,tokens}
+```
+
+Create log file and make sure Tancredi user is allowe to write into it
+```
+mkdir -p /var/log/tancredi
+chown -R root:apache /var/log/tancredi
+chmod g+w /var/log/tancredi
+```
 
 ## Configuration
+
+Add configuration to your httpd server to allow reach public/provisioning.php and public/api-v1.php
 
 Tancredi can be configured unsing '/etc/tancredi.conf' configuration file. there
 is a tancredi.conf.sample configuration file in the root directory that can be
