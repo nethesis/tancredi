@@ -6,17 +6,30 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 $app = new \Slim\App;
+$container = $app->getContainer();
+$container['logger'] = function($c) {
+    global $config;
+    $logger = new \Monolog\Logger('Tancredi');
+    $file_handler = new \Monolog\Handler\StreamHandler($config['logfile'],\Monolog\Logger::DEBUG); //TODO use config['log_level'] here somehow
+    $logger->pushHandler($file_handler);
+    return $logger;
+};
+
+$container['storage'] = function($c) {
+    global $config;
+    $storage = new \Tancredi\Entity\FileStorage($c['logger'],$config);
+    return $storage;
+};
 
 /*********************************
 * GET /phones
 **********************************/
 $app->get('/phones', function(Request $request, Response $response) use ($app) {
-    global $log;
-    $log->debug("GET /phones/");
-    $scopes = listScopes('phone');
+    $this->logger->debug("GET /phones/");
+    $scopes = $this->storage->listScopes('phone');
     $results = array();
     foreach ($scopes as $scopeId) {
-        $scope = new \Tancredi\Entity\Scope($scopeId);
+        $scope = new \Tancredi\Entity\Scope($scopeId, $this->storage, $this->logger);
         $scope_data = $scope->getVariables();
         $results[] = array(
             'mac' => $scopeId,
@@ -33,9 +46,8 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
 * GET /phones/{mac}
 **********************************/
 $app->get('/phones/{mac}', function(Request $request, Response $response, array $args) use ($app) {
-    global $log;
     $mac = $args['mac'];
-    $log->debug("GET /phones/" . $mac);
+    $this->logger->debug("GET /phones/" . $mac);
     // get all scopes of type "phone"
     if (!scopeExists($mac)) {
         $results = array(
@@ -53,9 +65,8 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
 * POST /phones
 **********************************/
 $app->post('/phones', function (Request $request, Response $response, $args) {
-    global $log;
     $post_data = $request->getParsedBody();
-    $log->debug("POST /phones " . json_encode($post_data));
+    $this->logger->debug("POST /phones " . json_encode($post_data));
     $mac = $post_data['mac'];
     $model = $post_data['model'];
     $display_name = ($post_data['display_name'] ? $post_data['display_name'] : "" );
@@ -79,7 +90,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
         $response = $response->withHeader('Content-Language', 'en');
         return $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
     }
-    $scope = new \Tancredi\Entity\Scope($mac);
+    $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
     $scope->metadata['displayName'] = $display_name;
     $scope->metadata['inheritFrom'] = $model;
     $scope->metadata['model'] = $model;
@@ -94,10 +105,9 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
 * PATCH /phones/{mac}
 **********************************/
 $app->patch('/phones/{mac}', function (Request $request, Response $response, $args) {
-    global $log;
     $mac = $args['mac'];
     $patch_data = $request->getParsedBody();
-    $log->debug("PATCH /phones/" .$mac . " " . json_encode($patch_data));
+    $this->logger->debug("PATCH /phones/" .$mac . " " . json_encode($patch_data));
 
     if (!scopeExists($mac)) {
         $results = array(
@@ -120,14 +130,14 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
     }
 
     if (array_key_exists('model',$patch_data)) {
-        $scope = new \Tancredi\Entity\Scope($mac);
+        $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
         $scope->metadata['inheritFrom'] = $patch_data['model'];
         $scope->metadata['model'] = $patch_data['model'];
         $scope->setVariables();
         return $response->withJson(getPhoneScope($mac),200,JSON_UNESCAPED_SLASHES);
     }
     if (array_key_exists('variables',$patch_data)) {
-        $scope = new \Tancredi\Entity\Scope($mac);
+        $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
         $scope->setVariables($patch_data['variables']);
         return $response->withStatus(204);
     }
@@ -138,9 +148,8 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
 * DELETE /phones/{mac}
 **********************************/
 $app->delete('/phones/{mac}', function (Request $request, Response $response, $args) {
-    global $log;
     $mac = $args['mac'];
-    $log->debug("DELETE /phones/" .$mac);
+    $this->logger->debug("DELETE /phones/" .$mac);
 
     if (!scopeExists($mac)) {
         $results = array(
@@ -153,7 +162,7 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
     }
     \Tancredi\Entity\TokenManager::deleteTok1ForId($mac);
     \Tancredi\Entity\TokenManager::deleteTok2ForId($mac);
-    deleteScope($mac);
+    $this->storage->deleteScope($mac);
     return $response->withStatus(204);
 });
 
@@ -161,12 +170,11 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
 * GET /models
 **********************************/
 $app->get('/models', function(Request $request, Response $response) use ($app) {
-    global $log;
-    $log->debug("GET /models/");
-    $scopes = listScopes('model');
+    $this->logger->debug("GET /models/");
+    $scopes = $this->storage->listScopes('model');
     $results = array();
     foreach ($scopes as $scopeId) {
-        $scope = new \Tancredi\Entity\Scope($scopeId);
+        $scope = new \Tancredi\Entity\Scope($scopeId, $this->storage, $this->logger);
         $scope_data = $scope->getVariables();
         $results[] = array(
             'name' => $scopeId,
@@ -181,10 +189,9 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
 * GET /models/{id}
 **********************************/
 $app->get('/models/{id}', function(Request $request, Response $response, array $args) use ($app) {
-    global $log;
     $id = $args['id'];
     $query = $request->getQueryParams();
-    $log->debug("GET /models/" . $id . " " . json_encode($query));
+    $this->logger->debug("GET /models/" . $id . " " . json_encode($query));
     // get all scopes of type "model"
     if (!scopeExists($id) or _getScopeMeta($id,'scopeType') !== 'model') {
         $results = array(
@@ -207,9 +214,8 @@ $app->get('/models/{id}', function(Request $request, Response $response, array $
 * POST /models
 **********************************/
 $app->post('/models', function (Request $request, Response $response, $args) {
-    global $log;
     $post_data = $request->getParsedBody();
-    $log->debug("POST /models " . json_encode($post_data));
+    $this->logger->debug("POST /models " . json_encode($post_data));
     $id = $post_data['name'];
     $display_name = ($post_data['display_name'] ? $post_data['display_name'] : "" );
     $variables = $post_data['variables'];
@@ -232,7 +238,7 @@ $app->post('/models', function (Request $request, Response $response, $args) {
         $response = $response->withHeader('Content-Language', 'en');
         return $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
     }
-    $scope = new \Tancredi\Entity\Scope($id);
+    $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
     $scope->metadata['displayName'] = $display_name;
     $scope->metadata['inheritFrom'] = 'globals';
     $scope->metadata['scopeType'] = "model";
@@ -244,10 +250,9 @@ $app->post('/models', function (Request $request, Response $response, $args) {
 * PATCH /models/{id}
 **********************************/
 $app->patch('/models/{id}', function (Request $request, Response $response, $args) {
-    global $log;
     $mac = $args['id'];
     $patch_data = $request->getParsedBody();
-    $log->debug("PATCH /models/" .$id . " " . json_encode($patch_data));
+    $this->logger->debug("PATCH /models/" .$id . " " . json_encode($patch_data));
 
     if (!scopeExists($id)) {
         $results = array(
@@ -270,7 +275,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
     }
 
     if (array_key_exists('variables',$patch_data) or array_key_exists('display_name',$patch_data)) {
-        $scope = new \Tancredi\Entity\Scope($id);
+        $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
         if (array_key_exists('display_name',$patch_data)) {
             $scope->metadata['displayName'] = $patch_data['display_name'];
         }
@@ -288,9 +293,8 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
 * DELETE /models/{id}
 **********************************/
 $app->delete('/models/{id}', function (Request $request, Response $response, $args) {
-    global $log;
     $id = $args['id'];
-    $log->debug("DELETE /models/" .$id);
+    $this->logger->debug("DELETE /models/" .$id);
 
     if (!scopeExists($id)) {
         $results = array(
@@ -312,7 +316,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
         return $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
     }
 
-    deleteScope($id);
+    $this->storage->deleteScope($id);
     return $response->withStatus(204);
 });
 
@@ -320,8 +324,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
 * GET /defaults
 **********************************/
 $app->get('/defaults', function(Request $request, Response $response) use ($app) {
-    global $log;
-    $log->debug("GET /defaults");
+    $this->logger->debug("GET /defaults");
     $scope = new \Tancredi\Entity\Scope('globals');
     $scope_data = $scope->getVariables();
     return $response->withJson($scope_data,200,JSON_UNESCAPED_SLASHES);
@@ -331,9 +334,8 @@ $app->get('/defaults', function(Request $request, Response $response) use ($app)
 * PATCH /defaults
 **********************************/
 $app->patch('/defaults', function (Request $request, Response $response, $args) {
-    global $log;
     $patch_data = $request->getParsedBody();
-    $log->debug("PATCH /defaults" . json_encode($patch_data));
+    $this->logger->debug("PATCH /defaults" . json_encode($patch_data));
 
     $scope = new \Tancredi\Entity\Scope('globals');
     foreach ($patch_data as $patch_key => $patch_value) {
@@ -348,11 +350,8 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
     return $response->withStatus(204);
 });
 
-
-
-
 function getModelScope($id,$inherit = false) {
-    $scope = new \Tancredi\Entity\Scope($id);
+    $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
     if ($inherit) {
         $scope_data = $scope->getVariables();
     } else {
@@ -369,7 +368,7 @@ function getModelScope($id,$inherit = false) {
 
 
 function getPhoneScope($mac,$inherit = false) {
-    $scope = new \Tancredi\Entity\Scope($mac);
+    $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
     if ($inherit) {
         $scope_data = $scope->getVariables();
     } else {

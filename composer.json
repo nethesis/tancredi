@@ -21,6 +21,7 @@
         "monolog/monolog": "^1.25"
     },
     "autoload": {
-        "psr-4": {"Tancredi\\": "src/"}
+        "psr-4": {"Tancredi\\": "src/"},
+        "files": ["src/init.php"]
     }
 }
