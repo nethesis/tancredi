@@ -162,7 +162,7 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
     }
     \Tancredi\Entity\TokenManager::deleteTok1ForId($mac);
     \Tancredi\Entity\TokenManager::deleteTok2ForId($mac);
-    deleteScope($mac);
+    $this->storage->deleteScope($mac);
     return $response->withStatus(204);
 });
 
@@ -316,7 +316,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
         return $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
     }
 
-    deleteScope($id);
+    $this->storage->deleteScope($id);
     return $response->withStatus(204);
 });
 
