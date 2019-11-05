@@ -6,8 +6,24 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 $app = new \Slim\App;
+$container = $app->getContainer();
+$container['logger'] = function($c) {
+    global $config;
+    $logger = new \Monolog\Logger('Tancredi');
+    $file_handler = new \Monolog\Handler\StreamHandler($config['logfile'],\Monolog\Logger::DEBUG); //TODO use config['log_level'] here somehow
+    $logger->pushHandler($file_handler);
+    return $logger;
+};
+
+$container['storage'] = function($c) {
+    global $config;
+    $storage = new \Tancredi\Entity\FileStorage($c['logger'],$config);
+    return $storage;
+};
 
 $app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
+    global $config;
+    $logger = new \Monolog\Logger('Tancredi');
     $filename = $args['filename'];
     $token = $args['token'];
     $this->logger->info('Received a token and file request. Token: ' .$token . '. File: ' . $filename);
@@ -25,7 +41,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
     $this->logger->debug("Scope $id last edit time: " . $scope->getLastEditTime() . " last_read_time: " . $scope->getLastReadTime());
     // Get template variable name from file
-    $data = getDataFromFilename($filename);
+    $data = getDataFromFilename($filename,$this->logger);
     $this->logger->debug(print_r($data,true));
     $template_var_name = $data['template'];
     $scope_data = $scope->getVariables();
@@ -44,10 +60,11 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
 });
 
 $app->get('/{filename}', function(Request $request, Response $response, array $args) use ($app) {
+    global $config;
     $filename = $args['filename'];
     $this->logger->info('Received a file request without token. File: ' . $filename);
 
-    $data = getDataFromFilename($filename);
+    $data = getDataFromFilename($filename,$this->logger);
     $this->logger->debug(print_r($data,true));
     if (array_key_exists('scope_id',$data) and !empty($data['scope_id'])) {
         $id = $data['scope_id'];
@@ -80,7 +97,8 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     return $response->getBody()->write($twig->render($template,$scope_data));
 });
 
-function getDataFromFilename($filename) {
+function getDataFromFilename($filename,$logger) {
+    global $config;
     $result = array();
     $patterns = array();
     foreach (scandir($config['ro_dir'] . 'patterns.d/') as $pattern_file) {
@@ -90,7 +108,7 @@ function getDataFromFilename($filename) {
     foreach ($patterns as $pattern) {
         if (preg_match('/'.$pattern['pattern'].'/', $filename, $tmp)) {
             $result['template'] = $pattern['template'];
-            $this->logger->debug($pattern['pattern'].' '.$pattern['scopeid'] .' '.  $filename);
+            $logger->debug($pattern['pattern'].' '.$pattern['scopeid'] .' '.  $filename);
             $result['scope_id'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
             break;
         }
@@ -99,6 +117,7 @@ function getDataFromFilename($filename) {
 }
 
 function saveNotFoundScopes($scope_id){
+    global $config;
     if (preg_match('/[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}/', $scope_id)) {
         // Provided scope id is a MAC address
         $data = array();

@@ -5,11 +5,11 @@ include_once(__DIR__.'/../init.php');
 class TokenManager {
     public static function getIdFromToken($token){
         global $config;
-        if (file_exists($config['rw_dir'] . 'first_access_token/'.$token)) {
-            return trim(file_get_contents($config['rw_dir'] . 'first_access_token/'.$token));
+        if (file_exists($config['rw_dir'] . 'first_access_tokens/'.$token)) {
+            return trim(file_get_contents($config['rw_dir'] . 'first_access_tokens/'.$token));
         } elseif (file_exists($config['rw_dir'] . 'tokens/'.$token)) {
             $id = trim(file_get_contents($config['rw_dir'] . 'tokens/'.$token));
-            TokenManager::deleteTokenForId($id,$config['rw_dir'] . 'first_access_token/');
+            TokenManager::deleteTokenForId($id,$config['rw_dir'] . 'first_access_tokens/');
             return $id;
         } else {
             // Token not found
@@ -29,7 +29,7 @@ class TokenManager {
     public static function createToken($token,$id,$first_time_access = FALSE) {
         global $config;
         if ($first_time_access) {
-            $dir = $config['rw_dir'] . 'first_access_token/';
+            $dir = $config['rw_dir'] . 'first_access_tokens/';
         } else {
             $dir = $config['rw_dir'] . 'tokens/';
         }
@@ -49,7 +49,7 @@ class TokenManager {
 
     public static function getToken1($id) {
         global $config;
-        return TokenManager::getTokenFromId($id,$config['rw_dir'] . 'first_access_token/');
+        return TokenManager::getTokenFromId($id,$config['rw_dir'] . 'first_access_tokens/');
     }
 
     public static function getToken2($id) {

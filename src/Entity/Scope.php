@@ -97,7 +97,7 @@ class Scope {
             $last_edit_time = 0;
         }
         while (!empty($inheritFrom) && $inheritFrom !== null) {
-            $parent = new Scope($inheritFrom);
+            $parent = new Scope($inheritFrom,$this->storage, $this->logger);
             if (array_key_exists('inheritFrom',$parent->metadata) and !empty($parent->metadata['inheritFrom'])) { 
                 $inheritFrom = $parent->metadata['inheritFrom'];
             } else {
