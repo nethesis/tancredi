@@ -49,7 +49,7 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
     $mac = $args['mac'];
     $this->logger->debug("GET /phones/" . $mac);
     // get all scopes of type "phone"
-    if (!scopeExists($mac)) {
+    if (!$this->storage->scopeExists($mac)) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
@@ -80,7 +80,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
         $response = $response->withHeader('Content-Language', 'en');
         return $response->withJson($results,400,JSON_UNESCAPED_SLASHES);
     }
-    if (scopeExists($mac)) {
+    if ($this->storage->scopeExists($mac)) {
         // Error: scope is already configured
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#phone-exists',
@@ -109,7 +109,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
     $patch_data = $request->getParsedBody();
     $this->logger->debug("PATCH /phones/" .$mac . " " . json_encode($patch_data));
 
-    if (!scopeExists($mac)) {
+    if (!$this->storage->scopeExists($mac)) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
@@ -151,7 +151,7 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
     $mac = $args['mac'];
     $this->logger->debug("DELETE /phones/" .$mac);
 
-    if (!scopeExists($mac)) {
+    if (!$this->storage->scopeExists($mac)) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
@@ -193,7 +193,7 @@ $app->get('/models/{id}', function(Request $request, Response $response, array $
     $query = $request->getQueryParams();
     $this->logger->debug("GET /models/" . $id . " " . json_encode($query));
     // get all scopes of type "model"
-    if (!scopeExists($id) or _getScopeMeta($id,'scopeType') !== 'model') {
+    if (!$this->storage->scopeExists($id) or _getScopeMeta($id,'scopeType') !== 'model') {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
@@ -228,7 +228,7 @@ $app->post('/models', function (Request $request, Response $response, $args) {
         $response = $response->withHeader('Content-Language', 'en');
         return $response->withJson($results,400,JSON_UNESCAPED_SLASHES);
    }
-   if (scopeExists($id)) {
+   if ($this->storage->scopeExists($id)) {
         // Error: scope is already configured
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#phone-exists',
@@ -254,7 +254,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
     $patch_data = $request->getParsedBody();
     $this->logger->debug("PATCH /models/" .$id . " " . json_encode($patch_data));
 
-    if (!scopeExists($id)) {
+    if (!$this->storage->scopeExists($id)) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
@@ -296,7 +296,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
     $id = $args['id'];
     $this->logger->debug("DELETE /models/" .$id);
 
-    if (!scopeExists($id)) {
+    if (!$this->storage->scopeExists($id)) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
