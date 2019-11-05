@@ -55,9 +55,10 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
         );
+        $response = $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
+        return $response;
     }
     return $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_UNESCAPED_SLASHES);
 });
@@ -77,9 +78,10 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
             'title' => 'Missing MAC address'
         );
+        $response = $response->withJson($results,400,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,400,JSON_UNESCAPED_SLASHES);
+        return $response;
     }
     if ($this->storage->scopeExists($mac)) {
         // Error: scope is already configured
@@ -87,9 +89,10 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#phone-exists',
             'title' => 'The phone mac address is already registered'
         );
+        $response = $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
+        return $response;
     }
     $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
     $scope->metadata['displayName'] = $display_name;
@@ -115,9 +118,10 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
         );
+        $response = $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
+        return $response;
     }
 
     if (array_key_exists('mac',$patch_data) or array_key_exists('model_url',$patch_data) or array_key_exists('tok1',$patch_data) or array_key_exists('tok2',$patch_data)) {
@@ -125,9 +129,10 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute',
             'title' => 'Cannot change a read-only attribute'
         );
+        $response = $response->withJson($results,403,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,403,JSON_UNESCAPED_SLASHES);
+        return $response;
     }
 
     if (array_key_exists('model',$patch_data)) {
@@ -157,9 +162,10 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
         );
+        $response = $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
+        return $response;
     }
     \Tancredi\Entity\TokenManager::deleteTok1ForId($mac);
     \Tancredi\Entity\TokenManager::deleteTok2ForId($mac);
@@ -199,9 +205,10 @@ $app->get('/models/{id}', function(Request $request, Response $response, array $
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
         );
+        $response = $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
+        return $response;
     }
     if (array_key_exists('inherit',$query) and $query['inherit'] == 1) {
         $results = getModelScope($id, $this->storage, $this->logger, true);
@@ -225,9 +232,10 @@ $app->post('/models', function (Request $request, Response $response, $args) {
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
             'title' => 'Missing model name'
         );
+        $response = $response->withJson($results,400,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,400,JSON_UNESCAPED_SLASHES);
+        return $response;
    }
    if ($this->storage->scopeExists($id)) {
         // Error: scope is already configured
@@ -235,17 +243,19 @@ $app->post('/models', function (Request $request, Response $response, $args) {
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#phone-exists',
             'title' => 'The model name is already registered'
         );
+        $response = $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
+        return $response;
     }
     $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
     $scope->metadata['displayName'] = $display_name;
     $scope->metadata['inheritFrom'] = 'globals';
     $scope->metadata['scopeType'] = "model";
     $scope->setVariables($variables);
+    $response = $response->withJson(getModelScope($id, $this->storage, $this->logger),201,JSON_UNESCAPED_SLASHES);
     $response = $response->withHeader('Location', '/tancredi/api/v1/models/' . $id);
-    return $response->withJson(getModelScope($id, $this->storage, $this->logger),201,JSON_UNESCAPED_SLASHES);
+    return $response;
 });
 
 /*********************************
@@ -261,9 +271,10 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
         );
+        $response = $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
+	return $response;
     }
 
     if (array_key_exists('name',$patch_data)) {
@@ -271,9 +282,10 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute',
             'title' => 'Cannot change a read-only attribute'
         );
+        $response = $response->withJson($results,403,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,403,JSON_UNESCAPED_SLASHES);
+        return $response;
     }
 
     if (array_key_exists('variables',$patch_data) or array_key_exists('display_name',$patch_data)) {
@@ -303,9 +315,10 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
         );
+        $response = $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
+	return $response;
     }
 
     if ($this->storage->scopeInUse($id)) {
@@ -313,9 +326,10 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#resource-in-use',
             'title' => 'The resource is in use by other resources and cannot be deleted'
         );
+        $response = $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        return $response->withJson($results,409,JSON_UNESCAPED_SLASHES);
+	return $response;
     }
 
     $this->storage->deleteScope($id);
