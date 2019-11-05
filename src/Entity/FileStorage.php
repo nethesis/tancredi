@@ -104,7 +104,7 @@ class FileStorage {
         return true;
     } 
 
-    private function getScopeMeta($scope, $varname) {
+    public function getScopeMeta($scope, $varname) {
         $vars = $this->readIniFile($this->config['rw_dir'] . 'scopes/' . $scope . '.ini');
         if (array_key_exists('metadata', $vars) and is_array($vars['metadata']) and array_key_exists($varname,$vars['metadata'])) {
             return $vars['metadata'][$varname];
@@ -129,7 +129,7 @@ class FileStorage {
     }
 
     public function scopeInUse($id) {
-        foreach (listScopes() as $scope) {
+        foreach ($this->listScopes() as $scope) {
             if ($this->getScopeMeta($scope, 'inheritFrom') === $id) {
                 return TRUE;
             }
@@ -137,5 +137,8 @@ class FileStorage {
         return FALSE;
     }
 
+    public function deleteScope($scope) {
+        return unlink($this->config['rw_dir'] . 'scopes/' . $scope . '.ini');
+    }
 }
 

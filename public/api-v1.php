@@ -39,6 +39,7 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
             'phone_url' => "/tancredi/api/v1/models/" . $scopeId
         );
     }
+
     return $response->withJson($results,200,JSON_UNESCAPED_SLASHES);
 });
 
@@ -58,7 +59,7 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
         $response = $response->withHeader('Content-Language', 'en');
         return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
     }
-    return $response->withJson(getPhoneScope($mac),200,JSON_UNESCAPED_SLASHES);
+    return $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************
@@ -98,7 +99,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $scope->setVariables($variables);
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , TRUE); // create first time access token
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , FALSE); // create token
-    return $response->withJson(getPhoneScope($mac),201,JSON_UNESCAPED_SLASHES);
+    return $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),201,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************
@@ -134,7 +135,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         $scope->metadata['inheritFrom'] = $patch_data['model'];
         $scope->metadata['model'] = $patch_data['model'];
         $scope->setVariables();
-        return $response->withJson(getPhoneScope($mac),200,JSON_UNESCAPED_SLASHES);
+        return $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_UNESCAPED_SLASHES);
     }
     if (array_key_exists('variables',$patch_data)) {
         $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
@@ -193,7 +194,7 @@ $app->get('/models/{id}', function(Request $request, Response $response, array $
     $query = $request->getQueryParams();
     $this->logger->debug("GET /models/" . $id . " " . json_encode($query));
     // get all scopes of type "model"
-    if (!$this->storage->scopeExists($id) or _getScopeMeta($id,'scopeType') !== 'model') {
+    if (!$this->storage->scopeExists($id) or $this->storage->getScopeMeta($id,'scopeType') !== 'model') {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
@@ -203,9 +204,9 @@ $app->get('/models/{id}', function(Request $request, Response $response, array $
         return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
     }
     if (array_key_exists('inherit',$query) and $query['inherit'] == 1) {
-        $results = getModelScope($id, true);
+        $results = getModelScope($id, $this->storage, $this->logger, true);
     } else {
-        $results = getModelScope($id, false);
+        $results = getModelScope($id, $this->storage, $this->logger, false);
     }
     return $response->withJson($results,200,JSON_UNESCAPED_SLASHES);
 });
@@ -243,7 +244,8 @@ $app->post('/models', function (Request $request, Response $response, $args) {
     $scope->metadata['inheritFrom'] = 'globals';
     $scope->metadata['scopeType'] = "model";
     $scope->setVariables($variables);
-    return $response->withJson(getModelScope($id),201,JSON_UNESCAPED_SLASHES);
+    $response = $response->withHeader('Location', '/tancredi/api/v1/models/' . $id);
+    return $response->withJson(getModelScope($id, $this->storage, $this->logger),201,JSON_UNESCAPED_SLASHES);
 });
 
 /*********************************
@@ -306,7 +308,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
         return $response->withJson($results,404,JSON_UNESCAPED_SLASHES);
     }
 
-    if (scopeInUse($id)) {
+    if ($this->storage->scopeInUse($id)) {
          $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#resource-in-use',
             'title' => 'The resource is in use by other resources and cannot be deleted'
@@ -350,8 +352,8 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
     return $response->withStatus(204);
 });
 
-function getModelScope($id,$inherit = false) {
-    $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
+function getModelScope($id,$storage,$logger,$inherit = false) {
+    $scope = new \Tancredi\Entity\Scope($id, $storage, $logger);
     if ($inherit) {
         $scope_data = $scope->getVariables();
     } else {
@@ -367,8 +369,8 @@ function getModelScope($id,$inherit = false) {
 }
 
 
-function getPhoneScope($mac,$inherit = false) {
-    $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
+function getPhoneScope($mac,$storage,$logger,$inherit = false) {
+    $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger);
     if ($inherit) {
         $scope_data = $scope->getVariables();
     } else {
