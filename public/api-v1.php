@@ -102,7 +102,9 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $scope->setVariables($variables);
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , TRUE); // create first time access token
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , FALSE); // create token
-    return $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),201,JSON_UNESCAPED_SLASHES);
+    $response = $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),201,JSON_UNESCAPED_SLASHES);
+    $response = $response->withHeader('Location', '/tancredi/api/v1/phones/' . $mac);
+    return $response;
 });
 
 /*********************************
@@ -167,8 +169,8 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    \Tancredi\Entity\TokenManager::deleteTok1ForId($mac);
-    \Tancredi\Entity\TokenManager::deleteTok2ForId($mac);
+    \Tancredi\Entity\TokenManager::deleteToken(\Tancredi\Entity\TokenManager::getToken1($mac));
+    \Tancredi\Entity\TokenManager::deleteToken(\Tancredi\Entity\TokenManager::getToken2($mac));
     $this->storage->deleteScope($mac);
     return $response->withStatus(204);
 });
