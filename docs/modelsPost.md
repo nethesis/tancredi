@@ -43,7 +43,7 @@ Failed response:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#model-exists",
+    "type": "https://nethesis.github.io/tancredi/problems#model-exists",
     "title": "The model name is already registered"
 }
 ```

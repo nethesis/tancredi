@@ -54,7 +54,7 @@ Failed response:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#phone-exists",
+    "type": "https://nethesis.github.io/tancredi/problems#phone-exists",
     "title": "The phone mac address is already registered"
 }
 ```

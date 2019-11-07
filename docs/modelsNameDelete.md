@@ -20,7 +20,7 @@ Failed response 1:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#resource-in-use",
+    "type": "https://nethesis.github.io/tancredi/problems#resource-in-use",
     "title": "The resource is in use by other resources and cannot be deleted"
 }
 ```
@@ -33,7 +33,7 @@ Failed response 2:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#not-found",
+    "type": "https://nethesis.github.io/tancredi/problems#not-found",
     "title": "Resource not found"
 }
 ```

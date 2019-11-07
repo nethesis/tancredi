@@ -20,7 +20,7 @@ Failed response:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#not-found",
+    "type": "https://nethesis.github.io/tancredi/problems#not-found",
     "title": "Resource not found"
 }
 ```

@@ -45,7 +45,7 @@ Failed response:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute",
+    "type": "https://nethesis.github.io/tancredi/problems#read-only-attribute",
     "title": "Cannot change a read-only attribute"
 }
 ```
