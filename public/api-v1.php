@@ -262,7 +262,7 @@ $app->post('/models', function (Request $request, Response $response, $args) {
 * PATCH /models/{id}
 **********************************/
 $app->patch('/models/{id}', function (Request $request, Response $response, $args) {
-    $mac = $args['id'];
+    $id = $args['id'];
     $patch_data = $request->getParsedBody();
     $this->logger->debug("PATCH /models/" .$id . " " . json_encode($patch_data));
 
