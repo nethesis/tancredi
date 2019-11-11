@@ -40,7 +40,7 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
         );
     }
 
-    return $response->withJson($results,200,JSON_UNESCAPED_SLASHES+JSON_UNESCAPED_UNICODE);
+    return $response->withJson($results,200,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 });
 
 /*********************************
@@ -60,7 +60,7 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    return $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,[JSON_UNESCAPED_SLASHES,JSON_UNESCAPED_UNICODE]);
+    return $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 });
 
 /*********************************
@@ -102,7 +102,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $scope->setVariables($variables);
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , TRUE); // create first time access token
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , FALSE); // create token
-    $response = $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),201,JSON_UNESCAPED_SLASHES+JSON_UNESCAPED_UNICODE);
+    $response = $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),201,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
     $response = $response->withHeader('Location', '/tancredi/api/v1/phones/' . $mac);
     return $response;
 });
@@ -142,7 +142,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         $scope->metadata['inheritFrom'] = $patch_data['model'];
         $scope->metadata['model'] = $patch_data['model'];
         $scope->setVariables();
-        return $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_UNESCAPED_SLASHES+JSON_UNESCAPED_UNICODE);
+        return $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
     }
     if (array_key_exists('variables',$patch_data)) {
         $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
@@ -191,7 +191,7 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
             'model_url' => "/tancredi/api/v1/models/" . $scopeId
         );
     }
-    return $response->withJson($results,200,JSON_UNESCAPED_SLASHES+JSON_UNESCAPED_UNICODE);
+    return $response->withJson($results,200,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 });
 
 /*********************************
@@ -217,7 +217,7 @@ $app->get('/models/{id}', function(Request $request, Response $response, array $
     } else {
         $results = getModelScope($id, $this->storage, $this->logger, false);
     }
-    return $response->withJson($results,200,JSON_UNESCAPED_SLASHES+JSON_UNESCAPED_UNICODE);
+    return $response->withJson($results,200,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 });
 
 /*********************************
@@ -255,7 +255,7 @@ $app->post('/models', function (Request $request, Response $response, $args) {
     $scope->metadata['inheritFrom'] = 'globals';
     $scope->metadata['scopeType'] = "model";
     $scope->setVariables($variables);
-    $response = $response->withJson(getModelScope($id, $this->storage, $this->logger),201,JSON_UNESCAPED_SLASHES+JSON_UNESCAPED_UNICODE);
+    $response = $response->withJson(getModelScope($id, $this->storage, $this->logger),201,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
     $response = $response->withHeader('Location', '/tancredi/api/v1/models/' . $id);
     return $response;
 });
