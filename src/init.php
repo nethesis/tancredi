@@ -1,7 +1,5 @@
 <?php
 
-require '../vendor/autoload.php'; 
- 
 ini_set('date.timezone', 'UTC'); 
 
 // Default configuration
@@ -18,6 +16,5 @@ if (file_exists('/etc/tancredi.conf')) {
     $ini_config = parse_ini_file('/etc/tancredi.conf'); 
 }
 
-$config = array_merge($default_config, $ini_config);
-
+$GLOBALS['config'] = array_merge($default_config, $ini_config);
 
