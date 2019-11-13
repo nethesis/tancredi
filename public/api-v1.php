@@ -21,6 +21,12 @@ $container['storage'] = function($c) {
     return $storage;
 };
 
+// load auth middleware if it exists
+if (array_key_exists('auth_class',$config) and !empty($config['auth_class'])) {
+    $auth_class = "\\Tancredi\\Entity\\" . $config['auth_class'];
+    $app->add(new $auth_class($config));
+}
+
 /*********************************
 * GET /phones
 **********************************/

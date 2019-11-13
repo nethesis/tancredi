@@ -57,3 +57,33 @@ Add configuration to your httpd server to allow reach public/provisioning.php an
 Tancredi can be configured unsing '/etc/tancredi.conf' configuration file. there
 is a tancredi.conf.sample configuration file in the root directory that can be
 copied and renamed in /etc and used as template.
+
+## Authentication
+
+Tancredi doesn't implement an authentication method itself, but you can implement your own:
+define your authentication class and put it in src/Entity folder
+Then, in configuration file, specify your authentication class name: 'auth_class = "YourAuthenticationClass"'
+This class will be loaded when api endpoint is called.
+An example class:
+```
+<?php namespace Tancredi\Entity;
+
+class MyAuth
+{
+    private $config;
+
+    public function __construct($config = null) {
+        // You can use configuration file variables here
+        $this->config = $config;
+    }
+
+    public function __invoke($request, $response, $next)
+    {
+        if ($request->hasHeader('foo') and $request->getHeaderLine('foo') === 'bar') {
+            $response = $next($request, $response);
+        } else {
+            return $response->withStatus(403);
+        }
+    }
+}
+```
