@@ -37,7 +37,8 @@ If not otherwise stated assume `application/json` media type for both request
 and response.
 
 Error responses use media type `application/problem+json` as defined by [RFC
-7807](https://tools.ietf.org/html/rfc7807).
+7807](https://tools.ietf.org/html/rfc7807). See also the
+[problem types list](problems).
 
 ## String formats
 
