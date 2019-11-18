@@ -22,3 +22,11 @@ This is the reference index of error types, as required by [RFC
 ## Model exists
 
     The model name is already registered
+
+## Forbidden
+
+    Access to resource is forbidden with current client privileges
+
+See the `detail` attribute for detailed failure reason. For instance
+
+    "Wrong credentials"
