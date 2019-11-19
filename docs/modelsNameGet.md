@@ -75,7 +75,7 @@ Get the version "original" of model `acme19.2`
 
 Success response:
 
-Status: 200 OK
+    Status: 200 OK
 
 ```json
 {
