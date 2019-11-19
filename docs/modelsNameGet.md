@@ -82,7 +82,7 @@ Status: 200 OK
     "name": "acme19.2",
     "display_name": "Acme IP phone v19 rev. 2",
     "variables": {
-        "var1": "original-value1@factorydefault",
+        "var1": "original value1",
     }
 }
 ```
