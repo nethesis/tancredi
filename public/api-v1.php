@@ -205,7 +205,7 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
 /*********************************
 * GET /models/{id}
 **********************************/
-$app->get('/models/{id}[/version/{version}]', function(Request $request, Response $response, array $args) use ($app) {
+$app->get('/models/{id}[/version/{version:original}]', function(Request $request, Response $response, array $args) use ($app) {
     $id = $args['id'];
     if (array_key_exists('version',$args) && $args['version'] == 'original') {
         $original = true;
