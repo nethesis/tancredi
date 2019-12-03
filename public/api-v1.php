@@ -351,7 +351,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
 **********************************/
 $app->get('/defaults', function(Request $request, Response $response) use ($app) {
     $this->logger->debug("GET /defaults");
-    $scope = new \Tancredi\Entity\Scope('globals');
+    $scope = new \Tancredi\Entity\Scope('globals', $this->storage, $this->logger);
     $scope_data = $scope->getVariables();
     return $response->withJson($scope_data,200,JSON_FLAGS);
 });
@@ -363,7 +363,7 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
     $patch_data = $request->getParsedBody();
     $this->logger->debug("PATCH /defaults" . json_encode($patch_data));
 
-    $scope = new \Tancredi\Entity\Scope('globals');
+    $scope = new \Tancredi\Entity\Scope('globals', $this->storage, $this->logger);
     foreach ($patch_data as $patch_key => $patch_value) {
         if (is_null($patch_value)) {
             unset($scope->data[$patch_key]);
