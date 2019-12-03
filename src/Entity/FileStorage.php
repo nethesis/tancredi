@@ -11,7 +11,11 @@ class FileStorage {
     }
 
     public function storageRead($id) {
-        $inifile = $this->config['rw_dir'] . 'scopes/' . $id . '.ini';
+        if (file_exists($this->config['rw_dir'] . 'scopes/' . $id . '.ini')) {
+            $inifile = $this->config['rw_dir'] . 'scopes/' . $id . '.ini';
+        } else {
+            $inifile = $this->config['ro_dir'] . 'scopes/' . $id . '.ini';
+        }
         return $this->readIniFile($inifile);
     }
 
