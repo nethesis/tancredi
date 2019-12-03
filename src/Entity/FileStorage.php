@@ -10,8 +10,8 @@ class FileStorage {
         $this->logger = $logger;
     }
 
-    public function storageRead($id) {
-        if (file_exists($this->config['rw_dir'] . 'scopes/' . $id . '.ini')) {
+    public function storageRead($id,$original = false) {
+        if (file_exists($this->config['rw_dir'] . 'scopes/' . $id . '.ini') && !$original) {
             $inifile = $this->config['rw_dir'] . 'scopes/' . $id . '.ini';
         } else {
             $inifile = $this->config['ro_dir'] . 'scopes/' . $id . '.ini';

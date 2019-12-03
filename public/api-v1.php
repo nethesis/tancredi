@@ -205,8 +205,13 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
 /*********************************
 * GET /models/{id}
 **********************************/
-$app->get('/models/{id}', function(Request $request, Response $response, array $args) use ($app) {
+$app->get('/models/{id}[/version/{version:original}]', function(Request $request, Response $response, array $args) use ($app) {
     $id = $args['id'];
+    if (array_key_exists('version',$args) && $args['version'] == 'original') {
+        $original = true;
+    } else {
+        $original = false;
+    }
     $query = $request->getQueryParams();
     $this->logger->debug("GET /models/" . $id . " " . json_encode($query));
     // get all scopes of type "model"
@@ -221,9 +226,9 @@ $app->get('/models/{id}', function(Request $request, Response $response, array $
         return $response;
     }
     if (array_key_exists('inherit',$query) and $query['inherit'] == 1) {
-        $results = getModelScope($id, $this->storage, $this->logger, true);
+        $results = getModelScope($id, $this->storage, $this->logger, true, $original);
     } else {
-        $results = getModelScope($id, $this->storage, $this->logger, false);
+        $results = getModelScope($id, $this->storage, $this->logger, false, $original);
     }
     return $response->withJson($results,200,JSON_FLAGS);
 });
@@ -376,8 +381,8 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
     return $response->withStatus(204);
 });
 
-function getModelScope($id,$storage,$logger,$inherit = false) {
-    $scope = new \Tancredi\Entity\Scope($id, $storage, $logger);
+function getModelScope($id,$storage,$logger,$inherit = false, $original = false) {
+    $scope = new \Tancredi\Entity\Scope($id, $storage, $logger, null, $original);
     if ($inherit) {
         $scope_data = $scope->getVariables();
     } else {
@@ -394,7 +399,7 @@ function getModelScope($id,$storage,$logger,$inherit = false) {
 
 
 function getPhoneScope($mac,$storage,$logger,$inherit = false) {
-    $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger);
+    $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger, null);
     if ($inherit) {
         $scope_data = $scope->getVariables();
     } else {

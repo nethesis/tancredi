@@ -9,13 +9,13 @@ class Scope {
     private $storage;
     private $logger;
 
-    function __construct($id, $storage, $logger, $scopeType = null) {
+    function __construct($id, $storage, $logger, $scopeType = null, $original = false) {
         $this->id = $id;
 
         $this->storage = $storage;
         $this->logger = $logger;
 
-        $ini_array = $this->storage->storageRead($id);
+        $ini_array = $this->storage->storageRead($id,$original);
 
         if (array_key_exists('data',$ini_array)) {
             $this->data = $ini_array['data'];
