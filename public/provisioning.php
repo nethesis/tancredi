@@ -54,7 +54,11 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         return $response->withStatus(404);
     }
     // Load twig template
-    $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
+    if (file_exists($config['rw_dir'] . 'templates-custom/' . $template)) {
+        $loader = new \Twig\Loader\FilesystemLoader($config['rw_dir'] . 'templates-custom/');
+    } else {
+        $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
+    }
     $twig = new \Twig\Environment($loader);
     return $response->getBody()->write($twig->render($template,$scope_data));
 });
