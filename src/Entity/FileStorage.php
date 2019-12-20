@@ -109,7 +109,11 @@ class FileStorage {
     } 
 
     public function getScopeMeta($scope, $varname) {
-        $vars = $this->readIniFile($this->config['rw_dir'] . 'scopes/' . $scope . '.ini');
+        if (file_exists($this->config['rw_dir'] . 'scopes/' . $id . '.ini')) {
+            $vars = $this->readIniFile($this->config['rw_dir'] . 'scopes/' . $scope . '.ini');
+        } else {
+            $vars = $this->readIniFile($this->config['ro_dir'] . 'scopes/' . $scope . '.ini');
+        }
         if (array_key_exists('metadata', $vars) and is_array($vars['metadata']) and array_key_exists($varname,$vars['metadata'])) {
             return $vars['metadata'][$varname];
         }
