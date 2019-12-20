@@ -118,7 +118,14 @@ class FileStorage {
 
     public function listScopes($typeFilter = null){
         $scopes = array();
-        foreach (scandir($this->config['rw_dir'] . 'scopes/') as $filename) {
+        $scopeFiles = array_unique(
+            array_merge(
+                scandir($this->config['ro_dir'] . 'scopes/'),
+                scandir($this->config['rw_dir'] . 'scopes/')
+            )
+        );
+
+        foreach ($scopeFiles as $filename) {
             if ($filename === '.' or $filename === '..' or preg_match('/\.ini$/',$filename) === FALSE) continue;
             $scope = preg_replace('/\.ini$/','',$filename);
             if (is_null($typeFilter) or $this->getScopeMeta($scope,'scopeType') === $typeFilter) {
