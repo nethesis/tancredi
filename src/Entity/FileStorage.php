@@ -109,7 +109,11 @@ class FileStorage {
     } 
 
     public function getScopeMeta($scope, $varname) {
-        $vars = $this->readIniFile($this->config['rw_dir'] . 'scopes/' . $scope . '.ini');
+        if (file_exists($this->config['rw_dir'] . 'scopes/' . $id . '.ini')) {
+            $vars = $this->readIniFile($this->config['rw_dir'] . 'scopes/' . $scope . '.ini');
+        } else {
+            $vars = $this->readIniFile($this->config['ro_dir'] . 'scopes/' . $scope . '.ini');
+        }
         if (array_key_exists('metadata', $vars) and is_array($vars['metadata']) and array_key_exists($varname,$vars['metadata'])) {
             return $vars['metadata'][$varname];
         }
@@ -118,7 +122,14 @@ class FileStorage {
 
     public function listScopes($typeFilter = null){
         $scopes = array();
-        foreach (scandir($this->config['rw_dir'] . 'scopes/') as $filename) {
+        $scopeFiles = array_unique(
+            array_merge(
+                scandir($this->config['ro_dir'] . 'scopes/'),
+                scandir($this->config['rw_dir'] . 'scopes/')
+            )
+        );
+
+        foreach ($scopeFiles as $filename) {
             if ($filename === '.' or $filename === '..' or preg_match('/\.ini$/',$filename) === FALSE) continue;
             $scope = preg_replace('/\.ini$/','',$filename);
             if (is_null($typeFilter) or $this->getScopeMeta($scope,'scopeType') === $typeFilter) {
