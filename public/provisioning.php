@@ -53,14 +53,19 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         $this->logger->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $scope->id );
         return $response->withStatus(404);
     }
-    // Load twig template
-    if (file_exists($config['rw_dir'] . 'templates-custom/' . $template)) {
-        $loader = new \Twig\Loader\FilesystemLoader($config['rw_dir'] . 'templates-custom/');
-    } else {
-        $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
+    try {
+        // Load twig template
+        if (file_exists($config['rw_dir'] . 'templates-custom/' . $template)) {
+            $loader = new \Twig\Loader\FilesystemLoader($config['rw_dir'] . 'templates-custom/');
+        } else {
+            $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
+        }
+        $twig = new \Twig\Environment($loader);
+        return $response->getBody()->write($twig->render($template,$scope_data));
+    } catch (Exception $e) {
+        $this->logger->error($e->getMessage());
+        return $response->withStatus(500);
     }
-    $twig = new \Twig\Environment($loader);
-    return $response->getBody()->write($twig->render($template,$scope_data));
 });
 
 $app->get('/{filename}', function(Request $request, Response $response, array $args) use ($app) {
@@ -72,6 +77,10 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     $this->logger->debug(print_r($data,true));
     if (array_key_exists('scope_id',$data) and !empty($data['scope_id'])) {
         $id = $data['scope_id'];
+        // Convert mac address to uppercase if id is a mac address
+        if (preg_match('/[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}/',$id) !== FALSE) {
+            $id = strtoupper($id);
+        }
     } else {
         $this->logger->error('Can\'t get id from filename');
         return $response->withStatus(403);
