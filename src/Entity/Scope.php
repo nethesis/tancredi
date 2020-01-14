@@ -74,6 +74,11 @@ class Scope {
 
     public function setVariables($data = array()) {
         $this->data = array_merge($this->data,$data);
+        foreach ($data as $key => $value) {
+            if (is_null($value)) {
+                unset($this->data[$key]);
+            }
+        }
         $this->metadata['last_edit_time'] = time();
         return $this->writeToStorage();
     }
