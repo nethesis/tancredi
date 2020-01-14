@@ -13,7 +13,7 @@
                 <challenge_response perm="">off</challenge_response>
                 <rtp_port_start perm="">10000</rtp_port_start>
                 <rtp_port_end perm="">20000</rtp_port_end>
-                <tone_scheme perm="">{{ tones_scheme }}</tone_scheme>
+                <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
 
                 <user_active idx="1" perm="">on</user_active>
                 <user_host idx="1" perm="">{{ server_host_line_1 }}</user_host>
