@@ -580,12 +580,12 @@ programablekey.type_range.custom =
 {% if _context['linekey_type_' ~ number] is defined %}
 
 linekey.{{ number }}.type = {{ _context['linekey_type_' ~ number]|default }}
-linekey.{{ number }}.line = {{ _context['linekey_type_line_' ~ number]|default }}
-linekey.{{ number }}.value = {{ _context['linekey_type_value_' ~ number]|default }}
-linekey.{{ number }}.label = {{ _context['linekey_type_label_' ~ number]|default }}
-linekey.{{ number }}.extension = {{ _context['linekey_type_extension_' ~ number]|default }}
-linekey.{{ number }}.xml_phonebook = {{ _context['linekey_type_xml_phonebook_' ~ number]|default }}
-linekey.{{ number }}.shortlabel = {{ _context['linekey_type_shortlabel_' ~ number]|default }}
+linekey.{{ number }}.line = {{ _context['linekey_line_' ~ number]|default }}
+linekey.{{ number }}.value = {{ _context['linekey_value_' ~ number]|default }}
+linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number]|default }}
+linekey.{{ number }}.extension = {{ _context['linekey_extension_' ~ number]|default }}
+linekey.{{ number }}.xml_phonebook = {{ _context['linekey_xml_phonebook_' ~ number]|default }}
+linekey.{{ number }}.shortlabel = {{ _context['linekey_shortlabel_' ~ number]|default }}
 
 {% endif %}
 {% endfor %}
