@@ -68,7 +68,6 @@ class Scope {
        $parents_vars = $this->getParentsVariables();
        $var_arrays[] = $parents_vars;
        $var_arrays[] = $this->data;
-       $this->setLastReadTime();
        return call_user_func_array('array_merge', $var_arrays);
     }
 
@@ -85,11 +84,6 @@ class Scope {
 
     private function writeToStorage() {
         return $this->storage->storageWrite($this->id,array('metadata' => $this->metadata, 'data' => $this->data));
-    }
-
-    public function setLastReadTime() {
-        $this->metadata['last_read_time'] = time();
-        $this->writeToStorage();
     }
 
     public function getLastEditTime() {
