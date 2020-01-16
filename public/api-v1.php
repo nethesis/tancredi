@@ -104,7 +104,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     }
     $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
     $scope->metadata['displayName'] = $display_name;
-    $scope->metadata['inheritFrom'] = $model;
+    $scope->metadata['inheritFrom'] = (empty($model) ? 'global' : $model);
     $scope->metadata['model'] = $model;
     $scope->metadata['scopeType'] = "phone";
     $scope->setVariables($variables);
