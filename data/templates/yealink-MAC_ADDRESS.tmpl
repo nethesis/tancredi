@@ -605,14 +605,14 @@ linekey.{{ number }}.shortlabel = {{ _context['linekey_shortlabel_' ~ number]|de
 
 {% for module in 1..6 %}
 {% for number in 1..60 %}
-{% if _context['expkey_' ~ module ~ '_type_' ~ number] is defined %}
+{% if _context['expkey_type_' ~ module ~ '_' ~ number] is defined %}
 
-expansion_module.{{ module }}.key.{{ number }}.type = {{ _context['expkey_' ~ module ~ '_type_' ~ number]|default }}
-expansion_module.{{ module }}.key.{{ number }}.line = {{ _context['expkey_' ~ module ~ '_line_' ~ number]|default }}
-expansion_module.{{ module }}.key.{{ number }}.value = {{ _context['expkey_' ~ module ~ '_value_' ~ number]|default }}
-expansion_module.{{ module }}.key.{{ number }}.extension = {{ _context['expkey_' ~ module ~ '_extension_' ~ number]|default }}
-expansion_module.{{ module }}.key.{{ number }}.label = {{ _context['expkey_' ~ module ~ '_label_' ~ number]|default }}
-expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = {{ _context['expkey_' ~ module ~ '_xml_phonebook_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.type = {{ _context['expkey_type_' ~ module ~ '_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.line = {{ _context['expkey_line_' ~ module ~ '_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.value = {{ _context['expkey_value_' ~ module ~ '_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.extension = {{ _context['expkey_extension_' ~ module ~ '_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.label = {{ _context['expkey_label_' ~ module ~ '_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = {{ _context['expkey_xml_phonebook_' ~ module ~ '_' ~ number]|default }}
 
 {% endif %}
 {% endfor %}
