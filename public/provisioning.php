@@ -104,10 +104,15 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         $this->logger->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $scope->id );
         return $response->withStatus(404);
     }
-    // Load twig template
-    $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
-    $twig = new \Twig\Environment($loader);
-    return $response->getBody()->write($twig->render($template,$scope_data));
+    try {
+        // Load twig template
+        $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
+        $twig = new \Twig\Environment($loader);
+        return $response->getBody()->write($twig->render($template,$scope_data));
+    } catch (Exception $e) {
+        $this->logger->error($e->getMessage());
+        return $response->withStatus(500);
+    }
 });
 
 function getDataFromFilename($filename,$logger) {
