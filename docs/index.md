@@ -11,8 +11,8 @@ its configuration.
   token** and is unique to each phone.
 
 - Configuration files are generated dynamically starting from a set of
-  **templates** specific to the phone **model** and some phone and model
-  variables.
+  **template files** specific to the phone **model** and from phone and model
+  **variables**.
 
 ## Administrative API
 
@@ -21,6 +21,13 @@ Tancredi does not provide an administrative user interface, however you can
 build one based on its management endpoint.
 
 See [API](API) for details.
+
+## Template files for phone provisioning
+
+The variables defined with the administrative API can be used in the template
+files along with other run-time defined variables.
+
+See [Template files](./templates) for details.
 
 ## Installation
 
@@ -52,38 +59,9 @@ chmod g+w /var/log/tancredi
 
 ## Configuration
 
-Add configuration to your httpd server to allow reach public/provisioning.php and public/api-v1.php
+Add configuration to your HTTP server to allow reaching `public/provisioning.php`
+and `public/api-v1.php`.
 
 Tancredi can be configured unsing '/etc/tancredi.conf' configuration file. there
-is a tancredi.conf.sample configuration file in the root directory that can be
+is a `tancredi.conf.sample` configuration file in the root directory that can be
 copied and renamed in /etc and used as template.
-
-## Authentication
-
-Tancredi doesn't implement an authentication method itself, but you can implement your own:
-define your authentication class and put it in src/Entity folder
-Then, in configuration file, specify your authentication class name: 'auth_class = "YourAuthenticationClass"'
-This class will be loaded when api endpoint is called.
-An example class:
-```
-<?php namespace Tancredi\Entity;
-
-class MyAuth
-{
-    private $config;
-
-    public function __construct($config = null) {
-        // You can use configuration file variables here
-        $this->config = $config;
-    }
-
-    public function __invoke($request, $response, $next)
-    {
-        if ($request->hasHeader('foo') and $request->getHeaderLine('foo') === 'bar') {
-            $response = $next($request, $response);
-        } else {
-            return $response->withStatus(403);
-        }
-    }
-}
-```

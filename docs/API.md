@@ -19,17 +19,19 @@ A third entity, **defaults** contains the global default values.
 
 ## Phone variables inheritance
 
-During the provisioning files generation each of the above entities acts like a
-variables *scope*. A variable value is generally defined by the *most specific
-scope rule*, in the following order:
+The entities discussed above acts like a variables *scope* during the generation
+of provisioning files (see [Tancredi template files](./templates) for more
+details). A variable value is generally defined by the *most specific scope
+rule*. It goes from the most general to the most specific scope, in the
+following order:
 
-1. phone
+1. defaults
 2. model
-3. defaults
+3. phone
 
-If the most specific *scope* does not define a variable the next one is
-considered. Thus a variable value can be **inherited** from the general scope to
-the specific one.
+A variable value can be **inherited** from the general scope to the specific
+one. If the specific scope does not define a variable the value from the
+previous scope is considered.
 
 ## Media types
 
@@ -67,3 +69,37 @@ Error responses use media type `application/problem+json` as defined by [RFC
 
 * [GET /defaults](defaultsGet) return the default values for known variables
 * [PATCH /defaults](defaultsPatch) change the default value of some variables
+
+## API authentication
+
+The Tancredi administrative API does not implement an authentication method
+itself, but it is possible to plug in a custom one:
+
+(1) In the `/etc/tancredi.conf` configuration file specify the authentication
+class name. For instance type `auth_class = "MyAuth"`.
+
+(2) Put a file `MyAuth.php` in the `src/Entity` directory. This is an example
+class:
+```php
+<?php
+namespace Tancredi\Entity;
+
+class MyAuth
+{
+    private $config;
+
+    public function __construct($config = null) {
+        // You can use configuration file variables here
+        $this->config = $config;
+    }
+
+    public function __invoke($request, $response, $next)
+    {
+        if ($request->hasHeader('foo') and $request->getHeaderLine('foo') === 'bar') {
+            $response = $next($request, $response);
+        } else {
+            return $response->withStatus(403);
+        }
+    }
+}
+```
