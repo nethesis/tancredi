@@ -547,15 +547,15 @@ bw.virtual_user.1.xsi.user =
 ##Programablekey X ranges(T48G/T48S/T46G/T46S: X=1-10, 12-14;T42G/T42S/T41P/T41S/T40P/T40G: X=1-10, 13;T29G/T27P/T27G: X=1-14;T23P/T23G/T21(P) E2: 1-10, 14;T19(P) E2: X=1-9, 13, 14;)##
 
 {% for number in 1..14 %}
-{% if _context['programablekey_type_' ~ number] is defined %}
+{% if _context['softkey_type_' ~ number] is defined %}
 
-programablekey.{{ number }}.type = {{ _context['programablekey_type_' ~ number]|default }}
-programablekey.{{ number }}.label = {{ _context['programablekey_label_' ~ number]|default }}
-programablekey.{{ number }}.value = {{ _context['programablekey_value_' ~ number]|default }}
-programablekey.{{ number }}.line = {{ _context['programablekey_line_' ~ number]|default }}
-programablekey.{{ number }}.history_type = {{ _context['programablekey_history_type_' ~ number]|default }}
-programablekey.{{ number }}.xml_phonebook = {{ _context['programablekey_xml_phonebook_' ~ number]|default }}
-programablekey.{{ number }}.extension = {{ _context['programablekey_extension_' ~ number]|default }}
+programablekey.{{ number }}.type = {{ _context['softkey_type_' ~ number]|default }}
+programablekey.{{ number }}.label = {{ _context['softkey_label_' ~ number]|default }}
+programablekey.{{ number }}.value = {{ _context['softkey_value_' ~ number]|default }}
+programablekey.{{ number }}.line = {{ _context['softkey_line_' ~ number]|default }}
+programablekey.{{ number }}.history_type = {{ _context['softkey_history_type_' ~ number]|default }}
+programablekey.{{ number }}.xml_phonebook = {{ _context['softkey_xml_phonebook_' ~ number]|default }}
+programablekey.{{ number }}.extension = {{ _context['softkey_extension_' ~ number]|default }}
 
 {% endif %}
 {% endfor %}
