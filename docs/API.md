@@ -21,17 +21,8 @@ A third entity, **defaults** contains the global default values.
 
 The entities discussed above acts like a variables *scope* during the generation
 of provisioning files (see [Tancredi template files](./templates) for more
-details). A variable value is generally defined by the *most specific scope
-rule*. It goes from the most general to the most specific scope, in the
-following order:
-
-1. defaults
-2. model
-3. phone
-
-A variable value can be **inherited** from the general scope to the specific
-one. If the specific scope does not define a variable the value from the
-previous scope is considered.
+details). Each variable has its own meaning, defined by the template files and
+their documentation.
 
 ## Media types
 

@@ -31,7 +31,7 @@ order, the first match stops the rules evaluation.
 1. The `scopeid = ` line is the identifier of the returned scope. Variable
 values depend also on values inherited from parent scopes (see [Phone variables
 inheritance](./API#phone-variables-inheritance)) for details) and from
-"run-time" variables (see the section below).
+"run-time" variables (see the sections below).
 
 1. The `template = ` line is the **name of a variable** containing the template
 file name.  This makes possible to set an alternative template for a specific
@@ -45,6 +45,32 @@ pattern = "y000000000[0-9]{3}\.cfg"
 scopeid = "yealink"
 template = "yealink_general_template"
 ```
+
+## Variable value inheritance
+
+Variables values are assigned inside a scope. A scope is an `.ini` file under
+the `scopes` directory. A scope can have a parent from which variables are
+inherited.
+
+A variable value is generally defined by the *most specific scope rule*. The
+value is assigned by looking to the parent scopes in the following order:
+
+1. defaults
+2. model
+3. phone
+
+A variable value is **inherited** from the parent scope to the specific one and
+is **overridden** by child scopes. In other words, if the child scope does not
+define a variable the value from the parent is considered.
+
+For example:
+
+1. the *defaults* scope has the following vars: `{v0: a, v1: b, v2: c}`,
+2. the *model* scope with id "yealink" has: `{v1: q, v3: p}`
+3. the *phone* scope with id "00-00-00-00-00-00" has: `{v2: x, v4: y}`
+
+When a template is expanded for the phone with MAC "00-00-00-00-00-00" the
+variables context is: `{v0: a, v1: q, v2: x, v3: p, v4: y}`.
 
 ## External data sources for run-time variables
 
