@@ -140,7 +140,7 @@ class FileStorage {
     }
 
     public function scopeExists($id) {
-        return file_exists($this->config['rw_dir'] . 'scopes/' . $id . '.ini');
+        return file_exists($this->config['rw_dir'] . 'scopes/' . $id . '.ini') || file_exists($this->config['ro_dir'] . 'scopes/' . $id . '.ini');
     }
 
     public function scopeInUse($id) {
