@@ -187,10 +187,28 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
 * GET /models
 **********************************/
 $app->get('/models', function(Request $request, Response $response) use ($app) {
-    $this->logger->debug("GET /models/");
+    $query_params = $request->getQueryParams();
+    $this->logger->debug("GET /models/ " . json_encode($query_params));
     $scopes = $this->storage->listScopes('model');
     $results = array();
+
+    $filter_used = FALSE;
+    if (array_key_exists('filter', $query_params) && array_key_exists('used', $query_params['filter'])) {
+        $filter_used = TRUE;
+        // get all scopes that are inherited by other scopes
+        $inherited_scopes = array();
+        foreach ($this->storage->listScopes() as $scopeId) {
+            $scope = new \Tancredi\Entity\Scope($scopeId, $this->storage, $this->logger);
+            if (array_search($scope->metadata['inheritFrom'],$inherited_scopes) === FALSE) {
+                $inherited_scopes[] = $scope->metadata['inheritFrom'];
+            }
+        }
+    }
+
     foreach ($scopes as $scopeId) {
+        if ($filter_used && array_search($scopeId,$inherited_scopes) === FALSE) {
+            continue;
+        }
         $scope = new \Tancredi\Entity\Scope($scopeId, $this->storage, $this->logger);
         $scope_data = $scope->getVariables();
         $results[] = array(

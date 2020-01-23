@@ -42,19 +42,3 @@ Response:
 ```json
 []
 ```
-
-### Filter by name
-
-Select the models which name starts with `acme`
-
-    GET /tancredi/api/v1/models?filter[name]=acme
-
-(empty request body)
-
-Response:
-
-    Status: 200 OK
-
-```json
-[]
-```
