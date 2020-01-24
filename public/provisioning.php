@@ -22,6 +22,7 @@ $container['storage'] = function($c) {
 };
 
 $app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
+    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     global $config;
     $logger = new \Monolog\Logger('Tancredi');
     $filename = $args['filename'];
@@ -31,8 +32,9 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     if ($id === FALSE) {
         // Token doesn't exists
         $this->logger->error('Invalid token requested. Token: ' . $token);
-        return $response->withStatus(403);
-        return;
+        $response = $response->withStatus(403);
+        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+        return $response;
     }
 
     $this->logger->debug('Token '.$token.' is valid');
@@ -45,13 +47,23 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     $this->logger->debug(print_r($data,true));
     $template_var_name = $data['template'];
     $scope_data = $scope->getVariables();
+    // Load filters
+    if (array_key_exists('runtime_filters',$config) and !empty($config['runtime_filters'])) {
+        foreach (explode(',',$config['runtime_filters']) as $filter) {
+            $filter = "\\Tancredi\\Entity\\" . $filter;
+            $filterObj = new $filter($config, $this->logger);
+            $scope_data = $filterObj($scope_data);
+        }
+    }
     $this->logger->debug(print_r($scope_data,true));
     if (array_key_exists($template_var_name,$scope_data)) {
         $template = $scope_data[$template_var_name];
     } else {
         // Missing template
         $this->logger->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $scope->id );
-        return $response->withStatus(404);
+        $response = $response->withStatus(404);
+        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+        return $response;
     }
     try {
         // Load twig template
@@ -61,14 +73,19 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
             $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
         }
         $twig = new \Twig\Environment($loader);
-        return $response->getBody()->write($twig->render($template,$scope_data));
+        $response = $response->getBody()->write($twig->render($template,$scope_data));
+        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+        return $response;
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
-        return $response->withStatus(500);
+        $response = $response->withStatus(500);
+        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+        return $response;
     }
 });
 
 $app->get('/{filename}', function(Request $request, Response $response, array $args) use ($app) {
+    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     global $config;
     $filename = $args['filename'];
     $this->logger->info('Received a file request without token. File: ' . $filename);
@@ -83,7 +100,9 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         }
     } else {
         $this->logger->error('Can\'t get id from filename');
-        return $response->withStatus(403);
+        $response = $response->withStatus(403);
+        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+        return $response;
     }
     // Instantiate scope
     $this->logger->debug("New scope id: \"$id\"");
@@ -92,6 +111,14 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     // Get template variable name from file
     $template_var_name = $data['template'];
     $scope_data = $scope->getVariables();
+    // Load filters
+    if (array_key_exists('runtime_filters',$config) and !empty($config['runtime_filters'])) {
+        foreach (explode(',',$config['runtime_filters']) as $filter) {
+            $filter = "\\Tancredi\\Entity\\" . $filter;
+            $filterObj = new $filter($config,$this->logger);
+            $scope_data = $filterObj($scope_data);
+        }
+    }
     // Save scope id into not found scopes if it has empty data
     if (empty($scope_data)) {
         saveNotFoundScopes($id);
@@ -102,16 +129,22 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     } else {
         // Missing template
         $this->logger->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $scope->id );
-        return $response->withStatus(404);
+        $response = $response->withStatus(404);
+        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+        return $response;
     }
     try {
         // Load twig template
         $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
         $twig = new \Twig\Environment($loader);
-        return $response->getBody()->write($twig->render($template,$scope_data));
+	$response = $response->getBody()->write($twig->render($template,$scope_data));
+	$this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+	return $response;
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
-        return $response->withStatus(500);
+        $response = $response->withStatus(500);
+        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+        return $response;
     }
 });
 

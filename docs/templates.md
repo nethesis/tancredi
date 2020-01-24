@@ -77,6 +77,20 @@ variables context is: `{v0: a, v1: q, v2: x, v3: p, v4: y}`.
 Sometimes it is useful to retrieve a variable value from an external data
 source. It is possible to plug in a filter that adds or modifies the variables
 passed to the template context.
+To add runtime filters, add in configuration file
+```
+runtime_filters = "SampleFilter"
+```
+Where "SampleFilter" is your filter class.
 
-_TODO: add an example of .conf file to plug in the filter code_
+SampleFilter Class is istantiated just before template rendering and it's __invoke function is called with scope variables as argument.
+The __invoke() function can add, remove or modify variables in $variables array and must return it.
+Look at src/Entity/SampleFilter.php for a sample filter class.
+Filter classes are able to access configuration. If you add
+```
+samplefilter_format = "d M Y H:i:s"
+
+```
+to configuration, you are able to define the format of the thate that the SampleFilter class add to your scope
+
 
