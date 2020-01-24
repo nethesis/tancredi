@@ -12,3 +12,9 @@ rw_dir = "/usr/share/tancredi/data/"
 ; Directory where Tancredi has Read access
 ro_dir = "/usr/share/tancredi/data/"
 
+; Add a sample runtime filter that adds current date to the current scope
+; SampleFilter class is here: /src/Entity/SampleFilter.php
+; You can call multiple filter classes separated by ","
+runtime_filters = "SampleFilter"
+samplefilter_format = "d M Y H:i:s"
+
