@@ -47,6 +47,14 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     $this->logger->debug(print_r($data,true));
     $template_var_name = $data['template'];
     $scope_data = $scope->getVariables();
+    // Load filters
+    if (array_key_exists('runtime_filters',$config) and !empty($config['runtime_filters'])) {
+        foreach (explode(',',$config['runtime_filters']) as $filter) {
+            $filter = "\\Tancredi\\Entity\\" . $filter;
+            $filterObj = new $filter($config, $this->logger);
+            $scope_data = $filterObj($scope_data);
+        }
+    }
     $this->logger->debug(print_r($scope_data,true));
     if (array_key_exists($template_var_name,$scope_data)) {
         $template = $scope_data[$template_var_name];
@@ -103,6 +111,14 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     // Get template variable name from file
     $template_var_name = $data['template'];
     $scope_data = $scope->getVariables();
+    // Load filters
+    if (array_key_exists('runtime_filters',$config) and !empty($config['runtime_filters'])) {
+        foreach (explode(',',$config['runtime_filters']) as $filter) {
+            $filter = "\\Tancredi\\Entity\\" . $filter;
+            $filterObj = new $filter($config,$this->logger);
+            $scope_data = $filterObj($scope_data);
+        }
+    }
     // Save scope id into not found scopes if it has empty data
     if (empty($scope_data)) {
         saveNotFoundScopes($id);
