@@ -27,7 +27,7 @@ See [API](API) for details.
 The variables defined with the administrative API can be used in the template
 files along with other run-time defined variables.
 
-See [Template files](./templates) for details.
+See [Template files](https://github.com/nethesis/tancredi/blob/master/docs/templates.md) for details.
 
 ## Installation
 
