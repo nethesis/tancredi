@@ -74,7 +74,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         }
         $twig = new \Twig\Environment($loader);
         $response = $response->getBody()->write($twig->render($template,$scope_data));
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+	$this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok '. __FILE__.':'.__LINE__);
         return $response;
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
@@ -138,7 +138,7 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
         $twig = new \Twig\Environment($loader);
 	$response = $response->getBody()->write($twig->render($template,$scope_data));
-	$this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+	$this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok ' . __FILE__.':'.__LINE__);
 	return $response;
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
