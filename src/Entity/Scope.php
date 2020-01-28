@@ -68,6 +68,11 @@ class Scope {
        $parents_vars = $this->getParentsVariables();
        $var_arrays[] = $parents_vars;
        $var_arrays[] = $this->data;
+       // Add metadata informations
+       $var_arrays[] = array(
+           'scopeType' => $this->metadata['scopeType'],
+           'scopeId' => $this->id,
+           );
        return call_user_func_array('array_merge', $var_arrays);
     }
 
