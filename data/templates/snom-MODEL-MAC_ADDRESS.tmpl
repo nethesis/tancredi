@@ -3,65 +3,140 @@
 <settings>
     <phone-settings>
         <language perm="">{{ snom.language(language) }}</language>
-        
-        {# //// remove? #}
-        <phone_type perm="">snomD785</phone_type>
+        {# //// verify: "This setting cannot be provisioned" http://wiki.snom.com/Settings/phone_type #}
+        {# <phone_type perm="">{{ metadata_model }}</phone_type> #}
 
-        <friends_ring_sound perm="">{{ ringtone }}</friends_ring_sound>
-        <family_ring_sound perm="">{{ ringtone }}</family_ring_sound>
-        <colleagues_ring_sound perm="">{{ ringtone }}</colleagues_ring_sound>
-        <work_ring_sound perm="">{{ ringtone }}</work_ring_sound>
-        <vip_ring_sound perm="">{{ ringtone }}</vip_ring_sound>
-        <alert_internal_ring_sound perm="">{{ ringtone }}</alert_internal_ring_sound>
-        <alert_external_ring_sound perm="">{{ ringtone }}</alert_external_ring_sound>
-        <alert_group_ring_sound perm="">{{ ringtone }}</alert_group_ring_sound>
+        {% if ringtone == 0 %}
+            <ring_sound perm="">Silent</ring_sound>
+        {% elseif ringtone <= 10 %}
+            <ring_sound perm="">Ringer{{ ringtone }}</ring_sound>
+        {% else %}
+            <ring_sound perm="">Ringer1</ring_sound>
+        {% endif %}
+
+        <auto_redial perm="">{{ auto_redial ? 'on' : 'off' }}</auto_redial>
+        {# //// verify #}
+        <vlan_id perm="">{{ voice_vlan_id }}</vlan_id>
+        {# //// verify #}
+        <vlan_qos perm="">{{ voice_vlan_priority }}</vlan_qos>
+        {# //// verify #}
+        <vlan_port_tagging perm="">{{ data_vlan_enable ? 'on' : 'off' }}</vlan_port_tagging>
+        {# //// verify #}
+        <vlan_pc_id perm="">{{ data_vlan_id }}</vlan_pc_id>
+        {# //// verify #}
+        <vlan_pc_priority perm=""></vlan_pc_priority>
+        {# //// ntp_server or network_time_server? #}
+        <ntp_server perm="">{{ network_time_server }}</ntp_server>
+        <date_us_format perm="">{{ date_format in [0, 2, 4] ? 'on' : 'off' }}</date_us_format>
+        <time_24_format perm="">{{ time_format ? 'on' : 'off' }}</time_24_format>
+        <ldap_base perm="">{{ ldap_base }}</ldap_base>
+        <ldap_port perm="">{{ ldap_port }}</ldap_port>
+        <ldap_server perm="">{{ ldap_server }}</ldap_server>
+        <ldap_username perm="">{{ ldap_username }}</ldap_username>
+        <ldap_password perm="">{{ ldap_password }}</ldap_password>
+        <ldap_over_tls perm="">{{ ldap_tls ? 'on' : 'off' }}</ldap_over_tls>
+        <ldap_display_name perm="">{{ ldap_display_name }}</ldap_display_name>
+        <ldap_number_attributes perm="">{{ ldap_number_attr }}</ldap_number_attributes>
+        <ldap_name_attributes perm="">{{ ldap_name_attr }}</ldap_name_attributes>
+        <ldap_number_filter perm="">{{ ldap_number_filter }}</ldap_number_filter>
+        <ldap_search_filter perm="">{{ ldap_name_filter }}</ldap_search_filter>
+
+        {% if backlight_time == 0 %}
+            <dim_timer perm="">4294967296</dim_timer>
+        {% elseif backlight_time == 1 %}
+            <dim_timer perm="">0</dim_timer>
+        {% else %}
+            <dim_timer perm="">{{ backlight_time }}</dim_timer>
+        {% endif %}
+
+        <screen_saver_timeout perm="">{{ screensaver_wait_time }}</screen_saver_timeout>
+        <custom_bg_image_url perm="">{{ wallpaper_url }}</custom_bg_image_url>
+        <dhcp perm="">{{ dhcp_enable ? 'on' : 'off' }}</dhcp>
+
+        {% if dss_transfer == 1 %}
+            <transfer_dialing_on_transfer perm="">attended</transfer_dialing_on_transfer>
+        {% else %}
+        {# Snom default = blind #}
+            <transfer_dialing_on_transfer perm="">blind</transfer_dialing_on_transfer>
+        {% endif %}
+
+        <admin_mode_password perm="">{{ adminpw }}</admin_mode_password>
+        {# //// verify #}
+        <admin_mode_password_confirm perm=""></admin_mode_password_confirm>
+
+        <setting_server perm="RW">{{ provisioning_url }}</setting_server>
+
+        {# allowed values: 3..15. active_backlight_level values: 1..10 #}
+        <backlight perm="">{{ active_backlight_level + 5 }}</backlight>
+        {# allowed values: 0..15. inactive_backlight_level values: 0 (off), 1 (low) #}
+        <backlight_idle perm="">{{ inactive_backlight_level * 15 }}</backlight_idle>
+
 
         {% for line in 1..12 %}
-        {# //// verify if condition #}
-        {% if _context['username_' ~ line] is defined %}
-        <user_active idx="{{ line }}" perm="">{{ _context['account_line_active_' ~ line] ? 'on' : 'off' }}</user_active>
-        <user_ringer idx="{{ line }}" perm="">{{ _context['account_default_ringtone_' ~ line] }}</user_ringer>
-        <user_media_transport_offer idx="{{ line }}" perm="">{{ _context['account_transport_type_' ~ line] }}</user_media_transport_offer>
-        <user_srtp idx="{{ line }}" perm="">{{ _context['account_srtp_encryption_' ~ line] ? 'on' : 'off' }}</user_srtp>
-        <user_name idx="{{ line }}" perm="">{{ _context['account_user_name_' ~ line] }}</user_name>
-        <user_pass idx="{{ line }}" perm="">{{ _context['account_password_' ~ line] }}</user_pass>
-        <user_host idx="{{ line }}" perm="">{{ _context['account_server_host_' ~ line] }}</user_host>
-        <fwd_all_enabled idx="{{ line }}" perm="">{{ _context['always_fwd_enable_' ~ line] ? 'on' : 'off' }}</fwd_all_enabled>
-        <fwd_all_target idx="{{ line }}" perm="">{{ _context['always_fwd_target_' ~ line] }}</fwd_all_target>
-        <fwd_busy_enabled idx="{{ line }}" perm="">{{ _context['busy_fwd_enable_' ~ line] ? 'on' : 'off' }}</fwd_busy_enabled>
-        <fwd_busy_target idx="{{ line }}" perm="">{{ _context['busy_fwd_target_' ~ line] }}</fwd_busy_target>
-        <fwd_time_enabled idx="{{ line }}" perm="">{{ _context['timeout_fwd_enable_' ~ line] ? 'on' : 'off' }}</fwd_time_enabled>
-        <fwd_time_target idx="{{ line }}" perm="">{{ _context['timeout_fwd_target_' ~ line] }}</fwd_time_target>
-        <dnd_mode idx="{{ line }}" perm="">{{ _context['dnd_enable_' ~ line] ? 'on' : 'off' }}</dnd_mode>
-        <call_waiting idx="{{ line }}" perm="">{{ _context['call_waiting_' ~ line] ? 'on' : 'off' }}</call_waiting>
-        <fwd_all_on_code idx="{{ line }}" perm="">{{ _context['cfalwayson_' ~ line] }}</fwd_all_on_code>
-        <fwd_all_off_code idx="{{ line }}" perm="">{{ _context['cfalwaysoff_' ~ line] }}</fwd_all_off_code>
-        <fwd_busy_on_code idx="{{ line }}" perm="">{{ _context['cfbusyon_' ~ line] }}</fwd_busy_on_code>
-        <fwd_busy_off_code idx="{{ line }}" perm="">{{ _context['cfbusyoff_' ~ line] }}</fwd_busy_off_code>
-        <fwd_time_secs idx="{{ line }}" perm="">{{ _context['cftimeout_' ~ line] }}</fwd_time_secs>
-        <fwd_time_on_code idx="{{ line }}" perm="">{{ _context['cftimeouton_' ~ line] }}</fwd_time_on_code>
-        <fwd_time_off_code idx="{{ line }}" perm="">{{ _context['cftimeoutoff_' ~ line] }}</fwd_time_off_code>
-        
-        {% endif %}
+            {# //// verify if condition #}
+            {% if _context['user_active' ~ line] is defined %}
+                <user_active idx="{{ line }}" perm="">{{ _context['account_line_active_' ~ line] ? 'on' : 'off' }}</user_active>
+
+                {% if _context['account_default_ringtone_' ~ line] == 0 %}
+                    <user_ringer idx="{{ line }}" perm="">Silent</user_ringer>
+                {% elseif _context['account_default_ringtone_' ~ line] <= 10 %}
+                    <user_ringer idx="{{ line }}" perm="">Ringer{{ _context['account_default_ringtone_' ~ line] }}</user_ringer>
+                {% elseif _context['account_default_ringtone_' ~ line] == -1 %}
+                    {# -1 = custom ringtone #}
+                    <user_ringer idx="{{ line }}" perm="">Custom</user_ringer>
+                {% else %}
+                    <user_ringer idx="{{ line }}" perm="">Ringer1</user_ringer>
+                {% endif %}
+
+                <user_media_transport_offer idx="{{ line }}" perm="">{{ _context['account_transport_type_' ~ line] }}</user_media_transport_offer>
+                <user_srtp idx="{{ line }}" perm="">{{ _context['account_srtp_encryption_' ~ line] ? 'on' : 'off' }}</user_srtp>
+                <user_name idx="{{ line }}" perm="">{{ _context['account_user_name_' ~ line] }}</user_name>
+                <user_pass idx="{{ line }}" perm="">{{ _context['account_password_' ~ line] }}</user_pass>
+                <user_host idx="{{ line }}" perm="">{{ _context['account_server_host_' ~ line] }}</user_host>
+                <fwd_all_enabled idx="{{ line }}" perm="">{{ _context['always_fwd_enable_' ~ line] ? 'on' : 'off' }}</fwd_all_enabled>
+                <fwd_all_target idx="{{ line }}" perm="">{{ _context['always_fwd_target_' ~ line] }}</fwd_all_target>
+                <fwd_busy_enabled idx="{{ line }}" perm="">{{ _context['busy_fwd_enable_' ~ line] ? 'on' : 'off' }}</fwd_busy_enabled>
+                <fwd_busy_target idx="{{ line }}" perm="">{{ _context['busy_fwd_target_' ~ line] }}</fwd_busy_target>
+                <fwd_time_enabled idx="{{ line }}" perm="">{{ _context['timeout_fwd_enable_' ~ line] ? 'on' : 'off' }}</fwd_time_enabled>
+                <fwd_time_target idx="{{ line }}" perm="">{{ _context['timeout_fwd_target_' ~ line] }}</fwd_time_target>
+                <dnd_mode idx="{{ line }}" perm="">{{ _context['dnd_enable_' ~ line] ? 'on' : 'off' }}</dnd_mode>
+                <call_waiting idx="{{ line }}" perm="">{{ _context['call_waiting_' ~ line] ? 'on' : 'off' }}</call_waiting>
+                <fwd_all_on_code idx="{{ line }}" perm="">{{ _context['cfalwayson_' ~ line] }}</fwd_all_on_code>
+                <fwd_all_off_code idx="{{ line }}" perm="">{{ _context['cfalwaysoff_' ~ line] }}</fwd_all_off_code>
+                <fwd_busy_on_code idx="{{ line }}" perm="">{{ _context['cfbusyon_' ~ line] }}</fwd_busy_on_code>
+                <fwd_busy_off_code idx="{{ line }}" perm="">{{ _context['cfbusyoff_' ~ line] }}</fwd_busy_off_code>
+                <fwd_time_secs idx="{{ line }}" perm="">{{ _context['cftimeout_' ~ line] }}</fwd_time_secs>
+                <fwd_time_on_code idx="{{ line }}" perm="">{{ _context['cftimeouton_' ~ line] }}</fwd_time_on_code>
+                <fwd_time_off_code idx="{{ line }}" perm="">{{ _context['cftimeoutoff_' ~ line] }}</fwd_time_off_code>
+                <dnd_on_code idx="{{ line }}" perm="">{{ _context['dndon_' ~ line] }}</dnd_on_code>
+                <dnd_off_code idx="{{ line }}" perm="">{{ _context['dndoff_' ~ line] }}</dnd_off_code>
+                <user_custom idx="{{ line }}" perm="">{{ ringtone_url }}</user_custom>
+            {% endif %}
         {% endfor %}
         
         <codec_tos perm="">160</codec_tos>
         <support_service_codes perm="">on</support_service_codes>
-        <setting_server perm="RW">https://192.168.5.214/provisioning/foobar/</setting_server>
         <pnp_config perm="">on</pnp_config>
-        <ip_adr perm="RW">192.168.5.55</ip_adr>
-        <netmask perm="RW">255.255.255.0</netmask>
-        <main_network_device perm="R">eth0</main_network_device>
-        <update_server perm="RW">192.168.5.211</update_server>
-        <dns_domain perm="RW">nethesis.it</dns_domain>
-        <dns_server1 perm="RW">192.168.5.253</dns_server1>
+        {# //// verify #}
+        <ip_adr perm="RW"></ip_adr>
+        {# //// verify #}
+        <netmask perm="RW"></netmask>
+        {# //// verify #}
+        <main_network_device perm="R"></main_network_device>
+        {# //// verify #}
+        <update_server perm="RW"></update_server>
+        {# //// verify #}
+        <dns_domain perm="RW"></dns_domain>
+        {# //// verify #}
+        <dns_server1 perm="RW"></dns_server1>
+        {# //// verify #}
         <dns_server2 perm=""></dns_server2>
-        <dhcp perm="">on</dhcp>
-        <gateway perm="RW">192.168.5.253</gateway>
-        <phone_name perm="RW">test2</phone_name>
+        {# //// verify #}
+        <gateway perm="RW"></gateway>
+        {# //// verify #}
+        <phone_name perm="RW"></phone_name>
         <utc_offset perm="">-36000</utc_offset>
         <system_time perm="RW">1580218196</system_time>
-        <ntp_server perm="">{{ ntp_server }}</ntp_server>
         <lcserver1 perm=""></lcserver1>
         <http_proxy perm=""></http_proxy>
         <http_port perm="">80</http_port>
@@ -73,7 +148,6 @@
         <webserver_cert perm=""></webserver_cert>
         <dst perm="">3600 03.02.07 02:00:00 11.01.07 02:00:00</dst>
         <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
-        <backlight perm="">15</backlight>
         <contrast perm="">12</contrast>
         <label_contrast perm="">8</label_contrast>
         <label_text_alignment perm="">center</label_text_alignment>
@@ -85,10 +159,7 @@
         <network_id_port perm=""></network_id_port>
         <max_forwards perm="">70</max_forwards>
         <user_phone perm="">on</user_phone>
-
-        {# //// la variabile account_line_active nel template è indicizzata, qui no #}
         <active_line perm="">1</active_line>
-
         <challenge_response perm="">on</challenge_response>
         <sip_proxy perm=""></sip_proxy>
         <register_http_contact perm="">off</register_http_contact>
@@ -124,8 +195,6 @@
         <service_mode_login perm=""></service_mode_login>
         <service_mode_password perm=""></service_mode_password>
         <admin_mode_login perm=""></admin_mode_login>
-        <admin_mode_password perm=""></admin_mode_password>
-        <admin_mode_password_confirm perm=""></admin_mode_password_confirm>
         <enable_predial_mode perm="">off</enable_predial_mode>
         <dialplan_for_keypaddial_only perm="">off</dialplan_for_keypaddial_only>
         <admin_mode perm="">on</admin_mode>
@@ -156,8 +225,6 @@
         <headset_active perm="">off</headset_active>
         <update_policy perm="">settings_only</update_policy>
         <enum_suffix perm="">e164.arpa</enum_suffix>
-        <vlan_id perm=""></vlan_id>
-        <vlan_qos perm=""></vlan_qos>
         <block_url_dialing perm="">on</block_url_dialing>
         <release_sound perm="">off</release_sound>
         <headset_rings_once perm="">off</headset_rings_once>
@@ -167,7 +234,6 @@
         <attended_transfer_on_ringing perm="">off</attended_transfer_on_ringing>
         <disable_blind_transfer perm="">off</disable_blind_transfer>
         <disable_deflection perm="">off</disable_deflection>
-        <transfer_dialing_on_transfer perm="">blind</transfer_dialing_on_transfer>
         <transfer_dialing_on_other perm="">blind</transfer_dialing_on_other>
         <quick_transfer perm="">new_call</quick_transfer>
         <ethernet_replug perm="">reregister</ethernet_replug>
@@ -183,7 +249,7 @@
         <offer_mpo perm="">off</offer_mpo>
         <firmware_status perm=""></firmware_status>
         <firmware_interval perm=""></firmware_interval>
-        <firmware perm=""></firmware>
+        <firmware perm="">{{ firmware_url }}</firmware>
         <firmware_uxm perm=""></firmware_uxm>
         <update_filename perm="RW">pxelinux.0</update_filename>
         <update_host_f perm=""></update_host_f>
@@ -191,13 +257,10 @@
         <call_completion perm="">off</call_completion>
         <use_backlight perm="">on</use_backlight>
         <reset_settings perm=""></reset_settings>
-        <date_us_format perm="">on</date_us_format>
-        <time_24_format perm="">on</time_24_format>
         <call_join_xfer perm="">off</call_join_xfer>
         <alert_info_playback perm="">on</alert_info_playback>
         <ringing_time perm="">120</ringing_time>
         <syslog_server perm=""></syslog_server>
-        <screen_saver_timeout perm="">60</screen_saver_timeout>
         <with_flash perm="">off</with_flash>
         <snmp_trusted_addresses perm=""></snmp_trusted_addresses>
         <snmp_port perm="">161</snmp_port>
@@ -212,19 +275,8 @@
         <eth_net perm="">auto</eth_net>
         <eth_pc perm="">auto</eth_pc>
         <answer_after_policy perm="">off</answer_after_policy>
-        <ldap_over_tls perm="">off</ldap_over_tls>
-        <ldap_server perm=""></ldap_server>
-        <ldap_port perm=""></ldap_port>
-        <ldap_base perm=""></ldap_base>
-        <ldap_username perm=""></ldap_username>
-        <ldap_password perm=""></ldap_password>
         <ldap_max_hits perm="">50</ldap_max_hits>
         <ldap_sort_results perm="">off</ldap_sort_results>
-        <ldap_search_filter perm=""></ldap_search_filter>
-        <ldap_number_filter perm=""></ldap_number_filter>
-        <ldap_name_attributes perm=""></ldap_name_attributes>
-        <ldap_number_attributes perm=""></ldap_number_attributes>
-        <ldap_display_name perm=""></ldap_display_name>
         <ldap_predict_text perm="">off</ldap_predict_text>
         <ldap_answer_timeout perm="">7000</ldap_answer_timeout>
         <ldap_queue_requests perm="">true</ldap_queue_requests>
@@ -279,7 +331,6 @@
         <show_local_line perm="">off</show_local_line>
         <firmware_version perm="">snomD785-SIP 10.1.25.0</firmware_version>
         <redirect_ringing perm="">off</redirect_ringing>
-        <auto_redial perm="">off</auto_redial>
         <auto_redial_value perm="">10</auto_redial_value>
         <action_log_on_url perm=""></action_log_on_url>
         <action_log_off_url perm=""></action_log_off_url>
@@ -296,9 +347,6 @@
         <reject_calls_with_603 perm="">off</reject_calls_with_603>
         <enable_keyboard_lock perm="">on</enable_keyboard_lock>
         <presence_lookup_number perm="">off</presence_lookup_number>
-        <vlan_port_tagging perm="">off</vlan_port_tagging>
-        <vlan_pc_id perm=""></vlan_pc_id>
-        <vlan_pc_priority perm=""></vlan_pc_priority>
         <emergency_proxy perm=""></emergency_proxy>
         <pbx_buttons perm="">off</pbx_buttons>
         <retry_after_failed_register perm="">300</retry_after_failed_register>
@@ -350,7 +398,6 @@
         <ocip_password perm=""></ocip_password>
         <ocip_max_hits perm="">50</ocip_max_hits>
         <ring_count perm="">5</ring_count>
-        <backlight_idle perm="">8</backlight_idle>
         <ip_frag_enable perm="">on</ip_frag_enable>
         <advertisement perm="">off</advertisement>
         <advertisement_url perm=""></advertisement_url>
@@ -360,7 +407,6 @@
         <wifi_wpa_encryptype perm=""></wifi_wpa_encryptype>
         <wifi_essid perm=""></wifi_essid>
         <wifi_wep_key1 perm=""></wifi_wep_key1>
-        <dim_timer perm="">20</dim_timer>
         <intercom_connect_type perm="">intercom_connect_type_handsfree</intercom_connect_type>
         <inactive_timeout perm="">15</inactive_timeout>
         <away_timeout perm="">40</away_timeout>
@@ -653,7 +699,6 @@
         <tcp_listen perm="">off</tcp_listen>
         <label_scroll_timeout perm="">0</label_scroll_timeout>
         <label_font_size perm="">13</label_font_size>
-        <custom_bg_image_url perm=""></custom_bg_image_url>
         <phone_cert_type perm="">best</phone_cert_type>
         <sort_server_dir_result_by_last_name perm="">on</sort_server_dir_result_by_last_name>
         <uxm_line_font_size perm="">14</uxm_line_font_size>
@@ -1078,18 +1123,6 @@
         <user_dp_exp idx="11" perm=""></user_dp_exp>
         <user_dp_exp idx="12" perm=""></user_dp_exp>
 
-        <user_custom idx="1" perm=""></user_custom>
-        <user_custom idx="2" perm=""></user_custom>
-        <user_custom idx="3" perm=""></user_custom>
-        <user_custom idx="4" perm=""></user_custom>
-        <user_custom idx="5" perm=""></user_custom>
-        <user_custom idx="6" perm=""></user_custom>
-        <user_custom idx="7" perm=""></user_custom>
-        <user_custom idx="8" perm=""></user_custom>
-        <user_custom idx="9" perm=""></user_custom>
-        <user_custom idx="10" perm=""></user_custom>
-        <user_custom idx="11" perm=""></user_custom>
-        <user_custom idx="12" perm=""></user_custom>
         <user_outbound idx="1" perm=""></user_outbound>
         <user_outbound idx="2" perm=""></user_outbound>
         <user_outbound idx="3" perm=""></user_outbound>
@@ -1832,30 +1865,6 @@
         <using_server_managed_fwd_time idx="10" perm="">off</using_server_managed_fwd_time>
         <using_server_managed_fwd_time idx="11" perm="">off</using_server_managed_fwd_time>
         <using_server_managed_fwd_time idx="12" perm="">off</using_server_managed_fwd_time>
-        <dnd_on_code idx="1" perm=""></dnd_on_code>
-        <dnd_on_code idx="2" perm=""></dnd_on_code>
-        <dnd_on_code idx="3" perm=""></dnd_on_code>
-        <dnd_on_code idx="4" perm=""></dnd_on_code>
-        <dnd_on_code idx="5" perm=""></dnd_on_code>
-        <dnd_on_code idx="6" perm=""></dnd_on_code>
-        <dnd_on_code idx="7" perm=""></dnd_on_code>
-        <dnd_on_code idx="8" perm=""></dnd_on_code>
-        <dnd_on_code idx="9" perm=""></dnd_on_code>
-        <dnd_on_code idx="10" perm=""></dnd_on_code>
-        <dnd_on_code idx="11" perm=""></dnd_on_code>
-        <dnd_on_code idx="12" perm=""></dnd_on_code>
-        <dnd_off_code idx="1" perm=""></dnd_off_code>
-        <dnd_off_code idx="2" perm=""></dnd_off_code>
-        <dnd_off_code idx="3" perm=""></dnd_off_code>
-        <dnd_off_code idx="4" perm=""></dnd_off_code>
-        <dnd_off_code idx="5" perm=""></dnd_off_code>
-        <dnd_off_code idx="6" perm=""></dnd_off_code>
-        <dnd_off_code idx="7" perm=""></dnd_off_code>
-        <dnd_off_code idx="8" perm=""></dnd_off_code>
-        <dnd_off_code idx="9" perm=""></dnd_off_code>
-        <dnd_off_code idx="10" perm=""></dnd_off_code>
-        <dnd_off_code idx="11" perm=""></dnd_off_code>
-        <dnd_off_code idx="12" perm=""></dnd_off_code>
         <record_missed_calls_cwi_off idx="1" perm="">on</record_missed_calls_cwi_off>
         <record_missed_calls_cwi_off idx="2" perm="">on</record_missed_calls_cwi_off>
         <record_missed_calls_cwi_off idx="3" perm="">on</record_missed_calls_cwi_off>
@@ -2843,254 +2852,20 @@
         <mac_info_in_sip_register idx="11" perm="">off</mac_info_in_sip_register>
         <mac_info_in_sip_register idx="12" perm="">off</mac_info_in_sip_register>
     </phone-settings>
-
-        {# <language perm="">{{ snom.language(language) }}</language>
-        <web_language perm="">{{ snom.language(language) }}</web_language>
-        <dhcp perm="">on</dhcp>
-        <ntp_server perm="">{{ server_ip_1 }}</ntp_server>
-        <dst perm=""></dst>
-        <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
-        <time_24_format perm="">{{ time_24_format }}</time_24_format>
-        <date_us_format perm="">{{ date_format }}</date_us_format>
-        <network_id_port perm="">5060</network_id_port>
-        <challenge_response perm="">off</challenge_response>
-        <rtp_port_start perm="">10000</rtp_port_start>
-        <rtp_port_end perm="">20000</rtp_port_end>
-        <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
-
-        <user_active idx="1" perm="">on</user_active>
-        <user_host idx="1" perm="">{{ server_host_line_1 }}</user_host>
-        <user_outbound idx="1" perm="">{{ server_host_line_1 }}</user_outbound>
-        <user_realname idx="1" perm="">{{ displayname_line_1 }}</user_realname>
-        <user_name idx="1" perm="">{{ username_line_1 }}</user_name>
-        <user_pname idx="1" perm="">{{ username_line_1 }}</user_pname>
-        <user_mailbox idx="1" perm="">{{ username_line_1 }}</user_mailbox>
-        <user_pass idx="1" perm="">{{ secret_line_1 }}</user_pass>
-        <user_idle_text idx="1" perm=""></user_idle_text>
-        <user_dtmf_info idx="1" perm="">off</user_dtmf_info>
-        <user_ringer idx="1" perm="">{{ defaultringer }}</user_ringer>
-        <user_xml_screen_url idx="1" perm=""></user_xml_screen_url>
-        <user_idle_text idx="1" perm=""></user_idle_text>
-        <user_srtp idx="1" perm="">off</user_srtp>
-        <codec_priority_list idx="1" perm="">pcmu,pcma,g722,g726-32,gsm,g729,telephone-event</codec_priority_list>
-        <user_failover_identity idx="1" perm=""></user_failover_identity>
-        <hide_identity idx="1" perm="">off</hide_identity>
-        <user_expiry idx="1" perm="">3600</user_expiry>
-        <call_waiting idx="1" perm="">{{ call_waiting }}</call_waiting>
-
-        <user_active idx="2" perm="">on</user_active>
-        <user_host idx="2" perm="">{{ server_host_line_2 }}</user_host>
-        <user_outbound idx="2" perm="">{{ server_host_line_2 }}</user_outbound>
-        <user_realname idx="2" perm="">{{ displayname_line_2 }}</user_realname>
-        <user_name idx="2" perm="">{{ username_line_2 }}</user_name>
-        <user_pname idx="2" perm="">{{ username_line_2 }}</user_pname>
-        <user_mailbox idx="2" perm="">{{ username_line_2 }}</user_mailbox>
-        <user_pass idx="2" perm="">{{ secret_line_2 }}</user_pass>
-        <user_idle_text idx="2" perm=""></user_idle_text>
-        <user_dtmf_info idx="2" perm="">off</user_dtmf_info>
-        <user_ringer idx="2" perm="">{{ defaultringer }}</user_ringer>
-        <user_xml_screen_url idx="2" perm=""></user_xml_screen_url>
-        <user_idle_text idx="2" perm=""></user_idle_text>
-        <user_srtp idx="2" perm="">off</user_srtp>
-        <codec_priority_list idx="2" perm="">pcmu,pcma,g722,g726-32,gsm,g729,telephone-event</codec_priority_list>
-        <user_failover_identity idx="2" perm=""></user_failover_identity>
-        <hide_identity idx="2" perm="">off</hide_identity>
-        <user_expiry idx="2" perm="">3600</user_expiry>
-        <call_waiting idx="2" perm="">{{ call_waiting }}</call_waiting>
-
-        <firmware_status perm="">{{ provisioning_type }}://{{ provisioning_path }}/provisioning/{{ mac }}_firmware.xml</firmware_status>
-        <setting_server perm="">{{ provisioning_type }}://{{ provisioning_path }}/provisioning/{% if token %}{{token}}/{% endif %}
-        </setting_server>
-        <pnp_config perm="">off</pnp_config>
-        <settings_refresh_timer perm="">3600</settings_refresh_timer>
-        <vlan_id perm="">{{ svlan_id }}</vlan_id>
-        <vlan_qos perm="">{{ svlan_qos }}</vlan_qos>
-        <vlan_port_tagging perm="">{{ vlan_port_tagging }}</vlan_port_tagging>
-        <vlan_pc_id perm="">{{ vlan_pc_id }}</vlan_pc_id>
-        <vlan_pc_priority perm="">{{ vlan_pc_priority }}</vlan_pc_priority>
-
-        <intercom_connect_type perm="">intercom_connect_type_handsfree</intercom_connect_type>
-        <answer_after_policy>idle</answer_after_policy>
-        <http_user perm="">admin</http_user>
-        <http_pass perm="">{{ http_pass }}</http_pass>
-        <http_scheme perm="">off</http_scheme>
-        <https_port perm="">443</https_port>
-        <webserver_type perm="">http_https</webserver_type>
-        <webserver_cert perm=""></webserver_cert>
-        <admin_mode_login perm=""></admin_mode_login>
-        <admin_mode_password perm="">{{ admin_mode_password }}</admin_mode_password>
-        <admin_mode_password_confirm perm="">{{ admin_mode_password }}</admin_mode_password_confirm>
-        <admin_mode perm="">{{ admin_mode }}</admin_mode>
-        <utc_offset perm="">3600</utc_offset>
-        <dst perm="">3600 03.05.07 02:00:00 10.05.07 03:00:00</dst>
-        <keyboard_lock_emergency perm=""></keyboard_lock_emergency>
-
-        <ldap_server perm="">{{ ldap_server }}</ldap_server>
-        <ldap_port perm="">{{ ldap_port }}</ldap_port>
-        <ldap_base perm="">{{ ldap_base }}</ldap_base>
-        <ldap_max_hits perm="">50</ldap_max_hits>
-        <ldap_search_filter perm="">{{ ldap_name_filter }}</ldap_search_filter>
-        <ldap_number_filter perm="">{{ ldap_number_filter }}</ldap_number_filter>
-        <ldap_name_attributes perm="">{{ ldap_name_attr }}</ldap_name_attributes>
-        <ldap_number_attributes perm="">{{ ldap_number_attr }}</ldap_number_attributes>
-        <ldap_display_name perm="">{{ ldap_name_display }}</ldap_display_name>
-        <ldap_sort_results perm="">on</ldap_sort_results>
-        <ldap_predict_text perm="">on</ldap_predict_text>
-        <perform_initial_query_in_ldap_state perm="">on</perform_initial_query_in_ldap_state>
-        <call_completion perm="">off</call_completion>
-        <guess_number perm="">off</guess_number>
-        <guess_start_length perm="">5</guess_start_length>
-        <transfer_on_hangup perm="">on</transfer_on_hangup>
-        <transfer_on_hangup_non_pots perm="">on</transfer_on_hangup_non_pots>
-        <transfer_on_hangup_with_starcode perm="">on</transfer_on_hangup_with_starcode>
-
-        <gui_fkey1 perm="">{{ gui_fkey1 }}</gui_fkey1>
-        <gui_fkey2 perm="">{{ gui_fkey2 }}</gui_fkey2>
-        <gui_fkey3 perm="">{{ gui_fkey3 }}</gui_fkey3>
-        <gui_fkey4 perm="">{{ gui_fkey4 }}</gui_fkey4>
-
-        <dkey_help perm="R">{{ dkey_help }}</dkey_help>
-        <dkey_snom perm="R">{{ dkey_snom }}</dkey_snom>
-        <dkey_conf perm="R">{{ dkey_conf }}</dkey_conf>
-        <dkey_transfer perm="R">{{ dkey_transfer }}</dkey_transfer>
-        <dkey_hold perm="R">{{ dkey_hold }}</dkey_hold>
-        <dkey_dnd perm="R">{{ dkey_dnd }}</dkey_dnd>
-        <dkey_record perm="R">{{ dkey_record }}</dkey_record>
-        <dkey_retrieve perm="R">{{ dkey_retrieve }}</dkey_retrieve>
-        <dkey_redial perm="R">{{ dkey_redial }}</dkey_redial>
-        <dkey_directory perm="R">{{ dkey_directory }}</dkey_directory>
-        <dkey_label_page_next perm="R">{{ dkey_label_page_next }}</dkey_label_page_next> #}
-
     <firmware-settings>
-        <firmware perm=""></firmware>
+        <firmware perm="">{{ firmware_url }}</firmware>
         <firmware_uxm perm=""></firmware_uxm>
     </firmware-settings>
     <functionKeys>
-        <fkey idx="0" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="1" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="2" context="active" label="" lp="on" default_text="$name" perm="">keyevent F_CONFERENCE</fkey>
-        <fkey idx="3" context="active" label="&#60253;SmartTransfer" lp="on" default_text="$name" perm="">url file:///xml/gui/transfer_setup.xml#var:key=3</fkey>
-        <fkey idx="4" context="active" label="" lp="on" default_text="$name" perm="">keyevent F_RINGER_SILENT</fkey>
-        <fkey idx="5" context="active" label="" lp="on" default_text="$name" perm="">keyevent F_REDIAL</fkey>
-        <fkey idx="6" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="7" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="8" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="9" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="10" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="11" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="12" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="13" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="14" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="15" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="16" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="17" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="18" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="19" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="20" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="21" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="22" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="23" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="24" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="25" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="26" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="27" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="28" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="29" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="30" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="31" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="32" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="33" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="34" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="35" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="36" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="37" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="38" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="39" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="40" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="41" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="42" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="43" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="44" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="45" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="46" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="47" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="48" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="49" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="50" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="51" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="52" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="53" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="54" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="55" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="56" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="57" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="58" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="59" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="60" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="61" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="62" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="63" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="64" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="65" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="66" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="67" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="68" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="69" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="70" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="71" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="72" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="73" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="74" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="75" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="76" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="77" context="active" label="" lp="on" default_text="$name" perm="">line</fkey>
-        <fkey idx="78" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="79" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="80" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="81" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="82" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="83" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="84" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="85" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="86" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="87" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="88" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="89" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="90" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="91" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="92" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="93" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="94" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="95" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="96" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="97" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="98" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="99" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="100" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="101" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="102" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="103" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="104" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="105" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="106" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="107" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="108" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="109" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="110" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="111" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="112" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="113" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="114" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="115" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="116" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="117" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="118" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="119" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="120" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="121" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="122" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="123" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="124" context="active" label="" lp="on" perm="">line</fkey>
-        <fkey idx="125" context="active" label="" lp="on" perm="">line</fkey>
+        {% for number in 0..125 %}
+            {% if _context['linekey_type_' ~ number] is defined %}
+                {% if _context['linekey_type_' ~ number] starts with 'F_' %}
+                    {# prefix with 'keyevent' #}
+                    <fkey idx="{{ number }}" context="active" label="" lp="on" default_text="$name" perm="">keyevent {{ _context['linekey_type_' ~ number] }}</fkey>
+                {% else %}
+                    <fkey idx="{{ number }}" context="active" label="" lp="on" default_text="$name" perm="">{{ _context['linekey_type_' ~ number] }}</fkey>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
     </functionKeys>
 </settings>
