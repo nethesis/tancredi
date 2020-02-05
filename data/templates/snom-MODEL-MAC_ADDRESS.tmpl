@@ -25,8 +25,7 @@
         <vlan_pc_id perm="">{{ data_vlan_id }}</vlan_pc_id>
         {# //// verify #}
         <vlan_pc_priority perm=""></vlan_pc_priority>
-        {# //// ntp_server or network_time_server? #}
-        <ntp_server perm="">{{ network_time_server }}</ntp_server>
+        <ntp_server perm="">{{ ntp_server }}</ntp_server>
         <date_us_format perm="">{{ date_format in [0, 2, 4] ? 'on' : 'off' }}</date_us_format>
         <time_24_format perm="">{{ time_format ? 'on' : 'off' }}</time_24_format>
         <ldap_base perm="">{{ ldap_base }}</ldap_base>
