@@ -56,20 +56,22 @@
         {% if dss_transfer == 1 %}
             <transfer_dialing_on_transfer perm="">attended</transfer_dialing_on_transfer>
         {% else %}
-        {# Snom default = blind #}
+        {# Snom default: blind #}
             <transfer_dialing_on_transfer perm="">blind</transfer_dialing_on_transfer>
         {% endif %}
 
         <admin_mode_password perm="">{{ adminpw }}</admin_mode_password>
         {# //// verify #}
         <admin_mode_password_confirm perm=""></admin_mode_password_confirm>
-
         <setting_server perm="RW">{{ provisioning_url }}</setting_server>
-
         {# allowed values: 3..15. active_backlight_level values: 1..10 #}
         <backlight perm="">{{ active_backlight_level + 5 }}</backlight>
         {# allowed values: 0..15. inactive_backlight_level values: 0 (off), 1 (low) #}
         <backlight_idle perm="">{{ inactive_backlight_level * 15 }}</backlight_idle>
+        <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
+        <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
+        <firmware perm="">{{ firmware_url }}</firmware>
+        <web_language perm="">{{ snom.language(language) }}</web_language>
 
 
         {% for line in 1..12 %}
@@ -147,7 +149,6 @@
         <webserver_type perm="">http_https</webserver_type>
         <webserver_cert perm=""></webserver_cert>
         <dst perm="">3600 03.02.07 02:00:00 11.01.07 02:00:00</dst>
-        <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
         <contrast perm="">12</contrast>
         <label_contrast perm="">8</label_contrast>
         <label_text_alignment perm="">center</label_text_alignment>
@@ -199,7 +200,6 @@
         <dialplan_for_keypaddial_only perm="">off</dialplan_for_keypaddial_only>
         <admin_mode perm="">on</admin_mode>
         <admin_mode_upon_http_login perm="">off</admin_mode_upon_http_login>
-        <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
         <vol_headset perm="">10</vol_headset>
         <vol_speaker perm="">8</vol_speaker>
         <vol_handset perm="">13</vol_handset>
@@ -249,11 +249,9 @@
         <offer_mpo perm="">off</offer_mpo>
         <firmware_status perm=""></firmware_status>
         <firmware_interval perm=""></firmware_interval>
-        <firmware perm="">{{ firmware_url }}</firmware>
         <firmware_uxm perm=""></firmware_uxm>
         <update_filename perm="RW">pxelinux.0</update_filename>
         <update_host_f perm=""></update_host_f>
-        <web_language perm="">{{ snom.language(language) }}</web_language>
         <call_completion perm="">off</call_completion>
         <use_backlight perm="">on</use_backlight>
         <reset_settings perm=""></reset_settings>
@@ -2853,6 +2851,7 @@
         <mac_info_in_sip_register idx="12" perm="">off</mac_info_in_sip_register>
     </phone-settings>
     <firmware-settings>
+        {# //// verify: already present in <phone-settings> #}
         <firmware perm="">{{ firmware_url }}</firmware>
         <firmware_uxm perm=""></firmware_uxm>
     </firmware-settings>
