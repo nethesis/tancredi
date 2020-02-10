@@ -940,7 +940,7 @@ push_xml.username =
 #######################################################################################
 features.fwd.allow = {{ fwd_allow }}
 features.fwd_mode = 1
-forward.no_answer.timeout = {{ cftimeout }}
+forward.no_answer.timeout = {{ (cftimeout / 6)|round }}
 forward.no_answer.on_code = {{ cftimeouton }}
 forward.no_answer.off_code = {{ cftimeoutoff }}
 forward.busy.off_code = {{ cfbusyoff }}
