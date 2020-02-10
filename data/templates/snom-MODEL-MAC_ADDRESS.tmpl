@@ -3,28 +3,25 @@
 <settings>
     <phone-settings>
         <language perm="">{{ snom.language(language) }}</language>
-        {# //// verify: "This setting cannot be provisioned" http://wiki.snom.com/Settings/phone_type #}
-        {# <phone_type perm="">{{ metadata_model }}</phone_type> #}
-
-        {% if ringtone == 0 %}
+        {% if default_ringtone == 0 %}
             <ring_sound perm="">Silent</ring_sound>
-        {% elseif ringtone <= 10 %}
-            <ring_sound perm="">Ringer{{ ringtone }}</ring_sound>
+        {% elseif default_ringtone <= 10 %}
+            <ring_sound perm="">Ringer{{ default_ringtone }}</ring_sound>
         {% else %}
             <ring_sound perm="">Ringer1</ring_sound>
         {% endif %}
 
         <auto_redial perm="">{{ auto_redial ? 'on' : 'off' }}</auto_redial>
-        {# //// verify #}
-        <vlan_id perm="">{{ voice_vlan_id }}</vlan_id>
-        {# //// verify #}
+        <vlan_id perm="">{{ voice_vlan_enable ? voice_vlan_id : '' }}</vlan_id>
+        <vlan_pc_id perm="">{{ data_vlan_enable ? data_vlan_id : '' }}</vlan_pc_id>
         <vlan_qos perm="">{{ voice_vlan_priority }}</vlan_qos>
+
         {# //// verify #}
         <vlan_port_tagging perm="">{{ data_vlan_enable ? 'on' : 'off' }}</vlan_port_tagging>
-        {# //// verify #}
-        <vlan_pc_id perm="">{{ data_vlan_id }}</vlan_pc_id>
+
         {# //// verify #}
         <vlan_pc_priority perm=""></vlan_pc_priority>
+
         <ntp_server perm="">{{ ntp_server }}</ntp_server>
         <date_us_format perm="">{{ date_format in [0, 2, 4] ? 'on' : 'off' }}</date_us_format>
         <time_24_format perm="">{{ time_format ? 'on' : 'off' }}</time_24_format>
@@ -55,66 +52,115 @@
         {% if dss_transfer == 1 %}
             <transfer_dialing_on_transfer perm="">attended</transfer_dialing_on_transfer>
         {% else %}
-        {# Snom default: blind #}
+            {# default value #}
             <transfer_dialing_on_transfer perm="">blind</transfer_dialing_on_transfer>
         {% endif %}
 
         <admin_mode_password perm="">{{ adminpw }}</admin_mode_password>
+
         {# //// verify #}
         <admin_mode_password_confirm perm=""></admin_mode_password_confirm>
+
         <setting_server perm="RW">{{ provisioning_url }}</setting_server>
-        {# allowed values: 3..15. active_backlight_level values: 1..10 #}
+        {# snom allowed values: 3..15. active_backlight_level values: 1..10 #}
         <backlight perm="">{{ active_backlight_level + 5 }}</backlight>
-        {# allowed values: 0..15. inactive_backlight_level values: 0 (off), 1 (low) #}
+        {# snom allowed values: 0..15. inactive_backlight_level values: 0 (off), 1 (low) #}
         <backlight_idle perm="">{{ inactive_backlight_level * 15 }}</backlight_idle>
         <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
         <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
         <firmware perm="">{{ firmware_url }}</firmware>
         <web_language perm="">{{ snom.language(language) }}</web_language>
 
+        {# //// verify; related to pc_port? #}
+        <eth_pc perm="">auto</eth_pc>
 
-        {% for line in 1..12 %}
+        <idle_status_btn_index perm="">4</idle_status_btn_index>
+        <idle_ok_key_action perm="">keyevent F_REDIAL</idle_ok_key_action>
+        <idle_cancel_key_action perm="">keyevent F_CANCEL</idle_cancel_key_action>
+        <idle_up_key_action perm="">keyevent F_PREV_ID</idle_up_key_action>
+        <idle_down_key_action perm="">keyevent F_NEXT_ID</idle_down_key_action>
+        <idle_left_key_action perm="">keyevent F_ACCEPTED_LIST</idle_left_key_action>
+        <idle_right_key_action perm="">keyevent F_MISSED_LIST</idle_right_key_action>
+        <dkey_retrieve perm="">keyevent F_RETRIEVE</dkey_retrieve>
+        <dkey_dnd perm="">keyevent F_DND</dkey_dnd>
+        <dkey_directory perm="">keyevent F_ADR_BOOK</dkey_directory>
+        <dkey_hold perm="">keyevent F_HOLD</dkey_hold>
+        <dkey_transfer perm="">keyevent F_TRANSFER</dkey_transfer>
+        <dkey_menu perm="">keyevent F_SETTINGS</dkey_menu>
+
+        {% for identity in 1..12 %}
             {# //// verify if condition #}
-            {% if _context['user_active' ~ line] is defined %}
-                <user_active idx="{{ line }}" perm="">{{ _context['account_line_active_' ~ line] ? 'on' : 'off' }}</user_active>
+            {% if _context['user_active' ~ identity] is defined %}
+                <user_active idx="{{ identity }}" perm="">{{ _context['account_line_active_' ~ identity] ? 'on' : 'off' }}</user_active>
 
-                {% if _context['account_default_ringtone_' ~ line] == 0 %}
-                    <user_ringer idx="{{ line }}" perm="">Silent</user_ringer>
-                {% elseif _context['account_default_ringtone_' ~ line] <= 10 %}
-                    <user_ringer idx="{{ line }}" perm="">Ringer{{ _context['account_default_ringtone_' ~ line] }}</user_ringer>
-                {% elseif _context['account_default_ringtone_' ~ line] == -1 %}
+                {% if _context['account_default_ringtone_' ~ identity] == 0 %}
+                    <user_ringer idx="{{ identity }}" perm="">Silent</user_ringer>
+                {% elseif _context['account_default_ringtone_' ~ identity] <= 10 %}
+                    <user_ringer idx="{{ identity }}" perm="">Ringer{{ _context['account_default_ringtone_' ~ identity] }}</user_ringer>
+                {% elseif _context['account_default_ringtone_' ~ identity] == -1 %}
                     {# -1 = custom ringtone #}
-                    <user_ringer idx="{{ line }}" perm="">Custom</user_ringer>
+                    <user_ringer idx="{{ identity }}" perm="">Custom</user_ringer>
                 {% else %}
-                    <user_ringer idx="{{ line }}" perm="">Ringer1</user_ringer>
+                    {# default value #}
+                    <user_ringer idx="{{ identity }}" perm="">Ringer1</user_ringer>
                 {% endif %}
 
-                <user_media_transport_offer idx="{{ line }}" perm="">{{ _context['account_transport_type_' ~ line] }}</user_media_transport_offer>
-                <user_srtp idx="{{ line }}" perm="">{{ _context['account_srtp_encryption_' ~ line] ? 'on' : 'off' }}</user_srtp>
-                <user_name idx="{{ line }}" perm="">{{ _context['account_user_name_' ~ line] }}</user_name>
-                <user_pass idx="{{ line }}" perm="">{{ _context['account_password_' ~ line] }}</user_pass>
-                <user_host idx="{{ line }}" perm="">{{ _context['account_server_host_' ~ line] }}</user_host>
-                <fwd_all_enabled idx="{{ line }}" perm="">{{ _context['always_fwd_enable_' ~ line] ? 'on' : 'off' }}</fwd_all_enabled>
-                <fwd_all_target idx="{{ line }}" perm="">{{ _context['always_fwd_target_' ~ line] }}</fwd_all_target>
-                <fwd_busy_enabled idx="{{ line }}" perm="">{{ _context['busy_fwd_enable_' ~ line] ? 'on' : 'off' }}</fwd_busy_enabled>
-                <fwd_busy_target idx="{{ line }}" perm="">{{ _context['busy_fwd_target_' ~ line] }}</fwd_busy_target>
-                <fwd_time_enabled idx="{{ line }}" perm="">{{ _context['timeout_fwd_enable_' ~ line] ? 'on' : 'off' }}</fwd_time_enabled>
-                <fwd_time_target idx="{{ line }}" perm="">{{ _context['timeout_fwd_target_' ~ line] }}</fwd_time_target>
-                <dnd_mode idx="{{ line }}" perm="">{{ _context['dnd_enable_' ~ line] ? 'on' : 'off' }}</dnd_mode>
-                <call_waiting idx="{{ line }}" perm="">{{ _context['call_waiting_' ~ line] ? 'on' : 'off' }}</call_waiting>
-                <fwd_all_on_code idx="{{ line }}" perm="">{{ _context['cfalwayson_' ~ line] }}</fwd_all_on_code>
-                <fwd_all_off_code idx="{{ line }}" perm="">{{ _context['cfalwaysoff_' ~ line] }}</fwd_all_off_code>
-                <fwd_busy_on_code idx="{{ line }}" perm="">{{ _context['cfbusyon_' ~ line] }}</fwd_busy_on_code>
-                <fwd_busy_off_code idx="{{ line }}" perm="">{{ _context['cfbusyoff_' ~ line] }}</fwd_busy_off_code>
-                <fwd_time_secs idx="{{ line }}" perm="">{{ _context['cftimeout_' ~ line] }}</fwd_time_secs>
-                <fwd_time_on_code idx="{{ line }}" perm="">{{ _context['cftimeouton_' ~ line] }}</fwd_time_on_code>
-                <fwd_time_off_code idx="{{ line }}" perm="">{{ _context['cftimeoutoff_' ~ line] }}</fwd_time_off_code>
-                <dnd_on_code idx="{{ line }}" perm="">{{ _context['dndon_' ~ line] }}</dnd_on_code>
-                <dnd_off_code idx="{{ line }}" perm="">{{ _context['dndoff_' ~ line] }}</dnd_off_code>
-                <user_custom idx="{{ line }}" perm="">{{ ringtone_url }}</user_custom>
+                {# //// verify #}
+                <user_media_transport_offer idx="{{ identity }}" perm="">{{ _context['account_transport_type_' ~ identity] }}</user_media_transport_offer>
+
+                <user_srtp idx="{{ identity }}" perm="">{{ _context['account_srtp_encryption_' ~ identity] ? 'on' : 'off' }}</user_srtp>
+                <user_name idx="{{ identity }}" perm="">{{ _context['account_user_name_' ~ identity] }}</user_name>
+                <user_pass idx="{{ identity }}" perm="">{{ _context['account_password_' ~ identity] }}</user_pass>
+                <user_host idx="{{ identity }}" perm="">{{ _context['account_server_host_' ~ identity] }}</user_host>
+
+                <user_outbound idx="{{ identity }}" perm="">{{ _context['account_server_host_' ~ identity] }}:{{ _context['account_server_port_' ~ identity] }};transport={{ _context['account_transport_type_' ~ identity] }}</user_outbound>
+
+                <fwd_all_enabled idx="{{ identity }}" perm="">{{ _context['always_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_all_enabled>
+                <fwd_all_target idx="{{ identity }}" perm="">{{ _context['always_fwd_target_' ~ identity] }}</fwd_all_target>
+                <fwd_busy_enabled idx="{{ identity }}" perm="">{{ _context['busy_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_busy_enabled>
+                <fwd_busy_target idx="{{ identity }}" perm="">{{ _context['busy_fwd_target_' ~ identity] }}</fwd_busy_target>
+                <fwd_time_enabled idx="{{ identity }}" perm="">{{ _context['timeout_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_time_enabled>
+                <fwd_time_target idx="{{ identity }}" perm="">{{ _context['timeout_fwd_target_' ~ identity] }}</fwd_time_target>
+                <dnd_mode idx="{{ identity }}" perm="">{{ _context['dnd_enable_' ~ identity] ? 'on' : 'off' }}</dnd_mode>
+
+                {% if _context['call_waiting_' ~ identity] and call_waiting_tone %}
+                    <call_waiting idx="{{ identity }}" perm="">on</call_waiting>
+                {% elseif _context['call_waiting_' ~ identity] and !call_waiting_tone %}
+                    <call_waiting idx="{{ identity }}" perm="">visual</call_waiting>
+                {% elseif !(_context['call_waiting_' ~ identity]) %}
+                    <call_waiting idx="{{ identity }}" perm="">off</call_waiting>
+                {% else %}
+                    {# default value #}
+                    <call_waiting idx="{{ identity }}" perm="">on</call_waiting>
+                {% endif %}
+
+                <fwd_all_on_code idx="{{ identity }}" perm="">{{ _context['cfalwayson_' ~ identity] }}</fwd_all_on_code>
+                <fwd_all_off_code idx="{{ identity }}" perm="">{{ _context['cfalwaysoff_' ~ identity] }}</fwd_all_off_code>
+                <fwd_busy_on_code idx="{{ identity }}" perm="">{{ _context['cfbusyon_' ~ identity] }}</fwd_busy_on_code>
+                <fwd_busy_off_code idx="{{ identity }}" perm="">{{ _context['cfbusyoff_' ~ identity] }}</fwd_busy_off_code>
+                <fwd_time_secs idx="{{ identity }}" perm="">{{ _context['cftimeout_' ~ identity] }}</fwd_time_secs>
+                <fwd_time_on_code idx="{{ identity }}" perm="">{{ _context['cftimeouton_' ~ identity] }}</fwd_time_on_code>
+                <fwd_time_off_code idx="{{ identity }}" perm="">{{ _context['cftimeoutoff_' ~ identity] }}</fwd_time_off_code>
+                <dnd_on_code idx="{{ identity }}" perm="">{{ _context['dndon_' ~ identity] }}</dnd_on_code>
+                <dnd_off_code idx="{{ identity }}" perm="">{{ _context['dndoff_' ~ identity] }}</dnd_off_code>
+                <user_custom idx="{{ identity }}" perm="">{{ ringtone_url }}</user_custom>
+
+                {% if _context['account_dtmf_type_' ~ identity] == 'inband' %}
+                    <user_dtmf_info idx="{{ identity }}" perm="">off</user_dtmf_info>
+                {% elseif _context['account_dtmf_type_' ~ identity] == 'rfc4733' %}
+                    <user_dtmf_info idx="{{ identity }}" perm="">on</user_dtmf_info>
+                {% elseif _context['account_dtmf_type_' ~ identity] == 'sip_info' %}
+                    <user_dtmf_info idx="{{ identity }}" perm="">sip_info_only</user_dtmf_info>
+                {% else %}
+                    {# default value #}
+                    <user_dtmf_info idx="{{ identity }}" perm="">off</user_dtmf_info>
+                {% endif %}
+
+                <user_realname idx="{{ identity }}" perm="">{{ _context['account_display_name_' ~ identity] }}</user_realname>
+                <user_mailbox idx="{{ identity }}" perm="">{{ _context['mainextension_' ~ identity] }}</user_mailbox>
             {% endif %}
         {% endfor %}
-        
+
         <codec_tos perm="">160</codec_tos>
         <support_service_codes perm="">on</support_service_codes>
         <pnp_config perm="">on</pnp_config>
@@ -270,7 +316,6 @@
         <partial_lookup perm="">off</partial_lookup>
         <signaling_tos perm="">160</signaling_tos>
         <eth_net perm="">auto</eth_net>
-        <eth_pc perm="">auto</eth_pc>
         <answer_after_policy perm="">off</answer_after_policy>
         <ldap_max_hits perm="">50</ldap_max_hits>
         <ldap_sort_results perm="">off</ldap_sort_results>
@@ -288,25 +333,8 @@
         <show_icon_on_linekey perm="">on</show_icon_on_linekey>
         <ringer_animation perm="">on</ringer_animation>
         <speaker_dialer perm="">on</speaker_dialer>
-        <idle_status_btn_index perm="">4</idle_status_btn_index>
-        <idle_ok_key_action perm="">keyevent F_REDIAL</idle_ok_key_action>
-        <idle_cancel_key_action perm="">keyevent F_CANCEL</idle_cancel_key_action>
-        <idle_up_key_action perm="">keyevent F_PREV_ID</idle_up_key_action>
-        <idle_down_key_action perm="">keyevent F_NEXT_ID</idle_down_key_action>
-        <idle_left_key_action perm="">keyevent F_ACCEPTED_LIST</idle_left_key_action>
-        <idle_right_key_action perm="">keyevent F_MISSED_LIST</idle_right_key_action>
-        <dkey_retrieve perm="">keyevent F_RETRIEVE</dkey_retrieve>
-        <dkey_dnd perm="">keyevent F_DND</dkey_dnd>
-        <dkey_directory perm="">keyevent F_ADR_BOOK</dkey_directory>
-        <dkey_hold perm="">keyevent F_HOLD</dkey_hold>
-        <dkey_transfer perm="">keyevent F_TRANSFER</dkey_transfer>
-        <dkey_menu perm="">keyevent F_SETTINGS</dkey_menu>
         <dkey_label_page_next perm="">keyevent F_LABEL_PAGE_NEXT</dkey_label_page_next>
         <dkey_label_page_prev perm="">keyevent F_LABEL_PAGE_PREV</dkey_label_page_prev>
-        <gui_fkey1 perm="">keyevent F_ADR_BOOK</gui_fkey1>
-        <gui_fkey2 perm="">keyevent F_CALL_LIST</gui_fkey2>
-        <gui_fkey3 perm="">keyevent F_REDIRECT</gui_fkey3>
-        <gui_fkey4 perm="">keyevent F_SUPPORT</gui_fkey4>
         <overlap_dialing perm="">off</overlap_dialing>
         <show_redundant_context_keys perm="">off</show_redundant_context_keys>
         <web_logout_timer perm=""></web_logout_timer>
@@ -795,18 +823,6 @@
         <terminate_ongoing_calls_on_user_deactivation idx="10" perm=""></terminate_ongoing_calls_on_user_deactivation>
         <terminate_ongoing_calls_on_user_deactivation idx="11" perm=""></terminate_ongoing_calls_on_user_deactivation>
         <terminate_ongoing_calls_on_user_deactivation idx="12" perm=""></terminate_ongoing_calls_on_user_deactivation>
-        <user_realname idx="1" perm=""></user_realname>
-        <user_realname idx="2" perm=""></user_realname>
-        <user_realname idx="3" perm=""></user_realname>
-        <user_realname idx="4" perm=""></user_realname>
-        <user_realname idx="5" perm=""></user_realname>
-        <user_realname idx="6" perm=""></user_realname>
-        <user_realname idx="7" perm=""></user_realname>
-        <user_realname idx="8" perm=""></user_realname>
-        <user_realname idx="9" perm=""></user_realname>
-        <user_realname idx="10" perm=""></user_realname>
-        <user_realname idx="11" perm=""></user_realname>
-        <user_realname idx="12" perm=""></user_realname>
         <user_tel_nr idx="1" perm=""></user_tel_nr>
         <user_tel_nr idx="2" perm=""></user_tel_nr>
         <user_tel_nr idx="3" perm=""></user_tel_nr>
@@ -867,18 +883,6 @@
         <user_expiry idx="10" perm="">3600</user_expiry>
         <user_expiry idx="11" perm="">3600</user_expiry>
         <user_expiry idx="12" perm="">3600</user_expiry>
-        <user_mailbox idx="1" perm=""></user_mailbox>
-        <user_mailbox idx="2" perm=""></user_mailbox>
-        <user_mailbox idx="3" perm=""></user_mailbox>
-        <user_mailbox idx="4" perm=""></user_mailbox>
-        <user_mailbox idx="5" perm=""></user_mailbox>
-        <user_mailbox idx="6" perm=""></user_mailbox>
-        <user_mailbox idx="7" perm=""></user_mailbox>
-        <user_mailbox idx="8" perm=""></user_mailbox>
-        <user_mailbox idx="9" perm=""></user_mailbox>
-        <user_mailbox idx="10" perm=""></user_mailbox>
-        <user_mailbox idx="11" perm=""></user_mailbox>
-        <user_mailbox idx="12" perm=""></user_mailbox>
         <user_symmetrical_rtp idx="1" perm="">off</user_symmetrical_rtp>
         <user_symmetrical_rtp idx="2" perm="">off</user_symmetrical_rtp>
         <user_symmetrical_rtp idx="3" perm="">off</user_symmetrical_rtp>
@@ -1120,18 +1124,6 @@
         <user_dp_exp idx="11" perm=""></user_dp_exp>
         <user_dp_exp idx="12" perm=""></user_dp_exp>
 
-        <user_outbound idx="1" perm=""></user_outbound>
-        <user_outbound idx="2" perm=""></user_outbound>
-        <user_outbound idx="3" perm=""></user_outbound>
-        <user_outbound idx="4" perm=""></user_outbound>
-        <user_outbound idx="5" perm=""></user_outbound>
-        <user_outbound idx="6" perm=""></user_outbound>
-        <user_outbound idx="7" perm=""></user_outbound>
-        <user_outbound idx="8" perm=""></user_outbound>
-        <user_outbound idx="9" perm=""></user_outbound>
-        <user_outbound idx="10" perm=""></user_outbound>
-        <user_outbound idx="11" perm=""></user_outbound>
-        <user_outbound idx="12" perm=""></user_outbound>
         <user_pui_treats_uri_username_as_fallback_for idx="1" perm="">number</user_pui_treats_uri_username_as_fallback_for>
         <user_pui_treats_uri_username_as_fallback_for idx="2" perm="">number</user_pui_treats_uri_username_as_fallback_for>
         <user_pui_treats_uri_username_as_fallback_for idx="3" perm="">number</user_pui_treats_uri_username_as_fallback_for>
@@ -1309,18 +1301,6 @@
         <auth_tmp_realm idx="10" perm=""></auth_tmp_realm>
         <auth_tmp_realm idx="11" perm=""></auth_tmp_realm>
         <auth_tmp_realm idx="12" perm=""></auth_tmp_realm>
-        <user_dtmf_info idx="1" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="2" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="3" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="4" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="5" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="6" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="7" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="8" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="9" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="10" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="11" perm="">off</user_dtmf_info>
-        <user_dtmf_info idx="12" perm="">off</user_dtmf_info>
         <user_dp idx="1" perm=""></user_dp>
         <user_dp idx="2" perm=""></user_dp>
         <user_dp idx="3" perm=""></user_dp>
@@ -2848,6 +2828,26 @@
         <mac_info_in_sip_register idx="10" perm="">off</mac_info_in_sip_register>
         <mac_info_in_sip_register idx="11" perm="">off</mac_info_in_sip_register>
         <mac_info_in_sip_register idx="12" perm="">off</mac_info_in_sip_register>
+
+        {% for number in 1..4 %}
+            {% if _context['softkey_type_' ~ number] is defined %}
+                {% if _context['softkey_type_' ~ number] == 'disabled' %}
+                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'forward' %}
+                    <gui_fkey{{ number }} perm="">keyevent F_REDIRECT</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'dnd' %}
+                    <gui_fkey{{ number }} perm="">keyevent F_DND</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'recall' %}
+                    <gui_fkey{{ number }} perm="">keyevent F_REDIAL</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'status' %}
+                    <gui_fkey{{ number }} perm="">keyevent F_STATUS</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'directory' %}
+                    <gui_fkey{{ number }} perm="">keyevent F_ADR_BOOK</gui_fkey1>
+                {% else %}
+                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey1>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
     </phone-settings>
     <firmware-settings>
         {# //// verify: already present in <phone-settings> #}
@@ -2857,12 +2857,7 @@
     <functionKeys>
         {% for number in 0..125 %}
             {% if _context['linekey_type_' ~ number] is defined %}
-                {% if _context['linekey_type_' ~ number] starts with 'F_' %}
-                    {# prefix with 'keyevent' #}
-                    <fkey idx="{{ number }}" context="active" label="" lp="on" default_text="$name" perm="">keyevent {{ _context['linekey_type_' ~ number] }}</fkey>
-                {% else %}
-                    <fkey idx="{{ number }}" context="active" label="" lp="on" default_text="$name" perm="">{{ _context['linekey_type_' ~ number] }}</fkey>
-                {% endif %}
+                <fkey idx="{{ number }}" context="active" label="{{ _context['linekey_label_' ~ number] }}" lp="on" default_text="$name" perm="">{{ _context['linekey_type_' ~ number] }} {{ _context['linekey_value_' ~ number] }}</fkey>
             {% endif %}
         {% endfor %}
     </functionKeys>
