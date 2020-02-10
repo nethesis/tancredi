@@ -1,5 +1,5 @@
 ﻿<<VOIP CONFIG FILE>>Version:2.0002                            
-{%- import 'fanvil-macros.twig' as fanvil -%}﻿
+{%- import 'fanvil.macros' as fanvil -%}﻿
 <GLOBAL CONFIG MODULE>
 WAN Mode           :DHCP
 Enable DHCP        :1
@@ -9,7 +9,7 @@ DHCP Auto DNS      :1
 DHCP Auto Time     :0
 RTP Initial Port   :10000
 RTP Port Quantity  :200
-SNTP Server        :{{ network_time_server ?? 'pool.ntp.org' }}
+SNTP Server        :{{ ntp_server ?? 'pool.ntp.org' }}
 Second SNTP Server :pool.ntp.org
 Enable SNTP        :1
 Time Zone          :{{ fanvil.tz_map(timezone, 'offset') }}
@@ -35,7 +35,7 @@ Dial by Pound      :1
 BTransfer by Pound :1
 Onhook to BXfer    :0
 Onhook to AXfer    :1
-Memory Key to BXfer:{{ dss_transfer == '0' ? '0' : '1' }}
+Memory Key to BXfer:{{ dss_transfer }}
 Xfer On Conf Onhook:0
 Dial Fixed Length  :0
 Fixed Length Nums  :11
@@ -45,11 +45,11 @@ Accept Any Call    :1
 IP Dial Prefix     :.
 --Port Config--    :
 P1 Mute Ringing    :0
-P1 CWaiting Tone   :1
+P1 CWaiting Tone   :{{ call_waiting_tone }}
 P1 Ban Dial Out    :0
 P1 Ban Empty CID   :0
 P1 Enable CLIP     :1
-P1 CallWaiting     :{{ call_waiting == '0' ? '0' : '1' }}
+P1 CallWaiting     :{{ fanvil.b2v(account_call_waiting_1) }}
 P1 CallTransfer    :1
 P1 CallSemiXfer    :1
 P1 CallConference  :1
@@ -89,7 +89,7 @@ Transf SDial       :0
 Enable Code Plan   :0
 <DSP CONFIG MODULE>
 Signal Standard    :{{ fanvil.tones_code(tonezone) }}
-Ring Type          :{{ default_ringtone >= 0 and default_ringtone < 9 ? (default_ringtone+1) : 'default' }}
+Ring Type          :{{ ringtone >= 0 and ringtone < 9 ? (ringtone + 1) : 'default' }}
 --Port Config--    :
 P1 Ring in Headset :0
 P1 Auto Headset    :0
@@ -99,25 +99,6 @@ P1 Voice Codec3    :G729/8000
 P1 Voice Codec4    :G722/8000
 P1 Voice Codec5    :G723/8000
 P1 Voice Codec6    :G726-32/8000
---Alert Info Ring--:
-Alert1 Text        :ring1
-Alert1 Ring Type   :1
-Alert2 Text        :ring2
-Alert2 Ring Type   :2
-Alert3 Text        :ring3
-Alert3 Ring Type   :3
-Alert4 Text        :ring4
-Alert4 Ring Type   :4
-Alert5 Text        :ring5
-Alert5 Ring Type   :5
-Alert6 Text        :ring6
-Alert6 Ring Type   :6
-Alert7 Text        :ring7
-Alert7 Ring Type   :7
-Alert8 Text        :ring8
-Alert8 Ring Type   :8
-Alert9 Text        :ring9
-Alert9 Ring Type   :9
 <SIP CONFIG MODULE>
 SIP  Port          :5060
 STUN Server        :
@@ -138,17 +119,17 @@ SMS Ring Enabled   :1
 CSTA Enable        :0
 Strict UA Match    :0
 --SIP Line List--  :
-{% for line in 0..5 %}
-{% if _context['username_' ~ line] is defined %}
-SIP{{ line }} Phone Number  :{{ _context['displayname_' ~ line] }}
-SIP{{ line }} Display Name  :{{ _context['displayname_' ~ line] }}
-SIP{{ line }} Sip Name      :{{ _context['displayname_' ~ line] }}
-SIP{{ line }} Register Addr :{{ _context['server_host_' ~ line] }}
-SIP{{ line }} Register Port :{{ _context['server_port_' ~ line] }}
-SIP{{ line }} Register User :{{ _context['username_' ~ line] }}
-SIP{{ line }} Register Pswd :{{ _context['secret_' ~ line] }}
+{% for line in range(1, 1) %}
+{% if _context['account_username_' ~ line] is defined %}
+SIP{{ line }} Phone Number  :{{ _context['account_displayname_' ~ line] }}
+SIP{{ line }} Display Name  :{{ _context['account_displayname_' ~ line] }}
+SIP{{ line }} Sip Name      :{{ _context['account_displayname_' ~ line] }}
+SIP{{ line }} Register Addr :{{ _context['account_server_host_' ~ line] }}
+SIP{{ line }} Register Port :{{ _context['account_server_port_' ~ line] }}
+SIP{{ line }} Register User :{{ _context['account_username_' ~ line] }}
+SIP{{ line }} Register Pswd :{{ _context['account_password_' ~ line] }}
 SIP{{ line }} Register TTL  :3600
-SIP{{ line }} Enable Reg    :{{ _context['line_active_' ~ line] ?? '0' }}
+SIP{{ line }} Enable Reg    :{{ fanvil.b2v(_context['account_line_active_' ~ line]) }}
 SIP{{ line }} Proxy Addr    :
 SIP{{ line }} Proxy Port    :5060
 SIP{{ line }} Proxy User    :
@@ -164,7 +145,7 @@ SIP{{ line }} SRTP Auth-Tag :0
 SIP{{ line }} Local Domain  :
 SIP{{ line }} FWD Timer     :5
 SIP{{ line }} WarmLine Time :0
-SIP{{ line }} Ring Type     :{{ default_ringtone >= 0 and default_ringtone < 9 ? (default_ringtone+1) : 'default' }}
+SIP{{ line }} Ring Type     :{{ ringtone >= 0 and ringtone < 9 ? (ringtone + 1) : 'default' }}
 SIP{{ line }} Hotline Num   :
 SIP{{ line }} Enable Hotline:0
 SIP{{ line }} WarmLine Time :0
@@ -179,7 +160,7 @@ SIP{{ line }} Keep AUTH     :0
 SIP{{ line }} Session Timer :0
 SIP{{ line }} S.Timer Expire:0
 SIP{{ line }} Enable GRUU   :0
-SIP{{ line }} DTMF Mode     :1
+SIP{{ line }} DTMF Mode     :{{ fanvil.dtmf_map(_context['account_dtmf_type_' ~ line]) }}
 SIP{{ line }} DTMF Info Mode:0
 SIP{{ line }} NAT Type      :0
 SIP{{ line }} Enable Rport  :1
@@ -209,7 +190,7 @@ SIP{{ line }} Long Contact  :0
 SIP{{ line }} Auto TCP      :0
 SIP{{ line }} Uri Escaped   :1
 SIP{{ line }} Click to Talk :0
-SIP{{ line }} MWI Num       :{{ username_line }}
+SIP{{ line }} MWI Num       :{{ _context['account_voicemail_number_' ~ line] }}
 SIP{{ line }} CallPark Num  :70
 SIP{{ line }} Retrieve Num  :
 SIP{{ line }} MSRPHelp Num  :
@@ -287,22 +268,21 @@ CDP Enabled        :0
 CDP Refresh Time   :60
 Singalling DSCP    :46
 Voice DSCP         :46
-VLAN ID            :{{ voice_vlan_id }}
-Signalling Priority:{{ voice_vlan_signalling }}
-Voice Priority     :{{ voice_vlan_voice_priority }}
-LAN Port Priority  :{{ data_vlan_priority }}
+VLAN ID            :{{ (voice_vlan_id >= 0 and voice_vlan_id < 4096) ? voice_vlan_id : '0' }}
+Voice Priority     :{{ (voice_vlan_priority >= 0 and voice_vlan_priority < 8) ? voice_vlan_priority : '0' }}
+LAN Port Priority  :{{ (data_vlan_priority >= 0 and data_vlan_priority < 8) ? data_vlan_priority : '0' }}
 VLAN Recv Check    :1
 Enable PVID        :{{ data_vlan_enable }}
-PVID Value         :{{ data_vlan_id }}
-DHCP Option Vlan   :0
+PVID Value         :{{ (data_vlan_id >= 0 and data_vlan_id < 4096) ? data_vlan_id : '0' }}
+DHCP Option Vlan   :{{ vlan_dhcp_enable == '1' ? ((vlan_dhcp_option >= 128 and vlan_dhcp_option < 255) ? vlan_dhcp_option : '132') : '0' }}
 <PHONE CONFIG MODULE>
 Menu Password      :{{ adminpw }}
 KeyLock Password   :{{ userpw }}
 Fast Keylock Code  :
 Enable KeyLock     :0
 KeyLock Status     :0
-Emergency Call     :112
-LCD Title          :NethVoice
+Emergency Call     :{{ fanvil.emergency_map(tonezone) }}
+LCD Title          :{{ logo_text ?? ('Fanvil ' ~ model) }}
 KeyLock Timeout    :0
 Enable Power Led   :0
 SMS MWI Power Led  :2
@@ -311,43 +291,45 @@ Talk Dial Power Led:1
 Ringing Power Led  :3
 Mute Call Power Led:2
 Hold Power Led     :2
-Time Display Style :{{ time_format }}
-Phone Model        :{{ model }}
+{# some function of time_format #}
+Time Display Style :0
 FuncKey Page Num   :5
 Blf Default type   :0
 Disable CHN IME    :0
 Disable Dial Search:0
 Redial Enter CLog  :1
-Date Display Style :{{ date_format }}
+{# some function of date_format #}
+Date Display Style :0
+{# some function of date_format #}
 Date Separator     :0
 Enable Pre-Dial    :1
 Default Line       :1
 Enable Default Line:1
 Enable Auto SelLine:1
 --LDAP Config--    :
-LDAP1 Title        :{{ fanvil.gettext('Phonebook', language) }}
+LDAP1 Title        :{{ fanvil.gettext('Phonebook', language) | slice(0, 31) }}
 LDAP1 Server       :{{ ldap_server }}
 LDAP1 port         :{{ ldap_port }}
-LDAP1 Authenticate :0
+LDAP1 Authenticate :{{ ldap_password ? '3' : '0' }}
 LDAP1 Version      :3
 LDAP1 Calling Line :1
 LDAP1 Enable Search:0
 LDAP1 Bind Line    :0
 LDAP1 Base         :{{ ldap_base }}
-LDAP1 Username     :
-LDAP1 Password     :
-LDAP1 Tel Attr     :telephoneNumber
-LDAP1 Mobile Attr  :mobile
-LDAP1 Other Attr   :other
-LDAP1 Displayname  :{{ ldap_name_display }}
+LDAP1 Username     :{{ ldap_user }}
+LDAP1 Password     :{{ ldap_password }}
+LDAP1 Tel Attr     :{{ ldap_mainphone_number_attr }}
+LDAP1 Mobile Attr  :{{ ldap_mobilephone_number_attr }}
+LDAP1 Other Attr   :{{ ldap_otherphone_number_attr }}
+LDAP1 Displayname  :{{ ldap_name_attr }}
 LDAP1 Filter Name  :{{ ldap_name_filter }}
 LDAP1 Filter Number:{{ ldap_number_filter }}
 --Function Key--   :
-{% for number in 1..30 %}
+{% for number in 1..4 %}
 {% if _context['linekey_type_' ~ number] is defined %}
-Fkey{{ number }} Type               :{{ type }}
-Fkey{{ number }} Value              :{{ value }}{{ line }}{{ subtype }}{{ value }}
-Fkey{{ number }} Title              :{{ label }}
+Fkey{{ number }} Type               :{{ fanvil.linekey_map(_context['linekey_type_' ~ number], 'type') }}
+Fkey{{ number }} Value              :{{ fanvil.linekey_map(_context['linekey_type_' ~ number], 'value') }}
+Fkey{{ number }} Title              :{{ fanvil.linekey_map(_context['linekey_type_' ~ number], 'title') | slice(0, 15) }}
 {% endif %}
 {% endfor %}
 --Soft Dss Key--:
@@ -359,14 +341,17 @@ SoftFkey2 Value    :{{ pickup_group }}@1/f
 SoftFkey2 Title    :Pickup
 {% for number in 1..30 %}
 {% if _context['softkey_type_' ~ number] is defined %}
-SoftFkey{{ number }} Type           :{{ type }}
-SoftFkey{{ number }} Value          :{{ value }}{{ line }}{{ subtype }}{{ value }}
-SoftFkey{{ number }} Title          :{{ label }}
+SoftFkey{{ number }} Type           :{{ fanvil.linekey_map(_context['softkey_type_' ~ number], 'type') }}
+SoftFkey{{ number }} Value          :{{ fanvil.linekey_map(_context['softkey_type_' ~ number], 'value') }}
+SoftFkey{{ number }} Title          :{{ fanvil.linekey_map(_context['softkey_type_' ~ number], 'title') | slice(0, 15) }}
 {% endif %}
 {% endfor %}
 DSS Home Page      :1
 <SCREEN KEY CONFIG MODULE>
-Desktop Softkey    :{{ soft_key1 }};{{ soft_key2 }};{{ soft_key3 }};{{ soft_key4 }};
+Desktop Softkey    :{% for number in 1..8 %}
+    {{- 'none' ~ ';' -}}
+{% endfor %}
+
 Talking Softkey    :hold;xfer;conf;end;
 Ringing Softkey    :accept;none;cfwd;reject;
 Alerting Softkey   :none;none;none;end;
