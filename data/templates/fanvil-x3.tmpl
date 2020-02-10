@@ -4,7 +4,7 @@
 WAN Mode           :DHCP
 Enable DHCP        :1
 Use Vendor Class ID:0
-Vendor Class ID    :{{ "Fanvil " ~ model }}
+Vendor Class ID    :
 DHCP Auto DNS      :1
 DHCP Auto Time     :0
 RTP Initial Port   :10000
@@ -282,7 +282,7 @@ Fast Keylock Code  :
 Enable KeyLock     :0
 KeyLock Status     :0
 Emergency Call     :{{ fanvil.emergency_map(tonezone) }}
-LCD Title          :{{ logo_text ?? ('Fanvil ' ~ model) }}
+LCD Title          :{{ logo_text ?? 'Fanvil' }}
 KeyLock Timeout    :0
 Enable Power Led   :0
 SMS MWI Power Led  :2
