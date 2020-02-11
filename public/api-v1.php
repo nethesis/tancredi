@@ -84,7 +84,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $mac = $post_data['mac'];
     $model = $post_data['model'];
     $display_name = ($post_data['display_name'] ? $post_data['display_name'] : "" );
-    $variables = $post_data['variables'];
+    $variables = array_key_exists('variables',$post_data) ? $post_data['variables'] : array();
     if (empty($mac)) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
