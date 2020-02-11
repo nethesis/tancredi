@@ -70,9 +70,7 @@
         <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
         <firmware perm="">{{ firmware_url }}</firmware>
         <web_language perm="">{{ snom.language(language) }}</web_language>
-
-        {# //// verify; related to pc_port? #}
-        <eth_pc perm="">auto</eth_pc>
+        <eth_pc perm="">{{ pc_port ? 'auto' : 'off' }}</eth_pc>
 
         <idle_status_btn_index perm="">4</idle_status_btn_index>
         <idle_ok_key_action perm="">keyevent F_REDIAL</idle_ok_key_action>
@@ -81,7 +79,10 @@
         <idle_down_key_action perm="">keyevent F_NEXT_ID</idle_down_key_action>
         <idle_left_key_action perm="">keyevent F_ACCEPTED_LIST</idle_left_key_action>
         <idle_right_key_action perm="">keyevent F_MISSED_LIST</idle_right_key_action>
-        <dkey_retrieve perm="">keyevent F_RETRIEVE</dkey_retrieve>
+
+        {# //// verify; voicemail_number is indexed, but dkey_retrieve is not #}
+        <dkey_retrieve perm="">speed {{ _context['voicemail_number_' ~ 1] }}</dkey_retrieve>
+
         <dkey_dnd perm="">keyevent F_DND</dkey_dnd>
         <dkey_directory perm="">keyevent F_ADR_BOOK</dkey_directory>
         <dkey_hold perm="">keyevent F_HOLD</dkey_hold>
@@ -89,10 +90,7 @@
         <dkey_menu perm="">keyevent F_SETTINGS</dkey_menu>
 
         {% for identity in 1..12 %}
-            {# //// verify if condition #}
-            {% if _context['user_active' ~ identity] is defined %}
-                <user_active idx="{{ identity }}" perm="">{{ _context['account_line_active_' ~ identity] ? 'on' : 'off' }}</user_active>
-
+            {% if _context['account_default_ringtone_' ~ identity] is defined %}
                 {% if _context['account_default_ringtone_' ~ identity] == 0 %}
                     <user_ringer idx="{{ identity }}" perm="">Silent</user_ringer>
                 {% elseif _context['account_default_ringtone_' ~ identity] <= 10 %}
@@ -108,11 +106,11 @@
                 {# //// verify #}
                 <user_media_transport_offer idx="{{ identity }}" perm="">{{ _context['account_transport_type_' ~ identity] }}</user_media_transport_offer>
 
+                <user_active idx="{{ identity }}" perm="">{{ _context['account_line_active_' ~ identity] ? 'on' : 'off' }}</user_active>
                 <user_srtp idx="{{ identity }}" perm="">{{ _context['account_srtp_encryption_' ~ identity] ? 'on' : 'off' }}</user_srtp>
                 <user_name idx="{{ identity }}" perm="">{{ _context['account_user_name_' ~ identity] }}</user_name>
                 <user_pass idx="{{ identity }}" perm="">{{ _context['account_password_' ~ identity] }}</user_pass>
                 <user_host idx="{{ identity }}" perm="">{{ _context['account_server_host_' ~ identity] }}</user_host>
-
                 <user_outbound idx="{{ identity }}" perm="">{{ _context['account_server_host_' ~ identity] }}:{{ _context['account_server_port_' ~ identity] }};transport={{ _context['account_transport_type_' ~ identity] }}</user_outbound>
 
                 <fwd_all_enabled idx="{{ identity }}" perm="">{{ _context['always_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_all_enabled>
@@ -2839,10 +2837,18 @@
                     <gui_fkey{{ number }} perm="">keyevent F_DND</gui_fkey1>
                 {% elseif _context['softkey_type_' ~ number] == 'recall' %}
                     <gui_fkey{{ number }} perm="">keyevent F_REDIAL</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'history' %}
+                    <gui_fkey{{ number }} perm="">keyevent F_CALL_LIST</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'menu' %}
+                    <gui_fkey{{ number }} perm="">keyevent F_SETTINGS</gui_fkey1>
                 {% elseif _context['softkey_type_' ~ number] == 'status' %}
                     <gui_fkey{{ number }} perm="">keyevent F_STATUS</gui_fkey1>
-                {% elseif _context['softkey_type_' ~ number] == 'directory' %}
+                {% elseif _context['softkey_type_' ~ number] == 'ldap' or _context['softkey_type_' ~ number] == 'directory' %}
+                    <gui_fkey{{ number }} perm="">keyevent F_DIRECTORY_SEARCH</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'local_directory' %}
                     <gui_fkey{{ number }} perm="">keyevent F_ADR_BOOK</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'favorite' %}
+                    <gui_fkey{{ number }} perm="">keyevent F_FAVORITES</gui_fkey1>
                 {% else %}
                     <gui_fkey{{ number }} perm="">keyevent none</gui_fkey1>
                 {% endif %}
@@ -2855,9 +2861,19 @@
         <firmware_uxm perm=""></firmware_uxm>
     </firmware-settings>
     <functionKeys>
-        {% for number in 0..125 %}
-            {% if _context['linekey_type_' ~ number] is defined %}
-                <fkey idx="{{ number }}" context="active" label="{{ _context['linekey_label_' ~ number] }}" lp="on" default_text="$name" perm="">{{ _context['linekey_type_' ~ number] }} {{ _context['linekey_value_' ~ number] }}</fkey>
+        {# line keys #}
+        {% if lineKeys > 0 %}
+            {% for number in 0..(lineKeys - 1) %}
+                {% if _context['linekey_type_' ~ number] is defined %}
+                    <fkey idx="{{ number }}" context="active" label="{{ _context['linekey_label_' ~ number] }}" lp="on" default_text="$name" perm="">{{ _context['linekey_type_' ~ number] }} {{ _context['linekey_value_' ~ number] }}</fkey>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {# expansion keys #}
+        {% for number in lineKeys..125 %}
+            {% if _context['expkey_type_' ~ number] is defined %}
+                <fkey idx="{{ number }}" context="active" label="{{ _context['expkey_label_' ~ number] }}" lp="on" default_text="$name" perm="">{{ _context['expkey_type_' ~ number] }} {{ _context['expkey_value_' ~ number] }}</fkey>
             {% endif %}
         {% endfor %}
     </functionKeys>
