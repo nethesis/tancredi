@@ -253,10 +253,10 @@ Web Authentication :0
 Default WEB User   :0
 --MMI Account--    :
 Account1 Name      :admin
-Account1 Password  :{{ adminpw }}
+Account1 Password  :{{ adminpw | default('admin') }}
 Account1 Level     :10
 Account2 Name      :guest
-Account2 Password  :{{ userpw }}
+Account2 Password  :{{ userpw | default('1234') }}
 Account2 Level     :5
 <QOS CONFIG MODULE>
 Enable VLAN        :{{ voice_vlan_enable }}
@@ -276,8 +276,8 @@ Enable PVID        :{{ data_vlan_enable }}
 PVID Value         :{{ (data_vlan_id >= 0 and data_vlan_id < 4096) ? data_vlan_id : '0' }}
 DHCP Option Vlan   :{{ vlan_dhcp_enable == '1' ? ((vlan_dhcp_option >= 128 and vlan_dhcp_option < 255) ? vlan_dhcp_option : '132') : '0' }}
 <PHONE CONFIG MODULE>
-Menu Password      :{{ adminpw }}
-KeyLock Password   :{{ userpw }}
+Menu Password      :{{ adminpw | default('admin') }}
+KeyLock Password   :{{ userpw  | default('1234') }}
 Fast Keylock Code  :
 Enable KeyLock     :0
 KeyLock Status     :0
