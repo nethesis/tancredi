@@ -27,6 +27,7 @@ class TokenManager {
     }
 
     public static function deleteToken($token) {
+        global $config;
         if (file_exists($config['rw_dir'] . 'first_access_tokens/' . $token)) {
             return unlink($config['rw_dir'] . 'first_access_tokens/' . $token);
         } elseif ($config['rw_dir'] . 'tokens/' . $token) {
