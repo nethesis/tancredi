@@ -121,9 +121,9 @@ Strict UA Match    :0
 --SIP Line List--  :
 {% for line in range(1, 1) %}
 {% if _context['account_username_' ~ line] is defined %}
-SIP{{ line }} Phone Number  :{{ _context['account_displayname_' ~ line] }}
-SIP{{ line }} Display Name  :{{ _context['account_displayname_' ~ line] }}
-SIP{{ line }} Sip Name      :{{ _context['account_displayname_' ~ line] }}
+SIP{{ line }} Phone Number  :{{ _context['account_username_' ~ line] }}
+SIP{{ line }} Display Name  :{{ _context['account_display_name_' ~ line] }}
+SIP{{ line }} Sip Name      :{{ _context['account_username_' ~ line] }}
 SIP{{ line }} Register Addr :{{ _context['account_server_host_' ~ line] }}
 SIP{{ line }} Register Port :{{ _context['account_server_port_' ~ line] }}
 SIP{{ line }} Register User :{{ _context['account_username_' ~ line] }}
