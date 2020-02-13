@@ -33,6 +33,7 @@ if (array_key_exists('auth_class',$config) and !empty($config['auth_class'])) {
 * GET /phones
 **********************************/
 $app->get('/phones', function(Request $request, Response $response) use ($app) {
+    global $config;
     $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $scopes = $this->storage->listScopes('phone');
     $results = array();
@@ -205,6 +206,7 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
 * GET /models
 **********************************/
 $app->get('/models', function(Request $request, Response $response) use ($app) {
+    global $config;
     $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $query_params = $request->getQueryParams();
     $this->logger->debug("GET /models/ " . json_encode($query_params));
