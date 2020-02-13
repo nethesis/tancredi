@@ -43,8 +43,8 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
             'mac' => $scopeId,
             'model' => $scope->metadata['inheritFrom'],
             'display_name' => $scope->metadata['displayName'],
-            'model_url' => "/tancredi/api/v1/models/" . $scope->metadata['inheritFrom'],
-            'phone_url' => "/tancredi/api/v1/models/" . $scopeId
+            'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom'],
+            'phone_url' => $config['api_url_path'] . "models/" . $scopeId
         );
     }
 
@@ -233,7 +233,7 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
         $results[] = array(
             'name' => $scopeId,
             'display_name' => $scope->metadata['displayName'],
-            'model_url' => "/tancredi/api/v1/models/" . $scopeId
+            'model_url' => $config['api_url_path'] . "models/" . $scopeId
         );
     }
     $response = $response->withJson($results,200,JSON_FLAGS);
@@ -440,6 +440,7 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
 });
 
 function getModelScope($id,$storage,$logger,$inherit = false, $original = false) {
+    global $config;
     $scope = new \Tancredi\Entity\Scope($id, $storage, $logger, null, $original);
     if ($inherit) {
         $scope_data = $scope->getVariables();
@@ -450,13 +451,14 @@ function getModelScope($id,$storage,$logger,$inherit = false, $original = false)
         'name' => $id,
         'display_name' => $scope->metadata['displayName'],
         'variables' => $scope_data,
-        'model_url' => "/tancredi/api/v1/models/" . $scope->metadata['inheritFrom']
+        'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
     );
     return $results;
 }
 
 
 function getPhoneScope($mac,$storage,$logger,$inherit = false) {
+    global $config;
     $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger, null);
     if ($inherit) {
         $scope_data = $scope->getVariables();
@@ -470,7 +472,7 @@ function getPhoneScope($mac,$storage,$logger,$inherit = false) {
         'tok1' => \Tancredi\Entity\TokenManager::getToken1($mac),
         'tok2' => \Tancredi\Entity\TokenManager::getToken2($mac),
         'variables' => $scope_data,
-        'model_url' => "/tancredi/api/v1/models/" . $scope->metadata['inheritFrom']
+        'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
     );
     return $results;
 }

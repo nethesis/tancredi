@@ -55,8 +55,8 @@
                 <user_expiry idx="2" perm="">3600</user_expiry>
                 <call_waiting idx="2" perm="">{{ call_waiting }}</call_waiting>
 
-                <firmware_status perm="">{{ provisioning_type }}://{{ provisioning_path }}/provisioning/{{ mac }}_firmware.xml</firmware_status>
-                <setting_server perm="">{{ provisioning_type }}://{{ provisioning_path }}/provisioning/{% if token %}{{token}}/{% endif %}</setting_server>
+                <firmware_status perm="">{{ provisioning_url_scheme }}://{{ provisioning_url_host }}{{ provisioning_url_path }}{{ mac }}_firmware.xml</firmware_status>
+                <setting_server perm="">{{ provisioning_url_scheme }}://{{ provisioning_url_host }}{{ provisioning_url_path }}{% if tok2 %}{{tok2}}/{% endif %}</setting_server>
                 <pnp_config perm="">off</pnp_config>
                 <settings_refresh_timer perm="">3600</settings_refresh_timer>
                 <vlan_id perm="">{{ svlan_id }}</vlan_id>
