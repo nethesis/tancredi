@@ -1,14 +1,47 @@
-{% macro dtmf_map(key) %}
-{% if key == 'inband' %}
-    {{- '0' -}}
-{% elseif key == 'rfc4733' %}
+#
+# srtp_encryption_map -- translate "account_srtp_encryption" to Fanvil code
+#
+{% macro srtp_encryption_map(account_srtp_encryption) %}
+{% if account_srtp_encryption == 'optional' %}
     {{- '1' -}}
-{% elseif key == 'sip_info' %}
+{% elseif account_srtp_encryption == 'compulsory' %}
+    {{- '2' -}}
+{% else %}
+    {{- '0' -}}
+{% endif %}
+{% endmacro srtp_encryption_map %}
+
+#
+# scheme_map -- translate "provisioning_url_scheme" to Fanvil code
+#
+{% macro scheme_map(scheme) %}
+{% if scheme == 'ftp' %}
+    {{- '1' -}}
+{% elseif scheme == 'tftp' %}
+    {{- '2' -}}
+{% elseif scheme == 'http' %}
+    {{- '4' -}}
+{% elseif scheme == 'https' %}
+    {{- '5' -}}
+{% else %}
+    {{- '0' -}}
+{% endif %}
+{% endmacro scheme_map %}
+
+#
+# dtmf_map -- translate "account_dtmf_type" value to Fanvil code
+#
+{% macro dtmf_map(account_dtmf_type) %}
+{% if account_dtmf_type == 'inband' %}
+    {{- '0' -}}
+{% elseif account_dtmf_type == 'rfc4733' %}
+    {{- '1' -}}
+{% elseif account_dtmf_type == 'sip_info' %}
     {{- '2' -}}
 {% else %}
     {{- '3' -}}
 {% endif %}
-{% endmacro %}
+{% endmacro dtmf_map %}
 
 #
 # b2v -- convert a boolean value to '0' or '1' with a fallback value for NULL
