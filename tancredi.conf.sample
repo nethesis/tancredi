@@ -12,6 +12,10 @@ rw_dir = "/usr/share/tancredi/data/"
 ; Directory where Tancredi has Read access
 ro_dir = "/usr/share/tancredi/data/"
 
+; provisioning_url_path and api_url_path depends on your web server configuration
+provisioning_url_path = "/provisioning/"
+api_url_path = "/tancredi/api/v1/"
+
 ; Add a sample runtime filter that adds current date to the current scope
 ; SampleFilter class is here: /src/Entity/SampleFilter.php
 ; You can call multiple filter classes separated by ","

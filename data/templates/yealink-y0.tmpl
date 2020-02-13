@@ -186,7 +186,7 @@ static.zero_touch.network_fail_wait_times = 8
 #######################################################################################
 ##                                   Autop URL                                       ##
 #######################################################################################
-static.auto_provision.server.url = {{ provisioning_url }}
+static.auto_provision.server.url = {{ provisioning_url_scheme }}://{{ provisioning_url_host }}{{ provisioning_url_path }}{{ tok2 }}/
 static.auto_provision.server.username =
 static.auto_provision.server.password =
 
