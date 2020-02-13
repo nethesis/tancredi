@@ -55,10 +55,16 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
             $scope_data = $filterObj($scope_data);
         }
     }
+
     //Add token2 variable
     $scope_data['tok2'] = \Tancredi\Entity\TokenManager::getToken2($id);
-    // Add provisioning_url_path variable
+
+    // Add provisioning_url_path and provisioning_url_host variables
     $scope_data['provisioning_url_path'] = $config['provisioning_url_path'];
+    if(empty($scope_data['provisioning_url_host'])) {
+        $scope_data['provisioning_url_host'] = gethostname();
+    }
+
     $this->logger->debug(print_r($scope_data,true));
     if (array_key_exists($template_var_name,$scope_data)) {
         $template = $scope_data[$template_var_name];
