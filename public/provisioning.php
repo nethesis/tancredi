@@ -102,10 +102,10 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
 
     $data = getDataFromFilename($filename,$this->logger);
     $this->logger->debug(print_r($data,true));
-    if (array_key_exists('scope_id',$data) and !empty($data['scope_id'])) {
-        $id = $data['scope_id'];
+    if (array_key_exists('scopeid',$data) and !empty($data['scopeid'])) {
+        $id = $data['scopeid'];
         // Convert mac address to uppercase if id is a mac address
-        if (preg_match('/[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}/',$id) !== FALSE) {
+        if (preg_match('/[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}/',$id) != FALSE) {
             $id = strtoupper($id);
         }
     } else {
@@ -174,7 +174,7 @@ function getDataFromFilename($filename,$logger) {
         if (preg_match('/'.$pattern['pattern'].'/', $filename, $tmp)) {
             $result['template'] = $pattern['template'];
             $logger->debug($pattern['pattern'].' '.$pattern['scopeid'] .' '.  $filename);
-            $result['scope_id'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
+            $result['scopeid'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
             break;
         }
     }
