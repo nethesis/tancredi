@@ -113,7 +113,7 @@ account.{{ line }}.user_name = {{ _context['account_username_' ~ line]|default }
 account.{{ line }}.password = {{ _context['account_password_' ~ line]|default }}
 account.{{ line }}.sip_server.1.address = {{ _context['account_server_host_' ~ line]|default }}
 account.{{ line }}.sip_server.1.port = {{ _context['account_server_port_' ~ line]|default }}
-account.{{ line }}.sip_server.1.transport_type = {{ _context['account_transport_type_' ~ line]|default }}
+account.{{ line }}.sip_server.1.transport_type = {{ _context['account_transport_type_' ~ line] == 'udp' ? '0' : '1'  }}
 account.{{ line }}.sip_server.1.expires = 3600
 account.{{ line }}.sip_server.1.retry_counts = 3
 
