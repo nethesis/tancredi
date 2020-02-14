@@ -4,7 +4,7 @@
 ##account.X.*:(T5XW/T54S/T48G/T48S/T46G/T46S/T29G: X ranges from 1 to 16. T52S/T42G/T42S: X ranges from 1 to 12. T41P/T41S/T27P/T27G: X ranges from 1 to 6. T40P/T40G/T23P/T23G: X ranges from 1 to 3. T21(P) E2: X ranges from 1 to 2.)##
 
 {% for line in 0..10 %}
-{% if _context['username_' ~ line] is defined %}
+{% if _context['account_username_' ~ line] is defined %}
 #######################################################################################
 ##                                   Transfer                                        ##
 #######################################################################################
@@ -105,21 +105,21 @@ account.{{ line }}.video.h264hp.enable = 1
 ################################################################
 #                      Account Register                       ##
 ################################################################
-account.{{ line }}.enable = {{ _context['line_active_' ~ line]|default }}
-account.{{ line }}.label = {{ _context['displayname_' ~ line]|default }}
-account.{{ line }}.display_name = {{ _context['displayname_' ~ line]|default }}
-account.{{ line }}.auth_name = {{ _context['username_' ~ line]|default }}
-account.{{ line }}.user_name = {{ _context['username_' ~ line]|default }}
-account.{{ line }}.password = {{ _context['secret_' ~ line]|default }}
-account.{{ line }}.sip_server.1.address = {{ _context['server_host_' ~ line]|default }}
-account.{{ line }}.sip_server.1.port = {{ _context['server_port_' ~ line]|default }}
-account.{{ line }}.sip_server.1.transport_type = {{ _context['transport_type_' ~ line]|default }}
+account.{{ line }}.enable = {{ _context['account_line_active_' ~ line]|default }}
+account.{{ line }}.label = {{ _context['account_display_name_' ~ line]|default }}
+account.{{ line }}.display_name = {{ _context['account_display_name_' ~ line]|default }}
+account.{{ line }}.auth_name = {{ _context['account_username_' ~ line]|default }}
+account.{{ line }}.user_name = {{ _context['account_username_' ~ line]|default }}
+account.{{ line }}.password = {{ _context['account_password_' ~ line]|default }}
+account.{{ line }}.sip_server.1.address = {{ _context['account_server_host_' ~ line]|default }}
+account.{{ line }}.sip_server.1.port = {{ _context['account_server_port_' ~ line]|default }}
+account.{{ line }}.sip_server.1.transport_type = {{ _context['account_transport_type_' ~ line]|default }}
 account.{{ line }}.sip_server.1.expires = 3600
 account.{{ line }}.sip_server.1.retry_counts = 3
 
-account.{{ line }}.sip_server.2.address = {{ _context['server_host2_' ~ line]|default }}
-account.{{ line }}.sip_server.2.port = {{ _context['server_port2_' ~ line]|default }}
-account.{{ line }}.sip_server.2.transport_type = {{ _context['transport_type2_' ~ line]|default }}
+account.{{ line }}.sip_server.2.address = {{ _context['account_server_host2_' ~ line]|default }}
+account.{{ line }}.sip_server.2.port = {{ _context['account_server_port2_' ~ line]|default }}
+account.{{ line }}.sip_server.2.transport_type = {{ _context['account_transport_type2_' ~ line]|default }}
 account.{{ line }}.sip_server.2.expires = 3600
 account.{{ line }}.sip_server.2.retry_counts = 3
 
@@ -144,7 +144,7 @@ account.{{ line }}.nat.udp_update_enable = 1
 account.{{ line }}.nat.udp_update_time = 30
 account.{{ line }}.nat.rport = 0
 
-account.{{ line }}.dtmf.type = {{ _context['dtmf_type_' ~ line]|default }}
+account.{{ line }}.dtmf.type = {{ _context['account_dtmf_type_' ~ line]|default }}
 account.{{ line }}.dtmf.info_type = 1
 account.{{ line }}.dtmf.dtmf_payload = 101
 account.{{ line }}.100rel_enable = 0
@@ -152,7 +152,7 @@ account.{{ line }}.100rel_enable = 0
 account.{{ line }}.subscribe_register = 0
 account.{{ line }}.cid_source = 3
 account.{{ line }}.enable_user_equal_phone = 0
-account.{{ line }}.srtp_encryption = {{ _context['srtp_encryption_' ~ line]|default }}
+account.{{ line }}.srtp_encryption = {{ _context['account_srtp_encryption_' ~ line]|default }}
 account.{{ line }}.srtp_unencrypted_rtp.enable = 0
 account.{{ line }}.srtp.unencrypted_rtcp.enable = 0
 account.{{ line }}.ptime = 20
@@ -316,7 +316,7 @@ account.{{ line }}.auto_dial_num =
 #######################################################################################
 ##                           Preference&Status                                       ##
 #######################################################################################
-account.{{ line }}.ringtone.ring_type = {{ _context['default_ringtone_' ~ line]|default }}
+account.{{ line }}.ringtone.ring_type = {{ _context['account_default_ringtone_' ~ line]|default }}
 
 #######################################################################################
 ##                           Digitmap                                                ##
@@ -514,7 +514,7 @@ account.{{ line }}.acd.call_information =
 #######################################################################################
 pstn.account.{{ line }}.enable = 1
 pstn.account.{{ line }}.label =
-pstn.account.{{ line }}.ring_type = {{ _context['default_ringtone_' ~ line]|default }}
+pstn.account.{{ line }}.ring_type = {{ _context['account_default_ringtone_' ~ line]|default }}
 pstn.account.{{ line }}.missed_calllog = 1
 pstn.account.{{ line }}.auto_answer = 0
 pstn.account.{{ line }}.auto_answer_mute_enable = 0
