@@ -113,13 +113,13 @@ account.{{ line }}.user_name = {{ _context['account_username_' ~ line]|default }
 account.{{ line }}.password = {{ _context['account_password_' ~ line]|default }}
 account.{{ line }}.sip_server.1.address = {{ _context['account_server_host_' ~ line]|default }}
 account.{{ line }}.sip_server.1.port = {{ _context['account_server_port_' ~ line]|default }}
-account.{{ line }}.sip_server.1.transport_type = {{ _context['account_transport_type_' ~ line] == 'udp' ? '0' : '1'  }}
+account.{{ line }}.sip_server.1.transport_type = {{ _context['account_transport_type_' ~ line] == 'udp' ? '0' : '2'  }}
 account.{{ line }}.sip_server.1.expires = 3600
 account.{{ line }}.sip_server.1.retry_counts = 3
 
 account.{{ line }}.sip_server.2.address = {{ _context['account_server_host2_' ~ line]|default }}
 account.{{ line }}.sip_server.2.port = {{ _context['account_server_port2_' ~ line]|default }}
-account.{{ line }}.sip_server.2.transport_type = {{ _context['account_transport_type2_' ~ line]|default }}
+account.{{ line }}.sip_server.2.transport_type = {{ _context['account_transport_type2_' ~ line] == 'udp' ? '0' : '2'  }}
 account.{{ line }}.sip_server.2.expires = 3600
 account.{{ line }}.sip_server.2.retry_counts = 3
 
@@ -152,7 +152,7 @@ account.{{ line }}.100rel_enable = 0
 account.{{ line }}.subscribe_register = 0
 account.{{ line }}.cid_source = 3
 account.{{ line }}.enable_user_equal_phone = 0
-account.{{ line }}.srtp_encryption = {{ _context['account_srtp_encryption_' ~ line]|default }}
+account.{{ line }}.srtp_encryption = {%if _context['account_srtp_encryption_' ~ line] == 'disabled' %}0{% elseif _context['account_srtp_encryption_' ~ line] == 'compulsory' %}2{% else %}1{% endif %}
 account.{{ line }}.srtp_unencrypted_rtp.enable = 0
 account.{{ line }}.srtp.unencrypted_rtcp.enable = 0
 account.{{ line }}.ptime = 20
