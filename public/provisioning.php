@@ -82,7 +82,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         } else {
             $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
         }
-        $twig = new \Twig\Environment($loader);
+        $twig = new \Twig\Environment($loader,['autoescape' => false]);
         $response = $response->getBody()->write($twig->render($template,$scope_data));
 	$this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok '. __FILE__.':'.__LINE__);
         return $response;
@@ -150,7 +150,7 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     try {
         // Load twig template
         $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
-        $twig = new \Twig\Environment($loader);
+        $twig = new \Twig\Environment($loader,['autoescape' => false]);
 	$response = $response->getBody()->write($twig->render($template,$scope_data));
 	$this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok ' . __FILE__.':'.__LINE__);
 	return $response;
