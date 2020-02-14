@@ -753,7 +753,7 @@ Syslog Server Port :514
 
 <TR069 CONFIG MODULE>
 TR069 Tone         :1
-CPE SerialNumber   :00100400FV02001000000c383e1ee366
+CPE SerialNumber   :
 ACS Server Type    :1
 Enable TR069       :0
 ACS URL            :0.0.0.0
@@ -851,7 +851,7 @@ Download CommonConf:0
 Save Provision Info:0
 Check FailTimes    :5
 Flash Server IP    :{{ provisioning_url_host }}
-Flash File Name    :{{ 'http' in provisioning_url_scheme ? (provisioning_url_path ~ tok2 ~ '/$mac.cfg') : '$mac.cfg' }}
+Flash File Name    :{{ 'http' in provisioning_url_scheme ? (provisioning_url_path | trim('/', 'left') ~ tok2 ~ '/$mac.cfg') : '$mac.cfg' }}
 Flash Protocol     :{{ fanvil.scheme_map(provisioning_url_scheme) }}
 Flash Mode         :1
 Flash Interval     :1

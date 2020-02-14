@@ -1,5 +1,5 @@
 <<VOIP CONFIG FILE>>Version:2.0002                            
-{% import 'fanvil.macros' as fanvil %}﻿
+{% import 'fanvil.macros' as fanvil %}
 
 <GLOBAL CONFIG MODULE>
 WAN Mode           :DHCP
@@ -645,7 +645,7 @@ Type               :0
 Download Username  :
 Download Password  :
 AP Pswd Encryption :0
-Config File Name   :{{ 'http' in provisioning_url_scheme ? (provisioning_url_path ~ tok2 ~ '/$mac.cfg') : '$mac.cfg' }}
+Config File Name   :{{ 'http' in provisioning_url_scheme ? (provisioning_url_path | trim('/', 'left') ~ tok2 ~ '/$mac.cfg') : '$mac.cfg' }}
 Config File Key    :
 Common Cfg File Key:
 Download Server IP :{{ provisioning_url_host }}
@@ -690,7 +690,7 @@ Server Area Code   :12345
 Xsup User          :admin
 Xsup Password      :admin
 Xsup Enable        :0
-Xsup AuthMac       :01:80:C2:00:00:03
+Xsup AuthMac       :
 Xsup UseDefaultMac :1
 
 <TR069 CONFIG MODULE>
