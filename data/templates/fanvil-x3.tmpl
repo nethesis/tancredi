@@ -71,7 +71,7 @@ Dial by Pound      :1
 BTransfer by Pound :1
 Onhook to BXfer    :0
 Onhook to AXfer    :1
-Memory Key to BXfer:{{ dss_transfer }}
+Memory Key to BXfer:0
 Xfer On Conf Onhook:0
 Dial Fixed Length  :0
 Fixed Length Nums  :11
@@ -232,17 +232,17 @@ SIP{{ line }} Register User :{{ _context['account_username_' ~ line] }}
 SIP{{ line }} Register Pswd :{{ _context['account_password_' ~ line] }}
 SIP{{ line }} Register TTL  :3600
 SIP{{ line }} Backup Addr   :
-SIP{{ line }} Backup Port   :5060
+SIP{{ line }} Backup Port   :
 SIP{{ line }} Backup Transpo:0
 SIP{{ line }} Backup TTL    :3600
 SIP{{ line }} Backup Mode   :0
 SIP{{ line }} Enable Reg    :{{ fanvil.b2v(_context['account_line_active_' ~ line]) }}
 SIP{{ line }} Proxy Addr    :
-SIP{{ line }} Proxy Port    :5060
+SIP{{ line }} Proxy Port    :
 SIP{{ line }} Proxy User    :
 SIP{{ line }} Proxy Pswd    :
 SIP{{ line }} BakProxy Addr :
-SIP{{ line }} BakProxy Port :5060
+SIP{{ line }} BakProxy Port :
 SIP{{ line }} Enable Failbac:0
 SIP{{ line }} Failback Hold :1
 SIP{{ line }} Failback Inter:1800
