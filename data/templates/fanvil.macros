@@ -1,0 +1,183 @@
+#
+# transport_type_map -- translate "account_transport_type" to Fanvil code
+#
+{% macro transport_type_map(account_transport_type) %}
+{% if account_transport_type == 'udp' %}
+    {{- '0' -}}
+{% elseif account_transport_type == 'tcp' %}
+    {{- '1' -}}
+{% elseif account_transport_type == 'tls' %}
+    {{- '3' -}}
+{% else %}
+    {{- '0' -}}
+{% endif %}
+{% endmacro transport_type_map %}
+
+#
+# srtp_encryption_map -- translate "account_srtp_encryption" to Fanvil code
+#
+{% macro srtp_encryption_map(account_srtp_encryption) %}
+{% if account_srtp_encryption == 'optional' %}
+    {{- '1' -}}
+{% elseif account_srtp_encryption == 'compulsory' %}
+    {{- '2' -}}
+{% else %}
+    {{- '0' -}}
+{% endif %}
+{% endmacro srtp_encryption_map %}
+
+#
+# scheme_map -- translate "provisioning_url_scheme" to Fanvil code
+#
+{% macro scheme_map(scheme) %}
+{% if scheme == 'ftp' %}
+    {{- '1' -}}
+{% elseif scheme == 'tftp' %}
+    {{- '2' -}}
+{% elseif scheme == 'http' %}
+    {{- '4' -}}
+{% elseif scheme == 'https' %}
+    {{- '5' -}}
+{% else %}
+    {{- '0' -}}
+{% endif %}
+{% endmacro scheme_map %}
+
+#
+# dtmf_map -- translate "account_dtmf_type" value to Fanvil code
+#
+{% macro dtmf_map(account_dtmf_type) %}
+{% if account_dtmf_type == 'inband' %}
+    {{- '0' -}}
+{% elseif account_dtmf_type == 'rfc4733' %}
+    {{- '1' -}}
+{% elseif account_dtmf_type == 'sip_info' %}
+    {{- '2' -}}
+{% else %}
+    {{- '3' -}}
+{% endif %}
+{% endmacro dtmf_map %}
+
+#
+# b2v -- convert a boolean value to '0' or '1' with a fallback value for NULL
+#
+{% macro b2v(value, fallback) %}
+{% if value is null %}
+    {{- fallback ?? '0' -}}
+{% else %}
+    {{- value is empty ? '0' : '1' -}}
+{% endif %}
+{% endmacro b2v %}
+
+#
+# National emergency call number
+#
+{% macro emergency_map(country) %}
+{%- set emergency_map = {
+    "it": "118",
+} -%}
+{% if emergency_map[country] is defined %}
+    {{- emergency_map[country] -}}
+{% endif %}
+{% endmacro emergency_map %}
+
+#
+# Translate line keys type to Fanvil encoding
+#
+{% macro linekey_map(key, field) %}
+{% import _self as local %}
+{% import _context as global %}
+{%- set tk_map = {
+    'ldap': {
+        'code': 'dsskey1',
+        'type': '3',
+        'value': 'F_LDAPCONTACTS:1',
+        'title': local.gettext('Phonebook', language)
+    },
+    'group_pickup': {
+        'code': 'dsskey2',
+        'type': '1',
+        'value': global.pickup_group ~ '@1/f',
+        'title': local.gettext('Pickup', language)
+    },
+    'disabled': {
+        'code': 'none',
+        'type': '0',
+        'value': '',
+        'title': ''
+    }
+} -%}
+{% if tk_map[key] is defined %}
+    {{- tk_map[key][field] -}}
+{% else %}
+    {{- tk_map['disabled'][field] -}}
+{% endif %}
+{% endmacro linekey_map %}
+
+#
+# Translate line keys type to Fanvil screen keys code
+#
+{% macro softkey_map(key, field) %}
+{% import _self as local %}
+    {{- '' -}}
+{% endmacro softkey_map %}
+
+#
+# Translate the tones country to Fanvil tone code
+#
+{% macro tones_code(country) %}
+    {%- set tones = {
+        "it": "21"
+} -%}
+    {{- tones[country] ?? '21' -}}
+{% endmacro tones_code %}
+
+#
+# Translate the language name to Fanvil language code
+#
+{% macro language_code(lang) %}
+    {%- set code = {
+        "en": "0",
+        "it": "7"
+} -%}
+    {{- code[lang] ?? '0' -}}
+{% endmacro language_code %}
+
+#
+# Translate generic strings
+#
+{% macro gettext(txt, lang) %}
+    {%- set l10n = {
+        'it': {
+            'Phonebook': 'Rubrica'
+        }
+    } -%}
+    {% if l10n[lang] is defined %}
+        {{- l10n[lang][txt] ?? txt -}}
+    {% else %}
+        {{- txt -}}
+    {% endif %}
+{% endmacro gettext %}
+
+#
+# The Fanvil time zone parameters map
+#
+{% macro tz_map(tz, field) %}
+{%- set tz_map = {
+  "Europe/Rome": {
+    "location": "13",
+    "name": "UTC+1",
+    "offset": "4"
+  },
+  "UTC": {
+    "location": "1",
+    "name": "UTC",
+    "offset": "0"
+  }
+} -%}
+{% if tz_map[tz] is defined %}
+    {{- tz_map[tz][field] -}}
+{% else %}
+    {{- tz_map['UTC'][field] -}}
+{% endif %}
+{% endmacro tz_map %}

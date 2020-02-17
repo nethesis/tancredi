@@ -82,7 +82,7 @@ static.network.ip_address_mode = 0
 ##static.network.span_to_pc_port = 0
 ##static.network.vlan.pc_port_mode = 1
 static.network.static_dns_enable = 0
-##static.network.pc_port.enable = 0
+static.network.pc_port.enable = {{ pc_port  ?? '1' }}
 ##static.network.primary_dns =
 ##static.network.secondary_dns =
 ##static.network.internet_port.gateway =
@@ -97,7 +97,7 @@ static.network.internet_port.type = 0
 #######################################################################################
 ##                               Network Advanced                                    ##
 #######################################################################################
-##static.network.dhcp_host_name =
+static.network.dhcp_host_name = {{ model }}-{{ metadata_id }}
 static.network.dhcp.option60type = 0
 static.network.mtu_value = 1500
 static.network.qos.audiotos = 46
@@ -186,7 +186,7 @@ static.zero_touch.network_fail_wait_times = 8
 #######################################################################################
 ##                                   Autop URL                                       ##
 #######################################################################################
-static.auto_provision.server.url = {{ provisioning_url }}
+static.auto_provision.server.url = {{ provisioning_url_scheme }}://{{ provisioning_url_host }}{{ provisioning_url_path }}{{ tok2 }}/
 static.auto_provision.server.username =
 static.auto_provision.server.password =
 
@@ -266,7 +266,7 @@ static.auto_provision.config_version.com =
 #######################################################################################
 ##                                   Autop PNP                                       ##
 #######################################################################################
-static.auto_provision.pnp_enable = {{ pnp_enable }}
+static.auto_provision.pnp_enable = {{ pnp_enable ?? '0' }}
 
 
 
@@ -1401,7 +1401,7 @@ features.power_saving.intelligent_mode = 0
 ##Single File Size: <=5MB
 ##2MB of space should bereserved for the phone
 
-wallpaper_upload.url = {{ wallpaperurl }}
+wallpaper_upload.url = {{ wallpaper_url }}
 phone_setting.backgrounds = {{ wallpaper }}
 
 ## phone_setting.backgrounds_with_dsskey_unfold(Only support T48G/S)

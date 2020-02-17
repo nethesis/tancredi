@@ -33,6 +33,7 @@ if (array_key_exists('auth_class',$config) and !empty($config['auth_class'])) {
 * GET /phones
 **********************************/
 $app->get('/phones', function(Request $request, Response $response) use ($app) {
+    global $config;
     $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $scopes = $this->storage->listScopes('phone');
     $results = array();
@@ -43,8 +44,8 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
             'mac' => $scopeId,
             'model' => $scope->metadata['inheritFrom'],
             'display_name' => $scope->metadata['displayName'],
-            'model_url' => "/tancredi/api/v1/models/" . $scope->metadata['inheritFrom'],
-            'phone_url' => "/tancredi/api/v1/models/" . $scopeId
+            'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom'],
+            'phone_url' => $config['api_url_path'] . "models/" . $scopeId
         );
     }
 
@@ -84,7 +85,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $mac = $post_data['mac'];
     $model = $post_data['model'];
     $display_name = ($post_data['display_name'] ? $post_data['display_name'] : "" );
-    $variables = $post_data['variables'];
+    $variables = array_key_exists('variables',$post_data) ? $post_data['variables'] : array();
     if (empty($mac)) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
@@ -205,6 +206,7 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
 * GET /models
 **********************************/
 $app->get('/models', function(Request $request, Response $response) use ($app) {
+    global $config;
     $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $query_params = $request->getQueryParams();
     $this->logger->debug("GET /models/ " . json_encode($query_params));
@@ -233,7 +235,7 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
         $results[] = array(
             'name' => $scopeId,
             'display_name' => $scope->metadata['displayName'],
-            'model_url' => "/tancredi/api/v1/models/" . $scopeId
+            'model_url' => $config['api_url_path'] . "models/" . $scopeId
         );
     }
     $response = $response->withJson($results,200,JSON_FLAGS);
@@ -440,6 +442,7 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
 });
 
 function getModelScope($id,$storage,$logger,$inherit = false, $original = false) {
+    global $config;
     $scope = new \Tancredi\Entity\Scope($id, $storage, $logger, null, $original);
     if ($inherit) {
         $scope_data = $scope->getVariables();
@@ -450,13 +453,14 @@ function getModelScope($id,$storage,$logger,$inherit = false, $original = false)
         'name' => $id,
         'display_name' => $scope->metadata['displayName'],
         'variables' => $scope_data,
-        'model_url' => "/tancredi/api/v1/models/" . $scope->metadata['inheritFrom']
+        'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
     );
     return $results;
 }
 
 
 function getPhoneScope($mac,$storage,$logger,$inherit = false) {
+    global $config;
     $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger, null);
     if ($inherit) {
         $scope_data = $scope->getVariables();
@@ -470,7 +474,7 @@ function getPhoneScope($mac,$storage,$logger,$inherit = false) {
         'tok1' => \Tancredi\Entity\TokenManager::getToken1($mac),
         'tok2' => \Tancredi\Entity\TokenManager::getToken2($mac),
         'variables' => $scope_data,
-        'model_url' => "/tancredi/api/v1/models/" . $scope->metadata['inheritFrom']
+        'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
     );
     return $results;
 }

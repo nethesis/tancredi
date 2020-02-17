@@ -10,6 +10,7 @@ class TokenManager {
         } elseif (file_exists($config['rw_dir'] . 'tokens/'.$token)) {
             $id = trim(file_get_contents($config['rw_dir'] . 'tokens/'.$token));
             TokenManager::deleteTokenForId($id,$config['rw_dir'] . 'first_access_tokens/');
+            TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE),$id,TRUE);
             return $id;
         } else {
             // Token not found
@@ -27,6 +28,7 @@ class TokenManager {
     }
 
     public static function deleteToken($token) {
+        global $config;
         if (file_exists($config['rw_dir'] . 'first_access_tokens/' . $token)) {
             return unlink($config['rw_dir'] . 'first_access_tokens/' . $token);
         } elseif ($config['rw_dir'] . 'tokens/' . $token) {

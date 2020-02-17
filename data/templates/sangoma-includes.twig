@@ -932,5 +932,24 @@
 } %}
 {% if tonezone_map[tonezone] %}{{ tonezone_map[tonezone] }}{% else %}Great Britain{% endif %}
 {% endmacro %}
-
-
+{# Map dtmf type #}
+{% macro dtmf(dtmf)%}
+{% set dtmf_map = {
+    "inband" : "0",
+    "rfc2833" : "1",
+    "sip_info" : "2",
+} %}
+{% if dtmf_map[dtmf] %}{{ dtmf_map[dtmf] }}{% else %}0{% endif %}
+{% endmacro %}
+{# Map date_format type #}
+{% macro date_format(date_format)%}
+{% set date_format_map = {
+    "2" : "0",
+    "4" : "1",
+} %}
+{% if date_format_map[date_format] %}{{ date_format_map[date_format] }}{% else %}2{% endif %}
+{% endmacro %}
+{# map screensaver_wait_time from seconds to sangoma values #}
+{% macro screensaver_wait_time(screensaver_wait_time) %}
+{% if screensaver_wait_time == 0 %}0{% elseif screensaver_wait_time < 60 %}1{% elseif screensaver_wait_time < 120 %}2{% elseif screensaver_wait_time < 300 %}3{% elseif screensaver_wait_time < 600 %}4{% else %}5{% endif %}
+{% endmacro %}
