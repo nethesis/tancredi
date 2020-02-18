@@ -1,30 +1,34 @@
-{# Map english language to localized languages used by Snom #}
+#
+# Map ISO 639-1 codes to localized languages used by Snom
+#
 {% macro language(language)%}
 {% set language_map = {
-    "Bosnian" : "Bosanski",
-    "Danish" : "Dansk",
-    "German" : "Deutsch",
-    "Czech" : "Čeština",
-    "English" : "English",
-    "Spanish" : "Español",
-    "Finnish" : "Suomi",
-    "French" : "Français",
-    "Chinese" : "Traditional Chinese",
-    "Magyar" : "Magyar",
-    "Italian" : "Italiano",
-    "Lithuanian" : "Lietuvių",
-    "Dutch" : "Nederlands",
-    "Norwegian" : "Norsk",
-    "Portuguese" : "Português",
-    "Slovenian" : "Slovenščina",
-    "Russian" : "Русский",
-    "Swedish" : "Svenska",
-    "Turkish" : "Türkçe",
-    "Simplified Chinese" : "Simplified Chinese"
+    "bs" : "Bosanski",
+    "da" : "Dansk",
+    "de" : "Deutsch",
+    "cs" : "Čeština",
+    "en" : "English",
+    "es" : "Español",
+    "fi" : "Suomi",
+    "fr" : "Français",
+    "zh" : "Traditional Chinese",
+    "hu" : "Magyar",
+    "it" : "Italiano",
+    "lt" : "Lietuvių",
+    "nl" : "Nederlands",
+    "no" : "Norsk",
+    "pt" : "Português",
+    "sl" : "Slovenščina",
+    "ru" : "Русский",
+    "sv" : "Svenska",
+    "tr" : "Türkçe"
 } %}
-{% if language_map[language] %}{{ language_map[language] }}{% else %}English{% endif %}
+    {{- language_map[language] ?: language_map['en'] -}}
 {% endmacro %}
-{# Map timezones to Snom format#}
+
+#
+# Map timezones to Snom format
+#
 {% macro timezone(timezone) %}
 {% set timezone_map = {
     "Africa/Abidjan" : "GBR-0",
@@ -450,9 +454,12 @@
     "Pacific/Wallis" : "NZL+12",
     "UTC" : "GBR-0"
 } %}
-{% if timezone_map[timezone] %}{{ timezone_map[timezone] }}{% else %}GBR-0{% endif %}
+    {{- timezone_map[timezone] ?: timezone_map['UTC'] -}}
 {% endmacro %}
-{# Map tonezone to Snom format#}
+
+#
+# Map tonezone to Snom format
+#
 {% macro tonezone(tonezone) %}
 {% set tonezone_map = {
     "ao" : "ESP",
@@ -511,5 +518,5 @@
     "us-old" : "USA",
     "ve" : "ESP"
 } %}
-{% if tonezone_map[tonezone] %}{{ tonezone_map[tonezone] }}{% else %}GBR{% endif %}
+    {{- tonezone_map[tonezone] ?: tonezone_map['us'] -}}
 {% endmacro %}
