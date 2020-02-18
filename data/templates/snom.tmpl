@@ -123,9 +123,9 @@
 
                 {% if _context['call_waiting_' ~ identity] and call_waiting_tone %}
                     <call_waiting idx="{{ identity }}" perm="">on</call_waiting>
-                {% elseif _context['call_waiting_' ~ identity] and !call_waiting_tone %}
+                {% elseif _context['call_waiting_' ~ identity] and not call_waiting_tone %}
                     <call_waiting idx="{{ identity }}" perm="">visual</call_waiting>
-                {% elseif !(_context['call_waiting_' ~ identity]) %}
+                {% elseif not (_context['call_waiting_' ~ identity]) %}
                     <call_waiting idx="{{ identity }}" perm="">off</call_waiting>
                 {% else %}
                     {# default value #}
