@@ -1,4 +1,4 @@
-{% import 'yealink-includes.twig' as yealink %}#!version:1.0.0.1
+{% import 'yealink.macros' as yealink %}#!version:1.0.0.1
 
 ##File header "#!version:1.0.0.1" can not be edited or deleted, and must be placed in the first line.##
 
@@ -1836,3 +1836,631 @@ features.default_layout = 1
 features.full_screen_in_call_enable = 1
 features.video_call_bandwidth = 0
 sip.h264.peer_resolution.default = 2
+
+{% for line in 0..10 %}
+{% if _context['account_username_' ~ line] is defined %}
+#######################################################################################
+##                                   Transfer                                        ##
+#######################################################################################
+account.{{ line }}.phone_setting.call_appearance.transfer_via_new_linekey = 0
+
+
+
+#######################################################################################
+##                               Call Waiting                                        ##
+#######################################################################################
+
+call_waiting.enable = {{ call_waiting }}
+call_waiting.tone = {{ call_waiting_tone }}
+call_waiting.off_code = {{ call_waiting_off }}
+call_waiting.on_code = {{ call_waiting_on }}
+
+
+#######################################################################################
+##                                   Conference                                      ##
+#######################################################################################
+account.{{ line }}.phone_setting.call_appearance.conference_via_new_linekey = 0
+
+
+#######################################################################################
+##                                   Anonymous                                       ##
+#######################################################################################
+account.{{ line }}.anonymous_call.server_base_only =
+account.{{ line }}.send_anonymous_rejection_code = 0
+account.{{ line }}.anonymous_reject_offcode =
+account.{{ line }}.anonymous_reject_oncode =
+account.{{ line }}.reject_anonymous_call = 0
+account.{{ line }}.anonymous_call_offcode =
+account.{{ line }}.anonymous_call_oncode =
+account.{{ line }}.anonymous_call = 0
+account.{{ line }}.send_anonymous_code = 0
+
+
+
+#######################################################################################
+##                          Call Configuration                                       ##
+#######################################################################################
+account.{{ line }}.music_server_uri =
+account.{{ line }}.music_on_hold_type = 0
+account.{{ line }}.auto_label.rule = {L}_{1} 
+account.{{ line }}.auto_label.enable = 0
+account.{{ line }}.number_of_linekey = 1
+account.{{ line }}.phone_setting.call_appearance.calls_per_linekey =
+
+
+#######################################################################################
+##                                    Codec                                          ##
+#######################################################################################
+account.{{ line }}.codec.ilbc_15_2kbps.priority = 0
+account.{{ line }}.codec.ilbc_15_2kbps.enable = 0
+account.{{ line }}.codec.ilbc_13_33kbps.priority = 0
+account.{{ line }}.codec.ilbc_13_33kbps.enable = 0
+account.{{ line }}.codec.pcma.enable = 1
+account.{{ line }}.codec.pcma.priority = 1
+account.{{ line }}.codec.pcmu.enable = 1
+account.{{ line }}.codec.pcmu.priority = 2
+account.{{ line }}.codec.opus.priority = 4
+account.{{ line }}.codec.opus.enable = 1
+account.{{ line }}.codec.opus.para = opus-wb
+account.{{ line }}.codec.g726_40.enable = 0
+account.{{ line }}.codec.g726_40.priority =
+account.{{ line }}.codec.g726_32.enable = 0
+account.{{ line }}.codec.g726_32.priority = 0
+account.{{ line }}.codec.g726_24.enable = 0
+account.{{ line }}.codec.g726_24.priority = 0
+account.{{ line }}.codec.g726_16.enable = 0
+account.{{ line }}.codec.g726_16.priority = 0
+account.{{ line }}.codec.g723_63.priority = 0
+account.{{ line }}.codec.g723_63.enable = 0
+account.{{ line }}.codec.g723_53.priority = 0
+account.{{ line }}.codec.g723_53.enable = 0
+account.{{ line }}.codec.g729.priority = 5
+account.{{ line }}.codec.g729.enable = 1
+account.{{ line }}.codec.g722.priority = 3
+account.{{ line }}.codec.g722.enable = 1
+account.{{ line }}.codec.G722_1_24kpbs.priority = 0
+account.{{ line }}.codec.G722_1_24kpbs.enable = 0
+account.{{ line }}.codec.G722_1c_24kpbs.priority = 0
+account.{{ line }}.codec.G722_1c_24kpbs.enable = 0
+account.{{ line }}.codec.G722_1c_32kpbs.priority = 0
+account.{{ line }}.codec.G722_1c_32kpbs.enable = 0
+account.{{ line }}.codec.G722_1c_48kpbs.priority = 0
+account.{{ line }}.codec.G722_1c_48kpbs.enable = 0
+
+account.{{ line }}.video.h264.priority = 1
+account.{{ line }}.video.h264.enable = 1
+account.{{ line }}.video.vp8.priority = 2
+account.{{ line }}.video.vp8.enable = 1
+account.{{ line }}.video.h263.priority = 3
+account.{{ line }}.video.h263.enable = 1
+account.{{ line }}.video.h264hp.priority = 4
+account.{{ line }}.video.h264hp.enable = 1
+
+################################################################
+#                      Account Register                       ##
+################################################################
+account.{{ line }}.enable = {{ _context['account_line_active_' ~ line]|default }}
+account.{{ line }}.label = {{ _context['account_display_name_' ~ line]|default }}
+account.{{ line }}.display_name = {{ _context['account_display_name_' ~ line]|default }}
+account.{{ line }}.auth_name = {{ _context['account_username_' ~ line]|default }}
+account.{{ line }}.user_name = {{ _context['account_username_' ~ line]|default }}
+account.{{ line }}.password = {{ _context['account_password_' ~ line]|default }}
+account.{{ line }}.sip_server.1.address = {{ _context['account_server_host_' ~ line]|default }}
+account.{{ line }}.sip_server.1.port = {{ _context['account_server_port_' ~ line]|default }}
+account.{{ line }}.sip_server.1.transport_type = {{ _context['account_transport_type_' ~ line] == 'udp' ? '0' : '2'  }}
+account.{{ line }}.sip_server.1.expires = 3600
+account.{{ line }}.sip_server.1.retry_counts = 3
+
+account.{{ line }}.sip_server.2.address = {{ _context['account_server_host2_' ~ line]|default }}
+account.{{ line }}.sip_server.2.port = {{ _context['account_server_port2_' ~ line]|default }}
+account.{{ line }}.sip_server.2.transport_type = {{ _context['account_transport_type2_' ~ line] == 'udp' ? '0' : '2'  }}
+account.{{ line }}.sip_server.2.expires = 3600
+account.{{ line }}.sip_server.2.retry_counts = 3
+
+account.{{ line }}.outbound_proxy_enable = 0
+account.{{ line }}.outbound_proxy.1.address =
+account.{{ line }}.outbound_proxy.1.port = 5060
+account.{{ line }}.outbound_proxy.2.address =
+account.{{ line }}.outbound_proxy.2.port = 5060
+account.{{ line }}.outbound_proxy_fallback_interval = 3600
+account.{{ line }}.nat.nat_traversal = 0
+
+
+################################################################
+#                      Account Basic                          ##
+################################################################
+account.{{ line }}.auto_answer = 0
+
+################################################################
+#                      Account Advanced                       ##
+################################################################
+account.{{ line }}.nat.udp_update_enable = 1
+account.{{ line }}.nat.udp_update_time = 30
+account.{{ line }}.nat.rport = 0
+
+account.{{ line }}.dtmf.type = {{ _context['account_dtmf_type_' ~ line]|default }}
+account.{{ line }}.dtmf.info_type = 1
+account.{{ line }}.dtmf.dtmf_payload = 101
+account.{{ line }}.100rel_enable = 0
+
+account.{{ line }}.subscribe_register = 0
+account.{{ line }}.cid_source = 3
+account.{{ line }}.enable_user_equal_phone = 0
+account.{{ line }}.srtp_encryption = {%if _context['account_srtp_encryption_' ~ line] == 'disabled' %}0{% elseif _context['account_srtp_encryption_' ~ line] == 'compulsory' %}2{% else %}1{% endif %}
+account.{{ line }}.srtp_unencrypted_rtp.enable = 0
+account.{{ line }}.srtp.unencrypted_rtcp.enable = 0
+account.{{ line }}.ptime = 20
+account.{{ line }}.register_line = 0
+account.{{ line }}.register_mac = 0
+account.{{ line }}.reg_fail_retry_interval = 30
+account.{{ line }}.unregister_on_reboot = 1
+
+account.{{ line }}.session_timer.refresher = 0
+account.{{ line }}.session_timer.expires = 1800
+account.{{ line }}.session_timer.enable = 0
+
+account.{{ line }}.conf_type = 0
+account.{{ line }}.sip_server_type = 0
+
+##V83 Add
+account.{{ line }}.sip_server_mode = 0
+
+
+
+################################################################
+#                        SIP Backup Server                    ##
+################################################################
+account.{{ line }}.outbound_proxy.1.register_on_enable = -1
+account.{{ line }}.outbound_proxy.1.failback_timeout = -1
+account.{{ line }}.outbound_proxy.1.failback_mode = -1
+account.{{ line }}.outbound_proxy.1.retry_counts = -1
+account.{{ line }}.outbound_proxy.1.only_signal_with_registered = -1
+account.{{ line }}.outbound_proxy.1.failback_subscribe.enable = -1
+account.{{ line }}.outbound_proxy.1.invite_retry_counts = -1
+
+account.{{ line }}.sip_server.1.register_on_enable = 0
+account.{{ line }}.sip_server.1.failback_timeout = 3600
+account.{{ line }}.sip_server.1.failback_mode = 0
+account.{{ line }}.sip_server.1.failback_subscribe.enable = 0
+account.{{ line }}.sip_server.1.only_signal_with_registered = 0
+account.{{ line }}.sip_server.1.invite_retry_counts = 3
+
+account.{{ line }}.outbound_proxy.2.register_on_enable = -1
+account.{{ line }}.outbound_proxy.2.failback_timeout = -1
+account.{{ line }}.outbound_proxy.2.failback_mode = -1
+account.{{ line }}.outbound_proxy.2.retry_counts = -1
+account.{{ line }}.outbound_proxy.2.only_signal_with_registered = -1
+account.{{ line }}.outbound_proxy.2.failback_subscribe.enable = -1
+account.{{ line }}.outbound_proxy.2.invite_retry_counts = -1
+
+account.{{ line }}.sip_server.2.register_on_enable = 0
+account.{{ line }}.sip_server.2.failback_timeout = 3600
+account.{{ line }}.sip_server.2.failback_mode = 0
+account.{{ line }}.sip_server.2.failback_subscribe.enable = 0
+account.{{ line }}.sip_server.2.only_signal_with_registered = 0
+account.{{ line }}.sip_server.2.invite_retry_counts = 3
+
+account.{{ line }}.static_cache_pri = 0
+account.{{ line }}.dns_cache_type = 1
+account.{{ line }}.naptr_build = 0
+account.{{ line }}.fallback.timeout = 120
+account.{{ line }}.fallback.redundancy_type = 0
+account.{{ line }}.reg_failed_retry_max_time = 60
+account.{{ line }}.reg_failed_retry_min_time = 0
+account.{{ line }}.redundancy_with_reg_fail.enable = 0
+
+##V83 Add
+account.{{ line }}.sip_server.1.outbound_proxy_enable = 0
+account.{{ line }}.sip_server.2.outbound_proxy_enable = 0
+
+################################################################
+#                        SIP Basic config                     ##
+################################################################
+account.{{ line }}.contact_take_line_param = 0
+account.{{ line }}.update_ack_while_dialing = 0
+account.{{ line }}.srtp_lifetime = 0
+account.{{ line }}.third_part_request_with_route.enable = 0
+account.{{ line }}.insert_outbound_in_route.enable = 0
+account.{{ line }}.path.enable = 0
+account.{{ line }}.sub_fail_retry_interval = 30
+account.{{ line }}.transfer_refer_to_contact_header.enable = 1
+account.{{ line }}.hold_use_inactive = 0
+account.{{ line }}.gruu.enable = 0
+account.{{ line }}.dial_tone = 0
+account.{{ line }}.call_id_mode = 0
+account.{{ line }}.subscribe_expires_overlap = -1
+account.{{ line }}.register_expires_overlap = -1
+account.{{ line }}.call_info = notused
+account.{{ line }}.custom_ua =
+account.{{ line }}.mwi_parse_terminated = 0
+account.{{ line }}.check_cseq.enable = 0
+account.{{ line }}.check_to_tag.enable = 0
+account.{{ line }}.vq_rtcpxr.collector_server_port = 5060
+account.{{ line }}.vq_rtcpxr.collector_server_host =
+account.{{ line }}.vq_rtcpxr.collector_name =
+account.{{ line }}.compact_header_enable = 0
+account.{{ line }}.cp_source = 0
+account.{{ line }}.cid_source_ppi = 1
+account.{{ line }}.cid_source_privacy = 1
+account.{{ line }}.reg_with_pani_header.enable =
+account.{{ line }}.alert_info =
+account.{{ line }}.picture_info_enable = 0
+
+##V83 Add
+account.{{ line }}.invite_with_pani_header.enable = 0
+
+##V84 Add
+account.{{ line }}.invite_with_rpid_header.enable = 1
+
+account.{{ line }}.auto_answer_mute_enable =
+
+##V84 SP4 Add
+account.{{ line }}.share_line.enable_private_code =
+account.{{ line }}.share_line.cancel_private_code =
+
+#######################################################################################
+##                                 History                                           ##
+#######################################################################################
+account.{{ line }}.missed_calllog = 1
+
+
+#######################################################################################
+##                                  Forward                                          ##
+#######################################################################################
+account.{{ line }}.timeout_fwd.off_code = {{ cftimeoutoff }}
+account.{{ line }}.timeout_fwd.on_code = {{ cftimeouton }}
+account.{{ line }}.timeout_fwd.timeout = {{ cftimeout }}
+account.{{ line }}.timeout_fwd.target = {{ _context['timeout_fwd_target_' ~ line]|default }}
+account.{{ line }}.timeout_fwd.enable = {{ _context['timeout_fwd_enable_' ~ line]|default }}
+account.{{ line }}.busy_fwd.off_code = {{ cfbusyoff }}
+account.{{ line }}.busy_fwd.on_code = {{ cfbusyon }}
+account.{{ line }}.busy_fwd.target = {{ _context['busy_fwd_target_' ~ line]|default }}
+account.{{ line }}.busy_fwd.enable = {{ _context['busy_fwd_enable_' ~ line]|default }}
+account.{{ line }}.always_fwd.off_code = {{ cfalwaysoff }}
+account.{{ line }}.always_fwd.on_code = {{ cfalwayson }}
+account.{{ line }}.always_fwd.target = {{ _context['always_fwd_target_' ~ line]|default }}
+account.{{ line }}.always_fwd.enable = {{ _context['always_fwd_enable_' ~ line]|default }}
+
+
+#######################################################################################
+##                                  DND                                              ##
+#######################################################################################
+account.{{ line }}.dnd.enable = {{ _context['dnd_enable_' ~ line]|default }}
+account.{{ line }}.dnd.off_code = {{ dndoff }}
+account.{{ line }}.dnd.on_code = {{ dndon }}
+
+
+
+#######################################################################################
+##                               Voice Mail                                          ##
+#######################################################################################
+voice_mail.number.1 = {{ _context['voicemail_number_' ~ line]|default }}
+account.{{ line }}.subscribe_mwi = 1
+account.{{ line }}.subscribe_mwi_to_vm = 0
+account.{{ line }}.subscribe_mwi_expires = 3600
+account.{{ line }}.display_mwi.enable = 1
+
+#######################################################################################
+##                               Auto Dial                                           ##
+#######################################################################################
+account.{{ line }}.auto_dial_enable =
+account.{{ line }}.auto_dial_num =
+
+
+#######################################################################################
+##                           Preference&Status                                       ##
+#######################################################################################
+account.{{ line }}.ringtone.ring_type = {{ _context['account_default_ringtone_' ~ line]|default }}
+
+#######################################################################################
+##                           Digitmap                                                ##
+#######################################################################################
+account.{{ line }}.dialplan.digitmap.enable = 0
+account.{{ line }}.dialplan.digitmap.string =
+account.{{ line }}.dialplan.digitmap.no_match_action =
+account.{{ line }}.dialplan.digitmap.interdigit_short_timer = 3
+account.{{ line }}.dialplan.digitmap.interdigit_long_timer =
+account.{{ line }}.dialplan.digitmap.apply_to.press_send =
+account.{{ line }}.dialplan.digitmap.apply_to.forward =
+account.{{ line }}.dialplan.digitmap.apply_to.history_dial =
+account.{{ line }}.dialplan.digitmap.apply_to.directory_dial =
+account.{{ line }}.dialplan.digitmap.apply_to.on_hook_dial =
+account.{{ line }}.dialplan.digitmap.active.on_hook_dialing =
+
+
+#######################################################################################
+##                                 Rings Settings                                    ##
+#######################################################################################
+account.{{ line }}.alert_info_url_enable = 1
+
+
+#######################################################################################
+##                                  BLF/BLF List                                     ##
+#######################################################################################
+account.{{ line }}.blf.blf_list_uri =
+account.{{ line }}.blf_list_barge_in_code =
+account.{{ line }}.blf_list_code =
+account.{{ line }}.blf_list_retrieve_call_parked_code =
+account.{{ line }}.blf.subscribe_period = 1800
+account.{{ line }}.blf.match_host.enable = 0
+account.{{ line }}.out_dialog_blf_enable = 0
+account.{{ line }}.blf.subscribe_event = 0
+
+##V84 Add
+account.{{ line }}.blf_list_call_parked_code =
+account.{{ line }}.blf_list_call_parked_list =
+
+##V84 SP4 ADD
+account.{{ line }}.blf_list_whisper_code =
+account.{{ line }}.blf_list_listen_in_code =
+
+
+#######################################################################################
+##                                   SCA                                             ##
+#######################################################################################
+account.{{ line }}.shared_line = 0
+account.{{ line }}.line_seize.expires = 15
+account.{{ line }}.shared_line_one_touch_bargein.enable = 0
+account.{{ line }}.shared_line_one_touch_retrieve.enable = 1
+account.{{ line }}.sca_manage_interface_display_time = 10
+account.{{ line }}.shared_line_callpull_code =
+
+##V83 Add
+account.x.share_line.barge_in.enable = 1
+
+#######################################################################################
+##                                   BLA                                             ##
+#######################################################################################
+account.{{ line }}.bla_number =
+account.{{ line }}.bla_subscribe_period = 300
+account.{{ line }}.bla.notify_with_expire.enable = 1
+account.{{ line }}.bla.subscribe_uri_build_type = 0
+
+#######################################################################################
+##                                   Call Park                                       ##
+#######################################################################################
+account.{{ line }}.callpark_enable = 1
+
+
+#######################################################################################
+##                                    Broadsoft ACD                                  ##
+#######################################################################################
+account.{{ line }}.acd.enable = 0
+account.{{ line }}.acd.available = 0
+account.{{ line }}.acd.unavailable_reason_enable = 0
+account.{{ line }}.acd.initial_state = 1
+account.{{ line }}.subscribe_acd_expires = 3600
+
+
+#######################################################################################
+##                                 Broadsoft ACD Call Center                         ##
+#######################################################################################
+##account.X.reason_code.Y=
+##account.X.reason_code_name.Y=
+##account.X.bw_disp_code.Y=
+##account.X.bw_disp_code_name.Y=
+##account.X.supervisor_info_code.Y=
+##account.X.supervisor_info_code_name.Y=
+##The value Y must be continuous.
+
+account.{{ line }}.reason_code.1 =
+account.{{ line }}.reason_code_name.1 =
+account.{{ line }}.bw_disp_code.1 =
+account.{{ line }}.bw_disp_code_name.1 =
+account.{{ line }}.supervisor_info_code.1 =
+account.{{ line }}.supervisor_info_code_name.1 =
+
+#######################################################################################
+##                                 Broadsoft Call Center                             ##
+#######################################################################################
+account.{{ line }}.call_center.call_info_enable = 0
+account.{{ line }}.call_center.show_call_info_time = 30
+account.{{ line }}.call_center.disp_code_enable = 0
+account.{{ line }}.call_center.trace_enable = 0
+account.{{ line }}.call_center.emergency_enable = 0
+account.{{ line }}.call_center.queue_status_enable = 0
+account.{{ line }}.call_center.queue_status_light_enable = 0
+
+
+
+#######################################################################################
+##                         Broadsoft Hoteling                                        ##
+#######################################################################################
+account.{{ line }}.hoteling.enable = 0
+account.{{ line }}.hoteling.user_id =
+account.{{ line }}.hoteling.password =
+account.{{ line }}.hoteling.expires = 3600
+account.{{ line }}.hoteling.auto_login_enable = 0
+
+
+#######################################################################################
+##                              Broadsoft XSI                                        ##
+#######################################################################################
+account.{{ line }}.xsi.user =
+account.{{ line }}.xsi.password =
+account.{{ line }}.xsi.host =
+account.{{ line }}.xsi.server_type = HTTP
+account.{{ line }}.xsi.port = 80
+
+
+#######################################################################################
+##                                Call Pickup                                        ##
+#######################################################################################
+account.{{ line }}.direct_pickup_code = {{ pickup_direct }}
+account.{{ line }}.group_pickup_code = {{ pickup_group }}
+account.{{ line }}.dialoginfo_callpickup = 0
+account.{{ line }}.refresh_remote_id.enable = 1
+
+
+#######################################################################################
+##                              Broadsoft Call Recording                             ##
+#######################################################################################
+account.{{ line }}.call_recording.enable = 0
+
+#######################################################################################
+##                                Network Conferene                                  ##
+#######################################################################################
+account.{{ line }}.conf_uri =
+
+
+#######################################################################################
+##                              Broadsoft Call Decline                               ##
+#######################################################################################
+account.{{ line }}.features.call_decline.enable =
+
+
+#######################################################################################
+##                       Broadsoft Security Classification                           ##
+#######################################################################################
+account.{{ line }}.security_classification.enable = 0
+
+
+
+#######################################################################################
+##                        Broadsoft Flexible Seating                                 ##
+#######################################################################################
+account.{{ line }}.flexible_seating.enable = 0
+account.{{ line }}.hoteling.pin =
+account.{{ line }}.hoteling.mode = 0
+
+#######################################################################################
+##                         Features Sync                                             ##
+#######################################################################################
+account.{{ line }}.features.forward.feature_key_sync.local_processing.enable =
+account.{{ line }}.features.dnd.feature_key_sync.local_processing.enable =
+
+##V84 Add
+account.{{ line }}.dnd.feature_key_sync.enable =
+account.{{ line }}.feature_key_sync.enable = 0
+account.{{ line }}.forward.feature_key_sync.enable =
+
+#######################################################################################
+##                                   ACD                                             ##
+#######################################################################################
+account.{{ line }}.acd.available_url =
+account.{{ line }}.acd.away_url =
+account.{{ line }}.acd.refresh_url =
+account.{{ line }}.acd.call_information =
+
+
+#######################################################################################
+##                                   PSTN                                            ##
+#######################################################################################
+pstn.account.{{ line }}.enable = 1
+pstn.account.{{ line }}.label =
+pstn.account.{{ line }}.ring_type = {{ _context['account_default_ringtone_' ~ line]|default }}
+pstn.account.{{ line }}.missed_calllog = 1
+pstn.account.{{ line }}.auto_answer = 0
+pstn.account.{{ line }}.auto_answer_mute_enable = 0
+{% endif %}
+{% endfor %}
+
+#######################################################################################
+##                                  virtual_user                                     ##
+#######################################################################################
+##V84 Add
+bw.virtual_user.1.enable = 0
+bw.virtual_user.1.label =
+bw.virtual_user.1.xsi.dnd.enable = 0
+bw.virtual_user.1.xsi.host =
+bw.virtual_user.1.xsi.password =
+bw.virtual_user.1.xsi.port = 80
+bw.virtual_user.1.xsi.server_type =
+bw.virtual_user.1.xsi.user =
+
+#######################################################################################
+##                                  Programablekey                                   ##
+#######################################################################################
+#programablekey.X.type
+#programablekey.X.line
+#programablekey.X.value
+#programablekey.X.xml_phonebook
+#programablekey.X.history_type
+#programablekey.X.label(X ranges from 1 to 4)
+#programablekey.X.extension
+##Programablekey X ranges(T48G/T48S/T46G/T46S: X=1-10, 12-14;T42G/T42S/T41P/T41S/T40P/T40G: X=1-10, 13;T29G/T27P/T27G: X=1-14;T23P/T23G/T21(P) E2: 1-10, 14;T19(P) E2: X=1-9, 13, 14;)##
+
+{% for number in 1..14 %}
+{% if _context['softkey_type_' ~ number] is defined %}
+
+programablekey.{{ number }}.type = {{ _context['softkey_type_' ~ number]|default }}
+programablekey.{{ number }}.label = {{ _context['softkey_label_' ~ number]|default }}
+programablekey.{{ number }}.value = {{ _context['softkey_value_' ~ number]|default }}
+programablekey.{{ number }}.line = {{ _context['softkey_line_' ~ number]|default }}
+programablekey.{{ number }}.history_type = {{ _context['softkey_history_type_' ~ number]|default }}
+programablekey.{{ number }}.xml_phonebook = {{ _context['softkey_xml_phonebook_' ~ number]|default }}
+programablekey.{{ number }}.extension = {{ _context['softkey_extension_' ~ number]|default }}
+
+{% endif %}
+{% endfor %}
+
+##V83 Add
+programablekey.type_range.custom =
+
+#######################################################################################
+##                                  Linekey                                          ##
+#######################################################################################
+##linekey.X.line
+##linekey.X.value
+##linekey.X.extension
+##linekey.X.type
+##linekey.X.xml_phonebook
+##linekey.X.shortlabel
+##linekey.X.label
+##LineKeyX ranges(T57W/T48G/S: X ranges from 1 to 29. T53W/T54W/T54S/T46G/T46S/T29G: X ranges from 1 to 27. T42G/T42S/T41P/T41S: X ranges from 1 to 15. T40P/T40G/T23P/T23G: X ranges from 1 to 3. T52S/T27P/T27G: X ranges from 1 to 21. T21(P) E2: X ranges from 1 to 2.)##
+## Not support T19P_E2
+
+{% for number in 1..30 %}
+{% if _context['linekey_type_' ~ number] is defined %}
+
+linekey.{{ number }}.type = {{ _context['linekey_type_' ~ number]|default }}
+linekey.{{ number }}.line = {{ _context['linekey_line_' ~ number]|default }}
+linekey.{{ number }}.value = {{ _context['linekey_value_' ~ number]|default }}
+linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number]|default }}
+linekey.{{ number }}.extension = {{ _context['linekey_extension_' ~ number]|default }}
+linekey.{{ number }}.xml_phonebook = {{ _context['linekey_xml_phonebook_' ~ number]|default }}
+
+{% endif %}
+{% endfor %}
+
+
+#######################################################################################
+##                                Expansion Key                                      ##
+#######################################################################################
+##expansion_module.X.key.Y.type
+##expansion_module.X.key.Y.line
+##expansion_module.X.key.Y.value
+##expansion_module.X.key.Y.extension
+##expansion_module.X.key.Y.label
+##expansion_module.X.key.Y.xml_phonebook
+## Expansion Key X ranges(SIP-T5XW/T54S/T52S: X ranges from 1 to 3, Y ranges from 1 to 60; SIP-T48G/T48S/T46G/T46S:X ranges from 1 to 6, Y ranges from 1 to 40; SIP-T29G/T27P/T27G:X ranges from 1 to 6, Y ranges from 1 to 20, 22 to 40 (Ext key 21 cannot be configured).)##
+## Only SIP-T5XW/T54S/T52S/T48G/T48S/T46G/T46S/T29G/T27P/T27G Models support the parameter.
+
+{% for module in 1..6 %}
+{% for number in 1..60 %}
+{% if _context['expkey_type_' ~ module ~ '_' ~ number] is defined %}
+
+expansion_module.{{ module }}.key.{{ number }}.type = {{ _context['expkey_type_' ~ module ~ '_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.line = {{ _context['expkey_line_' ~ module ~ '_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.value = {{ _context['expkey_value_' ~ module ~ '_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.extension = {{ _context['expkey_extension_' ~ module ~ '_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.label = {{ _context['expkey_label_' ~ module ~ '_' ~ number]|default }}
+expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = {{ _context['expkey_xml_phonebook_' ~ module ~ '_' ~ number]|default }}
+
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+#######################################################################################
+##                               Security                                            ##
+#######################################################################################
+
+static.security.user_password = admin:{{ adminpw }}
+static.security.user_password = user:{{ userpw }}
+static.security.user_password = var:{{ varpw }}
+static.security.user_name.var = var
+static.security.user_name.admin = admin
+static.security.user_name.user = user
+
+
+
