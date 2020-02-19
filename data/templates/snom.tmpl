@@ -63,7 +63,7 @@
         <http_user perm="">admin</http_user>
         <http_password perm="">{{ adminpw }}</http_password>
 
-        <setting_server perm="RW">{{ provisioning_url }}</setting_server>
+        <setting_server perm="RW">{{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}/{mac}.xml" }}</setting_server>
         {# snom allowed values: 3..15. active_backlight_level values: 1..10 #}
         <backlight perm="">{{ active_backlight_level + 5 }}</backlight>
         {# snom allowed values: 0..15. inactive_backlight_level values: 0 (off), 1 (low) #}
