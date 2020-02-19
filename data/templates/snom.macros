@@ -1,4 +1,32 @@
 #
+# dtmf_map -- translate "account_dtmf_type" value to Fanvil code
+#
+{% macro dtmf_map(account_dtmf_type) %}
+{% if account_dtmf_type == 'inband' %}
+    {{- 'off' -}}
+{% elseif account_dtmf_type == 'rfc4733' %}
+    {{- 'on' -}}
+{% elseif account_dtmf_type == 'sip_info' %}
+    {{- 'sip_info_only' -}}
+{% else %}
+    {{- 'off' -}}
+{% endif %}
+{% endmacro dtmf_map %}
+
+#
+# srtp_encryption_map -- translate "account_srtp_encryption" to Fanvil code
+#
+{% macro srtp_encryption_map(account_srtp_encryption) %}
+{% if account_srtp_encryption == 'optional' %}
+    {{- 'on' -}}
+{% elseif account_srtp_encryption == 'compulsory' %}
+    {{- 'on' -}}
+{% else %}
+    {{- 'off' -}}
+{% endif %}
+{% endmacro srtp_encryption_map %}
+
+#
 # Map ISO 639-1 codes to localized languages used by Snom
 #
 {% macro language(language)%}
