@@ -961,5 +961,5 @@
 {% if provisioning_url_scheme and provisioning_url_host and firmware_url_path %}
 {{ provisioning_url_scheme }}://{{ provisioning_url_host }}{{ firmware_url_path }}{{ tok2 }}/
 {% endif %}
-{% endmacro firmware_url%}
+{% endmacro %}
 
