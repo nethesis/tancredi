@@ -953,3 +953,44 @@
 {% macro screensaver_wait_time(screensaver_wait_time) %}
 {% if screensaver_wait_time == 0 %}0{% elseif screensaver_wait_time < 60 %}1{% elseif screensaver_wait_time < 120 %}2{% elseif screensaver_wait_time < 300 %}3{% elseif screensaver_wait_time < 600 %}4{% else %}5{% endif %}
 {% endmacro %}
+
+#
+# Translate srtp_encryption to Sangoma code
+#
+{% macro srtp(account_srtp_encryption_1) %}
+    {%- set map = {
+        "disabled": "0",
+        "compulsory": "2"
+        }
+    -%}
+{{- map[account_srtp_encryption_1] ?? '1' -}}
+{% endmacro %}
+
+#
+# Translate ringtone to Sangoma code
+#
+{% macro ringtone(ringtone) %}
+    {%- set map = {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        }
+    -%}
+{{- map[ringtone] ?? '0' -}}
+{% endmacro %}
+
+#
+# Translate provisioning_url_scheme to Sangoma code
+#
+{% macro provisioning_url_scheme(provisioning_url_scheme) %}
+    {%- set map = {
+        "http": "1",
+        "https": "3",
+        "tftp": "0",
+        "ftp": "2",
+        }
+    -%}
+{{- map[provisioning_url_scheme] ?? '3' -}}
+{% endmacro  %}
