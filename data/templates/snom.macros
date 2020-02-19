@@ -1,5 +1,21 @@
 #
-# dtmf_map -- translate "account_dtmf_type" value to Fanvil code
+# ringtone_map -- translate "account_"
+#
+{% macro ringtone_map(ringtone) %}
+{% if ringtone == 0 %}
+    {{- 'Silent' -}}
+{% elseif ringtone == -1 %}
+    {{- 'Custom' -}}
+{% elseif ringtone <= 10 %}
+    {{- 'Ringer' ~ ringtone -}}
+{% else %}
+    {{- 'Ringer1' -}}
+{% endif %}
+{% endmacro ringtone_map %}
+
+
+#
+# dtmf_map -- translate "account_dtmf_type" value to Snom code
 #
 {% macro dtmf_map(account_dtmf_type) %}
 {% if account_dtmf_type == 'inband' %}
@@ -14,7 +30,7 @@
 {% endmacro dtmf_map %}
 
 #
-# srtp_encryption_map -- translate "account_srtp_encryption" to Fanvil code
+# srtp_encryption_map -- translate "account_srtp_encryption" to Snom code
 #
 {% macro srtp_encryption_map(account_srtp_encryption) %}
 {% if account_srtp_encryption == 'optional' %}
