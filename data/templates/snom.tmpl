@@ -1,6 +1,7 @@
 {% import 'snom.macros' as snom %}
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
+{% autoescape %}
     <phone-settings>
         <language perm="">{{ snom.language(language) }}</language>
         {% if default_ringtone == 0 %}
@@ -59,7 +60,7 @@
 
         <admin_mode_password perm="">{{ adminpw }}</admin_mode_password>
         <admin_mode_password_confirm perm="">{{ adminpw }}</admin_mode_password_confirm>
-        <http_user perm="">admin</http_password>
+        <http_user perm="">admin</http_user>
         <http_password perm="">{{ adminpw }}</http_password>
 
         <setting_server perm="RW">{{ provisioning_url }}</setting_server>
@@ -763,4 +764,5 @@
             {% endif %}
         {% endfor %}
     </functionKeys>
+{% endautoescape %}
 </settings>
