@@ -112,7 +112,6 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
     $scope->metadata['displayName'] = $display_name;
     $scope->metadata['inheritFrom'] = (empty($model) ? 'defaults' : $model);
-    $scope->metadata['model'] = $model;
     $scope->metadata['scopeType'] = "phone";
     $scope->setVariables($variables);
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , TRUE); // create first time access token
@@ -158,7 +157,6 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
     if (array_key_exists('model',$patch_data)) {
         $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
         $scope->metadata['inheritFrom'] = $patch_data['model'];
-        $scope->metadata['model'] = $patch_data['model'];
         $scope->setVariables();
         $response = $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
         $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
