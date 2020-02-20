@@ -924,4 +924,36 @@
 {% if tonezone_map[tonezone] %}{{ tonezone_map[tonezone] }}{% else %}Great Britain{% endif %}
 {% endmacro %}
 
+#
+# Translate dss_transfer to yealink code
+#
+{% macro dss_transfer(dss_transfer) %}
+    {%- set map = {
+        "verify": "0",
+        "attended": "1",
+        "blind": "2"
+        }
+    -%}
+{{- map[dss_transfer] ?? '2' -}}
+{% endmacro dss_transfer %}
+
+#
+# Translate ringtone to yealink code
+#
+{% macro ringtone(ringtone) %}
+    {%- set map = {
+        "0": "Silent.wav",
+        "1": "Ring1.wav",
+        "2": "Ring2.wav",
+        "3": "Ring3.wav",
+        "4": "Ring4.wav",
+        "5": "Ring5.wav",
+        "6": "Ring6.wav",
+        "7": "Ring7.wav",
+        "8": "Ring8.wav",
+        "10": "Splash.wav"
+        }
+    -%}
+{{- map[ringtone] ?? 'Ring1.wav' -}}
+{% endmacro ringtone %}
 
