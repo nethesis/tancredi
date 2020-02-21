@@ -66,7 +66,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     }
 
     // Add user agent
-    $scope_data['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+    $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
     $this->logger->debug(print_r($scope_data,true));
     if (array_key_exists($template_var_name,$scope_data)) {
