@@ -143,7 +143,7 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     $scope_data['provisioning_url_path'] = $config['provisioning_url_path'];
 
     // Add user agent
-    $scope_data['user-agent'] = $_SERVER['HTTP_USER_AGENT'];
+    $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
     $this->logger->debug(print_r($scope_data,true));
     if (array_key_exists($template_var_name,$scope_data)) {
