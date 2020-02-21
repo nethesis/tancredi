@@ -1,0 +1,51 @@
+#
+# dtmf_map -- translate "account_dtmf_type" value to Fanvil code
+#
+{% macro dtmf_map(account_dtmf_type) %}
+{% if account_dtmf_type == 'inband' %}
+    {{- '0' -}}
+{% elseif account_dtmf_type == 'rfc4733' %}
+    {{- '1' -}}
+{% elseif account_dtmf_type == 'sip_info' %}
+    {{- '3' -}}
+{% else %}
+    {{- '0' -}}
+{% endif %}
+{% endmacro dtmf_map %}
+
+#
+# Translate the language name to Gigaset language code
+#
+{% macro language_code(lang) %}
+    {%- set code = {
+        "en": "en-us",
+        "it": "it-it"
+} -%}
+    {{- code[lang] ?? 'en-us' -}}
+{% endmacro language_code %}
+
+#
+# Translate the tones country to Gigaset tonezone
+#
+{% macro tones_code(country) %}
+    {%- set tones = {
+        "it": "ITA",
+        "us": "USA"
+} -%}
+    {{- tones[country] ?? 'INT' -}}
+{% endmacro tones_code %}
+
+#
+# The Gigaset timezone parameters map
+#
+{% macro timezone_map(tz) %}
+{%- set tz_map = {
+  "Europe/Rome": "GMT+1.Europe/Amsterdam",
+  "UTC": "GMT.Europe/London"
+} -%}
+{% if tz_map[tz] is defined %}
+    {{- tz_map[tz] -}}
+{% else %}
+    {{- tz_map['UTC'] -}}
+{% endif %}
+{% endmacro timezone_map %}
