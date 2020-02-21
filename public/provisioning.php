@@ -22,7 +22,7 @@ $container['storage'] = function($c) {
 };
 
 $app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
+    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()) . " " . $_SERVER['HTTP_USER_AGENT']);
     global $config;
     $logger = new \Monolog\Logger('Tancredi');
     $filename = $args['filename'];
@@ -72,6 +72,9 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         $scope_data['provisioning_url_host'] = gethostname();
     }
 
+    // Add user agent
+    $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+
     $this->logger->debug(print_r($scope_data,true));
     if (array_key_exists($template_var_name,$scope_data)) {
         $template = $scope_data[$template_var_name];
@@ -102,7 +105,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
 });
 
 $app->get('/{filename}', function(Request $request, Response $response, array $args) use ($app) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
+    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()) . " " . $_SERVER['HTTP_USER_AGENT']);
     global $config;
     $filename = $args['filename'];
     $this->logger->info('Received a file request without token. File: ' . $filename);
@@ -148,7 +151,10 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
 
     // Add provisioning_url_path variable
     $scope_data['provisioning_url_path'] = $config['provisioning_url_path'];
-	
+
+    // Add user agent
+    $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+
     $this->logger->debug(print_r($scope_data,true));
     if (array_key_exists($template_var_name,$scope_data)) {
         $template = $scope_data[$template_var_name];
@@ -209,4 +215,3 @@ function saveNotFoundScopes($scope_id){
 
 // Run app
 $app->run();
-
