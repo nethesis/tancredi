@@ -59,6 +59,13 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     //Add token2 variable
     $scope_data['tok2'] = \Tancredi\Entity\TokenManager::getToken2($id);
 
+    // Add provisioning_complete variable
+    if ($token === $scope_data['tok2']) {
+        $scope_data['provisioning_complete'] = '1';
+    } else {
+        $scope_data['provisioning_complete'] = '';
+    }
+
     // Add provisioning_url_path and provisioning_url_host variables
     $scope_data['provisioning_url_path'] = $config['provisioning_url_path'];
     if(empty($scope_data['provisioning_url_host'])) {
@@ -138,6 +145,9 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     }
     //Add token2 variable
     $scope_data['tok2'] = \Tancredi\Entity\TokenManager::getToken2($id);
+
+    // Add provisioning_complete variable
+    $scope_data['provisioning_complete'] = '';
 
     // Add provisioning_url_path variable
     $scope_data['provisioning_url_path'] = $config['provisioning_url_path'];
