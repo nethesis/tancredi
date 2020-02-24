@@ -18,7 +18,18 @@
     <param name="WebUI.Language" value="{{ gigaset.language_code(language) }}" />
     
     <param name="FirmwareManagment.AutomaticCheckForUpdates" value="0" />
+    <param name="System.Provision.Period" value="{{ provisioning_complete ? '0' : '600' }}" />
     <param name="System.Provision.ProvisioningServer" value="{{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}/%MACD.xml" }}" />
+
+    {% if provisioning_complete -%}
+    <param name="SIP.Port" value="{{ account_server_port_1 ?: account_srtp_encryption_1 == 'compulsory' ? '5061' : '5060' }}" />
+    <param name="SIP.RTP.Port" value="5004"  />
+    <param name="SIP.Security.UseSIPS" value="{{ account_srtp_encryption_1 == 'compulsory' ? '2' : '0' }}" />
+    <param name="SIP.TransportProtocol" value="{{ account_srtp_encryption_1 == 'compulsory' ? '2' : '1' }}" />
+    <param name="SIP.Security.SRTP" value="{{ account_srtp_encryption_1 == 'compulsory' ? '1' : '0' }}" />
+    <param name="SIP.Security.AcceptNonSRTPCalls" value="{{ account_srtp_encryption_1 == 'compulsory' ? '0' : '1' }}" />
+    <param name="SIP.PRACK" value="0" />
+    {% endif %}
 
     <param name="SIP.DefaultAccount" value="0" />
 
@@ -38,6 +49,8 @@
     <param name="SIP.Account.{{ idx }}.RegistrationServer.Address" value="{{ _context['account_server_host_' ~ line] }}" />
     <param name="SIP.Account.{{ idx }}.RegistrationServer.Port" value="{{ _context['account_server_port_' ~ line] }}" />
     <param name="SIP.Account.{{ idx }}.DTMFTransmission" value="{{ gigaset.dtmf_map(_context['account_dtmf_type_' ~ line]) }}" />
+    <param name="SIP.Account.{{ idx }}.FailoverServer.Enabled" value="0" />
+    <param name="SIP.Account.{{ idx }}.STUN.Enabled" value="0" />
     {%- endif %}
     {%- endfor %}
 
