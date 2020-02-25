@@ -957,3 +957,92 @@
 {{- map[ringtone] ?? 'Ring1.wav' -}}
 {% endmacro ringtone %}
 
+#
+# Translate linekey type to yealink code
+#
+{% macro linekey_type(linekey_type) %}
+    {%- set map = {
+        "acd": "42",
+        "blf": "16",
+        "blf_list": "39",
+        "call_park": "10",
+        "conference": "1",
+        "direct_pickup": "9",
+        "directory": "61",
+        "dnd": "5",
+        "dtmf": "11",
+        "forward": "2",
+        "group_listening": "18",
+        "group_pickup": "23",
+        "hold": "4",
+        "hot_desking": "34",
+        "intercom": "14",
+        "ldap": "38",
+        "line": "15",
+        "local_group": "45",
+        "multicast_paging": "24",
+        "disabled": "0",
+        "paging_list": "66",
+        "phone_lock": "50",
+        "prefix": "40",
+        "private_hold": "20",
+        "recall": "7",
+        "record": "25",
+        "retrieve_park": "56",
+        "sms": "8",
+        "speed_dial": "13",
+        "transfer": "3",
+        "url": "17",
+        "url_record": "35",
+        "voice_mail": "12",
+        "xml_browser": "27",
+        "xml_directory": "47",
+        "xml_group": "22",
+        "zero_touch": "41"
+        }
+    -%}
+{{- map[linekey_type] ?? '0' -}}
+{% endmacro linekey_type %}
+
+#
+# Translate softkey type to yealink code
+#
+{% macro softkey_type(softkey_type) %}
+    {%- set map = {
+        "disabled": "0",
+        "forward": "2",
+        "dnd": "5",
+        "recall": "7",
+        "sms": "8",
+        "pick_up": "9",
+        "speed_dial": "13",
+        "intercom": "14",
+        "xml_group": "22",
+        "group_pickup": "23",
+        "multicast_paging": "24",
+        "xml_browser": "27",
+        "history": "28",
+        "menu": "30",
+        "new_sms": "32",
+        "status": "33",
+        "hot_desking": "34",
+        "ldap": "38",
+        "prefix": "40",
+        "zero_touch": "41",
+        "local_directory": "43",
+        "local_group": "45",
+        "xml_directory": "47",
+        "phone_lock": "50",
+        "switch_account_up": "51",
+        "switch_account_down": "52",
+        "directory": "61",
+        "paging_list": "66",
+        "custom_key": "73",
+        "favorite": "85",
+        "google_contacts": "104",
+        "extend": "150",
+        "dect_intercom": "310"
+        }
+    -%}
+{{- map[softkey_type] ?? '0' -}}
+{% endmacro softkey_type %}
