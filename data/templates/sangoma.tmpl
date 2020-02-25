@@ -450,7 +450,7 @@
         <P237 para="FirmwareUpGrade.ConfigServerPath">{{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}" }}</P237>
         <P1145 para="FirmwareUpGrade.AllowDHCPOption">66</P1145>
         <P145 para="FirmwareUpGrade.ToOverrideServer">{{ provisioning_complete ? '0' : '1' }}</P145>
-        <P194 para="FirmwareUpGrade.AutoUpgrade">1</P194>
+        <P194 para="FirmwareUpGrade.AutoUpgrade">{{ provisioning_complete ? '0' : '1' }}</P194>
         <P193 para="FirmwareUpGrade.CheckUpgradeTimes">{{ provisioning_complete ? sangoma.upgrade_wait_minutes(timezone) : '1' }}</P193>
 
         <!--Global Config-->
