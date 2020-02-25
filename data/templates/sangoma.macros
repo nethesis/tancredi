@@ -390,10 +390,9 @@
 {% endmacro pcode %}
 
 #
-# Generate pcode tag for ExpKeys
+# Map linekey types to Sangoma code
 #
-{% macro pcode_expkey(m, k, type, value, label) %}
-{% set pcode = 60000 + (m * 1000) + (k * 5) %}
+{% macro linekey_type_map(type) %}
 {% set type_map = {
     "":"0",
     "line":"1",
@@ -416,5 +415,35 @@
     "multicast_paging":"47",
     "hold":"29",
 } %}
-<P{{ pcode }}>{{ type_map[type] | default('0') }}</P{{ pcode }}><P{{ pcode + 1 }}>{{ value | default('') }}</P{{ pcode + 1 }}><P{{ pcode + 2 }}>{{ label | default('') }}</P{{ pcode + 2 }}>
+    {{- type_map[type] ?: '0' -}}
+{% endmacro linekey_type_map %}
+
+#
+# Generate pcode tag for ExpKeys
+#
+{% macro pcode_expkey(m, k, type, value, label) %}
+{% set pcode = 60000 + (m * 1000) + (k * 5) %}
+{% import _self as local %}
+<P{{ pcode }}>{{ local.linekey_type_map(type) | default('0') }}</P{{ pcode }}><P{{ pcode + 1 }}>{{ value | default('') }}</P{{ pcode + 1 }}><P{{ pcode + 2 }}>{{ label | default('') }}</P{{ pcode + 2 }}>
 {% endmacro pcode_expkey %}
+
+#
+# Map softkey types to Sangoma code
+#
+{% macro softkey_type_map(type) %}
+{% set type_map = {
+    "":"0",
+    "forward":"18",
+    "dnd":"21",
+    "recall":"22",
+    "pick_up":"6",
+    "speed_dial":"2",
+    "group_pickup":"7",
+    "history":"36",
+    "menu":"38",
+    "status":"40",
+    "ldap":"37",
+    "prefix":"11",
+} %}
+    {{- type_map[type] ?: '0' -}}
+{% endmacro softkey_type_map %}
