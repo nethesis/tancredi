@@ -182,8 +182,8 @@ static.auto_provision.weekly_upgrade_interval = 0
 #######################################################################################
 ##                                   Autop Repeat                                    ##
 #######################################################################################
-static.auto_provision.repeat.enable = 0
-static.auto_provision.repeat.minutes = 1440
+static.auto_provision.repeat.enable = {% if provisioning_complete %}0{% else %}1{% endif %}
+static.auto_provision.repeat.minutes = {% if provisioning_complete %}1440{% else %}1{% endif %}
 
 #######################################################################################
 ##                                   Autop DHCP                                      ##
@@ -1802,9 +1802,24 @@ account.{{ line }}.video.h264hp.enable = 1
 account.{{ line }}.enable = {{ _context['account_line_active_' ~ line]|default }}
 account.{{ line }}.label = {{ _context['account_display_name_' ~ line]|default }}
 account.{{ line }}.display_name = {{ _context['account_display_name_' ~ line]|default }}
-account.{{ line }}.auth_name = {{ _context['account_username_' ~ line]|default }}
-account.{{ line }}.user_name = {{ _context['account_username_' ~ line]|default }}
-account.{{ line }}.password = {{ _context['account_password_' ~ line]|default }}
+account.{{ line }}.auth_name = 
+{%- if provisioning_complete %}
+ {{ _context['account_username_' ~ line]|default }}
+{% else %}
+ ****
+{% endif %}
+account.{{ line }}.user_name = 
+{%- if provisioning_complete %}
+ {{ _context['account_username_' ~ line]|default }}
+{% else %}
+ ****
+{% endif %}
+account.{{ line }}.password = 
+{%- if provisioning_complete %}
+ {{ _context['account_password_' ~ line]|default }}
+{% else %}
+ ****
+{% endif %}
 account.{{ line }}.sip_server.1.address = {{ _context['account_server_host_' ~ line]|default }}
 account.{{ line }}.sip_server.1.port = {{ _context['account_server_port_' ~ line]|default }}
 account.{{ line }}.sip_server.1.transport_type = {{ _context['account_transport_type_' ~ line] == 'udp' ? '0' : '2'  }}
