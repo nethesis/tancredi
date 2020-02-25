@@ -1,21 +1,24 @@
-{# Map english language to localized languages used by Sangoma #}
+#
+# Map language codes to localized languages used by Sangoma
+#
 {% macro language(language)%}
 {% set language_map = {
-    "Danish" : "0",
-    "Dutch" : "11",
-    "English" : "0",
-    "English" : "7",
-    "French" : "1",
-    "German" : "2",
-    "Italian" : "6",
-    "Portuguese" : "4",
-    "Russian" : "5",
-    "Spanish" : "3",
-    "Turkish" : "8"
+    "nl" : "11",
+    "en" : "0",
+    "fr" : "1",
+    "de" : "2",
+    "it" : "6",
+    "pt" : "4",
+    "ru" : "5",
+    "es" : "3",
+    "tr" : "8"
 } %}
-{% if language_map[language] %}{{ language_map[language] }}{% else %}0{% endif %}
+    {{- language_map[language] ?: language_map['en'] -}}
 {% endmacro %}
-{# Map timezones to Sangoma format#}
+
+#
+# Map timezones to Sangoma format
+#
 {% macro timezone(timezone) %}
 {% set timezone_map = {
     "Africa/Abidjan" : "40",
@@ -441,9 +444,12 @@
     "Pacific/Wallis" : "102",
     "UTC" : "39"
 } %}
-{% if timezone_map[timezone] %}{{ timezone_map[timezone] }}{% else %}0{% endif %}
+    {{- timezone_map[timezone] ?: timezone_map['UTC'] -}}
 {% endmacro %}
-{# Map timezones to Sangoma timezone label format#}
+
+#
+# Map timezone to Sangoma timezone label format
+#
 {% macro timezoneName(timezone) %}
 {% set timezone_name_map = {
     "Africa/Abidjan" : "Morocco",
@@ -869,9 +875,12 @@
     "Pacific/Wallis" : "New Zealand(Wellington,Auckland)",
     "UTC" : "United Kingdom(London)"
 } %}
-{% if timezone_name_map[timezone] %}{{ timezone_name_map[timezone] }}{% else %}United Kingdom(London){% endif %}
+    {{- timezone_name_map[timezone] ?: timezone_name_map['UTC'] -}}
 {% endmacro %}
-{# Map tonezone to Sangoma format#}
+
+#
+# Map tonezone to Sangoma format
+#
 {% macro tonezone(tonezone) %}
 {% set tonezone_map = {
     "ao" : "23",
@@ -930,18 +939,24 @@
     "us-old" : "28",
     "ve" : "24"
 } %}
-{% if tonezone_map[tonezone] %}{{ tonezone_map[tonezone] }}{% else %}Great Britain{% endif %}
+    {{- tonezone_map[tonezone] ?: tonezone_map['us'] -}}
 {% endmacro %}
-{# Map dtmf type #}
-{% macro dtmf(dtmf)%}
+
+#
+# Map dtmf type
+#
+{% macro dtmf(dtmf) %}
 {% set dtmf_map = {
     "inband" : "0",
     "rfc2833" : "1",
     "sip_info" : "2",
 } %}
-{% if dtmf_map[dtmf] %}{{ dtmf_map[dtmf] }}{% else %}0{% endif %}
+    {{- dtmf_map[dtmf] ?: '0' -}}
 {% endmacro %}
-{# Map date_format type #}
+
+#
+# Map date_format type
+#
 {% macro date_format(date_format)%}
 {% set date_format_map = {
     "2" : "0",
@@ -949,7 +964,10 @@
 } %}
 {% if date_format_map[date_format] %}{{ date_format_map[date_format] }}{% else %}2{% endif %}
 {% endmacro %}
-{# map screensaver_wait_time from seconds to sangoma values #}
+
+#
+# map screensaver_wait_time from seconds to sangoma values
+#
 {% macro screensaver_wait_time(screensaver_wait_time) %}
 {% if screensaver_wait_time == 0 %}0{% elseif screensaver_wait_time < 60 %}1{% elseif screensaver_wait_time < 120 %}2{% elseif screensaver_wait_time < 300 %}3{% elseif screensaver_wait_time < 600 %}4{% else %}5{% endif %}
 {% endmacro %}
