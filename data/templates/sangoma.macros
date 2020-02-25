@@ -1,4 +1,11 @@
 #
+# Calculate the minutes to wait before the next upgrade round
+#
+{% macro upgrade_wait_minutes(timezone) %}
+  {{- ((('tomorrow 01:00' | date('U', timezone)) - ('now' | date('U', timezone)))/60 + random(1,180)) | round -}}
+{% endmacro upgrade_wait_minutes %}
+
+#
 # Map language codes to localized languages used by Sangoma
 #
 {% macro language(language)%}

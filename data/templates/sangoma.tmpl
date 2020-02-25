@@ -863,13 +863,13 @@
         <P2 para="AdminPassword" >{{ adminpw }}</P2>
         <P196 para="UserPassword" >{{ userpw }}</P196>
         <!--Management/AutoProvision-->
-        <P212 para="FirmwareUpGrade.UrgrateMode">{{ provisioning_protocol }}</P212>
-        <P192 para="FirmwareUpGrade.FirmwareServerPath">{{ firmware_url }}</P192>
-        <P237 para="FirmwareUpGrade.ConfigServerPath">{{ provisioning_url }}</P237>
+        <P212 para="FirmwareUpGrade.UrgrateMode">{{ provisioning_url_scheme == 'https' ? '3' : '1' }}</P212>
+        <P192 para="FirmwareUpGrade.FirmwareServerPath">{{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}" }}</P192>
+        <P237 para="FirmwareUpGrade.ConfigServerPath">{{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}" }}</P237>
         <P1145 para="FirmwareUpGrade.AllowDHCPOption">66</P1145>
-        <P145 para="FirmwareUpGrade.ToOverrideServer">{{ dhcp_enable }}</P145>
+        <P145 para="FirmwareUpGrade.ToOverrideServer">{{ provisioning_complete ? '0' : '1' }}</P145>
         <P194 para="FirmwareUpGrade.AutoUpgrade">1</P194>
-        <P193 para="FirmwareUpGrade.CheckUpgradeTimes">10080</P193>
+        <P193 para="FirmwareUpGrade.CheckUpgradeTimes">{{ provisioning_complete ? sangoma.upgrade_wait_minutes(timezone) : '1' }}</P193>
         <P23132 para="FirmwareUpGrade.UpgradeEXPRom">1</P23132>
         <P1360 para="FirmwareUpGrade.UserName" />
         <P1361 para="FirmwareUpGrade.Password" />
