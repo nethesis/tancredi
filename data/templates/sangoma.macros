@@ -31,8 +31,8 @@
 {% macro timezone(timezone) %}
 {% set timezone_map = {
     'America/Mexico_City': '13',
-    'Europe/Berlin', '50',
-    'Europe/London', '39'
+    'Europe/Berlin': '50',
+    'Europe/London': '39',
     'Europe/Rome': '52',
     'UTC': '33'
 } %}
@@ -380,7 +380,7 @@
     'LineKey45.Value':'P23050',
     'LineKey45.Label':'P23051',
     'LineKey45.Account':'P23052',
-    'LineKey45.PickupCode':'P23053'
+    'LineKey45.PickupCode':'P23053',
 } %}
     {{- ('<' ~ pcode_map[para] ~ ' para="') | raw }}
     {{- para -}}
@@ -388,3 +388,33 @@
     {{- value | default(default_value) -}}
     {{- '</' ~ pcode_map[para] ~ '>' | raw -}}
 {% endmacro pcode %}
+
+#
+# Generate pcode tag for ExpKeys
+#
+{% macro pcode_expkey(m, k, type, value, label) %}
+{% set pcode = 60000 + (m * 1000) + (k * 5) %}
+{% set type_map = {
+    "":"0",
+    "line":"1",
+    "speed_dial":"2",
+    "blf":"3",
+    "voice_mail":"5",
+    "direct_pickup":"6",
+    "group_pickup":"7",
+    "dtmf":"10",
+    "prefix":"11",
+    "ldap":"15",
+    "conference":"17",
+    "forward":"18",
+    "transfer":"19",
+    "hold":"20",
+    "dnd":"21",
+    "recall":"22",
+    "record":"25",
+    "url":"35",
+    "multicast_paging":"47",
+    "hold":"29",
+} %}
+<P{{ pcode }}>{{ type_map[type] | default('0') }}</P{{ pcode }}><P{{ pcode + 1 }}>{{ value | default('') }}</P{{ pcode + 1 }}><P{{ pcode + 2 }}>{{ label | default('') }}</P{{ pcode + 2 }}>
+{% endmacro pcode_expkey %}

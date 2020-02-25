@@ -67,9 +67,9 @@
         <P8684 para="DhcpVlan">{{ vlan_dhcp_enable }}</P8684>
         <!--FunctionKeys-->
         {% for idx in 1..cap_linekey_count %}
-        {{ pcode("LineKey#{idx}.Type", _context["linekey_type_#{idx}"], '0') }}
-        {{ pcode("LineKey#{idx}.Value", _context["linekey_value_#{idx}"], '') }}
-        {{ pcode("LineKey#{idx}.Label", _context["linekey_label_#{idx}"], '') }}
+        {{- sangoma.pcode("LineKey#{idx}.Type", _context["linekey_type_#{idx}"], '0') }}
+        {{ sangoma.pcode("LineKey#{idx}.Value", _context["linekey_value_#{idx}"], '') }}
+        {{ sangoma.pcode("LineKey#{idx}.Label", _context["linekey_label_#{idx}"], '') }}
         {% endfor %}
 
         <!--FunctionKeys/ProgrammableKey-->
@@ -89,6 +89,16 @@
         <P43303 para="SoftKey4.Account">0</P43303>
         <P43403 para="SoftKey4.Value">{{ softkey_value_4 }}</P43403>
         <P20046 para="ProgrammableKey4.Label">{{ softkey_label_4 }}</P20046>
+
+        <!--ExpKeys-->
+        {%- for m in 0..(cap_expmodule_count - 1) -%}
+        {%- for k in 0..(cap_expkey_count - 1) -%}
+        {%- set idx = 1 + k + (m * cap_expkey_count) -%}
+        {%- if _context["expkey_type_#{idx}"] is defined %}
+        {{ sangoma.pcode_expkey(m, k, _context["expkey_type_#{idx}"], _context["expkey_value_#{idx}"], _context["expkey_label_#{idx}"]) -}}
+        {%- endif -%}
+        {%- endfor -%}
+        {% endfor %}
 
         <!--Setting-->
         <!--Setting/Preference-->
@@ -190,79 +200,6 @@
 
         <!--Global Config-->
         <P8951 para="GlobalConfig.LogoText">{{ logo_text }}</P8951>
-
-        <!--Add Config for Expansion 1-->
-        {% set k = 60000 %}
-        {% set module = 1 %}
-        {% for number in 1..40 %}
-        {% if _context['softkey_type_' ~ number] is defined %}
-        <P{{ k }} para="Exp1_{{ number }}.Type">{{ _context['expkey_type_' ~ module ~ '_' ~ number]|default }}<P{{ k }}>
-        <P{{ k + 1 }} para="Exp{{ module }}_{{ number }}.Value">{{ _context['expkey_value_' ~ module ~ '_' ~ number]|default }}<P{{ k + 1 }}>
-        <P{{ k + 2 }} para="Exp{{ module }}_{{ number }}.Label">{{ _context['expkey_label_' ~ module ~ '_' ~ number]|default }}<P{{ k + 2 }}>
-        <P{{ k + 3 }} para="Exp{{ module }}_{{ number }}.Account">{{ _context['expkey_line_' ~ module ~ '_' ~ number]|default }}<P{{ k + 3 }}>
-        <P{{ k + 4 }} para="Exp{{ module }}_{{ number }}.PickupCode">{{ pickup_direct }}<P{{ k + 4 }}>
-        {% endif %}
-        {% endfor %}
-        <!--Add Config for Expansion 2-->
-        {% set k = 61000 %}
-        {% set module = 1 %}
-        {% for number in 1..40 %}
-        {% if _context['softkey_type_' ~ number] is defined %}
-        <P{{ k }} para="Exp1_{{ number }}.Type">{{ _context['expkey_type_' ~ module ~ '_' ~ number]|default }}<P{{ k }}>
-        <P{{ k + 1 }} para="Exp{{ module }}_{{ number }}.Value">{{ _context['expkey_value_' ~ module ~ '_' ~ number]|default }}<P{{ k + 1 }}>
-        <P{{ k + 2 }} para="Exp{{ module }}_{{ number }}.Label">{{ _context['expkey_label_' ~ module ~ '_' ~ number]|default }}<P{{ k + 2 }}>
-        <P{{ k + 3 }} para="Exp{{ module }}_{{ number }}.Account">{{ _context['expkey_line_' ~ module ~ '_' ~ number]|default }}<P{{ k + 3 }}>
-        <P{{ k + 4 }} para="Exp{{ module }}_{{ number }}.PickupCode">{{ pickup_direct }}<P{{ k + 4 }}>
-        {% endif %}
-        {% endfor %}
-        <!--Add Config for Expansion 3-->
-        {% set k = 62000 %}
-        {% set module = 1 %}
-        {% for number in 1..40 %}
-        {% if _context['softkey_type_' ~ number] is defined %}
-        <P{{ k }} para="Exp1_{{ number }}.Type">{{ _context['expkey_type_' ~ module ~ '_' ~ number]|default }}<P{{ k }}>
-        <P{{ k + 1 }} para="Exp{{ module }}_{{ number }}.Value">{{ _context['expkey_value_' ~ module ~ '_' ~ number]|default }}<P{{ k + 1 }}>
-        <P{{ k + 2 }} para="Exp{{ module }}_{{ number }}.Label">{{ _context['expkey_label_' ~ module ~ '_' ~ number]|default }}<P{{ k + 2 }}>
-        <P{{ k + 3 }} para="Exp{{ module }}_{{ number }}.Account">{{ _context['expkey_line_' ~ module ~ '_' ~ number]|default }}<P{{ k + 3 }}>
-        <P{{ k + 4 }} para="Exp{{ module }}_{{ number }}.PickupCode">{{ pickup_direct }}<P{{ k + 4 }}>
-        {% endif %}
-        {% endfor %}
-        <!--Add Config for Expansion 4-->
-        {% set k = 63000 %}
-        {% set module = 1 %}
-        {% for number in 1..40 %}
-        {% if _context['softkey_type_' ~ number] is defined %}
-        <P{{ k }} para="Exp1_{{ number }}.Type">{{ _context['expkey_type_' ~ module ~ '_' ~ number]|default }}<P{{ k }}>
-        <P{{ k + 1 }} para="Exp{{ module }}_{{ number }}.Value">{{ _context['expkey_value_' ~ module ~ '_' ~ number]|default }}<P{{ k + 1 }}>
-        <P{{ k + 2 }} para="Exp{{ module }}_{{ number }}.Label">{{ _context['expkey_label_' ~ module ~ '_' ~ number]|default }}<P{{ k + 2 }}>
-        <P{{ k + 3 }} para="Exp{{ module }}_{{ number }}.Account">{{ _context['expkey_line_' ~ module ~ '_' ~ number]|default }}<P{{ k + 3 }}>
-        <P{{ k + 4 }} para="Exp{{ module }}_{{ number }}.PickupCode">{{ pickup_direct }}<P{{ k + 4 }}>
-        {% endif %}
-        {% endfor %}
-        <!--Add Config for Expansion 5-->
-        {% set k = 64000 %}
-        {% set module = 1 %}
-        {% for number in 1..40 %}
-        {% if _context['softkey_type_' ~ number] is defined %}
-        <P{{ k }} para="Exp1_{{ number }}.Type">{{ _context['expkey_type_' ~ module ~ '_' ~ number]|default }}<P{{ k }}>
-        <P{{ k + 1 }} para="Exp{{ module }}_{{ number }}.Value">{{ _context['expkey_value_' ~ module ~ '_' ~ number]|default }}<P{{ k + 1 }}>
-        <P{{ k + 2 }} para="Exp{{ module }}_{{ number }}.Label">{{ _context['expkey_label_' ~ module ~ '_' ~ number]|default }}<P{{ k + 2 }}>
-        <P{{ k + 3 }} para="Exp{{ module }}_{{ number }}.Account">{{ _context['expkey_line_' ~ module ~ '_' ~ number]|default }}<P{{ k + 3 }}>
-        <P{{ k + 4 }} para="Exp{{ module }}_{{ number }}.PickupCode">{{ pickup_direct }}<P{{ k + 4 }}>
-        {% endif %}
-        {% endfor %}
-        <!--Add Config for Expansion 6-->
-        {% set k = 65000 %}
-        {% set module = 1 %}
-        {% for number in 1..40 %}
-        {% if _context['softkey_type_' ~ number] is defined %}
-        <P{{ k }} para="Exp1_{{ number }}.Type">{{ _context['expkey_type_' ~ module ~ '_' ~ number]|default }}<P{{ k }}>
-        <P{{ k + 1 }} para="Exp{{ module }}_{{ number }}.Value">{{ _context['expkey_value_' ~ module ~ '_' ~ number]|default }}<P{{ k + 1 }}>
-        <P{{ k + 2 }} para="Exp{{ module }}_{{ number }}.Label">{{ _context['expkey_label_' ~ module ~ '_' ~ number]|default }}<P{{ k + 2 }}>
-        <P{{ k + 3 }} para="Exp{{ module }}_{{ number }}.Account">{{ _context['expkey_line_' ~ module ~ '_' ~ number]|default }}<P{{ k + 3 }}>
-        <P{{ k + 4 }} para="Exp{{ module }}_{{ number }}.PickupCode">{{ pickup_direct }}<P{{ k + 4 }}>
-        {% endif %}
-        {% endfor %}
 
         <P20058 para="ToneSelectCountry">{{ sangoma.tonezone(tonezone) }}</P20058>
 
