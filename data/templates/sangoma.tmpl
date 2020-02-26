@@ -27,7 +27,7 @@
         <P109 para="Account1.OutCallWithoutReg">1</P109>
         <P33 para="Account1.VoiceMailId">{{ voicemail_number_1 }}</P33>
         <P20166 para="Account1.DtmfMode">{{ sangoma.dtmf(account_dtmf_type_1) }}</P20166>
-        <P183 para="Account1.SRtpMode">{{ account_srtp_encryption_1 == 'compulsory' ? '2' : '1' }}</P183>
+        <P183 para="Account1.SRtpMode">{{ account_srtp_encryption_1 == 'compulsory' ? '2' : '0' }}</P183>
         <P104 para="Account1.AccountRingTone">{{ account_default_ringtone_1 }}</P104>
         <P185 para="Account1.RingTimeout">60</P185>
         <P72 para="Account1.Use#AsDialKey">{{ pound ? 1 : 0 }}</P72>
