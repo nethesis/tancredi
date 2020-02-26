@@ -4,14 +4,15 @@
 <hl_provision version="1">
     <config version="1">
         <!--Account1/Basic-->
-        <P271 para="Account1.Active">{{ account_line_active_1 ?? '1' }}</P271>
-        <P47 para="Account1.Sipserver">{{ account_server_host_1 }}</P47>
-        <P967 para="Account1.FailoverSipserver">{{ account_server_host2_1 }}</P967>
+        {% if account_password_1 -%}
+        <P271 para="Account1.Active">{{ account_line_active_1 ? '1' : '0' }}</P271>
+        <P47 para="Account1.Sipserver">{{ account_server_host_1 }}:{{ account_server_port_1 ?: account_srtp_encryption_1 == 'compulsory' ? '5061' : '5060' }}</P47>
+        <P967 para="Account1.FailoverSipserver" />
         <P8851 para="Account1.SecondFailoverSipserver" />
         <P4567 para="Account1.PreferPrimaryServer">1</P4567>
         <P48 para="Account1.OutboundProxy" />
         <P20047 para="Account1.BackUpOutboundProxy" />
-        <P130 para="Account1.SipTransport">{{ account_transport_type_1 == '0' or account_transport_type_1 == '2' or account_transport_type_1 == '3' ? account_transport_type_1 : '0' }}</P130>
+        <P130 para="Account1.SipTransport">{{ account_transport_type_1 == 'tls' ? '2' : '0' }}</P130>
         <P52 para="Account1.NatTraversal">2</P52>
         <P20000 para="Account1.Lable">{{ account_display_name_1 }}</P20000>
         <P35 para="Account1.SipUserId">{{ account_username_1 }}</P35>
@@ -24,18 +25,16 @@
         <P81 para="Account1.UnregisterOnReboot">1</P81>
         <P32 para="Account1.RegisterExpiration">15</P32>
         <P109 para="Account1.OutCallWithoutReg">1</P109>
-        <P40 para="Account1.LocalSipPort">{{ account_server_port_1 > 0 ? account_server_port_1 : '5060' }}</P40>
-        <P78 para="Account1.UseRandomPort">0</P78>
         <P33 para="Account1.VoiceMailId">{{ voicemail_number_1 }}</P33>
-        <P79 para="Account1.DtmfPayloadType">101</P79>
         <P20166 para="Account1.DtmfMode">{{ sangoma.dtmf(account_dtmf_type_1) }}</P20166>
-        <P183 para="Account1.SRtpMode">{{ account_srtp_encryption_1 }}</P183>
+        <P183 para="Account1.SRtpMode">{{ account_srtp_encryption_1 == 'compulsory' ? '2' : '1' }}</P183>
         <P104 para="Account1.AccountRingTone">{{ account_default_ringtone_1 }}</P104>
         <P185 para="Account1.RingTimeout">60</P185>
         <P72 para="Account1.Use#AsDialKey">{{ pound ? 1 : 0 }}</P72>
         <P4200 para="Account1.DialPlan">\{[x*]+\}</P4200>
         <P4705 para="Account1.DirectCallPickupCode">{{ pickup_direct }}</P4705>
         <P4706 para="Account1.GroupCallPickupCode">{{ pickup_group }}</P4706>
+        {%- endif %}
 
         <!--Network/Basic-->
         <P8 para="IPv4WanMode">0</P8>

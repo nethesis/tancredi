@@ -81,8 +81,8 @@
 #
 {% macro dtmf(dtmf) %}
 {% set dtmf_map = {
-    "inband" : "0",
-    "rfc2833" : "1",
+    "inband" : "1",
+    "rfc4733" : "0",
     "sip_info" : "2",
 } %}
     {{- dtmf_map[dtmf] ?: '0' -}}
