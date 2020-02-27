@@ -249,7 +249,7 @@ SIP{{ line }} Failback Inter:1800
 SIP{{ line }} Signal Failbac:0
 SIP{{ line }} Signal Retry C:3
 SIP{{ line }} Ena RFC5939   :0
-SIP{{ line }} Media Crypto  :{{ fanvil.srtp_encryption_map(_context['account_srtp_encryption_' ~ line]) }}
+SIP{{ line }} Media Crypto  :{{ _context['account_encryption_' ~ line] ? '2' : '0' }}
 SIP{{ line }} SRTP Auth-Tag :0
 SIP{{ line }} Local Domain  :
 SIP{{ line }} Always FWD    :0
