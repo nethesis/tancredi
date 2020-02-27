@@ -1807,15 +1807,9 @@ account.{{ line }}.user_name = {{ _context['account_username_' ~ line]|default }
 account.{{ line }}.password = {{ _context['account_password_' ~ line]|default }}
 account.{{ line }}.sip_server.1.address = {{ _context['account_server_host_' ~ line]|default }}
 account.{{ line }}.sip_server.1.port = {{ _context['account_server_port_' ~ line]|default }}
-account.{{ line }}.sip_server.1.transport_type = {{ _context['account_transport_type_' ~ line] == 'udp' ? '0' : '2'  }}
+account.{{ line }}.sip_server.1.transport_type = {{ _context['account_encryption_' ~ line] ? '2' : '0'  }}
 account.{{ line }}.sip_server.1.expires = 3600
 account.{{ line }}.sip_server.1.retry_counts = 3
-
-account.{{ line }}.sip_server.2.address = {{ _context['account_server_host2_' ~ line]|default }}
-account.{{ line }}.sip_server.2.port = {{ _context['account_server_port2_' ~ line]|default }}
-account.{{ line }}.sip_server.2.transport_type = {{ _context['account_transport_type2_' ~ line] == 'udp' ? '0' : '2'  }}
-account.{{ line }}.sip_server.2.expires = 3600
-account.{{ line }}.sip_server.2.retry_counts = 3
 
 account.{{ line }}.outbound_proxy_enable = 0
 account.{{ line }}.outbound_proxy.1.address =
