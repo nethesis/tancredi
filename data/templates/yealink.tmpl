@@ -2002,7 +2002,7 @@ account.{{ line }}.auto_dial_num =
 #######################################################################################
 ##                           Preference&Status                                       ##
 #######################################################################################
-account.{{ line }}.ringtone.ring_type = {{ yealink.ringtone(_context['account_default_ringtone_' ~ line]|default(ringtone)) }}
+account.{{ line }}.ringtone.ring_type = {{ yealink.ringtone(ringtone) }}
 
 #######################################################################################
 ##                           Digitmap                                                ##
@@ -2185,7 +2185,7 @@ account.{{ line }}.acd.call_information =
 #######################################################################################
 pstn.account.{{ line }}.enable = 1
 pstn.account.{{ line }}.label =
-pstn.account.{{ line }}.ring_type = {{ yealink.ringtone(_context['account_default_ringtone_' ~ line]|default(ringtone)) }}
+pstn.account.{{ line }}.ring_type = {{ yealink.ringtone(ringtone) }}
 pstn.account.{{ line }}.missed_calllog = 1
 pstn.account.{{ line }}.auto_answer = 0
 pstn.account.{{ line }}.auto_answer_mute_enable = 0
