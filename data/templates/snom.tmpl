@@ -102,7 +102,7 @@
                 <user_outbound idx="{{ identity }}" perm="">
                     {{- _context['account_server_host_' ~ identity] ~ ':'
                         ~ _context['account_server_port_' ~ identity] ~ ';transport='
-                        ~ _context['account_transport_type_' ~ identity]
+                        ~ (_context['account_encryption_' ~ identity] ? 'tls' : 'udp')
                     -}}
                 </user_outbound>
                 <codec_priority_list idx="{{ identity }}" perm="">g722,pcmu,pcma,amr-0,amrwb-0,gsm,g723,g726-32,aal2-g726-32,g729,telephone-event</codec_priority_list>
