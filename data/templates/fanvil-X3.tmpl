@@ -294,7 +294,7 @@ SIP{{ line }} Quota Name    :0
 SIP{{ line }} Presence Mode :0
 SIP{{ line }} RFC Ver       :1
 SIP{{ line }} Signal Port   :5060
-SIP{{ line }} Transport     :{{ fanvil.transport_type_map(_context['account_transport_type_' ~ line]) }}
+SIP{{ line }} Transport     :{{ _context['account_encryption_' ~ line] ? '3' : '0' }}
 SIP{{ line }} Enable ChgPort:0
 SIP{{ line }} TLS Version   :0
 SIP{{ line }} Ena sips URI  :0

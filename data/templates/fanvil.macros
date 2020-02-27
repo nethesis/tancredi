@@ -1,19 +1,4 @@
 #
-# transport_type_map -- translate "account_transport_type" to Fanvil code
-#
-{% macro transport_type_map(account_transport_type) %}
-{% if account_transport_type == 'udp' %}
-    {{- '0' -}}
-{% elseif account_transport_type == 'tcp' %}
-    {{- '1' -}}
-{% elseif account_transport_type == 'tls' %}
-    {{- '3' -}}
-{% else %}
-    {{- '0' -}}
-{% endif %}
-{% endmacro transport_type_map %}
-
-#
 # srtp_encryption_map -- translate "account_srtp_encryption" to Fanvil code
 #
 {% macro srtp_encryption_map(account_srtp_encryption) %}
