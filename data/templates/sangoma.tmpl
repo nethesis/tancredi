@@ -5,7 +5,7 @@
     <config version="1">
         <!--Account1/Basic-->
         {% if account_password_1 -%}
-        <P271 para="Account1.Active">{{ account_line_active_1 ? '1' : '0' }}</P271>
+        <P271 para="Account1.Active">1</P271>
         <P47 para="Account1.Sipserver">{{ account_server_host_1 }}:{{ account_server_port_1 ?: account_srtp_encryption_1 == 'compulsory' ? '5061' : '5060' }}</P47>
         <P967 para="Account1.FailoverSipserver" />
         <P8851 para="Account1.SecondFailoverSipserver" />
