@@ -22,12 +22,12 @@
     <param name="System.Provision.ProvisioningServer" value="{{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}/%MACD.xml" }}" />
 
     {% if provisioning_complete -%}
-    <param name="SIP.Port" value="{{ account_server_port_1 ?: account_srtp_encryption_1 == 'compulsory' ? '5061' : '5060' }}" />
+    <param name="SIP.Port" value="{{ account_server_port_1 ?: account_encryption_1 ? '5061' : '5060' }}" />
     <param name="SIP.RTP.Port" value="5004"  />
-    <param name="SIP.Security.UseSIPS" value="{{ account_srtp_encryption_1 == 'compulsory' ? '2' : '0' }}" />
-    <param name="SIP.TransportProtocol" value="{{ account_srtp_encryption_1 == 'compulsory' ? '2' : '1' }}" />
-    <param name="SIP.Security.SRTP" value="{{ account_srtp_encryption_1 == 'compulsory' ? '1' : '0' }}" />
-    <param name="SIP.Security.AcceptNonSRTPCalls" value="{{ account_srtp_encryption_1 == 'compulsory' ? '0' : '1' }}" />
+    <param name="SIP.Security.UseSIPS" value="{{ account_encryption_1 ? '2' : '0' }}" />
+    <param name="SIP.TransportProtocol" value="{{ account_encryption_1 ? '2' : '1' }}" />
+    <param name="SIP.Security.SRTP" value="{{ account_encryption_1 ? '1' : '0' }}" />
+    <param name="SIP.Security.AcceptNonSRTPCalls" value="{{ account_encryption_1 ? '0' : '1' }}" />
     <param name="SIP.PRACK" value="0" />
     {% endif %}
 
