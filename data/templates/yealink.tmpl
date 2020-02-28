@@ -166,7 +166,7 @@ static.zero_touch.network_fail_wait_times = 8
 #######################################################################################
 ##                                   Autop URL                                       ##
 #######################################################################################
-static.auto_provision.server.url = {{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}/" }}
+static.auto_provision.server.url = {{ provisioning_url2 }}
 static.auto_provision.server.username =
 static.auto_provision.server.password =
 
@@ -279,7 +279,7 @@ static.managementserver.connection_request_username =
 #######################################################################################
 ##                            Firmware Update                                        ##
 #######################################################################################
-static.firmware.url = {{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}/" }}
+static.firmware.url = {{ provisioning_url2 }}
 
 #######################################################################################
 ##                            Confguration                                           ##
@@ -1651,10 +1651,10 @@ handset.{{ handset }}.name = {{ _context['handset_name_' ~ line]|default }}
 over_the_air.base_trigger = 1
 over_the_air.handset_tip = 1
 over_the_air.handset_trigger = 1
-over_the_air.url = {{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}/" }}
-over_the_air.url.w52h = {{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}/" }}
-over_the_air.url.w53h = {{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}/" }}
-over_the_air.url.w56h = {{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}/" }}
+over_the_air.url = {{ provisioning_url2 }}
+over_the_air.url.w52h = {{ provisioning_url2 }}
+over_the_air.url.w53h = {{ provisioning_url2 }}
+over_the_air.url.w56h = {{ provisioning_url2 }}
 
 auto_provision.custom.handset.protect = 1
 auto_provision.handset_configured.enable = 1

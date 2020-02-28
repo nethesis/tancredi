@@ -180,8 +180,8 @@
         <P196 para="UserPassword" >{{ userpw ?: '1234' }}</P196>
         <!--Management/AutoProvision-->
         <P212 para="FirmwareUpGrade.UrgrateMode">{{ provisioning_url_scheme == 'https' ? '3' : '1' }}</P212>
-        <P192 para="FirmwareUpGrade.FirmwareServerPath">{{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}" }}</P192>
-        <P237 para="FirmwareUpGrade.ConfigServerPath">{{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}" }}</P237>
+        <P192 para="FirmwareUpGrade.FirmwareServerPath">{{ provisioning_url2 }}</P192>
+        <P237 para="FirmwareUpGrade.ConfigServerPath">{{ provisioning_url2 }}</P237>
         <P1145 para="FirmwareUpGrade.AllowDHCPOption">66</P1145>
         <P145 para="FirmwareUpGrade.ToOverrideServer">0</P145>
         <P194 para="FirmwareUpGrade.AutoUpgrade">{{ provisioning_complete ? '0' : '1' }}</P194>

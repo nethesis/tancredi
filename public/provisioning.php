@@ -66,11 +66,9 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         $scope_data['provisioning_complete'] = '';
     }
 
-    // Add provisioning_url_path and hostname variables
-    $scope_data['provisioning_url_path'] = $config['provisioning_url_path'];
-    if(empty($scope_data['hostname'])) {
-        $scope_data['hostname'] = gethostname();
-    }
+    // Ensure default values for provisioning_url_path and hostname variables
+    $scope_data['provisioning_url_path'] = $scope_data['provisioning_url_path'] ?: $config['provisioning_url_path'];
+    $scope_data['hostname'] = $scope_data['hostname'] ?: gethostname();
 
     // Add user agent
     $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
@@ -149,11 +147,9 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     // Add provisioning_complete variable
     $scope_data['provisioning_complete'] = '';
 
-    // Add provisioning_url_path and hostname variables
-    $scope_data['provisioning_url_path'] = $config['provisioning_url_path'];
-    if(empty($scope_data['hostname'])) {
-        $scope_data['hostname'] = gethostname();
-    }
+    // Ensure default values for provisioning_url_path and hostname variables
+    $scope_data['provisioning_url_path'] = $scope_data['provisioning_url_path'] ?: $config['provisioning_url_path'];
+    $scope_data['hostname'] = $scope_data['hostname'] ?: gethostname();
 
     // Add user agent
     $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];

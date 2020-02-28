@@ -19,7 +19,7 @@
     
     <param name="FirmwareManagment.AutomaticCheckForUpdates" value="0" />
     <param name="System.Provision.Period" value="{{ provisioning_complete ? '0' : '600' }}" />
-    <param name="System.Provision.ProvisioningServer" value="{{ "#{provisioning_url_scheme}://#{provisioning_url_host}#{provisioning_url_path}#{tok2}/%MACD.xml" }}" />
+    <param name="System.Provision.ProvisioningServer" value="{{ provisioning_url2 }}" />
 
     {% if provisioning_complete -%}
     <param name="SIP.Port" value="{{ account_server_port_1 ?: account_srtp_encryption_1 == 'compulsory' ? '5061' : '5060' }}" />
