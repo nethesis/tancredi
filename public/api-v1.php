@@ -142,7 +142,8 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         return $response;
     }
 
-    if (array_key_exists('mac',$patch_data) or array_key_exists('model_url',$patch_data) or array_key_exists('tok1',$patch_data) or array_key_exists('tok2',$patch_data)) {
+    $readonly_params = ['mac', 'model_url', 'tok1', 'tok2', 'provisioning_url1', 'provisioning_url2'];
+    if (array_intersect($readonly_params, array_keys($patch_data))) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute',
             'title' => 'Cannot change a read-only attribute'
@@ -460,20 +461,26 @@ function getModelScope($id,$storage,$logger,$inherit = false, $original = false)
 function getPhoneScope($mac,$storage,$logger,$inherit = false) {
     global $config;
     $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger, null);
+    $vars = $scope->getVariables();
     if ($inherit) {
-        $scope_data = $scope->getVariables();
+        $scope_data = $vars;
     } else {
         $scope_data = $scope->data;
     }
+    $tok1 = \Tancredi\Entity\TokenManager::getToken1($mac);
+    $tok2 = \Tancredi\Entity\TokenManager::getToken2($mac);
     $results = array(
         'mac' => $mac,
         'model' => $scope->metadata['inheritFrom'],
         'display_name' => $scope->metadata['displayName'],
-        'tok1' => \Tancredi\Entity\TokenManager::getToken1($mac),
-        'tok2' => \Tancredi\Entity\TokenManager::getToken2($mac),
+        'tok1' => $tok1,
+        'tok2' => $tok2,
         'variables' => $scope_data,
         'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
     );
+    $provisioning_url_path = trim($vars['provisioning_url_path'], '/');
+    $results['provisioning_url1'] = "{$vars['provisioning_url_scheme']}://{$vars['server_name']}/{$provisioning_url_path}/{$tok1}/{$vars['provisioning_url_filename']}";
+    $results['provisioning_url2'] = "{$vars['provisioning_url_scheme']}://{$vars['server_name']}/{$provisioning_url_path}/{$tok2}/{$vars['provisioning_url_filename']}";
     return $results;
 }
 
