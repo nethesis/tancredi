@@ -478,9 +478,18 @@ function getPhoneScope($mac,$storage,$logger,$inherit = false) {
         'variables' => $scope_data,
         'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
     );
-    $provisioning_url_path = trim($vars['provisioning_url_path'], '/');
-    $results['provisioning_url1'] = "{$vars['provisioning_url_scheme']}://{$vars['server_name']}/{$provisioning_url_path}/{$tok1}/{$vars['provisioning_url_filename']}";
-    $results['provisioning_url2'] = "{$vars['provisioning_url_scheme']}://{$vars['server_name']}/{$provisioning_url_path}/{$tok2}/{$vars['provisioning_url_filename']}";
+    $provisioning_url_path = trim($vars['provisioning_url_path'], '/') . '/';
+    if($tok1 && $vars['provisioning_url_scheme'] && $vars['server_name']) {
+        $results['provisioning_url1'] = "{$vars['provisioning_url_scheme']}://{$vars['server_name']}/{$provisioning_url_path}{$tok1}/{$vars['provisioning_url_filename']}";
+    } else {
+        $results['provisioning_url1'] = NULL;
+    }
+    if($tok2 && $vars['provisioning_url_scheme'] && $vars['server_name']) {
+        $results['provisioning_url2'] = "{$vars['provisioning_url_scheme']}://{$vars['server_name']}/{$provisioning_url_path}{$tok2}/{$vars['provisioning_url_filename']}";
+    } else {
+        // Never return back an invalid provisioning URL!
+        throw new \LogicException(sprintf("%s - malformed provisioning_url2", 1582905675));
+    }
     return $results;
 }
 
