@@ -71,7 +71,7 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    $response = $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
+    $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
     $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
@@ -116,7 +116,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $scope->setVariables($variables);
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , TRUE); // create first time access token
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , FALSE); // create token
-    $response = $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),201,JSON_FLAGS);
+    $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),201,JSON_FLAGS);
     $response = $response->withHeader('Location', '/tancredi/api/v1/phones/' . $mac);
     $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
@@ -159,7 +159,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
         $scope->metadata['inheritFrom'] = $patch_data['model'];
         $scope->setVariables();
-        $response = $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
+        $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
         $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
@@ -454,42 +454,6 @@ function getModelScope($id,$storage,$logger,$inherit = false, $original = false)
         'variables' => $scope_data,
         'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
     );
-    return $results;
-}
-
-
-function getPhoneScope($mac,$storage,$logger,$inherit = false) {
-    global $config;
-    $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger, null);
-    $vars = $scope->getVariables();
-    if ($inherit) {
-        $scope_data = $vars;
-    } else {
-        $scope_data = $scope->data;
-    }
-    $tok1 = \Tancredi\Entity\TokenManager::getToken1($mac);
-    $tok2 = \Tancredi\Entity\TokenManager::getToken2($mac);
-    $results = array(
-        'mac' => $mac,
-        'model' => $scope->metadata['inheritFrom'],
-        'display_name' => $scope->metadata['displayName'],
-        'tok1' => $tok1,
-        'tok2' => $tok2,
-        'variables' => $scope_data,
-        'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
-    );
-    $provisioning_url_path = trim($vars['provisioning_url_path'], '/') . '/';
-    if($tok1 && $vars['provisioning_url_scheme'] && $vars['hostname']) {
-        $results['provisioning_url1'] = "{$vars['provisioning_url_scheme']}://{$vars['hostname']}/{$provisioning_url_path}{$tok1}/{$vars['provisioning_url_filename']}";
-    } else {
-        $results['provisioning_url1'] = NULL;
-    }
-    if($tok2 && $vars['provisioning_url_scheme'] && $vars['hostname']) {
-        $results['provisioning_url2'] = "{$vars['provisioning_url_scheme']}://{$vars['hostname']}/{$provisioning_url_path}{$tok2}/{$vars['provisioning_url_filename']}";
-    } else {
-        // Never return back an invalid provisioning URL!
-        throw new \LogicException(sprintf("%s - malformed provisioning_url2", 1582905675));
-    }
     return $results;
 }
 

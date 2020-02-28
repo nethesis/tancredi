@@ -120,5 +120,48 @@ class Scope {
         }
         return null;
     }
+
+    public static function getPhoneScope($mac, $storage, $logger, $inherit = false) {
+        global $config;
+        $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger, null);
+        $vars = $scope->getVariables();
+
+        $hostname = empty($vars['hostname']) ? $config['hostname'] : $vars['hostname'];
+        $provisioning_url_path = trim(empty($vars['provisioning_url_path']) ? $config['provisioning_url_path'] : $vars['provisioning_url_path'], '/') . '/';
+        $provisioning_url_scheme = empty($vars['provisioning_url_scheme']) ? $config['provisioning_url_scheme'] : $vars['provisioning_url_scheme'];
+
+        if ($inherit) {
+            $scope_data = $vars;
+            $scope_data['hostname'] = $hostname;
+            $scope_data['provisioning_url_path'] = $provisioning_url_path;
+            $scope_data['provisioning_url_scheme'] = $provisioning_url_scheme;
+        } else {
+            $scope_data = $scope->data;
+        }
+        $tok1 = \Tancredi\Entity\TokenManager::getToken1($mac);
+        $tok2 = \Tancredi\Entity\TokenManager::getToken2($mac);
+        $results = array(
+            'mac' => $mac,
+            'model' => $scope->metadata['inheritFrom'],
+            'display_name' => $scope->metadata['displayName'],
+            'tok1' => $tok1,
+            'tok2' => $tok2,
+            'variables' => empty($scope_data) ? new \stdClass() : $scope_data,
+            'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
+        );
+
+        if($tok1 && $provisioning_url_scheme && $hostname) {
+            $results['provisioning_url1'] = "{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok1}/{$vars['provisioning_url_filename']}";
+        } else {
+            $results['provisioning_url1'] = NULL;
+        }
+        if($tok2 && $provisioning_url_scheme && $hostname) {
+            $results['provisioning_url2'] = "{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok2}/{$vars['provisioning_url_filename']}";
+        } else {
+            // Never return back an invalid provisioning URL!
+            throw new \LogicException(sprintf("%s - malformed provisioning_url2: %s", 1582905675));
+        }
+        return $results;
+    }
 }
 
