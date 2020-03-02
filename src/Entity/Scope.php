@@ -126,9 +126,9 @@ class Scope {
         $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger, null);
         $vars = $scope->getVariables();
 
-        $hostname = empty($vars['hostname']) ? $config['hostname'] : $vars['hostname'];
-        $provisioning_url_path = trim(empty($vars['provisioning_url_path']) ? $config['provisioning_url_path'] : $vars['provisioning_url_path'], '/') . '/';
-        $provisioning_url_scheme = empty($vars['provisioning_url_scheme']) ? $config['provisioning_url_scheme'] : $vars['provisioning_url_scheme'];
+        $hostname = empty($vars['hostname']) ? gethostname() : $vars['hostname'];
+        $provisioning_url_path = trim($config['provisioning_url_path'], '/') . '/';
+        $provisioning_url_scheme = empty($vars['provisioning_url_scheme']) ? 'http' : $vars['provisioning_url_scheme'];
 
         if ($inherit) {
             $scope_data = $vars;
@@ -159,7 +159,7 @@ class Scope {
             $results['provisioning_url2'] = "{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok2}/{$vars['provisioning_url_filename']}";
         } else {
             // Never return back an invalid provisioning URL!
-            throw new \LogicException(sprintf("%s - malformed provisioning_url2: %s", 1582905675));
+            throw new \LogicException(sprintf("%s - malformed provisioning_url2", 1582905675));
         }
         return $results;
     }
