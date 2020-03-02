@@ -94,7 +94,7 @@
             {% if _context['account_username_' ~ identity] is defined %}
                 <user_media_transport_offer idx="{{ identity }}" perm="">udp</user_media_transport_offer>
 
-                <user_active idx="{{ identity }}" perm="">{{ _context['account_line_active_' ~ identity] ? 'on' : 'off' }}</user_active>
+                <user_active idx="{{ identity }}" perm="">on</user_active>
                 <user_srtp idx="{{ identity }}" perm="">{{ snom.srtp_encryption_map(_context['account_srtp_encryption_' ~ identity]) }}</user_srtp>
                 <user_name idx="{{ identity }}" perm="">{{ _context['account_username_' ~ identity] }}</user_name>
                 <user_pass idx="{{ identity }}" perm="">{{ _context['account_password_' ~ identity] }}</user_pass>

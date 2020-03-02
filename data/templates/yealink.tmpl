@@ -1799,7 +1799,7 @@ account.{{ line }}.video.h264hp.enable = 1
 ################################################################
 #                      Account Register                       ##
 ################################################################
-account.{{ line }}.enable = {{ _context['account_line_active_' ~ line]|default }}
+account.{{ line }}.enable = 1
 account.{{ line }}.label = {{ _context['account_display_name_' ~ line]|default }}
 account.{{ line }}.display_name = {{ _context['account_display_name_' ~ line]|default }}
 account.{{ line }}.auth_name = {{ _context['account_username_' ~ line]|default }}
