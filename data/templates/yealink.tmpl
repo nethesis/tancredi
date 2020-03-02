@@ -1799,7 +1799,7 @@ account.{{ line }}.video.h264hp.enable = 1
 ################################################################
 #                      Account Register                       ##
 ################################################################
-account.{{ line }}.enable = {{ _context['account_line_active_' ~ line]|default }}
+account.{{ line }}.enable = 1
 account.{{ line }}.label = {{ _context['account_display_name_' ~ line]|default }}
 account.{{ line }}.display_name = {{ _context['account_display_name_' ~ line]|default }}
 account.{{ line }}.auth_name = {{ _context['account_username_' ~ line]|default }}
@@ -1807,15 +1807,9 @@ account.{{ line }}.user_name = {{ _context['account_username_' ~ line]|default }
 account.{{ line }}.password = {{ _context['account_password_' ~ line]|default }}
 account.{{ line }}.sip_server.1.address = {{ _context['account_server_host_' ~ line]|default }}
 account.{{ line }}.sip_server.1.port = {{ _context['account_server_port_' ~ line]|default }}
-account.{{ line }}.sip_server.1.transport_type = {{ _context['account_transport_type_' ~ line] == 'udp' ? '0' : '2'  }}
+account.{{ line }}.sip_server.1.transport_type = {{ _context['account_encryption_' ~ line] ? '2' : '0'  }}
 account.{{ line }}.sip_server.1.expires = 3600
 account.{{ line }}.sip_server.1.retry_counts = 3
-
-account.{{ line }}.sip_server.2.address = {{ _context['account_server_host2_' ~ line]|default }}
-account.{{ line }}.sip_server.2.port = {{ _context['account_server_port2_' ~ line]|default }}
-account.{{ line }}.sip_server.2.transport_type = {{ _context['account_transport_type2_' ~ line] == 'udp' ? '0' : '2'  }}
-account.{{ line }}.sip_server.2.expires = 3600
-account.{{ line }}.sip_server.2.retry_counts = 3
 
 account.{{ line }}.outbound_proxy_enable = 0
 account.{{ line }}.outbound_proxy.1.address =
@@ -1845,7 +1839,7 @@ account.{{ line }}.100rel_enable = 0
 account.{{ line }}.subscribe_register = 0
 account.{{ line }}.cid_source = 3
 account.{{ line }}.enable_user_equal_phone = 0
-account.{{ line }}.srtp_encryption = {%if _context['account_srtp_encryption_' ~ line] == 'disabled' %}0{% elseif _context['account_srtp_encryption_' ~ line] == 'compulsory' %}2{% else %}1{% endif %}
+account.{{ line }}.srtp_encryption = {{ _context['account_encryption_' ~ line] ? '2' : '0' }}
 account.{{ line }}.srtp_unencrypted_rtp.enable = 0
 account.{{ line }}.srtp.unencrypted_rtcp.enable = 0
 account.{{ line }}.ptime = 20
@@ -2002,7 +1996,7 @@ account.{{ line }}.auto_dial_num =
 #######################################################################################
 ##                           Preference&Status                                       ##
 #######################################################################################
-account.{{ line }}.ringtone.ring_type = {{ yealink.ringtone(_context['account_default_ringtone_' ~ line]|default(ringtone)) }}
+account.{{ line }}.ringtone.ring_type = {{ yealink.ringtone(ringtone) }}
 
 #######################################################################################
 ##                           Digitmap                                                ##
@@ -2185,7 +2179,7 @@ account.{{ line }}.acd.call_information =
 #######################################################################################
 pstn.account.{{ line }}.enable = 1
 pstn.account.{{ line }}.label =
-pstn.account.{{ line }}.ring_type = {{ yealink.ringtone(_context['account_default_ringtone_' ~ line]|default(ringtone)) }}
+pstn.account.{{ line }}.ring_type = {{ yealink.ringtone(ringtone) }}
 pstn.account.{{ line }}.missed_calllog = 1
 pstn.account.{{ line }}.auto_answer = 0
 pstn.account.{{ line }}.auto_answer_mute_enable = 0

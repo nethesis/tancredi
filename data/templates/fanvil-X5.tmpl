@@ -113,7 +113,7 @@ SIP{{ line }} Backup Addr        :
 SIP{{ line }} Backup Port        :
 SIP{{ line }} Backup Transport   :0
 SIP{{ line }} Backup TTL         :3600
-SIP{{ line }} Enable Reg         :{{ fanvil.b2v(_context['account_line_active_' ~ line]) }}
+SIP{{ line }} Enable Reg         :1
 SIP{{ line }} Proxy Addr         :
 SIP{{ line }} Proxy Port         :
 SIP{{ line }} Proxy User         :
@@ -126,7 +126,7 @@ SIP{{ line }} Signal Failback    :0
 SIP{{ line }} Signal Retry Counts:3
 SIP{{ line }} Signal Crypto      :0
 SIP{{ line }} SigCrypto Key      :
-SIP{{ line }} Media Crypto       :{{ fanvil.srtp_encryption_map(_context['account_srtp_encryption_' ~ line]) }}
+SIP{{ line }} Media Crypto       :{{ _context['account_encryption_' ~ line] ? '2' : '0' }}
 SIP{{ line }} MedCrypto Key      :
 SIP{{ line }} SRTP Auth-Tag      :0
 SIP{{ line }} Enable RFC5939     :0
@@ -175,7 +175,7 @@ SIP{{ line }} Presence Mode      :0
 SIP{{ line }} RFC Ver            :1
 SIP{{ line }} Phone Port         :0
 SIP{{ line }} Signal Port        :5060
-SIP{{ line }} Transport          :{{ fanvil.transport_type_map(_context['account_transport_type_' ~ line]) }}
+SIP{{ line }} Transport          :{{ _context['account_encryption_' ~ line] ? '3' : '0' }}
 SIP{{ line }} Use SRV Mixer      :0
 SIP{{ line }} SRV Mixer Uri      :
 SIP{{ line }} Long Contact       :0
