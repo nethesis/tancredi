@@ -40,13 +40,13 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     $this->logger->debug('Token '.$token.' is valid');
     // Instantiate scope
     $this->logger->debug("New scope id: \"$id\"");
-    $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
-    $this->logger->debug("Scope $id last edit time: " . $scope->getLastEditTime() . " last_read_time: " . $scope->getLastReadTime());
+    $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $this->storage, $this->logger, TRUE);
     // Get template variable name from file
     $data = getDataFromFilename($filename,$this->logger);
     $this->logger->debug(print_r($data,true));
     $template_var_name = $data['template'];
-    $scope_data = $scope->getVariables();
+    $scope_data = array_merge($scope, $scope['variables']);
+    unset($scope_data['variables']);
     // Load filters
     if (array_key_exists('runtime_filters',$config) and !empty($config['runtime_filters'])) {
         foreach (explode(',',$config['runtime_filters']) as $filter) {
@@ -56,20 +56,11 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         }
     }
 
-    //Add token2 variable
-    $scope_data['tok2'] = \Tancredi\Entity\TokenManager::getToken2($id);
-
     // Add provisioning_complete variable
     if ($token === $scope_data['tok2']) {
         $scope_data['provisioning_complete'] = '1';
     } else {
         $scope_data['provisioning_complete'] = '';
-    }
-
-    // Add provisioning_url_path and provisioning_url_host variables
-    $scope_data['provisioning_url_path'] = $config['provisioning_url_path'];
-    if(empty($scope_data['provisioning_url_host'])) {
-        $scope_data['provisioning_url_host'] = gethostname();
     }
 
     // Add user agent
@@ -80,7 +71,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         $template = $scope_data[$template_var_name];
     } else {
         // Missing template
-        $this->logger->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $scope->id );
+        $this->logger->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $id );
         $response = $response->withStatus(404);
         $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
@@ -126,11 +117,11 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     }
     // Instantiate scope
     $this->logger->debug("New scope id: \"$id\"");
-    $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
-    $this->logger->debug("Scope $id last edit time: " . $scope->getLastEditTime() . " last_read_time: " . $scope->getLastReadTime());
+    $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $this->storage, $this->logger, TRUE);
     // Get template variable name from file
     $template_var_name = $data['template'];
-    $scope_data = $scope->getVariables();
+    $scope_data = array_merge($scope, $scope['variables']);
+    unset($scope_data['variables']);
     // Save scope id into not found scopes if it has empty data
     if (empty($scope_data)) {
         saveNotFoundScopes($id);
@@ -143,17 +134,9 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
             $scope_data = $filterObj($scope_data);
         }
     }
-    //Add token2 variable
-    $scope_data['tok2'] = \Tancredi\Entity\TokenManager::getToken2($id);
 
     // Add provisioning_complete variable
     $scope_data['provisioning_complete'] = '';
-
-    // Add provisioning_url_path and provisioning_url_host variables
-    $scope_data['provisioning_url_path'] = $config['provisioning_url_path'];
-    if(empty($scope_data['provisioning_url_host'])) {
-        $scope_data['provisioning_url_host'] = gethostname();
-    }
 
     // Add user agent
     $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
@@ -163,7 +146,7 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         $template = $scope_data[$template_var_name];
     } else {
         // Missing template
-        $this->logger->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $scope->id );
+        $this->logger->error('Template variable ' . $template_var_name . ' does not exist in scope ' . $id );
         $response = $response->withStatus(404);
         $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;

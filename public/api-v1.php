@@ -71,7 +71,7 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    $response = $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
+    $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
     $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
@@ -116,7 +116,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $scope->setVariables($variables);
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , TRUE); // create first time access token
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , FALSE); // create token
-    $response = $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),201,JSON_FLAGS);
+    $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),201,JSON_FLAGS);
     $response = $response->withHeader('Location', '/tancredi/api/v1/phones/' . $mac);
     $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
@@ -142,7 +142,8 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         return $response;
     }
 
-    if (array_key_exists('mac',$patch_data) or array_key_exists('model_url',$patch_data) or array_key_exists('tok1',$patch_data) or array_key_exists('tok2',$patch_data)) {
+    $readonly_params = ['mac', 'model_url', 'tok1', 'tok2', 'provisioning_url1', 'provisioning_url2'];
+    if (array_intersect($readonly_params, array_keys($patch_data))) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute',
             'title' => 'Cannot change a read-only attribute'
@@ -158,7 +159,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
         $scope->metadata['inheritFrom'] = $patch_data['model'];
         $scope->setVariables();
-        $response = $response->withJson(getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
+        $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
         $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
@@ -450,27 +451,6 @@ function getModelScope($id,$storage,$logger,$inherit = false, $original = false)
     $results = array(
         'name' => $id,
         'display_name' => $scope->metadata['displayName'],
-        'variables' => $scope_data,
-        'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
-    );
-    return $results;
-}
-
-
-function getPhoneScope($mac,$storage,$logger,$inherit = false) {
-    global $config;
-    $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger, null);
-    if ($inherit) {
-        $scope_data = $scope->getVariables();
-    } else {
-        $scope_data = $scope->data;
-    }
-    $results = array(
-        'mac' => $mac,
-        'model' => $scope->metadata['inheritFrom'],
-        'display_name' => $scope->metadata['displayName'],
-        'tok1' => \Tancredi\Entity\TokenManager::getToken1($mac),
-        'tok2' => \Tancredi\Entity\TokenManager::getToken2($mac),
         'variables' => $scope_data,
         'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
     );

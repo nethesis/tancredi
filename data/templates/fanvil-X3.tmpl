@@ -648,7 +648,7 @@ AP Pswd Encryption :0
 Config File Name   :{{ 'http' in provisioning_url_scheme ? (provisioning_url_path | trim('/', 'left') ~ tok2 ~ '/$mac.cfg') : '$mac.cfg' }}
 Config File Key    :
 Common Cfg File Key:
-Download Server IP :{{ provisioning_url_host }}
+Download Server IP :{{ hostname }}
 Download Protocol  :{{ fanvil.scheme_map(provisioning_url_scheme) }}
 Download Mode      :1
 Download Interval  :1

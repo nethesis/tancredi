@@ -850,7 +850,7 @@ Common Cfg File Key:
 Download CommonConf:0
 Save Provision Info:0
 Check FailTimes    :5
-Flash Server IP    :{{ provisioning_url_host }}
+Flash Server IP    :{{ hostname }}
 Flash File Name    :{{ 'http' in provisioning_url_scheme ? (provisioning_url_path | trim('/', 'left') ~ tok2 ~ '/$mac.cfg') : '$mac.cfg' }}
 Flash Protocol     :{{ fanvil.scheme_map(provisioning_url_scheme) }}
 Flash Mode         :1
