@@ -5,7 +5,7 @@
     <config version="1">
         <!--Account1/Basic-->
         {% if account_password_1 -%}
-        <P271 para="Account1.Active">{{ account_line_active_1 ? '1' : '0' }}</P271>
+        <P271 para="Account1.Active">1</P271>
         <P47 para="Account1.Sipserver">{{ account_server_host_1 }}:{{ account_server_port_1 ?: account_encryption_1 ? '5061' : '5060' }}</P47>
         <P967 para="Account1.FailoverSipserver" />
         <P8851 para="Account1.SecondFailoverSipserver" />
@@ -28,7 +28,6 @@
         <P33 para="Account1.VoiceMailId">{{ voicemail_number_1 }}</P33>
         <P20166 para="Account1.DtmfMode">{{ sangoma.dtmf(account_dtmf_type_1) }}</P20166>
         <P183 para="Account1.SRtpMode">{{ account_encryption_1 ? '2' : '0' }}</P183>
-        <P104 para="Account1.AccountRingTone">{{ account_default_ringtone_1 }}</P104>
         <P185 para="Account1.RingTimeout">60</P185>
         <P72 para="Account1.Use#AsDialKey">{{ pound ? 1 : 0 }}</P72>
         <P4705 para="Account1.DirectCallPickupCode">{{ pickup_direct }}</P4705>
