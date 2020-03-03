@@ -83,6 +83,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
             $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
         }
         $twig = new \Twig\Environment($loader,['autoescape' => false]);
+        $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
         $response->getBody()->write($twig->render($template, $scope_data));
         $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok '. __FILE__.':'.__LINE__);
@@ -155,6 +156,7 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         // Load twig template
         $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
         $twig = new \Twig\Environment($loader,['autoescape' => false]);
+        $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
         $response->getBody()->write($twig->render($template, $scope_data));
         $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok ' . __FILE__.':'.__LINE__);
