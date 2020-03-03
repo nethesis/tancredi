@@ -1715,7 +1715,7 @@ account.{{ line }}.phone_setting.call_appearance.transfer_via_new_linekey = 0
 #######################################################################################
 ##                               Call Waiting                                        ##
 #######################################################################################
-call_waiting.enable = {{ _context['call_waiting_' ~ line]|default('0') }}
+call_waiting.enable = {{ _context['account_call_waiting_' ~ line] ? '1' : '0' }}
 call_waiting.tone = {{ call_waiting_tone }}
 call_waiting.off_code = {{ call_waiting_off }}
 call_waiting.on_code = {{ call_waiting_on }}
