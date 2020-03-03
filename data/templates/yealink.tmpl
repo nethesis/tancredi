@@ -1981,7 +1981,7 @@ account.{{ line }}.dnd.on_code = {{ dndon }}
 #######################################################################################
 ##                               Voice Mail                                          ##
 #######################################################################################
-voice_mail.number.1 = {{ _context['voicemail_number_' ~ line]|default }}
+voice_mail.number.1 = {{ _context['account_voicemail_' ~ line]|default }}
 account.{{ line }}.subscribe_mwi = 1
 account.{{ line }}.subscribe_mwi_to_vm = 0
 account.{{ line }}.subscribe_mwi_expires = 3600
