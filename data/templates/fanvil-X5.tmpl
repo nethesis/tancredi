@@ -104,7 +104,7 @@ Notify Reboot      :0
 SIP{{ line }} Phone Number       :{{ _context['account_username_' ~ line] }}
 SIP{{ line }} Display Name       :{{ _context['account_display_name_' ~ line] }}
 SIP{{ line }} Sip Name           :{{ _context['account_username_' ~ line] }}
-SIP{{ line }} Register Addr      :{{ _context['account_server_host_' ~ line] }}
+SIP{{ line }} Register Addr      :{{ hostname }}
 SIP{{ line }} Register Port      :{{ _context['account_server_port_' ~ line] }}
 SIP{{ line }} Register User      :{{ _context['account_username_' ~ line] }}
 SIP{{ line }} Register Pswd      :{{ _context['account_password_' ~ line] }}
