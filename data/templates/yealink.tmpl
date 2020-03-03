@@ -866,7 +866,7 @@ push_xml.username =
 #######################################################################################
 features.fwd.allow = {{ fwd_allow|default('1') }}
 features.fwd_mode = 1
-forward.no_answer.timeout = {{ cftimeout_1 }}
+forward.no_answer.timeout = {{ cftimeout }}
 forward.no_answer.on_code = {{ cftimeouton }}
 forward.no_answer.off_code = {{ cftimeoutoff }}
 forward.busy.off_code = {{ cfbusyoff }}
@@ -1959,7 +1959,7 @@ account.{{ line }}.missed_calllog = 1
 #######################################################################################
 account.{{ line }}.timeout_fwd.off_code = {{ cftimeoutoff }}
 account.{{ line }}.timeout_fwd.on_code = {{ cftimeouton }}
-account.{{ line }}.timeout_fwd.timeout = _context['cftimeout_' ~ line]|default('2') }}
+account.{{ line }}.timeout_fwd.timeout = {{ _context['account_cftimeout_' ~ line] | default('2') }}
 account.{{ line }}.timeout_fwd.target = {{ _context['account_timeout_fwd_target_' ~ line]|default }}
 account.{{ line }}.timeout_fwd.enable = {{ _context['account_timeout_fwd_target_' ~ line] ? '1' : '0' }}
 account.{{ line }}.busy_fwd.off_code = {{ cfbusyoff }}
