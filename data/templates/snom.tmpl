@@ -113,7 +113,7 @@
                 <fwd_busy_target idx="{{ identity }}" perm="">{{ _context['account_busy_fwd_target_' ~ identity] }}</fwd_busy_target>
                 <fwd_time_enabled idx="{{ identity }}" perm="">{{ _context['account_timeout_fwd_target_' ~ identity] ? 'on' : 'off' }}</fwd_time_enabled>
                 <fwd_time_target idx="{{ identity }}" perm="">{{ _context['account_timeout_fwd_target_' ~ identity] }}</fwd_time_target>
-                <dnd_mode idx="{{ identity }}" perm="">{{ _context['dnd_enable_' ~ identity] ? 'on' : 'off' }}</dnd_mode>
+                <dnd_mode idx="{{ identity }}" perm="">{{ _context['account_dnd_enable_' ~ identity] ? 'on' : 'off' }}</dnd_mode>
 
                 <blf_park_pick_up idx="{{ identity }}" perm="">*88</blf_park_pick_up>
                 <blf_directed_call_pickup idx="{{ identity }}" perm="">*97</blf_directed_call_pickup>

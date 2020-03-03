@@ -1974,7 +1974,7 @@ account.{{ line }}.always_fwd.enable = {{ _context['account_always_fwd_target_' 
 #######################################################################################
 ##                                  DND                                              ##
 #######################################################################################
-account.{{ line }}.dnd.enable = {{ _context['dnd_enable_' ~ line]|default }}
+account.{{ line }}.dnd.enable = {{ _context['account_dnd_enable_' ~ line] ? '1' : '0' }}
 account.{{ line }}.dnd.off_code = {{ dndoff }}
 account.{{ line }}.dnd.on_code = {{ dndon }}
 
