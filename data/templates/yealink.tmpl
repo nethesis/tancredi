@@ -864,7 +864,7 @@ push_xml.username =
 #######################################################################################
 ##                                  Forward                                          ##
 #######################################################################################
-features.fwd.allow = {{ fwd_allow|default('1') }}
+features.fwd.allow = {{ account_fwd_allow_1 ? '1' : '0' }}
 features.fwd_mode = 1
 forward.no_answer.timeout = {{ cftimeout }}
 forward.no_answer.on_code = {{ cftimeouton }}
@@ -888,7 +888,7 @@ features.no_answer_code = 486
 #######################################################################################
 ##                                  DND                                              ##
 #######################################################################################
-features.dnd.allow = {{ dnd_allow|default('1') }}
+features.dnd.allow = {{ account_dnd_allow_1 ? '1' : '0' }}
 features.dnd_mode = 1
 
 features.dnd.off_code = {{ dndoff }}
