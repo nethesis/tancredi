@@ -24,7 +24,6 @@ $container['storage'] = function($c) {
 $app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()) . " " . $_SERVER['HTTP_USER_AGENT']);
     global $config;
-    $logger = new \Monolog\Logger('Tancredi');
     $filename = $args['filename'];
     $token = $args['token'];
     $this->logger->info('Received a token and file request. Token: ' .$token . '. File: ' . $filename);
