@@ -107,7 +107,7 @@
                 <codec_priority_list idx="{{ identity }}" perm="">g722,pcmu,pcma,amr-0,amrwb-0,gsm,g723,g726-32,aal2-g726-32,g729,telephone-event</codec_priority_list>
                 <retry_after_failed_subscribe idx="{{ identity }}" perm="">600</retry_after_failed_subscribe>
 
-                <fwd_all_enabled idx="{{ identity }}" perm="">{{ _context['always_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_all_enabled>
+                <fwd_all_enabled idx="{{ identity }}" perm="">{{ _context['always_fwd_target_' ~ identity] ? 'on' : 'off' }}</fwd_all_enabled>
                 <fwd_all_target idx="{{ identity }}" perm="">{{ _context['always_fwd_target_' ~ identity] }}</fwd_all_target>
                 <fwd_busy_enabled idx="{{ identity }}" perm="">{{ _context['busy_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_busy_enabled>
                 <fwd_busy_target idx="{{ identity }}" perm="">{{ _context['busy_fwd_target_' ~ identity] }}</fwd_busy_target>

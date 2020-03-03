@@ -1969,7 +1969,7 @@ account.{{ line }}.busy_fwd.enable = {{ _context['busy_fwd_enable_' ~ line]|defa
 account.{{ line }}.always_fwd.off_code = {{ cfalwaysoff }}
 account.{{ line }}.always_fwd.on_code = {{ cfalwayson }}
 account.{{ line }}.always_fwd.target = {{ _context['always_fwd_target_' ~ line]|default }}
-account.{{ line }}.always_fwd.enable = {{ _context['always_fwd_enable_' ~ line]|default }}
+account.{{ line }}.always_fwd.enable = {{ _context['always_fwd_target_' ~ line] ? '1' : '0' }}
 
 #######################################################################################
 ##                                  DND                                              ##
