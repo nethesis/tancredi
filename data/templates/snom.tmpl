@@ -109,7 +109,7 @@
 
                 <fwd_all_enabled idx="{{ identity }}" perm="">{{ _context['always_fwd_target_' ~ identity] ? 'on' : 'off' }}</fwd_all_enabled>
                 <fwd_all_target idx="{{ identity }}" perm="">{{ _context['always_fwd_target_' ~ identity] }}</fwd_all_target>
-                <fwd_busy_enabled idx="{{ identity }}" perm="">{{ _context['busy_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_busy_enabled>
+                <fwd_busy_enabled idx="{{ identity }}" perm="">{{ _context['busy_fwd_target_' ~ identity] ? 'on' : 'off' }}</fwd_busy_enabled>
                 <fwd_busy_target idx="{{ identity }}" perm="">{{ _context['busy_fwd_target_' ~ identity] }}</fwd_busy_target>
                 <fwd_time_enabled idx="{{ identity }}" perm="">{{ _context['timeout_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_time_enabled>
                 <fwd_time_target idx="{{ identity }}" perm="">{{ _context['timeout_fwd_target_' ~ identity] }}</fwd_time_target>
