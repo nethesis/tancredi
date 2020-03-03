@@ -24,7 +24,6 @@ $container['storage'] = function($c) {
 $app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()) . " " . $_SERVER['HTTP_USER_AGENT']);
     global $config;
-    $logger = new \Monolog\Logger('Tancredi');
     $filename = $args['filename'];
     $token = $args['token'];
     $this->logger->info('Received a token and file request. Token: ' .$token . '. File: ' . $filename);
@@ -84,8 +83,10 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
             $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
         }
         $twig = new \Twig\Environment($loader,['autoescape' => false]);
-        $response = $response->getBody()->write($twig->render($template,$scope_data));
-	$this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok '. __FILE__.':'.__LINE__);
+        $response = $response->withHeader('Cache-Control', 'private');
+        $response = $response->withHeader('Content-Type', $data['content_type']);
+        $response->getBody()->write($twig->render($template, $scope_data));
+        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok '. __FILE__.':'.__LINE__);
         return $response;
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
@@ -155,9 +156,11 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         // Load twig template
         $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
         $twig = new \Twig\Environment($loader,['autoescape' => false]);
-	$response = $response->getBody()->write($twig->render($template,$scope_data));
-	$this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok ' . __FILE__.':'.__LINE__);
-	return $response;
+        $response = $response->withHeader('Cache-Control', 'private');
+        $response = $response->withHeader('Content-Type', $data['content_type']);
+        $response->getBody()->write($twig->render($template, $scope_data));
+        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok ' . __FILE__.':'.__LINE__);
+        return $response;
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
         $response = $response->withStatus(500);
@@ -179,6 +182,7 @@ function getDataFromFilename($filename,$logger) {
             $result['template'] = $pattern['template'];
             $logger->debug($pattern['pattern'].' '.$pattern['scopeid'] .' '.  $filename);
             $result['scopeid'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
+            $result['content_type'] = empty($pattern['content_type']) ? 'text/plain; charset=utf-8' : $pattern['content_type'];
             break;
         }
     }
