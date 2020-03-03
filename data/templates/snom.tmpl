@@ -100,7 +100,7 @@
                 <user_host idx="{{ identity }}" perm="">{{ hostname }}</user_host>
                 <user_outbound idx="{{ identity }}" perm="">
                     {{- hostname ~ ':'
-                        ~ _context['account_server_port_' ~ identity] ~ ';transport='
+                        ~ (_context['account_encryption_' ~ identity] ? sip_tls_port : sip_udp_port) ~ ';transport='
                         ~ (_context['account_encryption_' ~ identity] ? 'tls' : 'udp')
                     -}}
                 </user_outbound>
