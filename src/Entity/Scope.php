@@ -146,12 +146,12 @@ class Scope {
         );
 
         if($tok1 && $provisioning_url_scheme && $hostname) {
-            $results['provisioning_url1'] = "{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok1}/{$vars['provisioning_url_filename']}";
+            $results['provisioning_url1'] = trim("{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok1}/{$vars['provisioning_url_filename']}", '/');
         } else {
             $results['provisioning_url1'] = NULL;
         }
         if($tok2 && $provisioning_url_scheme && $hostname) {
-            $results['provisioning_url2'] = "{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok2}/{$vars['provisioning_url_filename']}";
+            $results['provisioning_url2'] = trim("{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok2}/{$vars['provisioning_url_filename']}", '/');
         } else {
             // Never return back an invalid provisioning URL!
             throw new \LogicException(sprintf("%s - malformed provisioning_url2", 1582905675));
