@@ -21,6 +21,10 @@ $container['storage'] = function($c) {
     return $storage;
 };
 
+$app->get('/check/ping', function(Request $request, Response $response, array $args) use ($app) {
+    return $response->withJson(filemtime('/etc/tancredi.conf'),200);
+});
+
 $app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()) . " " . $_SERVER['HTTP_USER_AGENT']);
     global $config;
