@@ -19,7 +19,7 @@
     
     <param name="FirmwareManagment.AutomaticCheckForUpdates" value="0" />
     <param name="System.Provision.Period" value="{{ provisioning_complete ? '0' : '600' }}" />
-    <param name="System.Provision.ProvisioningServer" value="{{ provisioning_url2 }}" />
+    <param name="System.Provision.ProvisioningServer" value="{{ provisioning_url2 | replace({'%25': '%'}) }}" />
 
     <param name="SIP.Port" value="{{ account_encryption_1 ? sip_tls_port : sip_udp_port }}" />
     <param name="SIP.RTP.Port" value="5004"  />
