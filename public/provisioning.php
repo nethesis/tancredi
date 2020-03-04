@@ -78,18 +78,9 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
 
     $this->logger->debug(print_r($scope_data,true));
     try {
-        // Load twig template
-        $template = $scope_data[$data['template']];
-        if (file_exists($config['rw_dir'] . 'templates-custom/' . $template)) {
-            $loader = new \Twig\Loader\FilesystemLoader($config['rw_dir'] . 'templates-custom/');
-        } else {
-            $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
-        }
-        $twig = new \Twig\Environment($loader,['autoescape' => false]);
         $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
-        $response->getBody()->write($twig->render($template, $scope_data));
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok '. __FILE__.':'.__LINE__);
+        $response->getBody()->write(renderTwigTemplate($scope_data[$data['template']], $scope_data));
         return $response;
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
@@ -151,13 +142,9 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     $this->logger->debug(print_r($scope_data,true));
     try {
         // Load twig template
-        $template = $scope_data[$data['template']];
-        $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
-        $twig = new \Twig\Environment($loader,['autoescape' => false]);
         $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
-        $response->getBody()->write($twig->render($template, $scope_data));
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok ' . __FILE__.':'.__LINE__);
+        $response->getBody()->write(renderTwigTemplate($scope_data[$data['template']], $scope_data));
         return $response;
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
@@ -166,6 +153,18 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         return $response;
     }
 });
+
+function renderTwigTemplate($template, $scope_data) {
+    global $config;
+    if (file_exists($config['rw_dir'] . 'templates-custom/' . $template)) {
+        $loader = new \Twig\Loader\FilesystemLoader($config['rw_dir'] . 'templates-custom/');
+    } else {
+        $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
+    }
+    $twig = new \Twig\Environment($loader,['autoescape' => false]);
+    $payload = $twig->render($template, $scope_data);
+    return $payload;
+}
 
 function getDataFromFilename($filename,$logger) {
     global $config;
