@@ -46,10 +46,17 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $this->storage, $this->logger, TRUE);
     // Get template variable name from file
     $data = getDataFromFilename($filename,$this->logger);
-    $this->logger->debug(print_r($data,true));
-    $template_var_name = $data['template'];
     $scope_data = array_merge($scope, $scope['variables']);
     unset($scope_data['variables']);
+
+    if (empty($data['template'])) {
+        $this->logger->error(sprintf('Template not found for "%s". It does not match our patterns.d/ rules', $filename));
+        return $response->withStatus(404);
+    } elseif(empty($scope_data[$data['template']])) {
+        $this->logger->error(sprintf('Template not found for "%s". The variable "%s" from pattern "%s" is not set properly', $filename, $data['template'], $data['pattern_name']));
+        return $response->withStatus(404);
+    }
+
     // Load filters
     if (array_key_exists('runtime_filters',$config) and !empty($config['runtime_filters'])) {
         foreach (explode(',',$config['runtime_filters']) as $filter) {
@@ -70,27 +77,10 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
     $this->logger->debug(print_r($scope_data,true));
-    if (array_key_exists($template_var_name,$scope_data)) {
-        $template = $scope_data[$template_var_name];
-    } else {
-        // Missing template
-        $this->logger->error('Template variable ' . $template_var_name . ' doesn\'t exists in scope ' . $id );
-        $response = $response->withStatus(404);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
-        return $response;
-    }
     try {
-        // Load twig template
-        if (file_exists($config['rw_dir'] . 'templates-custom/' . $template)) {
-            $loader = new \Twig\Loader\FilesystemLoader($config['rw_dir'] . 'templates-custom/');
-        } else {
-            $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
-        }
-        $twig = new \Twig\Environment($loader,['autoescape' => false]);
         $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
-        $response->getBody()->write($twig->render($template, $scope_data));
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok '. __FILE__.':'.__LINE__);
+        $response->getBody()->write(renderTwigTemplate($scope_data[$data['template']], $scope_data));
         return $response;
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
@@ -107,30 +97,33 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     $this->logger->info('Received a file request without token. File: ' . $filename);
 
     $data = getDataFromFilename($filename,$this->logger);
-    $this->logger->debug(print_r($data,true));
-    if (array_key_exists('scopeid',$data) and !empty($data['scopeid'])) {
-        $id = $data['scopeid'];
-        // Convert mac address to uppercase if id is a mac address
-        if (preg_match('/[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}/',$id) != FALSE) {
-            $id = strtoupper($id);
-        }
-    } else {
-        $this->logger->error('Can\'t get id from filename');
-        $response = $response->withStatus(403);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
-        return $response;
+
+    if (empty($data['scopeid'])) {
+        $this->logger->error(sprintf('Scope not found for "%s"', $filename));
+        return $response->withStatus(404);
     }
+
+    $id = $data['scopeid'];
+    // Convert mac address to uppercase if id is a mac address
+    if (preg_match('/[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}-[a-f0-9]{2}/',$id) != FALSE) {
+        $id = strtoupper($id);
+    }
+
     // Instantiate scope
     $this->logger->debug("New scope id: \"$id\"");
     $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $this->storage, $this->logger, TRUE);
     // Get template variable name from file
-    $template_var_name = $data['template'];
     $scope_data = array_merge($scope, $scope['variables']);
     unset($scope_data['variables']);
-    // Save scope id into not found scopes if it has empty data
-    if (empty($scope_data)) {
-        saveNotFoundScopes($id);
+
+    if (empty($data['template'])) {
+        $this->logger->error(sprintf('Template not found for "%s". It does not match our patterns.d/ rules', $filename));
+        return $response->withStatus(404);
+    } elseif(empty($scope_data[$data['template']])) {
+        $this->logger->error(sprintf('Template not found for "%s". The variable "%s" from pattern "%s" is not set properly', $filename, $data['template'], $data['pattern_name']));
+        return $response->withStatus(404);
     }
+
     // Load filters
     if (array_key_exists('runtime_filters',$config) and !empty($config['runtime_filters'])) {
         foreach (explode(',',$config['runtime_filters']) as $filter) {
@@ -147,23 +140,11 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
     $this->logger->debug(print_r($scope_data,true));
-    if (array_key_exists($template_var_name,$scope_data)) {
-        $template = $scope_data[$template_var_name];
-    } else {
-        // Missing template
-        $this->logger->error('Template variable ' . $template_var_name . ' does not exist in scope ' . $id );
-        $response = $response->withStatus(404);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
-        return $response;
-    }
     try {
         // Load twig template
-        $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
-        $twig = new \Twig\Environment($loader,['autoescape' => false]);
         $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
-        $response->getBody()->write($twig->render($template, $scope_data));
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result: 200 ok ' . __FILE__.':'.__LINE__);
+        $response->getBody()->write(renderTwigTemplate($scope_data[$data['template']], $scope_data));
         return $response;
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
@@ -173,6 +154,18 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     }
 });
 
+function renderTwigTemplate($template, $scope_data) {
+    global $config;
+    if (file_exists($config['rw_dir'] . 'templates-custom/' . $template)) {
+        $loader = new \Twig\Loader\FilesystemLoader($config['rw_dir'] . 'templates-custom/');
+    } else {
+        $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
+    }
+    $twig = new \Twig\Environment($loader,['autoescape' => false]);
+    $payload = $twig->render($template, $scope_data);
+    return $payload;
+}
+
 function getDataFromFilename($filename,$logger) {
     global $config;
     $result = array();
@@ -181,8 +174,9 @@ function getDataFromFilename($filename,$logger) {
         if ($pattern_file === '.' or $pattern_file === '..' or substr($pattern_file,-4) !== '.ini') continue;
         $patterns = array_merge($patterns,parse_ini_file($config['ro_dir'] . 'patterns.d/'.$pattern_file,true));
     }
-    foreach ($patterns as $pattern) {
+    foreach ($patterns as $pattern_name => $pattern) {
         if (preg_match('/'.$pattern['pattern'].'/', $filename, $tmp)) {
+            $result['pattern_name'] = $pattern_name;
             $result['template'] = $pattern['template'];
             $logger->debug($pattern['pattern'].' '.$pattern['scopeid'] .' '.  $filename);
             $result['scopeid'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
@@ -191,20 +185,6 @@ function getDataFromFilename($filename,$logger) {
         }
     }
     return $result;
-}
-
-function saveNotFoundScopes($scope_id){
-    global $config;
-    if (preg_match('/[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}-[A-F0-9]{2}/', $scope_id)) {
-        // Provided scope id is a MAC address
-        $data = array();
-        if (file_exists($config['rw_dir'] . 'not_found_scopes')) {
-            $data = (array) json_decode(file_get_contents($config['rw_dir'] . 'not_found_scopes'));
-        }
-        // add MAC to $config['rw_dir'] . 'not_found_scopes' file
-        $data[$scope_id] = time();
-        file_put_contents($config['rw_dir'] . 'not_found_scopes', json_encode($data));
-    }
 }
 
 // Run app
