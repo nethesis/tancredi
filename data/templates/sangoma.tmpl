@@ -6,7 +6,7 @@
         <!--Account1/Basic-->
         {% if account_password_1 -%}
         <P271 para="Account1.Active">1</P271>
-        <P47 para="Account1.Sipserver">{{ account_server_host_1 }}:{{ account_server_port_1 ?: account_encryption_1 ? '5061' : '5060' }}</P47>
+        <P47 para="Account1.Sipserver">{{ hostname }}:{{ account_encryption_1 ? sip_tls_port : sip_udp_port }}</P47>
         <P967 para="Account1.FailoverSipserver" />
         <P8851 para="Account1.SecondFailoverSipserver" />
         <P4567 para="Account1.PreferPrimaryServer">1</P4567>
@@ -25,7 +25,7 @@
         <P81 para="Account1.UnregisterOnReboot">1</P81>
         <P32 para="Account1.RegisterExpiration">15</P32>
         <P109 para="Account1.OutCallWithoutReg">1</P109>
-        <P33 para="Account1.VoiceMailId">{{ voicemail_number_1 }}</P33>
+        <P33 para="Account1.VoiceMailId">{{ account_voicemail_1 }}</P33>
         <P20166 para="Account1.DtmfMode">{{ sangoma.dtmf(account_dtmf_type_1) }}</P20166>
         <P183 para="Account1.SRtpMode">{{ account_encryption_1 ? '2' : '0' }}</P183>
         <P185 para="Account1.RingTimeout">60</P185>
@@ -119,17 +119,17 @@
         <P56203 para="Preference.BusyToneTimer">4</P56203>
         <P23263 para="Preference.LogoLED">{{ lcd_logo_mode }}</P23263>
         <!--Setting/Features-->
-        <P53100 para="ForwardAlways.OnOff">{{ always_fwd_enable_1 }}</P53100>
-        <P53101 para="ForwardAlways.Target" >{{ always_fwd_target_1 }}</P53101>
+        <P53100 para="ForwardAlways.OnOff">{{ account_always_fwd_target_1 ? '1' : '0' }}</P53100>
+        <P53101 para="ForwardAlways.Target" >{{ account_always_fwd_target_1 }}</P53101>
         <P53102 para="ForwardAlways.OnCode">{{ cfalwayson }}</P53102>
         <P53103 para="ForwardAlways.OffCode">{{ cfalwaysoff }}</P53103>
-        <P53110 para="ForwardBusy.OnOff">{{ busy_fwd_enable_1 }}</P53110>
-        <P53111 para="ForwardBusy.Target" >{{ busy_fwd_target_1 }}</P53111>
+        <P53110 para="ForwardBusy.OnOff">{{ account_busy_fwd_target_1 ? '1' : '0' }}</P53110>
+        <P53111 para="ForwardBusy.Target" >{{ account_busy_fwd_target_1 }}</P53111>
         <P53112 para="ForwardBusy.OnCode">{{ cfbusyon }}</P53112>
         <P53113 para="ForwardBusy.OffCode">{{ cfbusyoff }}</P53113>
-        <P53120 para="ForwardNoAnswer.OnOff">{{ timeout_fwd_enable_1 }}</P53120>
+        <P53120 para="ForwardNoAnswer.OnOff">{{ account_timeout_fwd_target_1 ? '1' : '0' }}</P53120>
         <P53124 para="ForwardNoAnswer.AfterRingTime">{{ cftimeout }}</P53124>
-        <P53121 para="ForwardNoAnswer.Target" >{{ timeout_fwd_target_1 }}</P53121>
+        <P53121 para="ForwardNoAnswer.Target" >{{ account_timeout_fwd_target_1 }}</P53121>
         <P53122 para="ForwardNoAnswer.OnCode">{{ cftimeouton }}</P53122>
         <P53123 para="ForwardNoAnswer.OffCode">{{ cftimeoutoff }}</P53123>
         <P53200 para="DND.OnCode">{{ dndon }}</P53200>

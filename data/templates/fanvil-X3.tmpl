@@ -226,8 +226,8 @@ Strict UA Match    :0
 SIP{{ line }} Phone Number  :{{ _context['account_username_' ~ line] }}
 SIP{{ line }} Display Name  :{{ _context['account_display_name_' ~ line] }}
 SIP{{ line }} Sip Name      :{{ _context['account_display_name_' ~ line] }}
-SIP{{ line }} Register Addr :{{ _context['account_server_host_' ~ line] }}
-SIP{{ line }} Register Port :{{ _context['account_server_port_' ~ line] }}
+SIP{{ line }} Register Addr :{{ hostname }}
+SIP{{ line }} Register Port :{{ _context['account_encryption_' ~ line] ? sip_tls_port : sip_udp_port }}
 SIP{{ line }} Register User :{{ _context['account_username_' ~ line] }}
 SIP{{ line }} Register Pswd :{{ _context['account_password_' ~ line] }}
 SIP{{ line }} Register TTL  :3600
@@ -304,7 +304,7 @@ SIP{{ line }} Long Contact  :0
 SIP{{ line }} Auto TCP      :0
 SIP{{ line }} Uri Escaped   :1
 SIP{{ line }} Click to Talk :0
-SIP{{ line }} MWI Num       :{{ _context['account_voicemail_number_' ~ line] }}
+SIP{{ line }} MWI Num       :{{ _context['account_voicemail_' ~ line] }}
 SIP{{ line }} CallPark Num  :70
 SIP{{ line }} Retrieve Num  :
 SIP{{ line }} MSRPHelp Num  :

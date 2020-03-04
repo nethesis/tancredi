@@ -863,9 +863,9 @@ push_xml.username =
 #######################################################################################
 ##                                  Forward                                          ##
 #######################################################################################
-features.fwd.allow = {{ fwd_allow|default('1') }}
+features.fwd.allow = {{ account_fwd_allow_1 ? '1' : '0' }}
 features.fwd_mode = 1
-forward.no_answer.timeout = {{ cftimeout_1 }}
+forward.no_answer.timeout = {{ cftimeout }}
 forward.no_answer.on_code = {{ cftimeouton }}
 forward.no_answer.off_code = {{ cftimeoutoff }}
 forward.busy.off_code = {{ cfbusyoff }}
@@ -887,7 +887,7 @@ features.no_answer_code = 486
 #######################################################################################
 ##                                  DND                                              ##
 #######################################################################################
-features.dnd.allow = {{ dnd_allow|default('1') }}
+features.dnd.allow = {{ account_dnd_allow_1 ? '1' : '0' }}
 features.dnd_mode = 1
 
 features.dnd.off_code = {{ dndoff }}
@@ -1714,7 +1714,7 @@ account.{{ line }}.phone_setting.call_appearance.transfer_via_new_linekey = 0
 #######################################################################################
 ##                               Call Waiting                                        ##
 #######################################################################################
-call_waiting.enable = {{ _context['call_waiting_' ~ line]|default('0') }}
+call_waiting.enable = {{ _context['account_call_waiting_' ~ line] ? '1' : '0' }}
 call_waiting.tone = {{ call_waiting_tone }}
 call_waiting.off_code = {{ call_waiting_off }}
 call_waiting.on_code = {{ call_waiting_on }}
@@ -1804,8 +1804,8 @@ account.{{ line }}.display_name = {{ _context['account_display_name_' ~ line]|de
 account.{{ line }}.auth_name = {{ _context['account_username_' ~ line]|default }}
 account.{{ line }}.user_name = {{ _context['account_username_' ~ line]|default }}
 account.{{ line }}.password = {{ _context['account_password_' ~ line]|default }}
-account.{{ line }}.sip_server.1.address = {{ _context['account_server_host_' ~ line]|default }}
-account.{{ line }}.sip_server.1.port = {{ _context['account_server_port_' ~ line]|default }}
+account.{{ line }}.sip_server.1.address = {{ hostname }}
+account.{{ line }}.sip_server.1.port = {{ _context['account_encryption_' ~ line] ? sip_tls_port : sip_udp_port }}
 account.{{ line }}.sip_server.1.transport_type = {{ _context['account_encryption_' ~ line] ? '2' : '0'  }}
 account.{{ line }}.sip_server.1.expires = 3600
 account.{{ line }}.sip_server.1.retry_counts = 3
@@ -1958,29 +1958,29 @@ account.{{ line }}.missed_calllog = 1
 #######################################################################################
 account.{{ line }}.timeout_fwd.off_code = {{ cftimeoutoff }}
 account.{{ line }}.timeout_fwd.on_code = {{ cftimeouton }}
-account.{{ line }}.timeout_fwd.timeout = _context['cftimeout_' ~ line]|default('2') }}
-account.{{ line }}.timeout_fwd.target = {{ _context['timeout_fwd_target_' ~ line]|default }}
-account.{{ line }}.timeout_fwd.enable = {{ _context['timeout_fwd_enable_' ~ line]|default }}
+account.{{ line }}.timeout_fwd.timeout = {{ _context['account_cftimeout_' ~ line] | default('2') }}
+account.{{ line }}.timeout_fwd.target = {{ _context['account_timeout_fwd_target_' ~ line]|default }}
+account.{{ line }}.timeout_fwd.enable = {{ _context['account_timeout_fwd_target_' ~ line] ? '1' : '0' }}
 account.{{ line }}.busy_fwd.off_code = {{ cfbusyoff }}
 account.{{ line }}.busy_fwd.on_code = {{ cfbusyon }}
-account.{{ line }}.busy_fwd.target = {{ _context['busy_fwd_target_' ~ line]|default }}
-account.{{ line }}.busy_fwd.enable = {{ _context['busy_fwd_enable_' ~ line]|default }}
+account.{{ line }}.busy_fwd.target = {{ _context['account_busy_fwd_target_' ~ line]|default }}
+account.{{ line }}.busy_fwd.enable = {{ _context['account_busy_fwd_target_' ~ line] ? '1' : '0' }}
 account.{{ line }}.always_fwd.off_code = {{ cfalwaysoff }}
 account.{{ line }}.always_fwd.on_code = {{ cfalwayson }}
-account.{{ line }}.always_fwd.target = {{ _context['always_fwd_target_' ~ line]|default }}
-account.{{ line }}.always_fwd.enable = {{ _context['always_fwd_enable_' ~ line]|default }}
+account.{{ line }}.always_fwd.target = {{ _context['account_always_fwd_target_' ~ line]|default }}
+account.{{ line }}.always_fwd.enable = {{ _context['account_always_fwd_target_' ~ line] ? '1' : '0' }}
 
 #######################################################################################
 ##                                  DND                                              ##
 #######################################################################################
-account.{{ line }}.dnd.enable = {{ _context['dnd_enable_' ~ line]|default }}
+account.{{ line }}.dnd.enable = {{ _context['account_dnd_enable_' ~ line] ? '1' : '0' }}
 account.{{ line }}.dnd.off_code = {{ dndoff }}
 account.{{ line }}.dnd.on_code = {{ dndon }}
 
 #######################################################################################
 ##                               Voice Mail                                          ##
 #######################################################################################
-voice_mail.number.1 = {{ _context['voicemail_number_' ~ line]|default }}
+voice_mail.number.1 = {{ _context['account_voicemail_' ~ line]|default }}
 account.{{ line }}.subscribe_mwi = 1
 account.{{ line }}.subscribe_mwi_to_vm = 0
 account.{{ line }}.subscribe_mwi_expires = 3600

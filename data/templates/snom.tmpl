@@ -82,7 +82,7 @@
         <idle_left_key_action perm="">keyevent F_ACCEPTED_LIST</idle_left_key_action>
         <idle_right_key_action perm="">keyevent F_MISSED_LIST</idle_right_key_action>
 
-        <dkey_retrieve perm="">speed {{ voicemail_number_1 }}</dkey_retrieve>
+        <dkey_retrieve perm="">speed {{ account_voicemail_1 }}</dkey_retrieve>
 
         <dkey_dnd perm="">keyevent F_DND</dkey_dnd>
         <dkey_directory perm="">keyevent F_ADR_BOOK</dkey_directory>
@@ -97,32 +97,32 @@
                 <user_srtp idx="{{ identity }}" perm="">{{ _context['account_encryption_' ~ identity] ? 'on' : 'off' }}</user_srtp>
                 <user_name idx="{{ identity }}" perm="">{{ _context['account_username_' ~ identity] }}</user_name>
                 <user_pass idx="{{ identity }}" perm="">{{ _context['account_password_' ~ identity] }}</user_pass>
-                <user_host idx="{{ identity }}" perm="">{{ _context['account_server_host_' ~ identity] }}</user_host>
+                <user_host idx="{{ identity }}" perm="">{{ hostname }}</user_host>
                 <user_outbound idx="{{ identity }}" perm="">
-                    {{- _context['account_server_host_' ~ identity] ~ ':'
-                        ~ _context['account_server_port_' ~ identity] ~ ';transport='
+                    {{- hostname ~ ':'
+                        ~ (_context['account_encryption_' ~ identity] ? sip_tls_port : sip_udp_port) ~ ';transport='
                         ~ (_context['account_encryption_' ~ identity] ? 'tls' : 'udp')
                     -}}
                 </user_outbound>
                 <codec_priority_list idx="{{ identity }}" perm="">g722,pcmu,pcma,amr-0,amrwb-0,gsm,g723,g726-32,aal2-g726-32,g729,telephone-event</codec_priority_list>
                 <retry_after_failed_subscribe idx="{{ identity }}" perm="">600</retry_after_failed_subscribe>
 
-                <fwd_all_enabled idx="{{ identity }}" perm="">{{ _context['always_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_all_enabled>
-                <fwd_all_target idx="{{ identity }}" perm="">{{ _context['always_fwd_target_' ~ identity] }}</fwd_all_target>
-                <fwd_busy_enabled idx="{{ identity }}" perm="">{{ _context['busy_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_busy_enabled>
-                <fwd_busy_target idx="{{ identity }}" perm="">{{ _context['busy_fwd_target_' ~ identity] }}</fwd_busy_target>
-                <fwd_time_enabled idx="{{ identity }}" perm="">{{ _context['timeout_fwd_enable_' ~ identity] ? 'on' : 'off' }}</fwd_time_enabled>
-                <fwd_time_target idx="{{ identity }}" perm="">{{ _context['timeout_fwd_target_' ~ identity] }}</fwd_time_target>
-                <dnd_mode idx="{{ identity }}" perm="">{{ _context['dnd_enable_' ~ identity] ? 'on' : 'off' }}</dnd_mode>
+                <fwd_all_enabled idx="{{ identity }}" perm="">{{ _context['account_always_fwd_target_' ~ identity] ? 'on' : 'off' }}</fwd_all_enabled>
+                <fwd_all_target idx="{{ identity }}" perm="">{{ _context['account_always_fwd_target_' ~ identity] }}</fwd_all_target>
+                <fwd_busy_enabled idx="{{ identity }}" perm="">{{ _context['account_busy_fwd_target_' ~ identity] ? 'on' : 'off' }}</fwd_busy_enabled>
+                <fwd_busy_target idx="{{ identity }}" perm="">{{ _context['account_busy_fwd_target_' ~ identity] }}</fwd_busy_target>
+                <fwd_time_enabled idx="{{ identity }}" perm="">{{ _context['account_timeout_fwd_target_' ~ identity] ? 'on' : 'off' }}</fwd_time_enabled>
+                <fwd_time_target idx="{{ identity }}" perm="">{{ _context['account_timeout_fwd_target_' ~ identity] }}</fwd_time_target>
+                <dnd_mode idx="{{ identity }}" perm="">{{ _context['account_dnd_enable_' ~ identity] ? 'on' : 'off' }}</dnd_mode>
 
                 <blf_park_pick_up idx="{{ identity }}" perm="">*88</blf_park_pick_up>
                 <blf_directed_call_pickup idx="{{ identity }}" perm="">*97</blf_directed_call_pickup>
 
-                {% if _context['call_waiting_' ~ identity] and call_waiting_tone %}
+                {% if _context['account_call_waiting_' ~ identity] and call_waiting_tone %}
                     <call_waiting idx="{{ identity }}" perm="">on</call_waiting>
-                {% elseif _context['call_waiting_' ~ identity] and not call_waiting_tone %}
+                {% elseif _context['account_call_waiting_' ~ identity] and not call_waiting_tone %}
                     <call_waiting idx="{{ identity }}" perm="">visual</call_waiting>
-                {% elseif not (_context['call_waiting_' ~ identity]) %}
+                {% elseif not (_context['account_call_waiting_' ~ identity]) %}
                     <call_waiting idx="{{ identity }}" perm="">off</call_waiting>
                 {% else %}
                     {# default value #}
@@ -133,7 +133,7 @@
                 <fwd_all_off_code idx="{{ identity }}" perm="">{{ _context['cfalwaysoff_' ~ identity] }}</fwd_all_off_code>
                 <fwd_busy_on_code idx="{{ identity }}" perm="">{{ _context['cfbusyon_' ~ identity] }}</fwd_busy_on_code>
                 <fwd_busy_off_code idx="{{ identity }}" perm="">{{ _context['cfbusyoff_' ~ identity] }}</fwd_busy_off_code>
-                <fwd_time_secs idx="{{ identity }}" perm="">{{ _context['cftimeout_' ~ identity] }}</fwd_time_secs>
+                <fwd_time_secs idx="{{ identity }}" perm="">{{ _context['account_cftimeout_' ~ identity] }}</fwd_time_secs>
                 <fwd_time_on_code idx="{{ identity }}" perm="">{{ _context['cftimeouton_' ~ identity] }}</fwd_time_on_code>
                 <fwd_time_off_code idx="{{ identity }}" perm="">{{ _context['cftimeoutoff_' ~ identity] }}</fwd_time_off_code>
                 <dnd_on_code idx="{{ identity }}" perm="">{{ _context['dndon_' ~ identity] }}</dnd_on_code>
@@ -141,7 +141,6 @@
                 <user_custom idx="{{ identity }}" perm="">{{ ringtone_url }}</user_custom>
                 <user_dtmf_info idx="{{ identity }}" perm="">{{ snom.dtmf_map(_context['account_dtmf_type_' ~ identity]) }}</user_dtmf_info>
                 <user_realname idx="{{ identity }}" perm="">{{ _context['account_display_name_' ~ identity] }}</user_realname>
-                <user_mailbox idx="{{ identity }}" perm="">{{ _context['mainextension_' ~ identity] }}</user_mailbox>
                 <user_ringer idx="{{ identity }}" perm="">{{ snom.ringtone_map(ringtone) }}</user_ringer>
                 <user_ringer_private_line idx="{{ identity }}" perm="">Ringer2</user_ringer_private_line>
                 <user_ringer_forwarded_calls idx="{{ identity }}" perm="">Ringer3</user_ringer_forwarded_calls>
