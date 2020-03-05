@@ -747,10 +747,12 @@
     </firmware-settings>
     <functionKeys>
         {# line keys #}
-        {% if lineKeys > 0 %}
-            {% for number in 0..(lineKeys - 1) %}
+        {% if cap_linekey_count > 0 %}
+            {% for number in 1..(cap_linekey_count) %}
                 {% if _context['linekey_type_' ~ number] is defined %}
-                    <fkey idx="{{ number }}" context="active" label="{{ _context['linekey_label_' ~ number] }}" lp="on" default_text="$name" perm="">{{ _context['linekey_type_' ~ number] }} {{ _context['linekey_value_' ~ number] }}</fkey>
+                    <fkey idx="{{ (number-1) }}" context="active" label="{{ _context['linekey_label_' ~ number] }}" lp="on" perm="">{{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['dndtoggle'], _context['pickup_group'])}}</fkey>
+                {% else %}
+                    <fkey idx="{{ (number-1) }}" context="active" label="" lp="on" perm="">line</fkey>
                 {% endif %}
             {% endfor %}
         {% endif %}
