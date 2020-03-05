@@ -2221,7 +2221,7 @@ bw.virtual_user.1.xsi.user =
 {% if _context['softkey_type_' ~ softkey] is defined and _context['softkey_type_' ~ softkey] != "" %}
 # Softkey {{ number }}
 programablekey.{{ softkey }}.type = {{ yealink.softkey_type(_context['softkey_type_' ~ softkey]) }}
-programablekey.{{ softkey }}.line = {{ _context['softkey_line_' ~ softkey]|default('1') }}
+programablekey.{{ softkey }}.line = 1
 programablekey.{{ softkey }}.value = {{ _context['softkey_value_' ~ softkey]|default('%NULL%') }}
 programablekey.{{ softkey }}.label = {{ _context['softkey_label_' ~ softkey]|default('%NULL%') }}
 programablekey.{{ softkey }}.extension = %NULL%
@@ -2304,4 +2304,3 @@ static.security.user_password = var:{{ varpw }}
 static.security.user_name.var = var
 static.security.user_name.admin = admin
 static.security.user_name.user = user
-
