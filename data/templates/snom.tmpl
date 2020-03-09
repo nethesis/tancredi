@@ -28,7 +28,7 @@
         <time_24_format perm="">{{ time_format ? 'on' : 'off' }}</time_24_format>
         <ldap_base perm="">{{ ldap_base }}</ldap_base>
         <ldap_port perm="">{{ ldap_port }}</ldap_port>
-        <ldap_server perm="">{{ ldap_server }}</ldap_server>
+        <ldap_server perm="">{{ ldap_server | default(host) }}</ldap_server>
         <ldap_username perm="">{{ ldap_username }}</ldap_username>
         <ldap_password perm="">{{ ldap_password }}</ldap_password>
         <ldap_over_tls perm="">{{ ldap_tls ? 'on' : 'off' }}</ldap_over_tls>
