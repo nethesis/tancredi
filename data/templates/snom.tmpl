@@ -379,7 +379,7 @@
         <subscription_delay perm="">0</subscription_delay>
         <terminate_subscribers_on_reboot perm="">on</terminate_subscribers_on_reboot>
         <show_ivr_digits perm="">off</show_ivr_digits>
-        <settings_refresh_timer perm="">3600</settings_refresh_timer>
+        <settings_refresh_timer perm="">{% if provisioning_complete %}0{% else %}60{% endif %}</settings_refresh_timer>
         <settings_cyclic_store_timer perm="">0</settings_cyclic_store_timer>
         <ocip_server perm=""></ocip_server>
         <ocip_port perm="">2208</ocip_port>
