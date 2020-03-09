@@ -557,7 +557,7 @@ BWDir6 Password    :
 BWDir6 SipLine     :0
 --LDAP Config--    :
 LDAP1 Title        :{{ fanvil.gettext('Phonebook', language) | slice(0, 31) }}
-LDAP1 Server       :{{ ldap_server }}
+LDAP1 Server       :{{ ldap_server | default(hostname) }}
 LDAP1 port         :{{ ldap_port | default('389') }}
 LDAP1 Authenticate :{{ ldap_password ? '3' : '0' }}
 LDAP1 Version      :3
