@@ -119,8 +119,8 @@ static.network.lldp.packet_interval = 60
 #######################################################################################
 ##                                   Network VLAN                                    ##
 #######################################################################################
-static.network.vlan.dhcp_enable = {{ vlan_dhcp_enable|default('1') }}
-static.network.vlan.dhcp_option = {{ vlan_dhcp_option|default('132') }}
+static.network.vlan.dhcp_enable = {{ vlan_dhcp_enable | default('1') }}
+static.network.vlan.dhcp_option = {{ vlan_dhcp_option | default('132') }}
 static.network.vlan.vlan_change.enable = 0
 
 static.network.vlan.pc_port_vid = {{ data_vlan_id }}
@@ -753,7 +753,7 @@ ldap.user = {{ ldap_user }}
 ldap.password = {{ ldap_password }}
 ldap.base = {{ ldap_base }}
 ldap.port = {{ ldap_port }}
-ldap.host = {{ ldap_server|default(host) }}
+ldap.host = {{ ldap_server | default(host) }}
 ldap.customize_label = {{ ldap_name }}
 ldap.incoming_call_special_search.enable = 0
 ldap.tls_mode = {{ ldap_tls }}
@@ -864,7 +864,7 @@ push_xml.username =
 #######################################################################################
 ##                                  Forward                                          ##
 #######################################################################################
-features.fwd.allow = {{ fwd_allow|default('1') }}
+features.fwd.allow = {{ fwd_allow | default('1') }}
 features.fwd_mode = 1
 forward.no_answer.timeout = {{ cftimeout_1 }}
 forward.no_answer.on_code = {{ cftimeouton }}
@@ -888,7 +888,7 @@ features.no_answer_code = 486
 #######################################################################################
 ##                                  DND                                              ##
 #######################################################################################
-features.dnd.allow = {{ dnd_allow|default('1') }}
+features.dnd.allow = {{ dnd_allow | default('1') }}
 features.dnd_mode = 1
 
 features.dnd.off_code = {{ dndoff }}
@@ -1638,11 +1638,11 @@ custom.handset.wallpaper = -1
 {% for handset in 0..10 %}
 {% if _context['name_' ~ line] is defined %}
 
-handset.{{ handset }}.dial_out_default_line = {{ _context['handset_default_line_' ~ line]|default }}
-handset.{{ handset }}.dial_out_lines = {{ _context['handset_dialout_line_' ~ line]|default }}
-handset.{{ handset }}.hac.enable = {{ _context['handset_hac_' ~ line]|default }}
-handset.{{ handset }}.incoming_lines = {{ _context['handset_incoming_lines_' ~ line]|default }}
-handset.{{ handset }}.name = {{ _context['handset_name_' ~ line]|default }}
+handset.{{ handset }}.dial_out_default_line = {{ _context['handset_default_line_' ~ line] | default }}
+handset.{{ handset }}.dial_out_lines = {{ _context['handset_dialout_line_' ~ line] | default }}
+handset.{{ handset }}.hac.enable = {{ _context['handset_hac_' ~ line] | default }}
+handset.{{ handset }}.incoming_lines = {{ _context['handset_incoming_lines_' ~ line] | default }}
+handset.{{ handset }}.name = {{ _context['handset_name_' ~ line] | default }}
 
 {% endif %}
 {% endfor %}
@@ -1715,7 +1715,7 @@ account.{{ line }}.phone_setting.call_appearance.transfer_via_new_linekey = 0
 #######################################################################################
 ##                               Call Waiting                                        ##
 #######################################################################################
-call_waiting.enable = {{ _context['call_waiting_' ~ line]|default('0') }}
+call_waiting.enable = {{ _context['call_waiting_' ~ line] | default('0') }}
 call_waiting.tone = {{ call_waiting_tone }}
 call_waiting.off_code = {{ call_waiting_off }}
 call_waiting.on_code = {{ call_waiting_on }}
@@ -1799,20 +1799,20 @@ account.{{ line }}.video.h264hp.enable = 1
 ################################################################
 #                      Account Register                       ##
 ################################################################
-account.{{ line }}.enable = {{ _context['account_line_active_' ~ line]|default }}
-account.{{ line }}.label = {{ _context['account_display_name_' ~ line]|default }}
-account.{{ line }}.display_name = {{ _context['account_display_name_' ~ line]|default }}
-account.{{ line }}.auth_name = {{ _context['account_username_' ~ line]|default }}
-account.{{ line }}.user_name = {{ _context['account_username_' ~ line]|default }}
-account.{{ line }}.password = {{ _context['account_password_' ~ line]|default }}
-account.{{ line }}.sip_server.1.address = {{ _context['account_server_host_' ~ line]|default }}
-account.{{ line }}.sip_server.1.port = {{ _context['account_server_port_' ~ line]|default }}
+account.{{ line }}.enable = {{ _context['account_line_active_' ~ line] | default }}
+account.{{ line }}.label = {{ _context['account_display_name_' ~ line] | default }}
+account.{{ line }}.display_name = {{ _context['account_display_name_' ~ line] | default }}
+account.{{ line }}.auth_name = {{ _context['account_username_' ~ line] | default }}
+account.{{ line }}.user_name = {{ _context['account_username_' ~ line] | default }}
+account.{{ line }}.password = {{ _context['account_password_' ~ line] | default }}
+account.{{ line }}.sip_server.1.address = {{ _context['account_server_host_' ~ line] | default }}
+account.{{ line }}.sip_server.1.port = {{ _context['account_server_port_' ~ line] | default }}
 account.{{ line }}.sip_server.1.transport_type = {{ _context['account_transport_type_' ~ line] == 'udp' ? '0' : '2'  }}
 account.{{ line }}.sip_server.1.expires = 3600
 account.{{ line }}.sip_server.1.retry_counts = 3
 
-account.{{ line }}.sip_server.2.address = {{ _context['account_server_host2_' ~ line]|default }}
-account.{{ line }}.sip_server.2.port = {{ _context['account_server_port2_' ~ line]|default }}
+account.{{ line }}.sip_server.2.address = {{ _context['account_server_host2_' ~ line] | default }}
+account.{{ line }}.sip_server.2.port = {{ _context['account_server_port2_' ~ line] | default }}
 account.{{ line }}.sip_server.2.transport_type = {{ _context['account_transport_type2_' ~ line] == 'udp' ? '0' : '2'  }}
 account.{{ line }}.sip_server.2.expires = 3600
 account.{{ line }}.sip_server.2.retry_counts = 3
@@ -1837,7 +1837,7 @@ account.{{ line }}.nat.udp_update_enable = 1
 account.{{ line }}.nat.udp_update_time = 30
 account.{{ line }}.nat.rport = 0
 
-account.{{ line }}.dtmf.type = {{ _context['account_dtmf_type_' ~ line]|default }}
+account.{{ line }}.dtmf.type = {{ _context['account_dtmf_type_' ~ line] | default }}
 account.{{ line }}.dtmf.info_type = 1
 account.{{ line }}.dtmf.dtmf_payload = 101
 account.{{ line }}.100rel_enable = 0
@@ -1965,29 +1965,29 @@ account.{{ line }}.missed_calllog = 1
 #######################################################################################
 account.{{ line }}.timeout_fwd.off_code = {{ cftimeoutoff }}
 account.{{ line }}.timeout_fwd.on_code = {{ cftimeouton }}
-account.{{ line }}.timeout_fwd.timeout = _context['cftimeout_' ~ line]|default('2') }}
-account.{{ line }}.timeout_fwd.target = {{ _context['timeout_fwd_target_' ~ line]|default }}
-account.{{ line }}.timeout_fwd.enable = {{ _context['timeout_fwd_enable_' ~ line]|default }}
+account.{{ line }}.timeout_fwd.timeout = _context['cftimeout_' ~ line] | default('2') }}
+account.{{ line }}.timeout_fwd.target = {{ _context['timeout_fwd_target_' ~ line] | default }}
+account.{{ line }}.timeout_fwd.enable = {{ _context['timeout_fwd_enable_' ~ line] | default }}
 account.{{ line }}.busy_fwd.off_code = {{ cfbusyoff }}
 account.{{ line }}.busy_fwd.on_code = {{ cfbusyon }}
-account.{{ line }}.busy_fwd.target = {{ _context['busy_fwd_target_' ~ line]|default }}
-account.{{ line }}.busy_fwd.enable = {{ _context['busy_fwd_enable_' ~ line]|default }}
+account.{{ line }}.busy_fwd.target = {{ _context['busy_fwd_target_' ~ line] | default }}
+account.{{ line }}.busy_fwd.enable = {{ _context['busy_fwd_enable_' ~ line] | default }}
 account.{{ line }}.always_fwd.off_code = {{ cfalwaysoff }}
 account.{{ line }}.always_fwd.on_code = {{ cfalwayson }}
-account.{{ line }}.always_fwd.target = {{ _context['always_fwd_target_' ~ line]|default }}
-account.{{ line }}.always_fwd.enable = {{ _context['always_fwd_enable_' ~ line]|default }}
+account.{{ line }}.always_fwd.target = {{ _context['always_fwd_target_' ~ line] | default }}
+account.{{ line }}.always_fwd.enable = {{ _context['always_fwd_enable_' ~ line] | default }}
 
 #######################################################################################
 ##                                  DND                                              ##
 #######################################################################################
-account.{{ line }}.dnd.enable = {{ _context['dnd_enable_' ~ line]|default }}
+account.{{ line }}.dnd.enable = {{ _context['dnd_enable_' ~ line] | default }}
 account.{{ line }}.dnd.off_code = {{ dndoff }}
 account.{{ line }}.dnd.on_code = {{ dndon }}
 
 #######################################################################################
 ##                               Voice Mail                                          ##
 #######################################################################################
-voice_mail.number.1 = {{ _context['voicemail_number_' ~ line]|default }}
+voice_mail.number.1 = {{ _context['voicemail_number_' ~ line] | default }}
 account.{{ line }}.subscribe_mwi = 1
 account.{{ line }}.subscribe_mwi_to_vm = 0
 account.{{ line }}.subscribe_mwi_expires = 3600
@@ -2002,7 +2002,7 @@ account.{{ line }}.auto_dial_num =
 #######################################################################################
 ##                           Preference&Status                                       ##
 #######################################################################################
-account.{{ line }}.ringtone.ring_type = {{ yealink.ringtone(_context['account_default_ringtone_' ~ line]|default(ringtone)) }}
+account.{{ line }}.ringtone.ring_type = {{ yealink.ringtone(_context['account_default_ringtone_' ~ line] | default(ringtone)) }}
 
 #######################################################################################
 ##                           Digitmap                                                ##
@@ -2185,7 +2185,7 @@ account.{{ line }}.acd.call_information =
 #######################################################################################
 pstn.account.{{ line }}.enable = 1
 pstn.account.{{ line }}.label =
-pstn.account.{{ line }}.ring_type = {{ yealink.ringtone(_context['account_default_ringtone_' ~ line]|default(ringtone)) }}
+pstn.account.{{ line }}.ring_type = {{ yealink.ringtone(_context['account_default_ringtone_' ~ line] | default(ringtone)) }}
 pstn.account.{{ line }}.missed_calllog = 1
 pstn.account.{{ line }}.auto_answer = 0
 pstn.account.{{ line }}.auto_answer_mute_enable = 0
@@ -2222,8 +2222,8 @@ bw.virtual_user.1.xsi.user =
 # Softkey {{ number }}
 programablekey.{{ softkey }}.type = {{ yealink.softkey_type(_context['softkey_type_' ~ softkey]) }}
 programablekey.{{ softkey }}.line = 1
-programablekey.{{ softkey }}.value = {{ _context['softkey_value_' ~ softkey]|default('%NULL%') }}
-programablekey.{{ softkey }}.label = {{ _context['softkey_label_' ~ softkey]|default('%NULL%') }}
+programablekey.{{ softkey }}.value = {{ _context['softkey_value_' ~ softkey] | default('%NULL%') }}
+programablekey.{{ softkey }}.label = {{ _context['softkey_label_' ~ softkey] | default('%NULL%') }}
 programablekey.{{ softkey }}.extension = %NULL%
 programablekey.{{ softkey }}.xml_phonebook = %NULL%
 programablekey.{{ softkey }}.pickup_value = 
@@ -2256,9 +2256,9 @@ programablekey.type_range.custom =
 {% if _context['linekey_type_' ~ number] is defined and _context['linekey_type_' ~ number] != "" %}
 # Linekey {{ number }}
 linekey.{{ number }}.type = {{ yealink.linekey_type(_context['linekey_type_' ~ number]) }}
-linekey.{{ number }}.line = {{ _context['linekey_line_' ~ number]|default('1') }}
-linekey.{{ number }}.value = {{ _context['linekey_value_' ~ number]|default('%NULL%') }}
-linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number]|default('%NULL%') }}
+linekey.{{ number }}.line = {{ _context['linekey_line_' ~ number] | default('1') }}
+linekey.{{ number }}.value = {{ _context['linekey_value_' ~ number] | default('%NULL%') }}
+linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number] | default('%NULL%') }}
 linekey.{{ number }}.extension = %NULL%
 linekey.{{ number }}.xml_phonebook = %NULL%
 
@@ -2284,9 +2284,9 @@ linekey.{{ number }}.xml_phonebook = %NULL%
 {% if _context['expkey_type_' ~ expkey] is defined and _context['expkey_type_' ~ expkey] != "" %}
 # Expansion module {{ module }}, Key {{ number }}
 expansion_module.{{ module }}.key.{{ number }}.type = {{ yealink.linekey_type(_context['expkey_type_' ~ expkey]) }}
-expansion_module.{{ module }}.key.{{ number }}.line = {{ _context['expkey_line_' ~ expkey]|default('1') }}
-expansion_module.{{ module }}.key.{{ number }}.value = {{ _context['expkey_value_' ~ expkey]|default('%NULL%') }}
-expansion_module.{{ module }}.key.{{ number }}.label = {{ _context['expkey_label_' ~ expkey]|default('%NULL%') }}
+expansion_module.{{ module }}.key.{{ number }}.line = {{ _context['expkey_line_' ~ expkey] | default('1') }}
+expansion_module.{{ module }}.key.{{ number }}.value = {{ _context['expkey_value_' ~ expkey] | default('%NULL%') }}
+expansion_module.{{ module }}.key.{{ number }}.label = {{ _context['expkey_label_' ~ expkey] | default('%NULL%') }}
 expansion_module.{{ module }}.key.{{ number }}.extension = %NULL%
 expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = %NULL%
 
