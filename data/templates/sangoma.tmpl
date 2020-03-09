@@ -163,7 +163,7 @@
         <P5435 para="LDAP.UserName">{{ ldap_user }}</P5435>
         <P5436 para="LDAP.Password">{{ ldap_password }}</P5436>
         <P5437 para="LDAP.Max.Hits">50</P5437>
-        <P5440 para="LDAP.DisplayName">{{ ldap_name_display }}</P5440>
+        <P5440 para="LDAP.DisplayName">{{ ldap_name_display | replace({'%': ''}) }}</P5440>
         <P23136 para="Directory.LDAPNameAttributes">{{ ldap_name_attr }}</P23136>
         <P23137 para="Directory.LDAPNumberAttributes">{{ ldap_number_attr }}</P23137>
         <P5442 para="LDAP.SearchDelay">200</P5442>
