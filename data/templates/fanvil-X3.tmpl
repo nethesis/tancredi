@@ -570,7 +570,7 @@ LDAP1 Password     :{{ ldap_password }}
 LDAP1 Tel Attr     :{{ ldap_mainphone_number_attr }}
 LDAP1 Mobile Attr  :{{ ldap_mobilephone_number_attr }}
 LDAP1 Other Attr   :{{ ldap_otherphone_number_attr }}
-LDAP1 Displayname  :{{ ldap_name_attr }}
+LDAP1 Displayname  :{{ ldap_name_display | replace({'%': ''}) }}
 LDAP1 Filter Name  :{{ ldap_name_filter }}
 LDAP1 Filter number:{{ ldap_number_filter }}
 

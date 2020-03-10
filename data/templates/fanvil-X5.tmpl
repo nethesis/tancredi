@@ -556,7 +556,7 @@ LDAP1 Mobile Attr        :{{ ldap_mobilephone_number_attr }}
 LDAP1 Other Attr         :{{ ldap_otherphone_number_attr }}
 LDAP1 Name Attr          :{{ ldap_name_attr }}
 LDAP1 Sort Attr          :{{ ldap_name_attr | split(' ')[0] }}
-LDAP1 Displayname        :{{ ldap_name_attr | split(' ')[0] }}
+LDAP1 Displayname        :{{ ldap_name_display | replace({'%': ''}) }}
 LDAP1 Number Filter      :{{ ldap_number_filter }}
 LDAP1 Name Filter        :{{ ldap_name_filter }}
 LDAP1 Max Hits           :50
