@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+{% import 'gigaset.macros' as gigaset %}
+{% autoescape %}
+<provisioning version="1.1">
+  <nvm>
+    <param name="WebUI.AdminPassword" value="{{ adminpw ?? 'admin' }}" />
+    <param name="WebUI.UserPassword" value="{{ userpw ?? '1234' }}" />
+    
+    <param name="System.DateAndTime.AutoAdjustTime" value="{{ ntp_server ? 'NTPServiceEnabled' : 'NTPServiceDHCP' }}" />
+    <param name="System.DateAndTime.TimeServer" value="{{ ntp_server ?? 'pool.ntp.org' }}" />
+    <param name="System.DateAndTime.TimeZone" value="{{ gigaset.timezone_map(timezone) }}" />
+    <param name="System.DateAndTime.AutoAdjustClockForDST" value="AutomatedDaylightSavingEnabled" />
+    <param name="System.DateAndTime.TimeFormat" value="24h" />
+    <param name="System.DateAndTime.DateOrder" value="dd.mm.yyyy" />
+
+    <param name="Telephony.ToneScheme" value="{{ gigaset.tones_code(tonezone) }}" />
+    <param name="PhoneUI.Settings.Language" value="{{ gigaset.language_code(language) }}" />
+    <param name="WebUI.Language" value="{{ gigaset.language_code(language) }}" />
+    
+    <param name="FirmwareManagment.AutomaticCheckForUpdates" value="0" />
+    <param name="System.Provision.Period" value="{{ provisioning_complete ? '0' : '600' }}" />
+    <param name="System.Provision.ProvisioningServer" value="{{ provisioning_url2 | replace({'%25': '%'}) }}" />
+
+    <param name="SIP.Port" value="{{ account_encryption_1 ? sip_tls_port : sip_udp_port }}" />
+    <param name="SIP.RTP.Port" value="5004"  />
+    <param name="SIP.Security.UseSIPS" value="{{ account_encryption_1 ? '2' : '0' }}" />
+    <param name="SIP.TransportProtocol" value="{{ account_encryption_1 ? '2' : '1' }}" />
+    <param name="SIP.Security.SRTP" value="{{ account_encryption_1 ? '1' : '0' }}" />
+    <param name="SIP.Security.AcceptNonSRTPCalls" value="{{ account_encryption_1 ? '0' : '1' }}" />
+    <param name="SIP.PRACK" value="0" />
+
+    <param name="SIP.DefaultAccount" value="0" />
+
+    {% for line in range(1,4) -%}
+    {%- if _context['account_username_' ~ line] is defined -%}
+    {%- set idx = line - 1 -%}
+    <param name="SIP.Account.{{ idx }}.AccountName" value="{{ _context['account_username_' ~ line] }}" />
+    <param name="SIP.Account.{{ idx }}.Active" value="1" />
+    <param name="SIP.Account.{{ idx }}.Provider" value="{{ _context['account_username_' ~ line] }}" />
+    <param name="SIP.Account.{{ idx }}.AuthName" value="{{ _context['account_username_' ~ line] }}" />
+    <param name="SIP.Account.{{ idx }}.AuthPassword" value="{{ _context['account_password_' ~ line] }}" />
+    <param name="SIP.Account.{{ idx }}.DisplayName" value="{{ _context['account_display_name_' ~ line] }}" />
+    <param name="SIP.Account.{{ idx }}.Username" value="{{ _context['account_username_' ~ line] }}" />
+    <param name="SIP.Account.{{ idx }}.Domain" value="{{ hostname }}" />
+    <param name="SIP.Account.{{ idx }}.ProxyServer.Address" value="{{ hostname }}" />
+    <param name="SIP.Account.{{ idx }}.ProxyServer.Port" value="{{ _context['account_encryption_' ~ line] ? sip_tls_port : sip_udp_port }}" />
+    <param name="SIP.Account.{{ idx }}.RegistrationServer.Address" value="{{ hostname }}" />
+    <param name="SIP.Account.{{ idx }}.RegistrationServer.Port" value="{{ _context['account_encryption_' ~ line] ? sip_tls_port : sip_udp_port }}" />
+    <param name="SIP.Account.{{ idx }}.DTMFTransmission" value="{{ gigaset.dtmf_map(_context['account_dtmf_type_' ~ line]) }}" />
+    <param name="SIP.Account.{{ idx }}.FailoverServer.Enabled" value="0" />
+    <param name="SIP.Account.{{ idx }}.STUN.Enabled" value="0" />
+    {%- endif %}
+    {%- endfor %}
+
+  </nvm>
+</provisioning>
+{% endautoescape %}
