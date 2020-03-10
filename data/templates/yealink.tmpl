@@ -173,9 +173,9 @@ static.auto_provision.server.password =
 ##                                   Autop Weekly                                    ##
 #######################################################################################
 static.auto_provision.weekly.enable =  {{ provisioning_freq == 'never' ? '0' : '1' }}
-static.auto_provision.weekly.dayofweek = {{ yealink.provisioning_day(provisioning_freq) }}
-static.auto_provision.weekly.end_time = {{ '06:00' }}
-static.auto_provision.weekly.begin_time = {{ '00:00' }}
+static.auto_provision.weekly.dayofweek = 0123456
+static.auto_provision.weekly.end_time = {{ '04:00' }}
+static.auto_provision.weekly.begin_time = {{ '01:00' }}
 static.auto_provision.weekly_upgrade_interval = 0
 
 #######################################################################################

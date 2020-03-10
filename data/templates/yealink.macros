@@ -1047,22 +1047,3 @@
 {{- map[softkey_type] ?? '0' -}}
 {% endmacro softkey_type %}
 
-#
-# Translate provisioning_freq day in Yealink number
-#
-{% macro provisioning_day(provisioning_freq) %}
-    {%- set map = {
-        "Sunday": "0",
-        "Monday": "1",
-        "Tuesday": "2",
-        "Wednesday": "3",
-        "Thursday": "4",
-        "Friday": "5",
-        "Saturday": "6",
-        "everyday": "0123456",
-        "never": "",
-        }
-    -%}
-{{- map[provisioning_freq] ?? '0123456' -}}
-{% endmacro provisioning_day %}
-
