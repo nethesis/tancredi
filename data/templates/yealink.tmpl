@@ -181,8 +181,8 @@ static.auto_provision.weekly_upgrade_interval = 0
 #######################################################################################
 ##                                   Autop Repeat                                    ##
 #######################################################################################
-static.auto_provision.repeat.enable = {% if provisioning_complete %}0{% else %}1{% endif %}
-static.auto_provision.repeat.minutes = {% if provisioning_complete %}1440{% else %}1{% endif %}
+static.auto_provision.repeat.enable = {{ provisioning_complete ? '0' : '1' }}
+static.auto_provision.repeat.minutes = {{ provisioning_complete ? '1440' : '1' }}
 
 #######################################################################################
 ##                                   Autop DHCP                                      ##
