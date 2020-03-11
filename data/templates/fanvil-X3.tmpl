@@ -652,7 +652,7 @@ Download Server IP :{{ hostname }}
 Download Protocol  :{{ fanvil.scheme_map(provisioning_url_scheme) }}
 Download Mode      :{{ provisioning_freq == 'never' ? '1' : '2' }}
 Download Interval  :{{ fanvil.upgrade_wait_hours(timezone) }}
-DHCP Option        :{{ dhcp_enable ? '66' : '0' }}
+DHCP Option        :0
 Save DHCP Opion    :0
 DHCP Option 120    :0
 PNP Enable         :0

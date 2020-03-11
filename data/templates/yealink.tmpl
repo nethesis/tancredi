@@ -118,8 +118,8 @@ static.network.lldp.packet_interval = 60
 #######################################################################################
 ##                                   Network VLAN                                    ##
 #######################################################################################
-static.network.vlan.dhcp_enable = {{ vlan_dhcp_enable | default('1') }}
-static.network.vlan.dhcp_option = {{ vlan_dhcp_option | default('132') }}
+static.network.vlan.dhcp_enable = 1
+static.network.vlan.dhcp_option = {{ vlan_dhcp_option|default('132') }}
 static.network.vlan.vlan_change.enable = 0
 
 static.network.vlan.pc_port_vid = {{ data_vlan_id }}
@@ -188,7 +188,7 @@ static.auto_provision.repeat.minutes = {{ provisioning_complete ? '1440' : '1' }
 ##                                   Autop DHCP                                      ##
 #######################################################################################
 static.auto_provision.dhcp_option.list_user_options =
-static.auto_provision.dhcp_option.enable = {{ dhcp_enable }}
+static.auto_provision.dhcp_option.enable = 0
 
 ##V83 Add
 static.auto_provision.dhcp_option.list_user6_options =
