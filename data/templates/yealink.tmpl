@@ -118,8 +118,8 @@ static.network.lldp.packet_interval = 60
 #######################################################################################
 ##                                   Network VLAN                                    ##
 #######################################################################################
-static.network.vlan.dhcp_enable = {{ vlan_dhcp_enable|default('1') }}
-static.network.vlan.dhcp_option = {{ vlan_dhcp_option|default('132') }}
+static.network.vlan.dhcp_enable = {{ vlan_dhcp_enable | default('1') }}
+static.network.vlan.dhcp_option = {{ vlan_dhcp_option | default('132') }}
 static.network.vlan.vlan_change.enable = 0
 
 static.network.vlan.pc_port_vid = {{ data_vlan_id }}
@@ -172,17 +172,17 @@ static.auto_provision.server.password =
 #######################################################################################
 ##                                   Autop Weekly                                    ##
 #######################################################################################
-static.auto_provision.weekly.enable =  {{ weekly_enable|default('1') }}
-static.auto_provision.weekly.dayofweek = {{ weekly_dayofweek|default('0123456') }}
-static.auto_provision.weekly.end_time = {{ weekly_end_time|default('00:00') }}
-static.auto_provision.weekly.begin_time = {{ weekly_begin_time|default('00:00') }}
+static.auto_provision.weekly.enable =  {{ provisioning_freq == 'never' ? '0' : '1' }}
+static.auto_provision.weekly.dayofweek = 0123456
+static.auto_provision.weekly.end_time = {{ '04:00' }}
+static.auto_provision.weekly.begin_time = {{ '01:00' }}
 static.auto_provision.weekly_upgrade_interval = 0
 
 #######################################################################################
 ##                                   Autop Repeat                                    ##
 #######################################################################################
-static.auto_provision.repeat.enable = 0
-static.auto_provision.repeat.minutes = 1440
+static.auto_provision.repeat.enable = {{ provisioning_complete ? '0' : '1' }}
+static.auto_provision.repeat.minutes = {{ provisioning_complete ? '1440' : '1' }}
 
 #######################################################################################
 ##                                   Autop DHCP                                      ##
@@ -752,7 +752,7 @@ ldap.user = {{ ldap_user }}
 ldap.password = {{ ldap_password }}
 ldap.base = {{ ldap_base }}
 ldap.port = {{ ldap_port }}
-ldap.host = {{ ldap_server }}
+ldap.host = {{ ldap_server | default(hostname) }}
 ldap.customize_label = {{ ldap_name }}
 ldap.incoming_call_special_search.enable = 0
 ldap.tls_mode = {{ ldap_tls }}
@@ -1637,11 +1637,11 @@ custom.handset.wallpaper = -1
 {% for handset in 0..10 %}
 {% if _context['name_' ~ line] is defined %}
 
-handset.{{ handset }}.dial_out_default_line = {{ _context['handset_default_line_' ~ line]|default }}
-handset.{{ handset }}.dial_out_lines = {{ _context['handset_dialout_line_' ~ line]|default }}
-handset.{{ handset }}.hac.enable = {{ _context['handset_hac_' ~ line]|default }}
-handset.{{ handset }}.incoming_lines = {{ _context['handset_incoming_lines_' ~ line]|default }}
-handset.{{ handset }}.name = {{ _context['handset_name_' ~ line]|default }}
+handset.{{ handset }}.dial_out_default_line = {{ _context['handset_default_line_' ~ line] | default }}
+handset.{{ handset }}.dial_out_lines = {{ _context['handset_dialout_line_' ~ line] | default }}
+handset.{{ handset }}.hac.enable = {{ _context['handset_hac_' ~ line] | default }}
+handset.{{ handset }}.incoming_lines = {{ _context['handset_incoming_lines_' ~ line] | default }}
+handset.{{ handset }}.name = {{ _context['handset_name_' ~ line] | default }}
 
 {% endif %}
 {% endfor %}
@@ -1830,7 +1830,7 @@ account.{{ line }}.nat.udp_update_enable = 1
 account.{{ line }}.nat.udp_update_time = 30
 account.{{ line }}.nat.rport = 0
 
-account.{{ line }}.dtmf.type = {{ _context['account_dtmf_type_' ~ line]|default }}
+account.{{ line }}.dtmf.type = {{ _context['account_dtmf_type_' ~ line] | default }}
 account.{{ line }}.dtmf.info_type = 1
 account.{{ line }}.dtmf.dtmf_payload = 101
 account.{{ line }}.100rel_enable = 0
@@ -2210,49 +2210,53 @@ bw.virtual_user.1.xsi.user =
 #programablekey.X.extension
 ##Programablekey X ranges(T48G/T48S/T46G/T46S: X=1-10, 12-14;T42G/T42S/T41P/T41S/T40P/T40G: X=1-10, 13;T29G/T27P/T27G: X=1-14;T23P/T23G/T21(P) E2: 1-10, 14;T19(P) E2: X=1-9, 13, 14;)##
 
-{% for number in 1..14 %}
-{% if _context['softkey_type_' ~ number] is defined %}
-
-programablekey.{{ number }}.type = {{ _context['softkey_type_' ~ number]|default }}
-programablekey.{{ number }}.label = {{ _context['softkey_label_' ~ number]|default }}
-programablekey.{{ number }}.value = {{ _context['softkey_value_' ~ number]|default }}
-programablekey.{{ number }}.line = {{ _context['softkey_line_' ~ number]|default }}
-programablekey.{{ number }}.history_type = {{ _context['softkey_history_type_' ~ number]|default }}
-programablekey.{{ number }}.xml_phonebook = {{ _context['softkey_xml_phonebook_' ~ number]|default }}
-programablekey.{{ number }}.extension = {{ _context['softkey_extension_' ~ number]|default }}
+{% for softkey in 1..cap_softkey_count %}
+{% if _context['softkey_type_' ~ softkey] is defined and _context['softkey_type_' ~ softkey] != "" %}
+# Softkey {{ number }}
+programablekey.{{ softkey }}.type = {{ yealink.softkey_type(_context['softkey_type_' ~ softkey]) }}
+programablekey.{{ softkey }}.line = 1
+programablekey.{{ softkey }}.value = {{ _context['softkey_value_' ~ softkey] | default('%NULL%') }}
+programablekey.{{ softkey }}.label = {{ _context['softkey_label_' ~ softkey] | default('%NULL%') }}
+programablekey.{{ softkey }}.extension = %NULL%
+programablekey.{{ softkey }}.xml_phonebook = %NULL%
+programablekey.{{ softkey }}.pickup_value = 
+{%- if _context['softkey_type_' ~ softkey] == 'pick_up' %}
+    {{ pickup_direct }}
+{% elseif _context['softkey_type_' ~ softkey] == 'group_pickup' %}
+    {{ pickup_group }}
+{%- else %}
+ %NULL%
+{% endif %}
 
 {% endif %}
 {% endfor %}
-
 ##V83 Add
 programablekey.type_range.custom =
 
 #######################################################################################
 ##                                  Linekey                                          ##
 #######################################################################################
+##linekey.X.type
 ##linekey.X.line
 ##linekey.X.value
-##linekey.X.extension
-##linekey.X.type
-##linekey.X.xml_phonebook
-##linekey.X.shortlabel
 ##linekey.X.label
+##linekey.X.extension
+##linekey.X.xml_phonebook
 ##LineKeyX ranges(T57W/T48G/S: X ranges from 1 to 29. T53W/T54W/T54S/T46G/T46S/T29G: X ranges from 1 to 27. T42G/T42S/T41P/T41S: X ranges from 1 to 15. T40P/T40G/T23P/T23G: X ranges from 1 to 3. T52S/T27P/T27G: X ranges from 1 to 21. T21(P) E2: X ranges from 1 to 2.)##
 ## Not support T19P_E2
 
-{% for number in 1..30 %}
-{% if _context['linekey_type_' ~ number] is defined %}
-
-linekey.{{ number }}.type = {{ _context['linekey_type_' ~ number]|default }}
-linekey.{{ number }}.line = {{ _context['linekey_line_' ~ number]|default }}
-linekey.{{ number }}.value = {{ _context['linekey_value_' ~ number]|default }}
-linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number]|default }}
-linekey.{{ number }}.extension = {{ _context['linekey_extension_' ~ number]|default }}
-linekey.{{ number }}.xml_phonebook = {{ _context['linekey_xml_phonebook_' ~ number]|default }}
+{% for number in 1..cap_linekey_count %}
+{% if _context['linekey_type_' ~ number] is defined and _context['linekey_type_' ~ number] != "" %}
+# Linekey {{ number }}
+linekey.{{ number }}.type = {{ yealink.linekey_type(_context['linekey_type_' ~ number]) }}
+linekey.{{ number }}.line = {{ _context['linekey_line_' ~ number] | default('1') }}
+linekey.{{ number }}.value = {{ _context['linekey_value_' ~ number] | default('%NULL%') }}
+linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number] | default('%NULL%') }}
+linekey.{{ number }}.extension = %NULL%
+linekey.{{ number }}.xml_phonebook = %NULL%
 
 {% endif %}
 {% endfor %}
-
 #######################################################################################
 ##                                Expansion Key                                      ##
 #######################################################################################
@@ -2265,21 +2269,25 @@ linekey.{{ number }}.xml_phonebook = {{ _context['linekey_xml_phonebook_' ~ numb
 ## Expansion Key X ranges(SIP-T5XW/T54S/T52S: X ranges from 1 to 3, Y ranges from 1 to 60; SIP-T48G/T48S/T46G/T46S:X ranges from 1 to 6, Y ranges from 1 to 40; SIP-T29G/T27P/T27G:X ranges from 1 to 6, Y ranges from 1 to 20, 22 to 40 (Ext key 21 cannot be configured).)##
 ## Only SIP-T5XW/T54S/T52S/T48G/T48S/T46G/T46S/T29G/T27P/T27G Models support the parameter.
 
-{% for module in 1..6 %}
-{% for number in 1..60 %}
-{% if _context['expkey_type_' ~ module ~ '_' ~ number] is defined %}
+{% set expkey = 1 %}
+{% for module in 1..cap_expmodule_count %}
+{% for number in 1..cap_expkey_count %}
+{# Skip expkey 21 #}
+{% if cap_expmodule_count != 38 and number != 21 %}
+{% if _context['expkey_type_' ~ expkey] is defined and _context['expkey_type_' ~ expkey] != "" %}
+# Expansion module {{ module }}, Key {{ number }}
+expansion_module.{{ module }}.key.{{ number }}.type = {{ yealink.linekey_type(_context['expkey_type_' ~ expkey]) }}
+expansion_module.{{ module }}.key.{{ number }}.line = {{ _context['expkey_line_' ~ expkey] | default('1') }}
+expansion_module.{{ module }}.key.{{ number }}.value = {{ _context['expkey_value_' ~ expkey] | default('%NULL%') }}
+expansion_module.{{ module }}.key.{{ number }}.label = {{ _context['expkey_label_' ~ expkey] | default('%NULL%') }}
+expansion_module.{{ module }}.key.{{ number }}.extension = %NULL%
+expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = %NULL%
 
-expansion_module.{{ module }}.key.{{ number }}.type = {{ _context['expkey_type_' ~ module ~ '_' ~ number]|default }}
-expansion_module.{{ module }}.key.{{ number }}.line = {{ _context['expkey_line_' ~ module ~ '_' ~ number]|default }}
-expansion_module.{{ module }}.key.{{ number }}.value = {{ _context['expkey_value_' ~ module ~ '_' ~ number]|default }}
-expansion_module.{{ module }}.key.{{ number }}.extension = {{ _context['expkey_extension_' ~ module ~ '_' ~ number]|default }}
-expansion_module.{{ module }}.key.{{ number }}.label = {{ _context['expkey_label_' ~ module ~ '_' ~ number]|default }}
-expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = {{ _context['expkey_xml_phonebook_' ~ module ~ '_' ~ number]|default }}
-
+{% set expkey =  expkey + 1 %}
+{% endif %}
 {% endif %}
 {% endfor %}
 {% endfor %}
-
 #######################################################################################
 ##                               Security                                            ##
 #######################################################################################
@@ -2289,4 +2297,3 @@ static.security.user_password = var:{{ varpw }}
 static.security.user_name.var = var
 static.security.user_name.admin = admin
 static.security.user_name.user = user
-
