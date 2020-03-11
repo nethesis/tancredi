@@ -156,11 +156,10 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
 
 function renderTwigTemplate($template, $scope_data) {
     global $config;
-    if (file_exists($config['rw_dir'] . 'templates-custom/' . $template)) {
-        $loader = new \Twig\Loader\FilesystemLoader($config['rw_dir'] . 'templates-custom/');
-    } else {
-        $loader = new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/');
-    }
+    $loader = new \Twig\Loader\ChainLoader([
+        new \Twig\Loader\FilesystemLoader($config['rw_dir'] . 'templates-custom/'),
+        new \Twig\Loader\FilesystemLoader($config['ro_dir'] . 'templates/'),
+    ]);
     $twig = new \Twig\Environment($loader,['autoescape' => false]);
     $payload = $twig->render($template, $scope_data);
     return $payload;
