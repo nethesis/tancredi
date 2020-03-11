@@ -153,3 +153,10 @@
     {{- tz_map['UTC'][field] -}}
 {% endif %}
 {% endmacro tz_map %}
+
+#
+# Calculate the hours to wait before the next upgrade round
+#
+{% macro upgrade_wait_hours(timezone) %}
+    {{- ((('tomorrow 01:00' | date('U', timezone)) - ('now' | date('U', timezone)))/3600 + random(0,4)) | round -}}
+{% endmacro upgrade_wait_hours %}
