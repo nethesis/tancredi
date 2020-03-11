@@ -25,9 +25,9 @@
 {% elseif linekey_type == "url" %}
     {{- 'url' }} {{ linekey_value -}}
 {% elseif linekey_type == "dnd" %}
-    {{- 'dtmf' }} {{ dndtoggle -}}
+    {{- 'speed' }} {{ dndtoggle -}}
 {% elseif linekey_type == "group_pickup" %}
-    {{- 'dtmf' }} {{ pickup_group -}}
+    {{- 'speed' }} {{ pickup_group -}}
 {% else %}
     {{- linekey_type }} {{ linekey_value -}}
 {% endif %}

@@ -379,7 +379,6 @@
         <subscription_delay perm="">0</subscription_delay>
         <terminate_subscribers_on_reboot perm="">on</terminate_subscribers_on_reboot>
         <show_ivr_digits perm="">off</show_ivr_digits>
-        <settings_refresh_timer perm="">3600</settings_refresh_timer>
         <settings_cyclic_store_timer perm="">0</settings_cyclic_store_timer>
         <ocip_server perm=""></ocip_server>
         <ocip_port perm="">2208</ocip_port>
@@ -703,11 +702,11 @@
         <xsi_max_anywhere_portals perm="">10</xsi_max_anywhere_portals>
         <xfer_dest_order_lifo perm="">on</xfer_dest_order_lifo>
         <remote_blacklist_action_timer perm="">1</remote_blacklist_action_timer>
-        <prov_polling_enabled perm="">off</prov_polling_enabled>
-        <prov_polling_mode perm="">rel</prov_polling_mode>
-        <prov_polling_period perm="">0</prov_polling_period>
-        <prov_polling_time perm="">00:00</prov_polling_time>
-        <prov_polling_time_rand_end perm="">00:00</prov_polling_time_rand_end>
+        <prov_polling_enabled perm="">{{ provisioning_freq == 'never' ? 'off' : 'on' }}</prov_polling_enabled>
+        <prov_polling_mode perm="">{{ provisioning_complete ? 'random' : 'rel' }}</prov_polling_mode>
+        <prov_polling_period perm="">{{ provisioning_complete ? '86400' : '60' }}</prov_polling_period>
+        <prov_polling_time perm="">01:00</prov_polling_time>
+        <prov_polling_time_rand_end perm="">04:00</prov_polling_time_rand_end>
         <show_desktop_msg_in_call_screens perm="">off</show_desktop_msg_in_call_screens>
         <msw_cp_pat perm=""></msw_cp_pat>
         <listen_in_on_handset perm="">off</listen_in_on_handset>
