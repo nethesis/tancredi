@@ -650,8 +650,8 @@ Config File Key    :
 Common Cfg File Key:
 Download Server IP :{{ hostname }}
 Download Protocol  :{{ fanvil.scheme_map(provisioning_url_scheme) }}
-Download Mode      :1
-Download Interval  :1
+Download Mode      :{{ provisioning_freq == 'never' ? '1' : '2' }}
+Download Interval  :{{ fanvil.upgrade_wait_hours(timezone) }}
 DHCP Option        :{{ dhcp_enable ? '66' : '0' }}
 Save DHCP Opion    :0
 DHCP Option 120    :0
