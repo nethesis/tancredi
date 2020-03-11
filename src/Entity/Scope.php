@@ -43,7 +43,7 @@ class Scope {
             $parent = $this->metadata['inheritFrom'];
         }
 
-        while (!empty($parent) && $parent !== null) {
+        while (!empty($parent) && $parent !== 'defaults') {
             $variables = $this->storage->storageRead($parent);
             if (array_key_exists('metadata',$variables) and array_key_exists('inheritFrom',$variables['metadata'])) {
                 $parent = $variables['metadata']['inheritFrom'];
@@ -54,6 +54,8 @@ class Scope {
                 $var_arrays[] = $variables['data'];
             }
         }
+        $variables = $this->storage->storageRead('defaults');
+        $var_arrays[] = $variables['data'];
         $var_arrays = array_reverse($var_arrays);
         if (!empty($var_arrays)) {
             return call_user_func_array('array_merge', $var_arrays);
