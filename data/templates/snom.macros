@@ -35,6 +35,32 @@
 
 
 #
+# softkey_type_map -- translate "softkey_type_"
+#
+{% macro softkey_type_map(softkey_type) %}
+{% if softkey_type == "" %}
+    {{- 'keyevent F_NONE' }}
+{% elseif softkey_type == "forward" %}
+    {{- 'keyevent F_REDIRECT' }}
+{% elseif softkey_type == "dnd" %}
+    {{- 'keyevent F_DND' }}
+{% elseif softkey_type == "recall" %}
+    {{- 'keyevent F_REDIAL' }}
+{% elseif softkey_type == "history" %}
+    {{- 'keyevent F_CALL_LIST' }}
+{% elseif softkey_type == "menu" %}
+    {{- 'keyevent F_SETTINGS' }}
+{% elseif softkey_type == "status" %}
+    {{- 'keyevent F_STATUS' }}
+{% elseif softkey_type == "ldap" %}
+    {{- 'keyevent F_DIRECTORY_SEARCH' }}
+{% else %}
+    {{- softkey_type }}
+{% endif %}
+{% endmacro softkey_type_map %}
+
+
+#
 # ringtone_map -- translate "account_"
 #
 {% macro ringtone_map(ringtone) %}
