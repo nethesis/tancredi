@@ -51,7 +51,24 @@
     <param name="SIP.Account.{{ idx }}.STUN.Enabled" value="0" />
     {%- endif %}
     {%- endfor %}
-
+    {# line keys #}
+    {% if cap_linekey_count > 0 %}
+      {% for number in 1..(cap_linekey_count) %}
+        {% if _context['linekey_type_' ~ number] is defined %}
+          {{ gigaset.linekey_type_map(_context['linekey_type_' ~ number], (number-1), _context['linekey_value_' ~ number], dndtoggle, pickup_group) }}
+        {% else %}
+            <param name="PhoneUI.Keys.FunctionKeys.{{number-1}}.Type" value="-1" />
+        {% endif %}
+        <param name="PhoneUI.Keys.FunctionKeys.{{number-1}}.DisplayName" value="{{_context['linekey_label_' ~ number]}}" />
+      {% endfor %}
+    {% endif %}
+    <param name="Telephony.ShowKeysDisplayName" value="1"/>
+    <param name="PhoneUI.Keys.FunctionKeys.Icons" value="1"/>
+    <param name="PhoneUI.Keys.FunctionKeys.Indicator" value="1"/>
   </nvm>
+  <custom>
+    <step type="UnlockAllFunctionKeys" />
+  </custom>
+  {# end line keys #}
 </provisioning>
 {% endautoescape %}
