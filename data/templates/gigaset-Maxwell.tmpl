@@ -62,9 +62,11 @@
         <param name="PhoneUI.Keys.FunctionKeys.{{number-1}}.DisplayName" value="{{_context['linekey_label_' ~ number]}}" />
       {% endfor %}
     {% endif %}
+    <param name="Telephony.ShowKeysDisplayName" value="1"/>
   </nvm>
   <custom>
     <step type="UnlockAllFunctionKeys" />
   </custom>
+  {# end line keys #}
 </provisioning>
 {% endautoescape %}
