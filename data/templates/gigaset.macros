@@ -1,4 +1,37 @@
 #
+# linekey_type_map -- translate "linekey_type_"
+#
+{% macro linekey_type_map(linekey_type, number, linekey_value, dndtoggle, pickup_group) %}
+{% if linekey_type == "blf" %}
+    {{- '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.Type" value="4" />' }}
+    {{ '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.PhoneNumber" value="' -}} {{ linekey_value }} {{- '" />' }}
+{% elseif linekey_type == "dtmf" %}
+    {{- '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.Type" value="7" />' }}
+    {{ '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.EnableCode" value="' -}} {{ linekey_value }} {{- '" />' }}
+{% elseif linekey_type == "forward" %}
+    {{- '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.Type" value="6" />' }}
+    {{ '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.PhoneNumber" value="' -}} {{ linekey_value }} {{- '" />' }}
+{% elseif linekey_type == "line" %}
+    {{- '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.Type" value="0" />' }}
+    {{ '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.Connection" value="' -}} {{ linekey_value }} {{- '" />' }}
+{% elseif linekey_type == "speed_dial" %}
+    {{- '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.Type" value="3" />' }}
+    {{ '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.PhoneNumber" value="' -}} {{ linekey_value }} {{- '" />' }}
+{% elseif linekey_type == "url" %}
+    {{- '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.Type" value="8" />' }}
+    {{ '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.URL" value="' -}} {{ linekey_value }} {{- '" />' }}
+{% elseif linekey_type == "dnd" %}
+    {{- '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.Type" value="10" />' }}
+    {{ '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.EnableCode" value="' -}} {{ dndtoggle }} {{- '" />' }}
+{% elseif linekey_type == "group_pickup" %}
+    {{- '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.Type" value="10" />' }}
+    {{ '<param name="PhoneUI.Keys.FunctionKeys.' -}} {{- number -}} {{- '.EnableCode" value="' -}} {{ pickup_group }} {{- '" />' }}
+{% else %}
+    {{- linekey_type }} {{ linekey_value -}}
+{% endif %}
+{% endmacro linekey_type_map %}
+
+#
 # dtmf_map -- translate "account_dtmf_type" value to Fanvil code
 #
 {% macro dtmf_map(account_dtmf_type) %}
