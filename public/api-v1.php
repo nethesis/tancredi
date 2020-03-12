@@ -111,7 +111,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     }
     $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
     $scope->metadata['displayName'] = $display_name;
-    $scope->metadata['inheritFrom'] = (empty($model) ? 'defaults' : $model);
+    $scope->metadata['inheritFrom'] = $model;
     $scope->metadata['scopeType'] = "phone";
     $scope->setVariables($variables);
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , TRUE); // create first time access token
@@ -310,7 +310,6 @@ $app->post('/models', function (Request $request, Response $response, $args) {
     }
     $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
     $scope->metadata['displayName'] = $display_name;
-    $scope->metadata['inheritFrom'] = 'defaults';
     $scope->metadata['scopeType'] = "model";
     $scope->setVariables($variables);
     $response = $response->withJson(getModelScope($id, $this->storage, $this->logger),201,JSON_FLAGS);
