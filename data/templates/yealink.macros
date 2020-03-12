@@ -1047,3 +1047,32 @@
 {{- map[softkey_type] ?? '0' -}}
 {% endmacro softkey_type %}
 
+#
+# Set date format
+#
+{% macro date_format(date_format,timezone) %}
+    {%- set map = {
+        "WWW MMM DD": "0",
+        "DD-MMM-YY": "1",
+        "YYYY-MM-DD": "2",
+        "DD/MM/YYYY": "3",
+        "MM/DD/YY": "4",
+        "DD MMM YYYY": "5",
+        "WWW DD MMM": "6",
+        }
+    -%}
+{% if map[date_format] %}
+    {{- map[date_format] -}}
+{% else %}
+    {% if timezone in ["America/Adak", "America/Anchorage", "America/Belize", "America/Bogota", "America/Boise", "America/Cancun", "America/Chicago", "America/Denver", "America/Detroit", "America/Eirunepe", "America/Guayaquil", "America/Indiana/Indianapolis", "America/Indiana/Knox", "America/Indiana/Marengo", "America/Indiana/Petersburg", "America/Indiana/Tell_City", "America/Indiana/Vevay", "America/Indiana/Vincennes", "America/Indiana/Winamac", "America/Juneau", "America/Kentucky/Louisville", "America/Kentucky/Monticello", "America/Lima", "America/Los_Angeles", "America/Menominee", "America/Metlakatla", "America/New_York", "America/Nome", "America/North_Dakota/Beulah", "America/North_Dakota/Center", "America/North_Dakota/New_Salem", "America/Panama", "America/Phoenix", "America/Port-au-Prince", "America/Rio_Branco", "America/Sitka", "America/Yakutat", "Pacific/Gambier", "Pacific/Honolulu", "Pacific/Rarotonga", "Pacific/Tahiti"] %}
+        # USA format
+        {{- '0' -}
+    {% elseif timezone in ["America/Atikokan", "America/Blanc-Sablon", "America/Cambridge_Bay", "America/Creston", "America/Dawson_Creek", "America/Dawson", "America/Edmonton", "America/Fort_Nelson", "America/Glace_Bay", "America/Goose_Bay", "America/Halifax", "America/Inuvik", "America/Iqaluit", "America/Moncton", "America/Pangnirtung", "America/Rainy_River", "America/Rankin_Inlet", "America/Regina", "America/Resolute", "America/St_Johns", "America/Swift_Current", "America/Thunder_Bay", "America/Toronto", "America/Vancouver", "America/Whitehorse", "America/Winnipeg", "America/Yellowknife", "Asia/Brunei", "Asia/Choibalsan", "Asia/Hong_Kong", "Asia/Irkutsk", "Asia/Kuala_Lumpur", "Asia/Kuching", "Asia/Macau", "Asia/Makassar", "Asia/Manila", "Asia/Shanghai", "Asia/Taipei", "Asia/Ulaanbaatar", "Pacific/Pitcairn"] %}
+        # China / Canada format
+        {{- '2' -}
+    {% else %}
+        {{- '6' -}
+    {% endif %}
+{% endif %}
+{% endmacro date_format %}
+
