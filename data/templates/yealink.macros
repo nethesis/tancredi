@@ -1047,3 +1047,20 @@
 {{- map[softkey_type] ?? '0' -}}
 {% endmacro softkey_type %}
 
+#
+# Set date format
+#
+{% macro date_format(date_format,timezone) %}
+    {%- set map = {
+        "WWW MMM DD": "0",
+        "DD-MMM-YY": "1",
+        "YYYY-MM-DD": "2",
+        "DD/MM/YYYY": "3",
+        "MM/DD/YY": "4",
+        "DD MMM YYYY": "5",
+        "WWW DD MMM": "6"
+        }
+    -%}
+{{- map[date_format] ?? '6' -}}
+{% endmacro date_format %}
+

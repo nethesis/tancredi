@@ -1,4 +1,5 @@
-{% import 'yealink.macros' as yealink %}#!version:1.0.0.1
+{%- import 'yealink.macros' as yealink -%}
+#!version:1.0.0.1
 
 ##File header "#!version:1.0.0.1" can not be edited or deleted, and must be placed in the first line.##
 
@@ -1083,7 +1084,7 @@ auto_dst.url =
 local_time.manual_time_enable = 0
 local_time.manual_ntp_srv_prior = 1
 local_time.time_format = {{ time_format }}
-local_time.date_format = {{ date_format }}
+local_time.date_format = {{ yealink.date_format(date_format) }}
 local_time.dhcp_time = 0
 
 local_time.summer_time = 2
