@@ -52,15 +52,13 @@
     {%- endif %}
     {%- endfor %}
     {# soft keys #}
-      {# left soft keys #}
-    <param name="PhoneUI.Keys.SoftKeys.0.Type" value="17"/>
-      {# right soft key #}
-    <param name="PhoneUI.Keys.SoftKeys.1.Type" value="10"/>
-    <param name="PhoneUI.Keys.SoftKeys.1.EnableCode" value="*8"/>
-    <param name="PhoneUI.Keys.SoftKeys.1.DisableCode" value="*8"/>
-    <param name="PhoneUI.Keys.SoftKeys.1.EnableName" value="Pickup"/>
-    <param name="PhoneUI.Keys.SoftKeys.1.DisableName" value="Pickup"/>
-      {# end right soft key #}
+    {% if cap_softkey_count > 0 %}
+      {% for number in 1..(cap_softkey_count) %}
+        {% if _context['softkey_type_' ~ number] is defined %}
+          {{ gigaset.softkey_type_map(_context['softkey_type_' ~ number], (number-1)) }}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
     {# end soft keys #}
     {# line keys #}
     {% if cap_linekey_count > 0 %}
