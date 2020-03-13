@@ -476,7 +476,7 @@ Talk Dial Power Led:1
 Ringing Power Led  :3
 Mute Call Power Led:2
 Hold Power Led     :2
-Time Display Style :0
+Time Display Style :{{ time_format == '12' ? '1' : '0' }}
 Remove Call Timer  :0
 Phone Model        :
 FuncKey Page Num   :5
@@ -484,7 +484,7 @@ Blf Default type   :0
 Disable CHN IME    :0
 Disable Dial Search:0
 Redial Enter CLog  :1
-Date Display Style :2
+Date Display Style :{{ fanvil.date_format(date_format) }}
 Date Separator     :0
 BLF Idle Color     :0
 BLF Idle Ctl       :1
