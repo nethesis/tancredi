@@ -89,17 +89,6 @@
 {% endmacro %}
 
 #
-# Map date_format type
-#
-{% macro date_format(date_format)%}
-{% set date_format_map = {
-    "2" : "0",
-    "4" : "1",
-} %}
-{% if date_format_map[date_format] %}{{ date_format_map[date_format] }}{% else %}2{% endif %}
-{% endmacro %}
-
-#
 # map screensaver_wait_time from seconds to sangoma values
 #
 {% macro screensaver_wait_time(screensaver_wait_time) %}
