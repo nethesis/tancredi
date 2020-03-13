@@ -1083,7 +1083,7 @@ lcl.datetime.date.format = WWW DD MMM
 auto_dst.url =
 local_time.manual_time_enable = 0
 local_time.manual_ntp_srv_prior = 1
-local_time.time_format = {{ time_format }}
+local_time.time_format = {{ time_format == '12' ? '0' : '1' }}
 local_time.date_format = {{ yealink.date_format(date_format) }}
 local_time.dhcp_time = 0
 
