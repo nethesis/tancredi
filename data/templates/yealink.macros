@@ -1050,7 +1050,7 @@
 #
 # Set date format
 #
-{% macro date_format(date_format,timezone) %}
+{% macro date_format(date_format) %}
     {%- set map = {
         "WWW MMM DD": "0",
         "DD-MMM-YY": "1",
