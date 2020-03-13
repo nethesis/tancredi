@@ -1,4 +1,57 @@
 #
+# dsskey
+#
+{% macro softkey_setup(index, ctx) %}
+
+{% if ctx['softkey_type_' ~ index] == 'ldap' %}
+SoftFkey{{ index }} Type     :3
+SoftFkey{{ index }} Value    :F_LDAP@0
+SoftFkey{{ index }} Title    :
+{% elseif ctx['softkey_type_' ~ index] == 'forward' %}
+SoftFkey{{ index }} Type     :3
+SoftFkey{{ index }} Value    :F_CFWD
+SoftFkey{{ index }} Title    :
+{% elseif ctx['softkey_type_' ~ index] == 'pickup' %}
+SoftFkey{{ index }} Type     :3
+SoftFkey{{ index }} Value    :F_PICKUP
+SoftFkey{{ index }} Title    :
+{% elseif ctx['softkey_type_' ~ index] == 'speed_dial' %}
+SoftFkey{{ index }} Type     :1
+SoftFkey{{ index }} Value    :{{ ctx['softkey_value_' ~ index] ~ '@1/f' }}
+SoftFkey{{ index }} Title    :{{ ctx['softkey_label_' ~ index] | default('SPD') }}
+{% elseif ctx['softkey_type_' ~ index] == 'group_pickup' %}
+SoftFkey{{ index }} Type     :1
+SoftFkey{{ index }} Value    :{{ ctx['pickup_group'] ~ '@1/f' }}
+SoftFkey{{ index }} Title    :{{ fanvil.gettext('Group pickup') }}
+{% else %}
+SoftFkey{{ index }} Type     :0
+SoftFkey{{ index }} Value    :
+SoftFkey{{ index }} Title    :
+{% endif %}
+{% endmacro softkey_setup %}
+
+#
+# screen_softkey -- configure the Desktop screen soft keys functions
+#
+{% macro screen_softkey(type, index, ctx) %}
+{% set screen_type = {
+     '': 'none',
+     'forward': 'dsskey' ~ index,
+     'dnd': 'dnd',
+     'recall': 'redial',
+     'pick_up': 'dsskey' ~ index,
+     'speed_dial': 'dsskey' ~ index,
+     'group_pickup': 'dsskey' ~ index,
+     'history': 'history',
+     'menu': 'menu',
+     'status': 'status',
+     'ldap': 'dsskey' ~ index,
+     'prefix': 'dsskey' ~ index,
+} %}
+    {{- screen_type[type] ?: 'none' -}}
+{% endmacro screen_softkey %}
+
+#
 # scheme_map -- translate "provisioning_url_scheme" to Fanvil code
 #
 {% macro scheme_map(scheme) %}

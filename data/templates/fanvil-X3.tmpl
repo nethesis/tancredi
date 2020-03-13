@@ -582,9 +582,9 @@ Fkey1 Value        :
 Fkey1 Title        :
 
 --Soft Dss Key--   :
-SoftFkey1 Type     :0
-SoftFkey1 Value    :
-SoftFkey1 Title    :
+{% for index in 1..cap_softkey_count %}
+{{ fanvil.softkey_setup(index, _context) }}
+{% endfor %}
 
 Ui font Color      :0xFFFFFF$0x444343
 Ui Title Color     :0x000026$0x4f79a7
@@ -601,7 +601,10 @@ SIP Notify XML     :1
 XML Update Interval:0
 
 <SCREEN KEY CONFIG MODULE>
-Desktop Softkey    :dsskey1;dsskey2;dnd;menu;
+Desktop Softkey    :{% for index in 1..cap_softkey_count -%}
+    {{- fanvil.screen_softkey(_context['softkey_type_' ~ index]], index, _context) ~ ';' -}}
+{%- endfor %}
+
 Talking Softkey    :hold;xfer;conf;end;
 Ringing Softkey    :accept;none;cfwd;reject;
 Alerting Softkey   :none;none;none;end;
