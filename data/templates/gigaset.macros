@@ -80,3 +80,15 @@
     {{- tz_map['UTC'] -}}
 {% endif %}
 {% endmacro timezone_map %}
+
+#
+# Set date format
+#
+{% macro date_format(date_format) %}
+{% if date_format in ["WWW MMM DD", "YYYY-MM-DD", "MM/DD/YY"] %}
+    {{- 'mm.dd.yyyy' -}}
+{{% else %}}
+    {{- 'dd.mm.yyyy' -}}
+{{% endif %}}
+{% endmacro date_format %}
+
