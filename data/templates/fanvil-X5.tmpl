@@ -459,8 +459,8 @@ DST End Wday       :0
 DST End Hour       :2
 --DateTime Display--:
 Enable TimeDisplay :0
-Time Display Style :0
-Date Display Style :2
+Time Display Style :{{ time_format == '12' ? '1' : '0' }}
+Date Display Style :{{ fanvil.date_format(date_format) }}
 Date Separator     :0
 --Softkey Config-- :
 Softkey Mode       :0

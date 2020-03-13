@@ -1052,13 +1052,18 @@
 #
 {% macro date_format(date_format) %}
     {%- set map = {
-        "WWW MMM DD": "0",
-        "DD-MMM-YY": "1",
-        "YYYY-MM-DD": "2",
-        "DD/MM/YYYY": "3",
-        "MM/DD/YY": "4",
-        "DD MMM YYYY": "5",
-        "WWW DD MMM": "6"
+        "DD MM YY" : "3", 
+        "DD MM YYYY" : "3", 
+        "DD MMM WW" : "1", 
+        "DD MMM YY" : "1", 
+        "DD MMM YYYY" : "5", 
+        "WWW DD MMM" : "6", 
+        "WWW MMM DD" : "0", 
+        "MM DD YY" : "4", 
+        "MM DD YYYY" : "4", 
+        "MMM DD WW" : "4", 
+        "YY MM DD" : "2", 
+        "YYYY MM DD" : "2"
         }
     -%}
 {{- map[date_format] ?? '6' -}}

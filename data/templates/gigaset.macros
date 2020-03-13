@@ -85,7 +85,7 @@
 # Set date format
 #
 {% macro date_format(date_format) %}
-{% if date_format in ["WWW MMM DD", "YYYY-MM-DD", "MM/DD/YY"] %}
+{% if date_format in ["WWW MMM DD", "MM DD YY", "MM DD YYYY", "MMM DD WW"] %}
     {{- 'mm.dd.yyyy' -}}
 {{% else %}}
     {{- 'dd.mm.yyyy' -}}
