@@ -30,6 +30,21 @@
 {% endmacro linekey_type_map %}
 
 #
+# softkey_type_map -- translate "softkey_type"
+#
+{% macro softkey_type_map(softkey_type, number) %}
+{% if softkey_type == "redial" %}
+    <param name="PhoneUI.Keys.SoftKeys.{{number}}.Type" value="17"/>
+{% elseif softkey_type == "pickup" %}
+    <param name="PhoneUI.Keys.SoftKeys.{{number}}.Type" value="10"/>
+    <param name="PhoneUI.Keys.SoftKeys.{{number}}.EnableCode" value="*8"/>
+    <param name="PhoneUI.Keys.SoftKeys.{{number}}.DisableCode" value="*8"/>
+    <param name="PhoneUI.Keys.SoftKeys.{{number}}.EnableName" value="Pickup"/>
+    <param name="PhoneUI.Keys.SoftKeys.{{number}}.DisableName" value="Pickup"/>
+{% endif %}
+{% endmacro softkey_type_map %}
+
+#
 # dtmf_map -- translate "account_dtmf_type" value to Fanvil code
 #
 {% macro dtmf_map(account_dtmf_type) %}
