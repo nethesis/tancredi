@@ -447,3 +447,21 @@
 } %}
     {{- type_map[type] ?: '0' -}}
 {% endmacro softkey_type_map %}
+
+#
+# Set date format
+#
+{% macro date_format(date_format) %}
+    {%- set map = {
+        "WWW MMM DD": "1",
+        "DD-MMM-YY": "1",
+        "YYYY-MM-DD": "0",
+        "DD/MM/YYYY": "2",
+        "MM/DD/YY": "1",
+        "DD MMM YYYY": "2",
+        "WWW DD MMM": "2"
+        }
+    -%}
+{{- map[date_format] ?? '2' -}}
+{% endmacro date_format %}
+
