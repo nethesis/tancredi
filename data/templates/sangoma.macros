@@ -89,17 +89,6 @@
 {% endmacro %}
 
 #
-# Map date_format type
-#
-{% macro date_format(date_format)%}
-{% set date_format_map = {
-    "2" : "0",
-    "4" : "1",
-} %}
-{% if date_format_map[date_format] %}{{ date_format_map[date_format] }}{% else %}2{% endif %}
-{% endmacro %}
-
-#
 # map screensaver_wait_time from seconds to sangoma values
 #
 {% macro screensaver_wait_time(screensaver_wait_time) %}
@@ -447,3 +436,26 @@
 } %}
     {{- type_map[type] ?: '0' -}}
 {% endmacro softkey_type_map %}
+
+#
+# Set date format
+#
+{% macro date_format(date_format) %}
+    {%- set map = {
+        "DD MM YY" : "2",
+        "DD MM YYYY" : "2",
+        "DD MMM WW" : "2",
+        "DD MMM YY" : "2",
+        "DD MMM YYYY" : "2",
+        "WWW DD MMM" : "2",
+        "WWW MMM DD" : "1",
+        "MM DD YY" : "1",
+        "MM DD YYYY" : "1",
+        "MMM DD WW" : "1",
+        "YY MM DD" : "0",
+        "YYYY MM DD" : "0"
+        }
+    -%}
+{{- map[date_format] ?? '2' -}}
+{% endmacro date_format %}
+
