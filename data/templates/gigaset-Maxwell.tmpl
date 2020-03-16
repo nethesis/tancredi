@@ -10,7 +10,7 @@
     <param name="System.DateAndTime.TimeServer" value="{{ ntp_server ?? 'pool.ntp.org' }}" />
     <param name="System.DateAndTime.TimeZone" value="{{ gigaset.timezone_map(timezone) }}" />
     <param name="System.DateAndTime.AutoAdjustClockForDST" value="AutomatedDaylightSavingEnabled" />
-    <param name="System.DateAndTime.TimeFormat" value="{{ time_format }}h" />
+    <param name="System.DateAndTime.TimeFormat" value="{{ time_format == '12' ? '12h' : '24h' }}" />
     <param name="System.DateAndTime.DateOrder" value="{{ gigaset.date_format(date_format) }}" />
 
     <param name="Telephony.ToneScheme" value="{{ gigaset.tones_code(tonezone) }}" />
