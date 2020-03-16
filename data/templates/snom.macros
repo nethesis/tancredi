@@ -1,35 +1,45 @@
 #
 # linekey_type_map -- translate "linekey_type_"
 #
-{% macro linekey_type_map(linekey_type, linekey_value, dndtoggle, pickup_group) %}
+{% macro linekey_type_map(linekey_type, linekey_value, linekey_label, dndtoggle, pickup_group, number) %}
 {% if linekey_type == "blf" %}
-    {{- 'blf' }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">blf {{ linekey_value }}</fkey>
 {% elseif linekey_type == "conference" %}
-    {{- 'conference' }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">conference {{ linekey_value }}</fkey>
 {% elseif linekey_type == "dtmf" %}
-    {{- 'dtmf' }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">dtmf {{ linekey_value }}</fkey>
 {% elseif linekey_type == "forward" %}
-    {{- 'redirect' }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">redirect {{ linekey_value }}</fkey>
 {% elseif linekey_type == "line" %}
-    {{- 'line' }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">line {{ linekey_value }}</fkey>
 {% elseif linekey_type == "multicast_paging" %}
-    {{- 'multicast' }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">multicast {{ linekey_value }}</fkey>
 {% elseif linekey_type == "" %}
-    {{- 'none' }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">none {{ linekey_value }}</fkey>
 {% elseif linekey_type == "record" %}
-    {{- 'record' }} {{ linekey_value -}}
-{% elseif linekey_type == "speed" %}
-    {{- 'speed' }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">record {{ linekey_value }}</fkey>
+{% elseif linekey_type == "speed_dial" %}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">speed {{ linekey_value }}</fkey>
 {% elseif linekey_type == "transfer" %}
-    {{- 'transfer' }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">transfer {{ linekey_value }}</fkey>
 {% elseif linekey_type == "url" %}
-    {{- 'url' }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">url {{ linekey_value }}</fkey>
 {% elseif linekey_type == "dnd" %}
-    {{- 'speed' }} {{ dndtoggle -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">speed {{ dndtoggle }}</fkey>
+{% elseif linekey_type == "ldap" %}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">keyevent F_DIRECTORY_SEARCH</fkey>
+{% elseif linekey_type == "mute" %}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">keyevent F_MUTE</fkey>
+{% elseif linekey_type == "voice_mail" %}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">keyevent F_VOICEMAIL_INFO</fkey>
+{% elseif linekey_type == "recall" %}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">keyevent F_REDIAL</fkey>
+{% elseif linekey_type == "hold" %}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">keyevent F_HOLD</fkey>
+{% elseif linekey_type == "dnd" %}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">keyevent F_DND</fkey>
 {% elseif linekey_type == "group_pickup" %}
-    {{- 'speed' }} {{ pickup_group -}}
-{% else %}
-    {{- linekey_type }} {{ linekey_value -}}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">speed {{ pickup_group }}</fkey>
 {% endif %}
 {% endmacro linekey_type_map %}
 

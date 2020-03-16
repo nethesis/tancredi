@@ -51,6 +51,15 @@
     <param name="SIP.Account.{{ idx }}.STUN.Enabled" value="0" />
     {%- endif %}
     {%- endfor %}
+    {# soft keys #}
+    {% if cap_softkey_count > 0 %}
+      {% for number in 1..(cap_softkey_count) %}
+        {% if _context['softkey_type_' ~ number] is defined %}
+          {{ gigaset.softkey_type_map(_context['softkey_type_' ~ number], (number-1)) }}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    {# end soft keys #}
     {# line keys #}
     {% if cap_linekey_count > 0 %}
       {% for number in 1..(cap_linekey_count) %}

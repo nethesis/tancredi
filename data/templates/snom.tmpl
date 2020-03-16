@@ -749,13 +749,10 @@
         {% if cap_linekey_count > 0 %}
             {% for number in 1..(cap_linekey_count) %}
                 {% if _context['linekey_type_' ~ number] is defined %}
-                    <fkey idx="{{ (number-1) }}" context="active" label="{{ _context['linekey_label_' ~ number] }}" lp="on" perm="">{{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['dndtoggle'], _context['pickup_group'])}}</fkey>
-                {% else %}
-                    <fkey idx="{{ (number-1) }}" context="active" label="" lp="on" perm="">line</fkey>
+                    {{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number)}}
                 {% endif %}
             {% endfor %}
         {% endif %}
-
         {# soft keys #}
         {% if cap_softkey_count > 0 %}
             {% for number in 1..(cap_softkey_count) %}
@@ -771,7 +768,6 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
-
         {# expansion keys #}
         {% for number in lineKeys..125 %}
             {% if _context['expkey_type_' ~ number] is defined %}
