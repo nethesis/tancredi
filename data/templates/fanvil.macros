@@ -2,7 +2,6 @@
 # dsskey
 #
 {% macro softkey_setup(index, ctx) %}
-
 {% if ctx['softkey_type_' ~ index] == 'ldap' %}
 SoftFkey{{ index }} Type     :3
 SoftFkey{{ index }} Value    :F_LDAP@0
