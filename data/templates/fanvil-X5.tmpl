@@ -466,7 +466,7 @@ Date Separator     :0
 Softkey Mode       :0
 SoftKey Exit Style :2
 Desktop Softkey    :{% for index in 1..cap_softkey_count -%}
-    {{- fanvil.screen_softkey_x5(_context['softkey_type_' ~ index], index, _context) ~ ';' -}}
+    {{- fanvil.screen_softkey_x5(_context['softkey_type_' ~ index], index) ~ ';' -}}
 {%- endfor %}
 
 Talking Softkey    :hold;xfer;conf;end;

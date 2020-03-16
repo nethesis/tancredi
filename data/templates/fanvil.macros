@@ -37,7 +37,7 @@ Fkey{{ index }} ICON     :Green
 #
 # screen_softkey -- configure the Desktop screen soft keys functions
 #
-{% macro screen_softkey_x5(type, index, ctx) %}
+{% macro screen_softkey_x5(type, index) %}
 {% set screen_type = {
      '': 'none',
      'forward': 'dss' ~ index,
@@ -89,7 +89,7 @@ SoftFkey{{ index }} Title    :
 #
 # screen_softkey -- configure the Desktop screen soft keys functions
 #
-{% macro screen_softkey_x3(type, index, ctx) %}
+{% macro screen_softkey_x3(type, index) %}
 {% set screen_type = {
      '': 'none',
      'forward': 'dsskey' ~ index,
