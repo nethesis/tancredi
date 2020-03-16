@@ -583,7 +583,32 @@ Fkey1 Title        :
 
 --Soft Dss Key--   :
 {% for index in 1..cap_softkey_count %}
-{{ fanvil.softkey_setup_x3(index, _context) }}
+{% if _context['softkey_type_' ~ index] == 'ldap' %}
+SoftFkey{{ index }} Type     :3
+SoftFkey{{ index }} Value    :F_LDAP@1
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Phonebook')) }}
+{% elseif _context['softkey_type_' ~ index] == 'forward' %}
+SoftFkey{{ index }} Type     :3
+SoftFkey{{ index }} Value    :F_CFWD
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Forward')) }}
+{% elseif _context['softkey_type_' ~ index] == 'pickup' %}
+SoftFkey{{ index }} Type     :3
+SoftFkey{{ index }} Value    :F_PICKUP
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup')) }}
+{% elseif _context['softkey_type_' ~ index] == 'speed_dial' %}
+SoftFkey{{ index }} Type     :1
+SoftFkey{{ index }} Value    :{{ _context['softkey_value_' ~ index] ~ '@1/f' }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default('N/A') }}
+{% elseif _context['softkey_type_' ~ index] == 'group_pickup' %}
+SoftFkey{{ index }} Type     :1
+SoftFkey{{ index }} Value    :{{ _context['pickup_group'] ~ '@1/f' }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup')) }}
+{% else %}
+SoftFkey{{ index }} Type     :0
+SoftFkey{{ index }} Value    :
+SoftFkey{{ index }} Title    :
+{% endif %}
+
 {% endfor %}
 
 Ui font Color      :0xFFFFFF$0x444343
@@ -602,7 +627,21 @@ XML Update Interval:0
 
 <SCREEN KEY CONFIG MODULE>
 Desktop Softkey    :{% for index in 1..cap_softkey_count -%}
-    {{- fanvil.screen_softkey_x3(_context['softkey_type_' ~ index], index) ~ ';' -}}
+{% set screen_type = {
+     '': 'none',
+     'forward': 'dsskey' ~ index,
+     'dnd': 'dnd',
+     'recall': 'redial',
+     'pick_up': 'dsskey' ~ index,
+     'speed_dial': 'dsskey' ~ index,
+     'group_pickup': 'dsskey' ~ index,
+     'history': 'history',
+     'menu': 'menu',
+     'status': 'status',
+     'ldap': 'dsskey' ~ index,
+     'prefix': 'dsskey' ~ index,
+} %}
+    {{- (screen_type[_context['softkey_type_' ~ index]] ?: 'none') ~ ';' -}}
 {%- endfor %}
 
 Talking Softkey    :hold;xfer;conf;end;
