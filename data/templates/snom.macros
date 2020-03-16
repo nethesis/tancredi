@@ -623,3 +623,15 @@
 } %}
     {{- tonezone_map[tonezone] ?: tonezone_map['us'] -}}
 {% endmacro %}
+
+#
+# Set date format
+#
+{% macro date_format(date_format) %}
+{% if date_format in ["WWW MMM DD", "MM DD YY", "MM DD YYYY", "MMM DD WW"] %}
+    {{- 'on' -}}
+{% else %}
+    {{- 'off' -}}
+{% endif %}
+{% endmacro date_format %}
+

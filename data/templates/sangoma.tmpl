@@ -104,7 +104,7 @@
         <P143 para="Preference.DHCPTime">0</P143>
         <P75 para="Preference.DaylightSavingTime">2</P75>
         <P102 para="Preference.DateDisplayFormat">{{ sangoma.date_format(date_format) }}</P102>
-        <P8624 para="Preference.TimeFormat">{{ time_format == 1 ? '0' : '1' }}</P8624>
+        <P8624 para="Preference.TimeFormat">{{ time_format == '12' ? '1' : '0' }}</P8624>
         <P8683 para="Preference.BacklightTime">{{ backlight_time }}</P8683>
         <P8940 para="Preference.ScreenTimeOut">{{ sangoma.screensaver_wait_time(screensaver_wait_time) }}</P8940>
         <P8950 para="Preference.ScreenSaverType">{{ screensaver_mode ?? 1 }}</P8950>
