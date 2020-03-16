@@ -1,4 +1,4 @@
-<<VOIP CONFIG FILE>>Version:2.0002                            
+<<VOIP CONFIG FILE>>Version:2.0002
 {% import 'fanvil.macros' as fanvil %}
 
 <GLOBAL CONFIG MODULE>
@@ -583,7 +583,7 @@ Fkey1 Title        :
 
 --Soft Dss Key--   :
 {% for index in 1..cap_softkey_count %}
-{{ fanvil.softkey_setup(index, _context) }}
+{{ fanvil.softkey_setup_x3(index, _context) }}
 {% endfor %}
 
 Ui font Color      :0xFFFFFF$0x444343
@@ -602,7 +602,7 @@ XML Update Interval:0
 
 <SCREEN KEY CONFIG MODULE>
 Desktop Softkey    :{% for index in 1..cap_softkey_count -%}
-    {{- fanvil.screen_softkey(_context['softkey_type_' ~ index], index, _context) ~ ';' -}}
+    {{- fanvil.screen_softkey_x3(_context['softkey_type_' ~ index], index, _context) ~ ';' -}}
 {%- endfor %}
 
 Talking Softkey    :hold;xfer;conf;end;
