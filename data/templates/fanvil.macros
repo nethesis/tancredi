@@ -61,7 +61,7 @@ Fkey{{ index }} ICON     :Green
 {% macro softkey_setup_x3(index, ctx) %}
 {% if ctx['softkey_type_' ~ index] == 'ldap' %}
 SoftFkey{{ index }} Type     :3
-SoftFkey{{ index }} Value    :F_LDAP@0
+SoftFkey{{ index }} Value    :F_LDAP@1
 SoftFkey{{ index }} Title    :{{ ctx['softkey_label_' ~ index] | default(fanvil.gettext('Phonebook')) }}
 {% elseif ctx['softkey_type_' ~ index] == 'forward' %}
 SoftFkey{{ index }} Type     :3
