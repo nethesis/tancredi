@@ -465,7 +465,24 @@ Date Separator     :0
 --Softkey Config-- :
 Softkey Mode       :0
 SoftKey Exit Style :2
-Desktop Softkey    :dss1;dss2;dnd;menu;
+Desktop Softkey    :{% for index in 1..cap_softkey_count -%}
+{% set screen_type = {
+     '': 'none',
+     'forward': 'dss' ~ index,
+     'dnd': 'dnd',
+     'recall': 'redial',
+     'pick_up': 'dss' ~ index,
+     'speed_dial': 'dss' ~ index,
+     'group_pickup': 'dss' ~ index,
+     'history': 'history',
+     'menu': 'menu',
+     'status': 'status',
+     'ldap': 'dss' ~ index,
+     'prefix': 'dss' ~ index,
+} %}
+    {{- (screen_type[_context['softkey_type_' ~ index]] ?: 'none') ~ ';' -}}
+{%- endfor %}
+
 Talking Softkey    :hold;xfer;conf;end;
 Ringing Softkey    :accept;none;forward;reject;
 Alerting Softkey   :end;none;none;none;
@@ -716,11 +733,41 @@ Fkey1 Type               :0
 Fkey1 Value              :
 Fkey1 Title              :
 Fkey1 ICON               :Green
+
 --SoftDss Config-- :
-Fkey1 Type               :0
-Fkey1 Value              :
-Fkey1 Title              :
-Fkey1 ICON               :Green
+{% for index in 1..cap_softkey_count %}
+{% if _context['softkey_type_' ~ index] == 'ldap' %}
+Fkey{{ index }} Type     :3
+Fkey{{ index }} Value    :F_LDAPCONTACTS:1
+Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Phonebook')) }}
+Fkey{{ index }} ICON     :Green
+{% elseif _context['softkey_type_' ~ index] == 'forward' %}
+Fkey{{ index }} Type     :3
+Fkey{{ index }} Value    :F_CFWD
+Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Forward')) }}
+Fkey{{ index }} ICON     :Green
+{% elseif _context['softkey_type_' ~ index] == 'pickup' %}
+Fkey{{ index }} Type     :3
+Fkey{{ index }} Value    :F_PICKUP
+Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup')) }}
+Fkey{{ index }} ICON     :Green
+{% elseif _context['softkey_type_' ~ index] == 'speed_dial' %}
+Fkey{{ index }} Type     :1
+Fkey{{ index }} Value    :{{ _context['softkey_value_' ~ index] ~ '@1/f' }}
+Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default('N/A') }}
+{% elseif _context['softkey_type_' ~ index] == 'group_pickup' %}
+Fkey{{ index }} Type     :1
+Fkey{{ index }} Value    :{{ _context['pickup_group'] ~ '@1/f' }}
+Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup')) }}
+Fkey{{ index }} ICON     :Green
+{% else %}
+Fkey{{ index }} Type     :0
+Fkey{{ index }} Value    :
+Fkey{{ index }} Title    :
+Fkey{{ index }} ICON     :Green
+{% endif %}
+
+{% endfor %}
 
 <MMI CONFIG MODULE>
 Web Server Type    :0

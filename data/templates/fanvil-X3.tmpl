@@ -313,20 +313,20 @@ SIP{{ line }} Auto Answer   :0
 SIP{{ line }} NoAnswerTime  :5
 SIP{{ line }} MissedCallLog :1
 SIP{{ line }} SvcCode Mode  :1
-SIP{{ line }} DNDOn SvcCode :{{ dndon | default('*78') }}
-SIP{{ line }} DNDOff SvcCode:{{ dndoff | default('*79') }}
-SIP{{ line }} CFUOn SvcCode :{{ cfalwayson | default('*72') }}
-SIP{{ line }} CFUOff SvcCode:{{ cfalwaysoff | default('*73') }}
-SIP{{ line }} CFBOn SvcCode :{{ cfbusyon | default('*90') }}
-SIP{{ line }} CFBOff SvcCode:{{ cfbusyoff | default('*91') }}
-SIP{{ line }} CFNOn SvcCode :{{ cftimeouton | default('*52') }}
-SIP{{ line }} CFNOff SvcCode:{{ cftimeoutoff | default('*53') }}
+SIP{{ line }} DNDOn SvcCode :{{ dndon }}
+SIP{{ line }} DNDOff SvcCode:{{ dndoff }}
+SIP{{ line }} CFUOn SvcCode :{{ cfalwayson }}
+SIP{{ line }} CFUOff SvcCode:{{ cfalwaysoff }}
+SIP{{ line }} CFBOn SvcCode :{{ cfbusyon }}
+SIP{{ line }} CFBOff SvcCode:{{ cfbusyoff }}
+SIP{{ line }} CFNOn SvcCode :{{ cftimeouton }}
+SIP{{ line }} CFNOff SvcCode:{{ cftimeoutoff }}
 SIP{{ line }} ANCOn SvcCode :
 SIP{{ line }} ANCOff SvcCode:
 SIP{{ line }} Send ANOn Code:
 SIP{{ line }} Send ANOffCode:
-SIP{{ line }} CW On Code    :{{ call_waiting_on | default('*70') }}
-SIP{{ line }} CW Off Code   :{{ call_waiting_off | default('*71') }}
+SIP{{ line }} CW On Code    :{{ call_waiting_on }}
+SIP{{ line }} CW Off Code   :{{ call_waiting_off }}
 SIP{{ line }} VoiceCodecMap :G711U,G711A,G722,G729,G726-32,G723
 SIP{{ line }} BLFList Uri   :
 SIP{{ line }} BLF Server    :
@@ -582,9 +582,34 @@ Fkey1 Value        :
 Fkey1 Title        :
 
 --Soft Dss Key--   :
-SoftFkey1 Type     :0
-SoftFkey1 Value    :
-SoftFkey1 Title    :
+{% for index in 1..cap_softkey_count %}
+{% if _context['softkey_type_' ~ index] == 'ldap' %}
+SoftFkey{{ index }} Type     :3
+SoftFkey{{ index }} Value    :F_LDAP@1
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Phonebook')) }}
+{% elseif _context['softkey_type_' ~ index] == 'forward' %}
+SoftFkey{{ index }} Type     :3
+SoftFkey{{ index }} Value    :F_CFWD
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Forward')) }}
+{% elseif _context['softkey_type_' ~ index] == 'pickup' %}
+SoftFkey{{ index }} Type     :3
+SoftFkey{{ index }} Value    :F_PICKUP
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup')) }}
+{% elseif _context['softkey_type_' ~ index] == 'speed_dial' %}
+SoftFkey{{ index }} Type     :1
+SoftFkey{{ index }} Value    :{{ _context['softkey_value_' ~ index] ~ '@1/f' }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default('N/A') }}
+{% elseif _context['softkey_type_' ~ index] == 'group_pickup' %}
+SoftFkey{{ index }} Type     :1
+SoftFkey{{ index }} Value    :{{ _context['pickup_group'] ~ '@1/f' }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup')) }}
+{% else %}
+SoftFkey{{ index }} Type     :0
+SoftFkey{{ index }} Value    :
+SoftFkey{{ index }} Title    :
+{% endif %}
+
+{% endfor %}
 
 Ui font Color      :0xFFFFFF$0x444343
 Ui Title Color     :0x000026$0x4f79a7
@@ -601,7 +626,24 @@ SIP Notify XML     :1
 XML Update Interval:0
 
 <SCREEN KEY CONFIG MODULE>
-Desktop Softkey    :dsskey1;dsskey2;dnd;menu;
+Desktop Softkey    :{% for index in 1..cap_softkey_count -%}
+{% set screen_type = {
+     '': 'none',
+     'forward': 'dsskey' ~ index,
+     'dnd': 'dnd',
+     'recall': 'redial',
+     'pick_up': 'dsskey' ~ index,
+     'speed_dial': 'dsskey' ~ index,
+     'group_pickup': 'dsskey' ~ index,
+     'history': 'history',
+     'menu': 'menu',
+     'status': 'status',
+     'ldap': 'dsskey' ~ index,
+     'prefix': 'dsskey' ~ index,
+} %}
+    {{- (screen_type[_context['softkey_type_' ~ index]] ?: 'none') ~ ';' -}}
+{%- endfor %}
+
 Talking Softkey    :hold;xfer;conf;end;
 Ringing Softkey    :accept;none;cfwd;reject;
 Alerting Softkey   :none;none;none;end;

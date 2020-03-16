@@ -1,3 +1,4 @@
+
 #
 # scheme_map -- translate "provisioning_url_scheme" to Fanvil code
 #
@@ -53,46 +54,6 @@
 {% endif %}
 {% endmacro emergency_map %}
 
-#
-# Translate line keys type to Fanvil encoding
-#
-{% macro linekey_map(key, field) %}
-{% import _self as local %}
-{% import _context as global %}
-{%- set tk_map = {
-    'ldap': {
-        'code': 'dsskey1',
-        'type': '3',
-        'value': 'F_LDAPCONTACTS:1',
-        'title': local.gettext('Phonebook', language)
-    },
-    'group_pickup': {
-        'code': 'dsskey2',
-        'type': '1',
-        'value': global.pickup_group ~ '@1/f',
-        'title': local.gettext('Pickup', language)
-    },
-    'disabled': {
-        'code': 'none',
-        'type': '0',
-        'value': '',
-        'title': ''
-    }
-} -%}
-{% if tk_map[key] is defined %}
-    {{- tk_map[key][field] -}}
-{% else %}
-    {{- tk_map['disabled'][field] -}}
-{% endif %}
-{% endmacro linekey_map %}
-
-#
-# Translate line keys type to Fanvil screen keys code
-#
-{% macro softkey_map(key, field) %}
-{% import _self as local %}
-    {{- '' -}}
-{% endmacro softkey_map %}
 
 #
 # Translate the tones country to Fanvil tone code
@@ -121,7 +82,9 @@
 {% macro gettext(txt, lang) %}
     {%- set l10n = {
         'it': {
-            'Phonebook': 'Rubrica'
+            'Phonebook': 'Rubrica',
+            'Pickup': 'Pickup',
+            'Forward': 'Inoltro',
         }
     } -%}
     {% if l10n[lang] is defined %}
