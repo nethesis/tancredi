@@ -900,8 +900,8 @@ Check FailTimes    :5
 Flash Server IP    :{{ hostname }}
 Flash File Name    :{{ 'http' in provisioning_url_scheme ? (provisioning_url_path | trim('/', 'left') ~ tok2 ~ '/$mac.cfg') : '$mac.cfg' }}
 Flash Protocol     :{{ fanvil.scheme_map(provisioning_url_scheme) }}
-Flash Mode         :{{ provisioning_freq == 'never' ? '1' : '2' }}
-Flash Interval     :{{ fanvil.upgrade_wait_hours(timezone) }}
+Flash Mode         :{{ (provisioning_complete and provisioning_freq == 'never') ? '1' : '2' }}
+Flash Interval     :{{ provisioning_complete ? fanvil.upgrade_wait_hours(timezone) : '1' }}
 update PB Interval :720
 AP Pswd Encryption :0
 --Sip Pnp List--   :
