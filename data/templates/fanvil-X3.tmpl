@@ -692,8 +692,8 @@ Config File Key    :
 Common Cfg File Key:
 Download Server IP :{{ hostname }}
 Download Protocol  :{{ fanvil.scheme_map(provisioning_url_scheme) }}
-Download Mode      :{{ provisioning_freq == 'never' ? '1' : '2' }}
-Download Interval  :{{ fanvil.upgrade_wait_hours(timezone) }}
+Download Mode      :{{ (provisioning_complete and provisioning_freq == 'never') ? '1' : '2' }}
+Download Interval  :{{ provisioning_complete ? fanvil.upgrade_wait_hours(timezone) : '1' }}
 DHCP Option        :0
 Save DHCP Opion    :0
 DHCP Option 120    :0
