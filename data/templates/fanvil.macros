@@ -85,6 +85,15 @@
             'Phonebook': 'Rubrica',
             'Pickup': 'Pickup',
             'Forward': 'Inoltro',
+            'DND': 'DND',
+            'Hold': 'Attesa',
+            'Line %s': 'Linea %s',
+            'Lock phone': 'Blocca telefono',
+            'Redial': 'Richiama',
+            'Record': 'Registra',
+            'Transfer': 'Trasferimento',
+            'URL': 'URL',
+            'Voice mail': 'Casella vocale',
         }
     } -%}
     {% if l10n[lang] is defined %}
@@ -145,4 +154,3 @@
     -%}
 {{- map[date_format] ?? '2' -}}
 {% endmacro date_format %}
-
