@@ -1,5 +1,6 @@
 <<VOIP CONFIG FILE>>Version:2.0002                            
 {% import 'fanvil.macros' as fanvil %}
+{% import 'language.macros' as l10n %}
 
 <GLOBAL CONFIG MODULE>
 WAN Mode           :DHCP
@@ -556,7 +557,7 @@ BWDir6 Username    :
 BWDir6 Password    :
 BWDir6 SipLine     :0
 --LDAP Config--    :
-LDAP1 Title        :{{ fanvil.gettext('Phonebook', language) | slice(0, 31) }}
+LDAP1 Title        :{{ l10n.gettext('Phonebook', language) | slice(0, 31) }}
 LDAP1 Server       :{{ ldap_server | default(hostname) }}
 LDAP1 port         :{{ ldap_port | default('389') }}
 LDAP1 Authenticate :{{ ldap_password ? '3' : '0' }}
@@ -600,11 +601,11 @@ Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | slic
 {% elseif _context['linekey_type_' ~ index] == 'direct_pickup' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_PICKUP
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Pickup', language)) | slice(0,10)  }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Pickup', language)) | slice(0,10)  }}
 {% elseif _context['linekey_type_' ~ index] == 'dnd' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_DND
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('DND', language)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('DND', language)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'dtmf' %}
 Fkey{{ index }} Type               :4
 Fkey{{ index }} Value              :{{ _context['linekey_value_' ~ index] }}
@@ -616,19 +617,19 @@ Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | slic
 {% elseif _context['linekey_type_' ~ index] == 'group_pickup' %}
 Fkey{{ index }} Type               :1
 Fkey{{ index }} Value              :{{ pickup_group ~ '@1/f' }}
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Pickup', language)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Pickup', language)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'hold' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_HOLD
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Hold', language)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Hold', language)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'ldap' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_LDAP:1
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Phonebook', language)) | slice(0,10)  }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Phonebook', language)) | slice(0,10)  }}
 {% elseif _context['linekey_type_' ~ index] == 'line' %}
 Fkey{{ index }} Type               :2
 Fkey{{ index }} Value              :SIP{{ index }}
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Line %s', language) | format(index)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Line %s', language) | format(index)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'multicast_paging' %}
 Fkey{{ index }} Type               :14
 Fkey{{ index }} Value              :{{ _context['linekey_value_' ~ index] ~ '/PCMU' }}
@@ -636,7 +637,7 @@ Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index]  | sli
 {% elseif _context['linekey_type_' ~ index] == 'phone_lock' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_LOCK
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Lock phone', language)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Lock phone', language)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'prefix' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_PREFIX:{{ _context['linekey_value_' ~ index] }}
@@ -644,11 +645,11 @@ Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | slic
 {% elseif _context['linekey_type_' ~ index] == 'recall' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_REDIAL
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Redial', language)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Redial', language)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'record' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_REC
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Record', language)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Record', language)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'speed_dial' %}
 Fkey{{ index }} Type               :1
 Fkey{{ index }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/f' }}
@@ -656,19 +657,19 @@ Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | slic
 {% elseif _context['linekey_type_' ~ index] == 'transfer' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_B_TRANSFER
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Transfer', language)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Transfer', language)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'url' %}
 Fkey{{ index }} Type               :7
 Fkey{{ index }} Value              :{{ 'get:' ~ _context['linekey_value_' ~ index] }}
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('URL', language)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('URL', language)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'voice_mail' and not _context['linekey_value_' ~ index] %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_MWI
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Voice mail', language)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Voice mail', language)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'voice_mail' and _context['linekey_value_' ~ index] %}
 Fkey{{ index }} Type               :1
 Fkey{{ index }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/m' }}
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Voice mail', language)) | slice(0,10) }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Voice mail', language)) | slice(0,10) }}
 {% else %}
 Fkey{{ index }} Type               :0
 Fkey{{ index }} Value              :
@@ -681,15 +682,15 @@ Fkey{{ index }} Title              :
 {% if _context['softkey_type_' ~ index] == 'ldap' %}
 SoftFkey{{ index }} Type     :3
 SoftFkey{{ index }} Value    :F_LDAP@1
-SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Phonebook', language)) }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Phonebook', language)) }}
 {% elseif _context['softkey_type_' ~ index] == 'forward' %}
 SoftFkey{{ index }} Type     :3
 SoftFkey{{ index }} Value    :F_CFWD
-SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Forward', language)) }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Forward', language)) }}
 {% elseif _context['softkey_type_' ~ index] == 'pickup' %}
 SoftFkey{{ index }} Type     :3
 SoftFkey{{ index }} Value    :F_PICKUP
-SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup', language)) }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Pickup', language)) }}
 {% elseif _context['softkey_type_' ~ index] == 'speed_dial' %}
 SoftFkey{{ index }} Type     :1
 SoftFkey{{ index }} Value    :{{ _context['softkey_value_' ~ index] ~ '@1/f' }}
@@ -697,7 +698,7 @@ SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default('N
 {% elseif _context['softkey_type_' ~ index] == 'group_pickup' %}
 SoftFkey{{ index }} Type     :1
 SoftFkey{{ index }} Value    :{{ pickup_group ~ '@1/f' }}
-SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup', language)) }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Pickup', language)) }}
 {% else %}
 SoftFkey{{ index }} Type     :0
 SoftFkey{{ index }} Value    :
