@@ -754,7 +754,7 @@ Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/
 Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'group_pickup' %}
-Fkey{{ lkidx }} Type               :0
+Fkey{{ lkidx }} Type               :1
 Fkey{{ lkidx }} Value              :{{ pickup_group ~ '@1/f' }}
 Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Pickup')) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
@@ -774,9 +774,9 @@ Fkey{{ lkidx }} Value              :SIP{{ lkidx }}
 Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Line %s') | format(lkidx)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'multicast_paging' %}
-Fkey{{ lkidx }} Type               :0
-Fkey{{ lkidx }} Value              :
-Fkey{{ lkidx }} Title              :
+Fkey{{ lkidx }} Type               :14
+Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '/PCMU' }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index]  | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'phone_lock' %}
 Fkey{{ lkidx }} Type               :3
