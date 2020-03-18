@@ -77,24 +77,6 @@
 {% endmacro language_code %}
 
 #
-# Translate generic strings
-#
-{% macro gettext(txt, lang) %}
-    {%- set l10n = {
-        'it': {
-            'Phonebook': 'Rubrica',
-            'Pickup': 'Pickup',
-            'Forward': 'Inoltro',
-        }
-    } -%}
-    {% if l10n[lang] is defined %}
-        {{- l10n[lang][txt] ?? txt -}}
-    {% else %}
-        {{- txt -}}
-    {% endif %}
-{% endmacro gettext %}
-
-#
 # The Fanvil time zone parameters map
 #
 {% macro tz_map(tz, field) %}
@@ -145,4 +127,3 @@
     -%}
 {{- map[date_format] ?? '2' -}}
 {% endmacro date_format %}
-
