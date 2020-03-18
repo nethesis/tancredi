@@ -662,13 +662,9 @@ Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | defa
 Fkey{{ index }} Type               :7
 Fkey{{ index }} Value              :{{ 'get:' ~ _context['linekey_value_' ~ index] }}
 Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('URL', language)) | slice(0,10) }}
-{% elseif _context['linekey_type_' ~ index] == 'voice_mail' and not _context['linekey_value_' ~ index] %}
+{% elseif _context['linekey_type_' ~ index] == 'voice_mail' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_MWI
-Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Voice mail', language)) | slice(0,10) }}
-{% elseif _context['linekey_type_' ~ index] == 'voice_mail' and _context['linekey_value_' ~ index] %}
-Fkey{{ index }} Type               :1
-Fkey{{ index }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/m' }}
 Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Voice mail', language)) | slice(0,10) }}
 {% else %}
 Fkey{{ index }} Type               :0

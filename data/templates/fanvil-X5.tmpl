@@ -814,14 +814,9 @@ Fkey{{ lkidx }} Type               :7
 Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] }}
 Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('URL', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'voice_mail' and not _context['linekey_value_' ~ index] %}
+{% elseif _context['linekey_type_' ~ index] == 'voice_mail' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_MWI
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Voice mail', language)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'voice_mail' and _context['linekey_value_' ~ index] %}
-Fkey{{ lkidx }} Type               :1
-Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/m' }}
 Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Voice mail', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% else %}
