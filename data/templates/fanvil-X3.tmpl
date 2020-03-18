@@ -586,23 +586,23 @@ Fkey1 Title        :
 {% if _context['softkey_type_' ~ index] == 'ldap' %}
 SoftFkey{{ index }} Type     :3
 SoftFkey{{ index }} Value    :F_LDAP@1
-SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Phonebook')) }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Phonebook', language)) }}
 {% elseif _context['softkey_type_' ~ index] == 'forward' %}
 SoftFkey{{ index }} Type     :3
 SoftFkey{{ index }} Value    :F_CFWD
-SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Forward')) }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Forward', language)) }}
 {% elseif _context['softkey_type_' ~ index] == 'pickup' %}
 SoftFkey{{ index }} Type     :3
 SoftFkey{{ index }} Value    :F_PICKUP
-SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup')) }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup', language)) }}
 {% elseif _context['softkey_type_' ~ index] == 'speed_dial' %}
 SoftFkey{{ index }} Type     :1
 SoftFkey{{ index }} Value    :{{ _context['softkey_value_' ~ index] ~ '@1/f' }}
 SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default('N/A') }}
 {% elseif _context['softkey_type_' ~ index] == 'group_pickup' %}
 SoftFkey{{ index }} Type     :1
-SoftFkey{{ index }} Value    :{{ _context['pickup_group'] ~ '@1/f' }}
-SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup')) }}
+SoftFkey{{ index }} Value    :{{ pickup_group ~ '@1/f' }}
+SoftFkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup', language)) }}
 {% else %}
 SoftFkey{{ index }} Type     :0
 SoftFkey{{ index }} Value    :

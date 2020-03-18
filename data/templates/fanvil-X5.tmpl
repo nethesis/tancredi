@@ -736,12 +736,12 @@ Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'direct_pickup' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_PICKUP
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Pickup')) | slice(0,10)  }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Pickup', language)) | slice(0,10)  }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'dnd' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_DND
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('DND')) | slice(0,10) }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('DND', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'dtmf' %}
 Fkey{{ lkidx }} Type               :4
@@ -756,22 +756,22 @@ Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'group_pickup' %}
 Fkey{{ lkidx }} Type               :1
 Fkey{{ lkidx }} Value              :{{ pickup_group ~ '@1/f' }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Pickup')) | slice(0,10) }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Pickup', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'hold' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_HOLD
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Hold')) | slice(0,10) }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Hold', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'ldap' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_LDAPCONTACTS:1
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Phonebook')) | slice(0,10)  }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Phonebook', language)) | slice(0,10)  }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'line' %}
 Fkey{{ lkidx }} Type               :2
 Fkey{{ lkidx }} Value              :SIP{{ lkidx }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Line %s') | format(lkidx)) | slice(0,10) }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Line %s', language) | format(lkidx)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'multicast_paging' %}
 Fkey{{ lkidx }} Type               :14
@@ -781,7 +781,7 @@ Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'phone_lock' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_LOCK
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Lock phone')) | slice(0,10) }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Lock phone', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'prefix' %}
 Fkey{{ lkidx }} Type               :3
@@ -791,12 +791,12 @@ Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'recall' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_REDIAL
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Redial')) | slice(0,10) }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Redial', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'record' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_RECORD
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Record')) | slice(0,10) }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Record', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'speed_dial' %}
 Fkey{{ lkidx }} Type               :1
@@ -806,17 +806,17 @@ Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'transfer' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_B_TRANSFER
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Transfer')) | slice(0,10) }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Transfer', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'url' %}
 Fkey{{ lkidx }} Type               :7
 Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('URL')) | slice(0,10) }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('URL', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'voice_mail' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_MWI
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Voice mail')) | slice(0,10) }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(fanvil.gettext('Voice mail', language)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% else %}
 Fkey{{ lkidx }} Type               :0
@@ -833,17 +833,17 @@ Fkey{{ lkidx }} ICON               :Green
 {% if _context['softkey_type_' ~ index] == 'ldap' %}
 Fkey{{ index }} Type     :3
 Fkey{{ index }} Value    :F_LDAPCONTACTS:1
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Phonebook')) }}
+Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Phonebook', language)) }}
 Fkey{{ index }} ICON     :Green
 {% elseif _context['softkey_type_' ~ index] == 'forward' %}
 Fkey{{ index }} Type     :3
 Fkey{{ index }} Value    :F_CFWD
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Forward')) }}
+Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Forward', language)) }}
 Fkey{{ index }} ICON     :Green
 {% elseif _context['softkey_type_' ~ index] == 'pickup' %}
 Fkey{{ index }} Type     :3
 Fkey{{ index }} Value    :F_PICKUP
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup')) }}
+Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup', language)) }}
 Fkey{{ index }} ICON     :Green
 {% elseif _context['softkey_type_' ~ index] == 'speed_dial' %}
 Fkey{{ index }} Type     :1
@@ -852,7 +852,7 @@ Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default('N/A')
 {% elseif _context['softkey_type_' ~ index] == 'group_pickup' %}
 Fkey{{ index }} Type     :1
 Fkey{{ index }} Value    :{{ pickup_group ~ '@1/f' }}
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup')) }}
+Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(fanvil.gettext('Pickup', language)) }}
 Fkey{{ index }} ICON     :Green
 {% else %}
 Fkey{{ index }} Type     :0
