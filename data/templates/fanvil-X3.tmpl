@@ -566,6 +566,15 @@ LDAP1 Calling Line :1
 LDAP1 Enable Search:0
 LDAP1 Bind Line    :0
 LDAP1 Base         :{{ ldap_base }}
+LDAP1 Use SSL      :
+{%- if ldap_tls == 'starttls' %}
+    {{- '2' }}
+{% elseif ldap_tls == 'ldaps' %}
+    {{- '1' }}
+{% else %}
+    {{- '0' }}
+{% endif %}
+LDAP1 Authenticate :{{ ( ldap_user and ldap_password and ldap_tls != '0' ) ? '3' : '0' }}
 LDAP1 Username     :{{ ldap_user }}
 LDAP1 Password     :{{ ldap_password }}
 LDAP1 Tel Attr     :{{ ldap_mainphone_number_attr }}
