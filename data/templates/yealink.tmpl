@@ -756,7 +756,14 @@ ldap.port = {{ ldap_port }}
 ldap.host = {{ ldap_server | default(hostname) }}
 ldap.customize_label = {{ ldap_name }}
 ldap.incoming_call_special_search.enable = 0
-ldap.tls_mode = {{ ldap_tls }}
+ldap.tls_mode = 
+%- if ldap_tls == 'starttls' %}
+    {{- '1' }}
+{% elseif ldap_tls == 'ldaps' %}
+    {{- '2' }}
+{% else %}
+    {{- '0' }}
+{% endif %}
 ldap.search_type = 1
 ldap.numb_display_mode = 1
 ldap.ldap_sort = 1
