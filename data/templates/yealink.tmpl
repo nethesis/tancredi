@@ -752,7 +752,7 @@ ldap.enable = 1
 ldap.user = {{ ldap_user }}
 ldap.password = {{ ldap_password }}
 ldap.base = {{ ldap_base }}
-ldap.port = {{ ldap_port }}
+ldap.port = {{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}
 ldap.host = {{ ldap_server | default(hostname) }}
 ldap.customize_label = {{ ldap_name }}
 ldap.incoming_call_special_search.enable = 0

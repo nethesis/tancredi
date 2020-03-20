@@ -58,7 +58,7 @@
     <param name="NetDir.LDAP.0.Enable" value="1"/>
     <param name="NetDir.LDAP.0.Lookup" value="0"/>
     <param name="NetDir.LDAP.0.Server.Address" value="{{ ldap_server | default(hostname) }}"/>
-    <param name="NetDir.LDAP.0.Server.Port" value="{{ ldap_port | default('389') }}"/>
+    <param name="NetDir.LDAP.0.Server.Port" value="{{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}"/>
     <param name="NetDir.LDAP.0.BaseDN" value="{{ ldap_base }}"/>
     <param name="NetDir.LDAP.0.Security" value="
 {%- if ldap_tls == 'starttls' %}

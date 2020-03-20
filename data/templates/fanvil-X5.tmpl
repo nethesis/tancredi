@@ -558,7 +558,7 @@ BWCLog3 SipLine            :0
 --LDAP Config--    :
 LDAP1 Title              :{{ l10n.gettext('Phonebook', language) | slice(0, 31) }}
 LDAP1 Server             :{{ ldap_server | default(hostname) }}
-LDAP1 port               :{{ ldap_port | default('389') }}
+LDAP1 port               :{{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}
 LDAP1 Base               :{{ ldap_base }}
 LDAP1 Use SSL            :
 {%- if ldap_tls == 'starttls' %}
