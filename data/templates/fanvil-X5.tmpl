@@ -573,7 +573,7 @@ LDAP1 Calling Line       :0
 LDAP1 Bind Line          :0
 LDAP1 In Call Search     :0
 LDAP1 Out Call Search    :0
-LDAP1 Authenticate       :{{ ( ldap_user and ldap_password and ldap_tls != '0' ) ? '3' : '0' }}
+LDAP1 Authenticate       :{{ ( ldap_user and ldap_password and ldap_tls in ['ldaps', 'start_tls'] ) ? '3' : '0' }}
 LDAP1 Username           :{{ ldap_user }}
 LDAP1 Password           :{{ ldap_password }}
 LDAP1 Tel Attr           :{{ ldap_mainphone_number_attr }}
