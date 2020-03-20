@@ -158,7 +158,7 @@
         <P5430 para="LDAP.NameFilter">{{ ldap_name_filter }}</P5430>
         <P5431 para="LDAP.NumberFilter">{{ ldap_number_filter }}</P5431>
         <P5432 para="LDAP.ServerAddress">{{ ldap_server | default(hostname) }}</P5432>
-        <P5433 para="LDAP.Port">{{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}</P5433>
+        <P5433 para="LDAP.Port">{{ ldap_port | default('389') }}</P5433>
         <P5434 para="LDAP.Base">{{ ldap_base }}</P5434>
         <P5435 para="LDAP.UserName">{{ ldap_user }}</P5435>
         <P5436 para="LDAP.Password">{{ ldap_password }}</P5436>
