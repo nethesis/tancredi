@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 {% import 'gigaset.macros' as gigaset %}
+{% import 'language.macros' as l10n %}
 {% autoescape %}
 <provisioning version="1.1">
   <nvm>
@@ -51,6 +52,34 @@
     <param name="SIP.Account.{{ idx }}.STUN.Enabled" value="0" />
     {%- endif %}
     {%- endfor %}
+
+    {# LDAP #}
+    <param name="NetDir.LDAP.0.DirectoryName" value="{{ l10n.gettext('Phonebook', language) }}"/>
+    <param name="NetDir.LDAP.0.Enable" value="1"/>
+    <param name="NetDir.LDAP.0.Lookup" value="0"/>
+    <param name="NetDir.LDAP.0.Server.Address" value="{{ ldap_server | default(hostname) }}"/>
+    <param name="NetDir.LDAP.0.Server.Port" value="{{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}"/>
+    <param name="NetDir.LDAP.0.BaseDN" value="{{ ldap_base }}"/>
+    <param name="NetDir.LDAP.0.Security" value="
+{%- if ldap_tls == 'starttls' %}
+    {{- '1' -}}
+{% elseif ldap_tls == 'ldaps' %}
+    {{- '2' -}}
+{% else %}
+    {{- '0' -}}
+{% endif -%}
+"/>
+    <param name="NetDir.LDAP.0.Uername" value="{{ ldap_user }}"/>
+    <param name="NetDir.LDAP.0.Password" value="{{ ldap_password }}"/>
+    <param name="NetDir.LDAP.0.NameFilter" value="{{ ldap_name_filter }}"/>
+    <param name="NetDir.LDAP.0.NumberFilter" value="{{ ldap_number_filter }}"/>
+    <param name="NetDir.LDAP.0.DisplayFormat" value="{{ ldap_name_display }}"/>
+    <param name="NetDir.LDAP.0.MaxNumberOfSearchResults" value="50"/>
+    <param name="NetDir.LDAP.0.FirstName" value="{{ ldap_name_attr | split(' ')[0] }}"/>                
+    <param name="NetDir.LDAP.0.Surname" value="{{ ldap_name_attr | split(' ')[1:] }}"/>
+    <param name="NetDir.LDAP.0.PhoneHome" value="{{ ldap_mainphone_number_attr }}"/>
+    <param name="NetDir.LDAP.0.PhoneOffice" value="{{ ldap_otherphone_number_attr }}"/>
+    <param name="NetDir.LDAP.0.PhoneMobile" value="{{ ldap_mobilephone_number_attr }}"/>
     {# soft keys #}
     {% if cap_softkey_count > 0 %}
       {% for number in 1..(cap_softkey_count) %}
