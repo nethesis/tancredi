@@ -1,4 +1,5 @@
 {%- import 'yealink.macros' as yealink -%}
+{%- import 'language.macros' as l10n -%}
 #!version:1.0.0.1
 
 ##File header "#!version:1.0.0.1" can not be edited or deleted, and must be placed in the first line.##
@@ -754,7 +755,7 @@ ldap.password = {{ ldap_password }}
 ldap.base = {{ ldap_base }}
 ldap.port = {{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}
 ldap.host = {{ ldap_server | default(hostname) }}
-ldap.customize_label = {{ ldap_name }}
+ldap.customize_label = {{ l10n.gettext('Phonebook', language) }}
 ldap.incoming_call_special_search.enable = 0
 ldap.tls_mode = 
 %- if ldap_tls == 'starttls' %}
