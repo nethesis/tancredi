@@ -51,7 +51,7 @@
         <dhcp perm="">on</dhcp>
         <dhcp_v6 perm="">off</dhcp_v6>
 
-        {% if dss_transfer == 1 %}
+        {% if dss_transfer == 'attended' %}
             <transfer_dialing_on_transfer perm="">attended</transfer_dialing_on_transfer>
         {% else %}
             {# default value #}
