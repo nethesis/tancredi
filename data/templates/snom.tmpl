@@ -33,7 +33,7 @@
         <ldap_password perm="">{{ ldap_password }}</ldap_password>
         <ldap_over_tls perm="">{{ ldap_tls == 'ldaps' ? 'on' : 'off' }}</ldap_over_tls>
         <ldap_display_name perm="">{{ ldap_name_display }}</ldap_display_name>
-        <ldap_number_attributes perm="">{{ ldap_number_attr }}</ldap_number_attributes>
+        <ldap_number_attributes perm="">{{ ['ldap_mainphone_number_attr', 'ldap_mobilephone_number_attr', 'ldap_otherphone_number_attr'] | join(' ') }}</ldap_number_attributes>
         <ldap_name_attributes perm="">{{ ldap_name_attr }}</ldap_name_attributes>
         <ldap_number_filter perm="">{{ ldap_number_filter }}</ldap_number_filter>
         <ldap_search_filter perm="">{{ ldap_name_filter }}</ldap_search_filter>
