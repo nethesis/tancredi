@@ -4,8 +4,8 @@
 {% autoescape %}
 <provisioning version="1.1">
   <nvm>
-    <param name="WebUI.AdminPassword" value="{{ adminpw ?? 'admin' }}" />
-    <param name="WebUI.UserPassword" value="{{ userpw ?? '1234' }}" />
+    <param name="WebUI.AdminPassword" value="{{ adminpw | default('admin') }}" />
+    <param name="WebUI.UserPassword" value="{{ userpw | default('1234') }}" />
     
     <param name="System.DateAndTime.AutoAdjustTime" value="{{ ntp_server ? 'NTPServiceEnabled' : 'NTPServiceDHCP' }}" />
     <param name="System.DateAndTime.TimeServer" value="{{ ntp_server ?? 'pool.ntp.org' }}" />

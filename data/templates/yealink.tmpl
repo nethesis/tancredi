@@ -2300,8 +2300,8 @@ expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = %NULL%
 #######################################################################################
 ##                               Security                                            ##
 #######################################################################################
-static.security.user_password = admin:{{ adminpw }}
-static.security.user_password = user:{{ userpw }}
+static.security.user_password = admin:{{ adminpw | default('admin') }}
+static.security.user_password = user:{{ userpw | default('1234') }}
 static.security.user_password = var:{{ varpw }}
 static.security.user_name.var = var
 static.security.user_name.admin = admin

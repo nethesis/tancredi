@@ -175,8 +175,8 @@
         <!--Management/PassWord-->
         <P8681 para="LogUser.Admin">admin</P8681>
         <P8682 para="LogUser.User">user</P8682>
-        <P2 para="AdminPassword" >{{ adminpw ?: 'admin' }}</P2>
-        <P196 para="UserPassword" >{{ userpw ?: '1234' }}</P196>
+        <P2 para="AdminPassword" >{{ adminpw | default('admin') }}</P2>
+        <P196 para="UserPassword" >{{ userpw | default('1234') }}</P196>
         <!--Management/AutoProvision-->
         <P212 para="FirmwareUpGrade.UrgrateMode">{{ provisioning_url_scheme == 'https' ? '3' : '1' }}</P212>
         <P192 para="FirmwareUpGrade.FirmwareServerPath">{{ provisioning_url2 }}</P192>
