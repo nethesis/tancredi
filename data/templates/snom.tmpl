@@ -29,7 +29,7 @@
         <ldap_base perm="">{{ ldap_base }}</ldap_base>
         <ldap_port perm="">{{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}</ldap_port>
         <ldap_server perm="">{{ ldap_server | default(hostname) }}</ldap_server>
-        <ldap_username perm="">{{ ldap_username }}</ldap_username>
+        <ldap_username perm="">{{ ldap_user }}</ldap_username>
         <ldap_password perm="">{{ ldap_password }}</ldap_password>
         <ldap_over_tls perm="">{{ ldap_tls == 'ldaps' ? 'on' : 'off' }}</ldap_over_tls>
         <ldap_display_name perm="">{{ ldap_display_name }}</ldap_display_name>
