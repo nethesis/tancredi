@@ -165,7 +165,7 @@
         <P5437 para="LDAP.Max.Hits">50</P5437>
         <P5440 para="LDAP.DisplayName">{{ ldap_name_display | replace({'%': ''}) }}</P5440>
         <P23136 para="Directory.LDAPNameAttributes">{{ ldap_name_attr }}</P23136>
-        <P23137 para="Directory.LDAPNumberAttributes">{{ ldap_number_attr }}</P23137>
+        <P23137 para="Directory.LDAPNumberAttributes">{{ ['ldap_mainphone_number_attr', 'ldap_mobilephone_number_attr', 'ldap_otherphone_number_attr'] | join(' ') }}</P23137>
         <P5442 para="LDAP.SearchDelay">200</P5442>
         <P5441 para="LDAP.Protocol">1</P5441>
         <P5443 para="LDAP.LookupForIncomingCall">0</P5443>
