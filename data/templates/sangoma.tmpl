@@ -108,7 +108,7 @@
         <P8683 para="Preference.BacklightTime">{{ backlight_time }}</P8683>
         <P8940 para="Preference.ScreenTimeOut">{{ sangoma.screensaver_wait_time(screensaver_wait_time) }}</P8940>
         <P8950 para="Preference.ScreenSaverType">{{ screensaver_mode ?? 1 }}</P8950>
-        <P8721 para="Preference.RingTones">{{ default_ringtone }}</P8721>
+        <P8721 para="Preference.RingTones">{{ ringtone in ["2","3","4","5"] ? ringtone : "1" }}</P8721>
         <P85 para="Preference.NoKeyEntryTimeout">3</P85>
         <P8672 para="Preference.IncomingCallShowMode">1</P8672>
         <P8680 para="Preference.WatchDogEnable">1</P8680>
@@ -128,7 +128,7 @@
         <P53112 para="ForwardBusy.OnCode">{{ cfbusyon }}</P53112>
         <P53113 para="ForwardBusy.OffCode">{{ cfbusyoff }}</P53113>
         <P53120 para="ForwardNoAnswer.OnOff">{{ account_timeout_fwd_target_1 ? '1' : '0' }}</P53120>
-        <P53124 para="ForwardNoAnswer.AfterRingTime">{{ cftimeout }}</P53124>
+        <P53124 para="ForwardNoAnswer.AfterRingTime">{{ account_cftimeout_1}}</P53124>
         <P53121 para="ForwardNoAnswer.Target" >{{ account_timeout_fwd_target_1 }}</P53121>
         <P53122 para="ForwardNoAnswer.OnCode">{{ cftimeouton }}</P53122>
         <P53123 para="ForwardNoAnswer.OffCode">{{ cftimeoutoff }}</P53123>
@@ -175,8 +175,8 @@
         <!--Management/PassWord-->
         <P8681 para="LogUser.Admin">admin</P8681>
         <P8682 para="LogUser.User">user</P8682>
-        <P2 para="AdminPassword" >{{ adminpw ?: 'admin' }}</P2>
-        <P196 para="UserPassword" >{{ userpw ?: '1234' }}</P196>
+        <P2 para="AdminPassword" >{{ adminpw | default('admin') }}</P2>
+        <P196 para="UserPassword" >{{ userpw | default('1234') }}</P196>
         <!--Management/AutoProvision-->
         <P212 para="FirmwareUpGrade.UrgrateMode">{{ provisioning_url_scheme == 'https' ? '3' : '1' }}</P212>
         <P192 para="FirmwareUpGrade.FirmwareServerPath">{{ provisioning_url2 }}</P192>

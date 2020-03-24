@@ -759,11 +759,11 @@ ldap.customize_label = {{ l10n.gettext('Phonebook', language) }}
 ldap.incoming_call_special_search.enable = 0
 ldap.tls_mode = 
 %- if ldap_tls == 'starttls' %}
-    {{- '1' }}
+{{- '1' }}
 {% elseif ldap_tls == 'ldaps' %}
-    {{- '2' }}
+{{- '2' }}
 {% else %}
-    {{- '0' }}
+{{- '0' }}
 {% endif %}
 ldap.search_type = 1
 ldap.numb_display_mode = 1
@@ -1631,7 +1631,7 @@ custom.handset.backlight_out_of_charger.enable = 0
 custom.handset.backlight_in_charger.enable = 1
 custom.handset.color_scheme = -1
 custom.handset.confirmation_tone.enable = 1
-custom.handset.date_format = {{ date_format }}
+custom.handset.date_format = {{ yealink.date_format(date_format) }}
 custom.handset.eco_mode.enable = 0
 custom.handset.keypad_light.enable = 1
 custom.handset.keypad_tone.enable = 1
@@ -2300,8 +2300,8 @@ expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = %NULL%
 #######################################################################################
 ##                               Security                                            ##
 #######################################################################################
-static.security.user_password = admin:{{ adminpw }}
-static.security.user_password = user:{{ userpw }}
+static.security.user_password = admin:{{ adminpw | default('admin') }}
+static.security.user_password = user:{{ userpw | default('1234') }}
 static.security.user_password = var:{{ varpw }}
 static.security.user_name.var = var
 static.security.user_name.admin = admin
