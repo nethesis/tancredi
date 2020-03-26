@@ -758,7 +758,7 @@ ldap.host = {{ ldap_server | default(hostname) }}
 ldap.customize_label = {{ l10n.gettext('Phonebook', language) }}
 ldap.incoming_call_special_search.enable = 0
 ldap.tls_mode = 
-%- if ldap_tls == 'starttls' %}
+{%- if ldap_tls == 'starttls' %}
 {{- '1' }}
 {% elseif ldap_tls == 'ldaps' %}
 {{- '2' }}
