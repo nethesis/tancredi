@@ -15,8 +15,8 @@
     <param name="System.DateAndTime.DateOrder" value="{{ gigaset.date_format(date_format) }}" />
 
     <param name="Telephony.ToneScheme" value="{{ gigaset.tones_code(tonezone) }}" />
-    <param name="Telephony.CallTransfer.HoldOnTransfer.Attended" value="{{ dss_transfer != 'attended' ? 'Disabled : 'Enabled' }}" />
-    <param name="Telephony.CallTransfer.HoldOnTransfer.Unattended" value="{{ dss_transfer == 'attended' ? 'Disabled : 'Enabled' }}" />
+    <param name="Telephony.CallTransfer.HoldOnTransfer.Attended" value="{{ dss_transfer != 'attended' ? 'Disabled' : 'Enabled' }}" />
+    <param name="Telephony.CallTransfer.HoldOnTransfer.Unattended" value="{{ dss_transfer == 'attended' ? 'Disabled' : 'Enabled' }}" />
     <param name="PhoneUI.Settings.Language" value="{{ gigaset.language_code(language) }}" />
     <param name="WebUI.Language" value="{{ gigaset.language_code(language) }}" />
     
