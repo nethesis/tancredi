@@ -233,7 +233,7 @@ SIP{{ line }} Register User :{{ _context['account_username_' ~ line] }}
 SIP{{ line }} Register Pswd :{{ _context['account_password_' ~ line] }}
 SIP{{ line }} Register TTL  :3600
 SIP{{ line }} Backup Addr   :
-SIP{{ line }} Backup Port   :
+SIP{{ line }} Backup Port   :{{ _context['account_encryption_' ~ line] ? sip_tls_port : sip_udp_port }}
 SIP{{ line }} Backup Transpo:0
 SIP{{ line }} Backup TTL    :3600
 SIP{{ line }} Backup Mode   :0
@@ -297,7 +297,7 @@ SIP{{ line }} RFC Ver       :1
 SIP{{ line }} Signal Port   :5060
 SIP{{ line }} Transport     :{{ _context['account_encryption_' ~ line] ? '3' : '0' }}
 SIP{{ line }} Enable ChgPort:0
-SIP{{ line }} TLS Version   :0
+SIP{{ line }} TLS Version   :2
 SIP{{ line }} Ena sips URI  :0
 SIP{{ line }} Use SRV Mixer :0
 SIP{{ line }} SRV Mixer Uri :
