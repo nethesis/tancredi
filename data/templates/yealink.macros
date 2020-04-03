@@ -12,7 +12,7 @@
     "es" : "Spanish",
     "tr" : "Turkish",
 } %}
-{% if language_map[language] %}{{ language_map[language] }}{% else %}{{ 'English' }}{% endif %}
+{%- language_map[language] ?: 'English' -%}
 {% endmacro %}
 {# Map timezones to Yealink format#}
 {% macro timezone(timezone) %}
@@ -1089,4 +1089,3 @@
     -%}
 {{- map[dtmf] ?? '1' -}}
 {% endmacro dtmf %}
-
