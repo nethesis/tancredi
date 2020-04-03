@@ -1077,3 +1077,16 @@
 {{- map[date_format] ?? '6' -}}
 {% endmacro date_format %}
 
+#
+# Translate DTMF
+#
+{% macro dtmf(dtmf) %}
+    {%- set map = {
+        "inband" : "0",
+        "sip_info" : "2",
+        "rfc4733" : "1"
+        }
+    -%}
+{{- map[dtmf] ?? '1' -}}
+{% endmacro dtmf %}
+

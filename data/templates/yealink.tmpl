@@ -1838,7 +1838,7 @@ account.{{ line }}.nat.udp_update_enable = 1
 account.{{ line }}.nat.udp_update_time = 30
 account.{{ line }}.nat.rport = 0
 
-account.{{ line }}.dtmf.type = {{ _context['account_dtmf_type_' ~ line] | default }}
+account.{{ line }}.dtmf.type = {{ yealink.dtmf(_context['account_dtmf_type_' ~ line]) }}
 account.{{ line }}.dtmf.info_type = 1
 account.{{ line }}.dtmf.dtmf_payload = 101
 account.{{ line }}.100rel_enable = 0
