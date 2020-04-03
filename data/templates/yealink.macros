@@ -1,10 +1,18 @@
 {# Map english language to localized languages used by Yealink #}
 {% macro language(language)%}
 {% set language_map = {
-    "Chinese" : "Chinese_T",
-    "Simplified Chinese" : "Chinese_S",
+    "it" : "Italian",
+    "dk" : "Danish",
+    "nl" : "Dutch",
+    "fr" : "French",
+    "de" : "German",
+    "it" : "Italian",
+    "pt" : "Portuguese",
+    "ru" : "Russian",
+    "es" : "Spanish",
+    "tr" : "Turkish",
 } %}
-{% if language_map[language] %}{{ language_map[language] }}{% else %}{{ language }}{% endif %}
+{% if language_map[language] %}{{ language_map[language] }}{% else %}{{ 'English' }}{% endif %}
 {% endmacro %}
 {# Map timezones to Yealink format#}
 {% macro timezone(timezone) %}
