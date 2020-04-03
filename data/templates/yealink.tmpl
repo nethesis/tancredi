@@ -987,7 +987,7 @@ features.send_pound_key = 0
 features.busy_tone_delay = 3
 features.hotline_delay = 4
 features.hotline_number =
-features.direct_ip_call_enable = 1
+features.direct_ip_call_enable = 0
 features.call_num_filter = , -()/
 features.call_completion_enable = 1
 features.allow_mute = 1
@@ -1151,7 +1151,7 @@ phone_setting.contrast = {{ contrast }}
 phone_setting.backlight_time = {{ backlight_time }}
 phone_setting.inactive_backlight_level = {{ inactive_backlight_level }}
 phone_setting.active_backlight_level = {{ active_backlight_level }}
-phone_setting.predial_autodial = 0
+phone_setting.predial_autodial = 1
 
 ringtone.url = {{ ringtone_url }}
 ringtone.delete =
@@ -1838,7 +1838,7 @@ account.{{ line }}.nat.udp_update_enable = 1
 account.{{ line }}.nat.udp_update_time = 30
 account.{{ line }}.nat.rport = 0
 
-account.{{ line }}.dtmf.type = {{ _context['account_dtmf_type_' ~ line] | default }}
+account.{{ line }}.dtmf.type = {{ yealink.dtmf(_context['account_dtmf_type_' ~ line]) }}
 account.{{ line }}.dtmf.info_type = 1
 account.{{ line }}.dtmf.dtmf_payload = 101
 account.{{ line }}.100rel_enable = 0
