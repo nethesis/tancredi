@@ -10,10 +10,10 @@
     "pt" : "Portuguese",
     "ru" : "Russian",
     "es" : "Spanish",
-    "tr" : "Turkish",
+    "tr" : "Turkish"
 } %}
-{%- language_map[language] ?: 'English' -%}
-{% endmacro %}
+{{- language_map[language] ?: 'English' -}}
+{% endmacro language %}
 {# Map timezones to Yealink format#}
 {% macro timezone(timezone) %}
 {% set timezone_map = {
