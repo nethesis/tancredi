@@ -2305,3 +2305,9 @@ static.security.user_password = var:{{ varpw }}
 static.security.user_name.var = var
 static.security.user_name.admin = admin
 static.security.user_name.user = user
+
+{% if provisioning_user_agent matches '/SIP-T23P 44\.8[4-9]\./' %}
+# Fix TLS error 218910881 (ASN1_item_verify-unknown message digest algorithm)
+sip.tls_cipher_list=!ECDH:AES:!ADH:!LOW:!NULL
+security.tls_cipher_list =!ECDH:AES:!ADH:!LOW:!NULL
+{% endif %}
