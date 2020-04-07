@@ -2,10 +2,8 @@ name: Syntax checks
 on: [push, pull_request]
 
 jobs:
-  build:
-
+  checks:
     runs-on: ubuntu-18.04
-
     steps:
     - name: "Checkout code"
       uses: actions/checkout@v2
