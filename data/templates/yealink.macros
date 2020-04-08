@@ -1,11 +1,19 @@
 {# Map english language to localized languages used by Yealink #}
 {% macro language(language)%}
 {% set language_map = {
-    "Chinese" : "Chinese_T",
-    "Simplified Chinese" : "Chinese_S",
+    "it" : "Italian",
+    "dk" : "Danish",
+    "nl" : "Dutch",
+    "fr" : "French",
+    "de" : "German",
+    "it" : "Italian",
+    "pt" : "Portuguese",
+    "ru" : "Russian",
+    "es" : "Spanish",
+    "tr" : "Turkish"
 } %}
-{% if language_map[language] %}{{ language_map[language] }}{% else %}{{ language }}{% endif %}
-{% endmacro %}
+{{- language_map[language] ?: 'English' -}}
+{% endmacro language %}
 {# Map timezones to Yealink format#}
 {% macro timezone(timezone) %}
 {% set timezone_map = {
@@ -1069,3 +1077,15 @@
 {{- map[date_format] ?? '6' -}}
 {% endmacro date_format %}
 
+#
+# Translate DTMF
+#
+{% macro dtmf(dtmf) %}
+    {%- set map = {
+        "inband" : "0",
+        "sip_info" : "2",
+        "rfc4733" : "1"
+        }
+    -%}
+{{- map[dtmf] ?? '1' -}}
+{% endmacro dtmf %}

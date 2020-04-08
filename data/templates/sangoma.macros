@@ -459,3 +459,16 @@
 {{- map[date_format] ?? '2' -}}
 {% endmacro date_format %}
 
+#
+# Translate dss_transfer to Sangoma code
+#
+{% macro dss_transfer(dss_transfer) %}
+    {%- set map = {
+        "verify": "2",
+        "attended": "0",
+        "blind": "1"
+        }
+    -%}
+{{- map[dss_transfer] ?? '2' -}}
+{% endmacro dss_transfer %}
+

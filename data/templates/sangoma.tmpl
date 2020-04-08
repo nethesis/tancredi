@@ -108,7 +108,7 @@
         <P8683 para="Preference.BacklightTime">{{ backlight_time }}</P8683>
         <P8940 para="Preference.ScreenTimeOut">{{ sangoma.screensaver_wait_time(screensaver_wait_time) }}</P8940>
         <P8950 para="Preference.ScreenSaverType">{{ screensaver_mode ?? 1 }}</P8950>
-        <P8721 para="Preference.RingTones">{{ default_ringtone }}</P8721>
+        <P8721 para="Preference.RingTones">{{ ringtone in ["2","3","4","5"] ? ringtone : "1" }}</P8721>
         <P85 para="Preference.NoKeyEntryTimeout">3</P85>
         <P8672 para="Preference.IncomingCallShowMode">1</P8672>
         <P8680 para="Preference.WatchDogEnable">1</P8680>
@@ -128,7 +128,7 @@
         <P53112 para="ForwardBusy.OnCode">{{ cfbusyon }}</P53112>
         <P53113 para="ForwardBusy.OffCode">{{ cfbusyoff }}</P53113>
         <P53120 para="ForwardNoAnswer.OnOff">{{ account_timeout_fwd_target_1 ? '1' : '0' }}</P53120>
-        <P53124 para="ForwardNoAnswer.AfterRingTime">{{ cftimeout }}</P53124>
+        <P53124 para="ForwardNoAnswer.AfterRingTime">{{ account_cftimeout_1}}</P53124>
         <P53121 para="ForwardNoAnswer.Target" >{{ account_timeout_fwd_target_1 }}</P53121>
         <P53122 para="ForwardNoAnswer.OnCode">{{ cftimeouton }}</P53122>
         <P53123 para="ForwardNoAnswer.OffCode">{{ cftimeoutoff }}</P53123>
@@ -139,7 +139,7 @@
         <P3201 para="Transfer.BlindTransferOnHook">1</P3201>
         <P3202 para="Transfer.Semi-AttendedTransfer">1</P3202>
         <P3204 para="Transfer.AttendedTransferOnHook">1</P3204>
-        <P3205 para="Transfer.TransferModeviaDSSkey">{{ dss_transfer }}</P3205>
+        <P3205 para="Transfer.TransferModeviaDSSkey">{{ sangoma.dss_transfer(dss_transfer) }}</P3205>
         <P3207 para="Transfer.HoldTransferOnHook">0</P3207>
         <P4701 para="CallPickup.DirectCallPickup">1</P4701>
         <P4745 para="CallPickup.DirectCallPickupCode">{{ pickup_direct }}</P4745>
@@ -158,14 +158,14 @@
         <P5430 para="LDAP.NameFilter">{{ ldap_name_filter }}</P5430>
         <P5431 para="LDAP.NumberFilter">{{ ldap_number_filter }}</P5431>
         <P5432 para="LDAP.ServerAddress">{{ ldap_server | default(hostname) }}</P5432>
-        <P5433 para="LDAP.Port">{{ ldap_port }}</P5433>
+        <P5433 para="LDAP.Port">{{ ldap_port | default('389') }}</P5433>
         <P5434 para="LDAP.Base">{{ ldap_base }}</P5434>
         <P5435 para="LDAP.UserName">{{ ldap_user }}</P5435>
         <P5436 para="LDAP.Password">{{ ldap_password }}</P5436>
         <P5437 para="LDAP.Max.Hits">50</P5437>
         <P5440 para="LDAP.DisplayName">{{ ldap_name_display | replace({'%': ''}) }}</P5440>
         <P23136 para="Directory.LDAPNameAttributes">{{ ldap_name_attr }}</P23136>
-        <P23137 para="Directory.LDAPNumberAttributes">{{ ldap_number_attr }}</P23137>
+        <P23137 para="Directory.LDAPNumberAttributes">{{ ['ldap_mainphone_number_attr', 'ldap_mobilephone_number_attr', 'ldap_otherphone_number_attr'] | join(' ') }}</P23137>
         <P5442 para="LDAP.SearchDelay">200</P5442>
         <P5441 para="LDAP.Protocol">1</P5441>
         <P5443 para="LDAP.LookupForIncomingCall">0</P5443>
@@ -175,8 +175,8 @@
         <!--Management/PassWord-->
         <P8681 para="LogUser.Admin">admin</P8681>
         <P8682 para="LogUser.User">user</P8682>
-        <P2 para="AdminPassword" >{{ adminpw ?: 'admin' }}</P2>
-        <P196 para="UserPassword" >{{ userpw ?: '1234' }}</P196>
+        <P2 para="AdminPassword" >{{ adminpw | default('admin') }}</P2>
+        <P196 para="UserPassword" >{{ userpw | default('1234') }}</P196>
         <!--Management/AutoProvision-->
         <P212 para="FirmwareUpGrade.UrgrateMode">{{ provisioning_url_scheme == 'https' ? '3' : '1' }}</P212>
         <P192 para="FirmwareUpGrade.FirmwareServerPath">{{ provisioning_url2 }}</P192>

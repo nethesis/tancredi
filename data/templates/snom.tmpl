@@ -27,13 +27,13 @@
         <date_us_format perm="">{{ snom.date_format(date_format) }}</date_us_format>
         <time_24_format perm="">{{ time_format == '12' ? 'off' : 'on' }}</time_24_format>
         <ldap_base perm="">{{ ldap_base }}</ldap_base>
-        <ldap_port perm="">{{ ldap_port }}</ldap_port>
+        <ldap_port perm="">{{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}</ldap_port>
         <ldap_server perm="">{{ ldap_server | default(hostname) }}</ldap_server>
-        <ldap_username perm="">{{ ldap_username }}</ldap_username>
+        <ldap_username perm="">{{ ldap_user }}</ldap_username>
         <ldap_password perm="">{{ ldap_password }}</ldap_password>
-        <ldap_over_tls perm="">{{ ldap_tls ? 'on' : 'off' }}</ldap_over_tls>
-        <ldap_display_name perm="">{{ ldap_display_name }}</ldap_display_name>
-        <ldap_number_attributes perm="">{{ ldap_number_attr }}</ldap_number_attributes>
+        <ldap_over_tls perm="">{{ ldap_tls == 'ldaps' ? 'on' : 'off' }}</ldap_over_tls>
+        <ldap_display_name perm="">{{ ldap_name_display }}</ldap_display_name>
+        <ldap_number_attributes perm="">{{ ['ldap_mainphone_number_attr', 'ldap_mobilephone_number_attr', 'ldap_otherphone_number_attr'] | join(' ') }}</ldap_number_attributes>
         <ldap_name_attributes perm="">{{ ldap_name_attr }}</ldap_name_attributes>
         <ldap_number_filter perm="">{{ ldap_number_filter }}</ldap_number_filter>
         <ldap_search_filter perm="">{{ ldap_name_filter }}</ldap_search_filter>
@@ -51,17 +51,17 @@
         <dhcp perm="">on</dhcp>
         <dhcp_v6 perm="">off</dhcp_v6>
 
-        {% if dss_transfer == 1 %}
+        {% if dss_transfer == 'attended' %}
             <transfer_dialing_on_transfer perm="">attended</transfer_dialing_on_transfer>
         {% else %}
             {# default value #}
             <transfer_dialing_on_transfer perm="">blind</transfer_dialing_on_transfer>
         {% endif %}
 
-        <admin_mode_password perm="">{{ adminpw }}</admin_mode_password>
-        <admin_mode_password_confirm perm="">{{ adminpw }}</admin_mode_password_confirm>
+        <admin_mode_password perm="">{{ adminpw | default('admin') }}</admin_mode_password>
+        <admin_mode_password_confirm perm="">{{ adminpw | default('admin') }}</admin_mode_password_confirm>
         <http_user perm="">admin</http_user>
-        <http_password perm="">{{ adminpw }}</http_password>
+        <http_password perm="">{{ adminpw | default('admin') }}</http_password>
 
         <setting_server perm="RW">{{ provisioning_url2 }}</setting_server>
         {# snom allowed values: 3..15. active_backlight_level values: 1..10 #}
@@ -129,15 +129,15 @@
                     <call_waiting idx="{{ identity }}" perm="">on</call_waiting>
                 {% endif %}
 
-                <fwd_all_on_code idx="{{ identity }}" perm="">{{ _context['cfalwayson_' ~ identity] }}</fwd_all_on_code>
-                <fwd_all_off_code idx="{{ identity }}" perm="">{{ _context['cfalwaysoff_' ~ identity] }}</fwd_all_off_code>
-                <fwd_busy_on_code idx="{{ identity }}" perm="">{{ _context['cfbusyon_' ~ identity] }}</fwd_busy_on_code>
-                <fwd_busy_off_code idx="{{ identity }}" perm="">{{ _context['cfbusyoff_' ~ identity] }}</fwd_busy_off_code>
+                <fwd_all_on_code idx="{{ identity }}" perm="">{{ cfalwayson }}</fwd_all_on_code>
+                <fwd_all_off_code idx="{{ identity }}" perm="">{{ cfalwaysoff }}</fwd_all_off_code>
+                <fwd_busy_on_code idx="{{ identity }}" perm="">{{ cfbusyon }}</fwd_busy_on_code>
+                <fwd_busy_off_code idx="{{ identity }}" perm="">{{ cfbusyoff }}</fwd_busy_off_code>
                 <fwd_time_secs idx="{{ identity }}" perm="">{{ _context['account_cftimeout_' ~ identity] }}</fwd_time_secs>
-                <fwd_time_on_code idx="{{ identity }}" perm="">{{ _context['cftimeouton_' ~ identity] }}</fwd_time_on_code>
-                <fwd_time_off_code idx="{{ identity }}" perm="">{{ _context['cftimeoutoff_' ~ identity] }}</fwd_time_off_code>
-                <dnd_on_code idx="{{ identity }}" perm="">{{ _context['dndon_' ~ identity] }}</dnd_on_code>
-                <dnd_off_code idx="{{ identity }}" perm="">{{ _context['dndoff_' ~ identity] }}</dnd_off_code>
+                <fwd_time_on_code idx="{{ identity }}" perm="">{{ cftimeouton }}</fwd_time_on_code>
+                <fwd_time_off_code idx="{{ identity }}" perm="">{{ cftimeoutoff }}</fwd_time_off_code>
+                <dnd_on_code idx="{{ identity }}" perm="">{{ dndon }}</dnd_on_code>
+                <dnd_off_code idx="{{ identity }}" perm="">{{ dndoff }}</dnd_off_code>
                 <user_custom idx="{{ identity }}" perm="">{{ ringtone_url }}</user_custom>
                 <user_dtmf_info idx="{{ identity }}" perm="">{{ snom.dtmf_map(_context['account_dtmf_type_' ~ identity]) }}</user_dtmf_info>
                 <user_realname idx="{{ identity }}" perm="">{{ _context['account_display_name_' ~ identity] }}</user_realname>
@@ -714,27 +714,27 @@
         {% for number in 1..4 %}
             {% if _context['softkey_type_' ~ number] is defined %}
                 {% if _context['softkey_type_' ~ number] == 'disabled' %}
-                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'forward' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_REDIRECT</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_REDIRECT</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'dnd' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_DND</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_DND</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'recall' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_REDIAL</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_REDIAL</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'history' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_CALL_LIST</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_CALL_LIST</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'menu' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_SETTINGS</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_SETTINGS</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'status' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_STATUS</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_STATUS</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'ldap' or _context['softkey_type_' ~ number] == 'directory' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_DIRECTORY_SEARCH</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_DIRECTORY_SEARCH</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'local_directory' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_ADR_BOOK</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_ADR_BOOK</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'favorite' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_FAVORITES</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_FAVORITES</gui_fkey{{ number }}>
                 {% else %}
-                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey{{ number }}>
                 {% endif %}
             {% endif %}
         {% endfor %}

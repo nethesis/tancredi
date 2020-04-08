@@ -3,7 +3,7 @@
     "description": "Tancredi is the ultimate provisioning manager",
     "keywords": ["provisioning","rest","voip"],
     "homepage": "http://github.com/nethesis/tancredi",
-    "license": "GPL3",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Stefano Fancello",

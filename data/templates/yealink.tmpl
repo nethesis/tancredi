@@ -1,4 +1,5 @@
 {%- import 'yealink.macros' as yealink -%}
+{%- import 'language.macros' as l10n -%}
 #!version:1.0.0.1
 
 ##File header "#!version:1.0.0.1" can not be edited or deleted, and must be placed in the first line.##
@@ -405,7 +406,6 @@ features.play_held_tone.enable = 0
 features.play_hold_tone.interval = 30
 features.play_hold_tone.delay = 30
 features.play_hold_tone.enable = 0
-force.voice.ring_vol = 0
 features.mute.autoanswer_mute.enable = 0
 phone_setting.end_call_net_disconnect.enable = 0
 features.custom_auto_answer_tone.enable = 1
@@ -752,18 +752,25 @@ ldap.enable = 1
 ldap.user = {{ ldap_user }}
 ldap.password = {{ ldap_password }}
 ldap.base = {{ ldap_base }}
-ldap.port = {{ ldap_port }}
+ldap.port = {{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}
 ldap.host = {{ ldap_server | default(hostname) }}
-ldap.customize_label = {{ ldap_name }}
+ldap.customize_label = {{ l10n.gettext('Phonebook', language) }}
 ldap.incoming_call_special_search.enable = 0
-ldap.tls_mode = {{ ldap_tls }}
+ldap.tls_mode = 
+{%- if ldap_tls == 'starttls' %}
+{{- '1' }}
+{% elseif ldap_tls == 'ldaps' %}
+{{- '2' }}
+{% else %}
+{{- '0' }}
+{% endif %}
 ldap.search_type = 1
 ldap.numb_display_mode = 1
 ldap.ldap_sort = 1
 ldap.call_in_lookup = 0
 ldap.version = 3
 ldap.display_name = {{ ldap_name_display }}
-ldap.numb_attr = {{ ldap_number_attr }}
+ldap.numb_attr = {{ ['ldap_mainphone_number_attr', 'ldap_mobilephone_number_attr', 'ldap_otherphone_number_attr'] | join(' ') }}
 ldap.name_attr = {{ ldap_name_attr }}
 ldap.max_hits = 50
 ldap.number_filter = {{ ldap_number_filter }}
@@ -980,7 +987,7 @@ features.send_pound_key = 0
 features.busy_tone_delay = 3
 features.hotline_delay = 4
 features.hotline_number =
-features.direct_ip_call_enable = 1
+features.direct_ip_call_enable = 0
 features.call_num_filter = , -()/
 features.call_completion_enable = 1
 features.allow_mute = 1
@@ -1144,7 +1151,7 @@ phone_setting.contrast = {{ contrast }}
 phone_setting.backlight_time = {{ backlight_time }}
 phone_setting.inactive_backlight_level = {{ inactive_backlight_level }}
 phone_setting.active_backlight_level = {{ active_backlight_level }}
-phone_setting.predial_autodial = 0
+phone_setting.predial_autodial = 1
 
 ringtone.url = {{ ringtone_url }}
 ringtone.delete =
@@ -1623,7 +1630,7 @@ custom.handset.backlight_out_of_charger.enable = 0
 custom.handset.backlight_in_charger.enable = 1
 custom.handset.color_scheme = -1
 custom.handset.confirmation_tone.enable = 1
-custom.handset.date_format = {{ date_format }}
+custom.handset.date_format = {{ yealink.date_format(date_format) }}
 custom.handset.eco_mode.enable = 0
 custom.handset.keypad_light.enable = 1
 custom.handset.keypad_tone.enable = 1
@@ -1831,7 +1838,7 @@ account.{{ line }}.nat.udp_update_enable = 1
 account.{{ line }}.nat.udp_update_time = 30
 account.{{ line }}.nat.rport = 0
 
-account.{{ line }}.dtmf.type = {{ _context['account_dtmf_type_' ~ line] | default }}
+account.{{ line }}.dtmf.type = {{ yealink.dtmf(_context['account_dtmf_type_' ~ line]) }}
 account.{{ line }}.dtmf.info_type = 1
 account.{{ line }}.dtmf.dtmf_payload = 101
 account.{{ line }}.100rel_enable = 0
@@ -2292,9 +2299,15 @@ expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = %NULL%
 #######################################################################################
 ##                               Security                                            ##
 #######################################################################################
-static.security.user_password = admin:{{ adminpw }}
-static.security.user_password = user:{{ userpw }}
-static.security.user_password = var:{{ varpw }}
-static.security.user_name.var = var
 static.security.user_name.admin = admin
+static.security.user_password = admin:{{ adminpw | default('admin') }}
 static.security.user_name.user = user
+static.security.user_password = user:{{ userpw | default('1234') }}
+static.security.user_name.var = var
+static.security.user_password = var:{{ userpw | default('1234') }}
+
+{% if provisioning_user_agent matches '/SIP-T23P 44\.8[4-9]\./' %}
+# Fix TLS error 218910881 (ASN1_item_verify-unknown message digest algorithm)
+sip.tls_cipher_list=!ECDH:AES:!ADH:!LOW:!NULL
+security.tls_cipher_list =!ECDH:AES:!ADH:!LOW:!NULL
+{% endif %}

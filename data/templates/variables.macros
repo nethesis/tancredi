@@ -3,4 +3,3 @@
     'hostname': ['String', 'The provisioning server DNS name or IP address']
 } %}
 {% endmacro allowed_values %}
-

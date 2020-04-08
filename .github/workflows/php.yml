@@ -1,0 +1,42 @@
+name: Syntax checks
+on: [push, pull_request]
+
+jobs:
+  checks:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: "Checkout code"
+      uses: actions/checkout@v2
+    - name: "Setup PHP"
+      uses: shivammathur/setup-php@2.1.3
+      with:
+        php-version: '5.6'
+    - run: composer validate
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - name: Cache composer dependencies
+      uses: actions/cache@v1
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ubuntu18-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ubuntu18-composer-
+    - name: Install dependencies
+      run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+    - name: Run PHP lint checks
+      run: for F in $(find public/ src/ -name '*.php'); do php -l $F || exit 1; done
+    - name: Run Twig lint checks
+      run: >
+        find data/ -name '*.tmpl' -or -name '*.macros' |
+        php -B 'require_once("vendor/autoload.php"); $errors = 0; $twig = new \Twig\Environment(new \Twig\Loader\FilesystemLoader("data/templates"));' 
+        -R 'printf("[NOTICE] Checking %s\n",  $argn); try { $twig->tokenize(file_get_contents($argn)); } catch (Exception $ex) { ++$errors ; printf("[ERROR] in %s: %s\n", $argn, $ex->getMessage()); }'
+        -E '$errors > 0 ? exit(1) : exit(0);'
+    - name: Check .ini files syntax
+      run: >
+        find data/ -name '*.ini' | php
+        -B '$errors = 0; error_reporting(0);'
+        -R 'if(parse_ini_file($argn) === FALSE) { ++$errors ; printf("[ERROR] in %s: %s\n", $argn, strtr("message", error_get_last())); } else { printf("[NOTICE] Syntax ok: %s\n", $argn); }'
+        -E '$errors > 0 ? exit(1) : exit(0);'
+        
+          
+
