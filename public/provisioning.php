@@ -11,7 +11,7 @@ $container['logger'] = function($c) {
     global $config;
     $logger = new \Monolog\Logger('tancredi');
     $handler = new \Monolog\Handler\ErrorLogHandler();
-    $formatter = new \Monolog\Formatter\LineFormatter("%channel%.%level_name%: %message% %context% %extra%\n");
+    $formatter = new \Monolog\Formatter\LineFormatter("%channel%.%level_name%: %message% %context% %extra%");
     $handler->setFormatter($formatter);
 
     if($config['loglevel'] == 'ERROR') {
