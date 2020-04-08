@@ -754,20 +754,20 @@
             {% endfor %}
         {% endif %}
         {# soft keys #}
-        {% if cap_softkey_count > 0 %}
-            {% for number in 1..(cap_softkey_count) %}
-                {% if _context['softkey_type_' ~ number] is defined %}
-                    <gui_fkey{{number}} perm="">{{snom.softkey_type_map(_context['softkey_type_' ~ number])}}</gui_fkey{{number}}>
-                {% else %}
-                    <gui_fkey{{number}} perm="">keyevent F_NONE</gui_fkey{{number}}>
-                {% endif %}
-                {% if _context['softkey_label_' ~ number] is defined %}
-                    <gui_fkey_label idx="{{ (number-1) }}" perm="">{{_context['softkey_label_' ~ number]}}</gui_fkey_label>
-                {% else %}
-                    <gui_fkey_label idx="{{ (number-1) }}" perm=""/>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
+{#        {% if cap_softkey_count > 0 %} #}
+{#            {% for number in 1..(cap_softkey_count) %} #}
+{#                {% if _context['softkey_type_' ~ number] is defined %} #}
+{#                    <gui_fkey{{number}} perm="">{{snom.softkey_type_map(_context['softkey_type_' ~ number])}}</gui_fkey{{number}}> #}
+{#                {% else %} #}
+{#                    <gui_fkey{{number}} perm="">keyevent F_NONE</gui_fkey{{number}}> #}
+{#                {% endif %} #}
+{#                {% if _context['softkey_label_' ~ number] is defined %} #}
+{#                    <gui_fkey_label idx="{{ (number-1) }}" perm="">{{_context['softkey_label_' ~ number]}}</gui_fkey_label> #}
+{#                {% else %} #}
+{#                    <gui_fkey_label idx="{{ (number-1) }}" perm=""/> #}
+{#                {% endif %} #}
+{#           {% endfor %} #}
+{#        {% endif %} #}
         {# expansion keys #}
         {% for number in lineKeys..125 %}
             {% if _context['expkey_type_' ~ number] is defined %}
