@@ -2299,12 +2299,12 @@ expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = %NULL%
 #######################################################################################
 ##                               Security                                            ##
 #######################################################################################
-static.security.user_password = admin:{{ adminpw | default('admin') }}
-static.security.user_password = user:{{ userpw | default('1234') }}
-static.security.user_password = var:{{ varpw }}
-static.security.user_name.var = var
 static.security.user_name.admin = admin
+static.security.user_password = admin:{{ adminpw | default('admin') }}
 static.security.user_name.user = user
+static.security.user_password = user:{{ userpw | default('1234') }}
+static.security.user_name.var = var
+static.security.user_password = var:{{ userpw | default('1234') }}
 
 {% if provisioning_user_agent matches '/SIP-T23P 44\.8[4-9]\./' %}
 # Fix TLS error 218910881 (ASN1_item_verify-unknown message digest algorithm)
