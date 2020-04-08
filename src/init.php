@@ -1,6 +1,8 @@
 <?php
 
-ini_set('date.timezone', 'UTC'); 
+if( ! ini_get('date.timezone')) {
+    ini_set('date.timezone', 'UTC');
+}
 
 // Default configuration
 $default_config = array(
