@@ -9,9 +9,22 @@ $app = new \Slim\App;
 $container = $app->getContainer();
 $container['logger'] = function($c) {
     global $config;
-    $logger = new \Monolog\Logger('Tancredi');
-    $file_handler = new \Monolog\Handler\StreamHandler($config['logfile'],\Monolog\Logger::DEBUG); //TODO use config['log_level'] here somehow
-    $logger->pushHandler($file_handler);
+    $logger = new \Monolog\Logger('tancredi');
+    $handler = new \Monolog\Handler\ErrorLogHandler();
+    $formatter = new \Monolog\Formatter\LineFormatter("%channel%.%level_name%: %message% %context% %extra%\n");
+    $handler->setFormatter($formatter);
+
+    if($config['loglevel'] == 'ERROR') {
+        $handler->setLevel($logger::ERROR);
+    } elseif ($config['loglevel'] == 'WARNING') {
+        $handler->setLevel($logger::WARNING);
+    } elseif ($config['loglevel'] == 'INFO') {
+        $handler->setLevel($logger::INFO);
+    } else {
+        $handler->setLevel($logger::DEBUG);
+    }
+
+    $logger->pushHandler($handler);
     return $logger;
 };
 

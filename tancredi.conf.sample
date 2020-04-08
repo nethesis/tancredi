@@ -1,9 +1,11 @@
 ; Tancredi sample configuration file
 
-; Tancredi log file. Make sure user Tancredi run with (apache probably) has write permission
-logfile = "/var/log/tancredi.log"
-
-; Tancredi loglevel. Allowed levels are DEBUG,INFO,WARNING,ERROR
+; Tancredi log verbosity level. Allowed level names are
+;  - DEBUG (default)
+;  - INFO
+;  - WARNING
+;  - ERROR
+; Log messages sent to error_log()
 loglevel = "DEBUG"
 
 ; Directory where Tancredi has Read/Write access
