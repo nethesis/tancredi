@@ -714,27 +714,27 @@
         {% for number in 1..4 %}
             {% if _context['softkey_type_' ~ number] is defined %}
                 {% if _context['softkey_type_' ~ number] == 'disabled' %}
-                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'forward' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_REDIRECT</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_REDIRECT</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'dnd' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_DND</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_DND</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'recall' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_REDIAL</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_REDIAL</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'history' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_CALL_LIST</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_CALL_LIST</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'menu' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_SETTINGS</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_SETTINGS</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'status' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_STATUS</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_STATUS</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'ldap' or _context['softkey_type_' ~ number] == 'directory' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_DIRECTORY_SEARCH</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_DIRECTORY_SEARCH</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'local_directory' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_ADR_BOOK</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_ADR_BOOK</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'favorite' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_FAVORITES</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent F_FAVORITES</gui_fkey{{ number }}>
                 {% else %}
-                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey1>
+                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey{{ number }}>
                 {% endif %}
             {% endif %}
         {% endfor %}
