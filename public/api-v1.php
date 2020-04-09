@@ -9,12 +9,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 $app = new \Slim\App;
 $container = $app->getContainer();
+$container['config'] = $config;
 $container['logger'] = function($c) {
-    global $config;
-    $logger = new \Monolog\Logger('Tancredi');
-    $file_handler = new \Monolog\Handler\StreamHandler($config['logfile'],\Monolog\Logger::DEBUG); //TODO use config['log_level'] here somehow
-    $logger->pushHandler($file_handler);
-    return $logger;
+    return \Tancredi\LoggerFactory::createLogger($c);
 };
 
 $container['storage'] = function($c) {
