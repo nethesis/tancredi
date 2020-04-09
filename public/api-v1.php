@@ -9,25 +9,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 $app = new \Slim\App;
 $container = $app->getContainer();
+$container['config'] = $config;
 $container['logger'] = function($c) {
-    global $config;
-    $logger = new \Monolog\Logger('tancredi');
-    $handler = new \Monolog\Handler\ErrorLogHandler();
-    $formatter = new \Monolog\Formatter\LineFormatter("%channel%.%level_name%: %message% %context% %extra%");
-    $handler->setFormatter($formatter);
-
-    if($config['loglevel'] == 'ERROR') {
-        $handler->setLevel($logger::ERROR);
-    } elseif ($config['loglevel'] == 'WARNING') {
-        $handler->setLevel($logger::WARNING);
-    } elseif ($config['loglevel'] == 'INFO') {
-        $handler->setLevel($logger::INFO);
-    } else {
-        $handler->setLevel($logger::DEBUG);
-    }
-
-    $logger->pushHandler($handler);
-    return $logger;
+    return \Tancredi\LoggerFactory::createLogger($c);
 };
 
 $container['storage'] = function($c) {

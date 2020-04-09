@@ -5,8 +5,11 @@
 ;  - INFO
 ;  - WARNING
 ;  - ERROR
-; Log messages sent to error_log()
 loglevel = "DEBUG"
+
+; Write log entries to the given path. Ensure proper permissions are set.
+; If "logfile" is empty or not set, log messages are sent to PHP error_log.
+;logfile = "/var/log/tancredi/tancredi.log"
 
 ; Directory where Tancredi has Read/Write access
 rw_dir = "/usr/share/tancredi/data/"
