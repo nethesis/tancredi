@@ -9,6 +9,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 $app = new \Slim\App;
 $container = $app->getContainer();
+$container['app'] = function($c) use ($app) {
+    return $app;
+};
 $container['config'] = $config;
 $container['logger'] = function($c) {
     return \Tancredi\LoggerFactory::createLogger($c);
@@ -25,6 +28,9 @@ if (array_key_exists('auth_class',$config) and !empty($config['auth_class'])) {
     $auth_class = "\\Tancredi\\Entity\\" . $config['auth_class'];
     $app->add(new $auth_class($config));
 }
+
+// Add request/response logging middleware
+$app->add(\Tancredi\LoggerFactory::createLoggingMiddleware($container));
 
 /*********************************
 * GET /phones

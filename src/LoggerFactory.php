@@ -29,16 +29,18 @@ class LoggerFactory
     public static function createLogger(\ArrayAccess $dc)
     {
         $logger = new \Monolog\Logger('tancredi');
+        $logger->pushProcessor(new \Monolog\Processor\PsrLogMessageProcessor());
 
         $config = $dc['config'];
         if( ! empty($config['logfile'])) {
             $handler = new \Monolog\Handler\StreamHandler($config['logfile']);
+            $formatter = new \Monolog\Formatter\LineFormatter("[%datetime%] %level_name%: %message%\n");
         } else {
             $handler = new \Monolog\Handler\ErrorLogHandler();
             // We assume the error_log already adds a time stamp to log messages:
-            $formatter = new \Monolog\Formatter\LineFormatter("%channel%.%level_name%: %message% %context% %extra%");
-            $handler->setFormatter($formatter);
+            $formatter = new \Monolog\Formatter\LineFormatter("%level_name%: %message%");
         }
+        $handler->setFormatter($formatter);
 
         if($config['loglevel'] == 'ERROR') {
             $handler->setLevel($logger::ERROR);
@@ -53,6 +55,23 @@ class LoggerFactory
         $logger->pushHandler($handler);
         \Monolog\ErrorHandler::register($logger);
         return $logger;
+    }
+
+    public static function createLoggingMiddleware($container)
+    {
+        return function($request, $response, $next) use ($container) {
+            $logger = $container['logger'];
+            $response = $next($request, $response);
+            $context = [
+                'method' => $request->getMethod(),
+                'uri' => $request->getUri(),
+                'status' => $response->getStatusCode(),
+                'request' => substr($request->getBody(), 0, 4096),
+                'response' => substr($request->getBody()->getContents(), 0, 4096),
+            ];
+            $logger->debug('{method} {uri} ({status}) [{request}, {response}]', $context);
+            return $response;
+        };
     }
 
 }
