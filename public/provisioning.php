@@ -23,7 +23,6 @@ $app->get('/check/ping', function(Request $request, Response $response, array $a
 });
 
 $app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()) . " " . $_SERVER['HTTP_USER_AGENT']);
     global $config;
     $filename = $args['filename'];
     $token = $args['token'];
@@ -33,7 +32,6 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         // Token doesn't exists
         $this->logger->error('Invalid token requested. Token: ' . $token);
         $response = $response->withStatus(403);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
 
@@ -82,13 +80,11 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
         $response = $response->withStatus(500);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
 });
 
 $app->get('/{filename}', function(Request $request, Response $response, array $args) use ($app) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()) . " " . $_SERVER['HTTP_USER_AGENT']);
     global $config;
     $filename = $args['filename'];
     $this->logger->info('Received a file request without token. File: ' . $filename);
@@ -146,7 +142,6 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     } catch (Exception $e) {
         $this->logger->error($e->getMessage());
         $response = $response->withStatus(500);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
 });
