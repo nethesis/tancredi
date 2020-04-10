@@ -9,7 +9,7 @@ $app = new \Slim\App;
 $container = $app->getContainer();
 $container['config'] = $config;
 $container['logger'] = function($c) {
-    return \Tancredi\LoggerFactory::createLogger($c);
+    return \Tancredi\LoggerFactory::createLogger('provisioning', $c);
 };
 
 $container['storage'] = function($c) {
@@ -18,28 +18,25 @@ $container['storage'] = function($c) {
     return $storage;
 };
 
+// Add request/response logging middleware
+$app->add(new \Tancredi\LoggingMiddleware($container));
+
 $app->get('/check/ping', function(Request $request, Response $response, array $args) use ($app) {
     return $response->withJson(filemtime('/etc/tancredi.conf'),200);
 });
 
 $app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()) . " " . $_SERVER['HTTP_USER_AGENT']);
     global $config;
     $filename = $args['filename'];
     $token = $args['token'];
-    $this->logger->info('Received a token and file request. Token: ' .$token . '. File: ' . $filename);
     $id = \Tancredi\Entity\TokenManager::getIdFromToken($token);
     if ($id === FALSE) {
         // Token doesn't exists
-        $this->logger->error('Invalid token requested. Token: ' . $token);
-        $response = $response->withStatus(403);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+        $this->logger->info('Invalid token request from {address} {ua}: {uri}', ['uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
+        $response = $response->withStatus(404);
         return $response;
     }
 
-    $this->logger->debug('Token '.$token.' is valid');
-    // Instantiate scope
-    $this->logger->debug("New scope id: \"$id\"");
     $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $this->storage, $this->logger, TRUE);
     // Get template variable name from file
     $data = getDataFromFilename($filename,$this->logger);
@@ -47,11 +44,11 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     unset($scope_data['variables']);
 
     if (empty($data['template'])) {
-        $this->logger->error(sprintf('Template not found for "%s". It does not match our patterns.d/ rules', $filename));
+        $this->logger->debug('Template not found for "{filename}". It does not match our patterns.d/ rules', $data);
         return $response->withStatus(404);
     } elseif(empty($scope_data[$data['template']])) {
-        $this->logger->error(sprintf('Template not found for "%s". The variable "%s" from pattern "%s" is not set properly', $filename, $data['template'], $data['pattern_name']));
-        return $response->withStatus(404);
+        $this->logger->error('Template not found for "{filename}". The variable "{template}" from pattern "{pattern_name}" is not set properly', $data);
+        return $response->withStatus(500);
     }
 
     // Load filters
@@ -73,30 +70,32 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     // Add user agent
     $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
-    $this->logger->debug(print_r($scope_data,true));
     try {
         $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
         $response->getBody()->write(renderTwigTemplate($scope_data[$data['template']], $scope_data));
+        $this->logger->debug('Rendered template "{template}" with data: {data}', ['data' => json_encode($scope_data), 'template' => $scope_data[$data['template']]]);
+        $this->logger->info('Serving request from {address} {ua}: {uri}', ['uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
         return $response;
     } catch (Exception $e) {
-        $this->logger->error($e->getMessage());
-        $response = $response->withStatus(500);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+        $this->logger->error($e);
+        $response = $response
+            ->withHeader('Content-type', 'text/plain')
+            ->withStatus(500)
+        ;
+        $response->getBody()->write("Internal server error\n\nSee the application log for details.\n");
         return $response;
     }
 });
 
 $app->get('/{filename}', function(Request $request, Response $response, array $args) use ($app) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()) . " " . $_SERVER['HTTP_USER_AGENT']);
     global $config;
     $filename = $args['filename'];
-    $this->logger->info('Received a file request without token. File: ' . $filename);
 
     $data = getDataFromFilename($filename,$this->logger);
 
     if (empty($data['scopeid'])) {
-        $this->logger->error(sprintf('Scope not found for "%s"', $filename));
+        $this->logger->debug(sprintf('Scope not found for "%s"', $filename));
         return $response->withStatus(404);
     }
 
@@ -107,18 +106,17 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     }
 
     // Instantiate scope
-    $this->logger->debug("New scope id: \"$id\"");
     $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $this->storage, $this->logger, TRUE);
     // Get template variable name from file
     $scope_data = array_merge($scope, $scope['variables']);
     unset($scope_data['variables']);
 
     if (empty($data['template'])) {
-        $this->logger->error(sprintf('Template not found for "%s". It does not match our patterns.d/ rules', $filename));
+        $this->logger->debug('Template not found for "{filename}". It does not match our patterns.d/ rules', $data);
         return $response->withStatus(404);
     } elseif(empty($scope_data[$data['template']])) {
-        $this->logger->error(sprintf('Template not found for "%s". The variable "%s" from pattern "%s" is not set properly', $filename, $data['template'], $data['pattern_name']));
-        return $response->withStatus(404);
+        $this->logger->error('Template not found for "{filename}". The variable "{template}" from pattern "{pattern_name}" is not set properly', $data);
+        return $response->withStatus(500);
     }
 
     // Load filters
@@ -136,17 +134,20 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     // Add user agent
     $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
-    $this->logger->debug(print_r($scope_data,true));
     try {
-        // Load twig template
         $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
         $response->getBody()->write(renderTwigTemplate($scope_data[$data['template']], $scope_data));
+        $this->logger->debug('Rendered template "{template}" with data: {data}', ['data' => json_encode($scope_data), 'template' => $scope_data[$data['template']]]);
+        $this->logger->info('Serving request from {address} {ua}: {uri}', ['uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
         return $response;
     } catch (Exception $e) {
-        $this->logger->error($e->getMessage());
-        $response = $response->withStatus(500);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
+        $this->logger->error($e);
+        $response = $response
+            ->withHeader('Content-type', 'text/plain')
+            ->withStatus(500)
+        ;
+        $response->getBody()->write("Internal server error\n\nSee the application log for details.\n");
         return $response;
     }
 });
@@ -164,17 +165,17 @@ function renderTwigTemplate($template, $scope_data) {
 
 function getDataFromFilename($filename,$logger) {
     global $config;
-    $result = array();
+    $result = array(
+        'filename' => $filename,
+    );
     $patterns = array();
-    foreach (scandir($config['ro_dir'] . 'patterns.d/') as $pattern_file) {
-        if ($pattern_file === '.' or $pattern_file === '..' or substr($pattern_file,-4) !== '.ini') continue;
-        $patterns = array_merge($patterns,parse_ini_file($config['ro_dir'] . 'patterns.d/'.$pattern_file,true));
+    foreach (glob($config['ro_dir'] . 'patterns.d/*.ini') as $pattern_file) {
+        $patterns = array_merge($patterns, parse_ini_file($pattern_file, true));
     }
     foreach ($patterns as $pattern_name => $pattern) {
         if (preg_match('/'.$pattern['pattern'].'/', $filename, $tmp)) {
             $result['pattern_name'] = $pattern_name;
             $result['template'] = $pattern['template'];
-            $logger->debug($pattern['pattern'].' '.$pattern['scopeid'] .' '.  $filename);
             $result['scopeid'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
             $result['content_type'] = empty($pattern['content_type']) ? 'text/plain; charset=utf-8' : $pattern['content_type'];
             break;

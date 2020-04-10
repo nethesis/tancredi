@@ -26,19 +26,21 @@
  */
 class LoggerFactory 
 {
-    public static function createLogger(\ArrayAccess $dc)
+    public static function createLogger($channel, \ArrayAccess $dc)
     {
-        $logger = new \Monolog\Logger('tancredi');
+        $logger = new \Monolog\Logger($channel);
+        $logger->pushProcessor(new \Monolog\Processor\PsrLogMessageProcessor());
 
         $config = $dc['config'];
         if( ! empty($config['logfile'])) {
             $handler = new \Monolog\Handler\StreamHandler($config['logfile']);
+            $formatter = new \Monolog\Formatter\LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
         } else {
             $handler = new \Monolog\Handler\ErrorLogHandler();
             // We assume the error_log already adds a time stamp to log messages:
-            $formatter = new \Monolog\Formatter\LineFormatter("%channel%.%level_name%: %message% %context% %extra%");
-            $handler->setFormatter($formatter);
+            $formatter = new \Monolog\Formatter\LineFormatter("%channel%.%level_name%: %message%");
         }
+        $handler->setFormatter($formatter);
 
         if($config['loglevel'] == 'ERROR') {
             $handler->setLevel($logger::ERROR);

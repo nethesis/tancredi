@@ -9,9 +9,12 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 $app = new \Slim\App;
 $container = $app->getContainer();
+$container['app'] = function($c) use ($app) {
+    return $app;
+};
 $container['config'] = $config;
 $container['logger'] = function($c) {
-    return \Tancredi\LoggerFactory::createLogger($c);
+    return \Tancredi\LoggerFactory::createLogger('api-v1', $c);
 };
 
 $container['storage'] = function($c) {
@@ -26,12 +29,14 @@ if (array_key_exists('auth_class',$config) and !empty($config['auth_class'])) {
     $app->add(new $auth_class($config));
 }
 
+// Add request/response logging middleware
+$app->add(new \Tancredi\LoggingMiddleware($container));
+
 /*********************************
 * GET /phones
 **********************************/
 $app->get('/phones', function(Request $request, Response $response) use ($app) {
     global $config;
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $scopes = $this->storage->listScopes('phone');
     $results = array();
     foreach ($scopes as $scopeId) {
@@ -42,12 +47,11 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
             'model' => $scope->metadata['inheritFrom'],
             'display_name' => $scope->metadata['displayName'],
             'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom'],
-            'phone_url' => $config['api_url_path'] . "models/" . $scopeId
+            'phone_url' => $config['api_url_path'] . "phones/" . $scopeId
         );
     }
 
     $response = $response->withJson($results,200,JSON_FLAGS);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -55,7 +59,6 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
 * GET /phones/{mac}
 **********************************/
 $app->get('/phones/{mac}', function(Request $request, Response $response, array $args) use ($app) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $mac = $args['mac'];
     // get all scopes of type "phone"
     if (!$this->storage->scopeExists($mac)) {
@@ -69,7 +72,6 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
         return $response;
     }
     $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -77,7 +79,6 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
 * POST /phones
 **********************************/
 $app->post('/phones', function (Request $request, Response $response, $args) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $post_data = $request->getParsedBody();
     $mac = $post_data['mac'];
     $model = $post_data['model'];
@@ -91,7 +92,6 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
         $response = $response->withJson($results,400,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
     if ($this->storage->scopeExists($mac)) {
@@ -103,7 +103,6 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
         $response = $response->withJson($results,409,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
     $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
@@ -115,7 +114,6 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , FALSE); // create token
     $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),201,JSON_FLAGS);
     $response = $response->withHeader('Location', '/tancredi/api/v1/phones/' . $mac);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -123,7 +121,6 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
 * PATCH /phones/{mac}
 **********************************/
 $app->patch('/phones/{mac}', function (Request $request, Response $response, $args) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $mac = $args['mac'];
     $patch_data = $request->getParsedBody();
 
@@ -135,7 +132,6 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         $response = $response->withJson($results,404,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
 
@@ -148,7 +144,6 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         $response = $response->withJson($results,403,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
 
@@ -157,18 +152,15 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         $scope->metadata['inheritFrom'] = $patch_data['model'];
         $scope->setVariables();
         $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
     if (array_key_exists('variables',$patch_data)) {
         $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
         $scope->setVariables($patch_data['variables']);
         $response = $response->withStatus(204);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
     $response = $response->withStatus(400);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -176,7 +168,6 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
 * DELETE /phones/{mac}
 **********************************/
 $app->delete('/phones/{mac}', function (Request $request, Response $response, $args) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $mac = $args['mac'];
 
     if (!$this->storage->scopeExists($mac)) {
@@ -187,14 +178,12 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
         $response = $response->withJson($results,404,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
     \Tancredi\Entity\TokenManager::deleteToken(\Tancredi\Entity\TokenManager::getToken1($mac));
     \Tancredi\Entity\TokenManager::deleteToken(\Tancredi\Entity\TokenManager::getToken2($mac));
     $this->storage->deleteScope($mac);
     $response = $response->withStatus(204);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -203,9 +192,7 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
 **********************************/
 $app->get('/models', function(Request $request, Response $response) use ($app) {
     global $config;
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $query_params = $request->getQueryParams();
-    $this->logger->debug("GET /models/ " . json_encode($query_params));
     $scopes = $this->storage->listScopes('model');
     $results = array();
 
@@ -216,7 +203,7 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
         $inherited_scopes = array();
         foreach ($this->storage->listScopes() as $scopeId) {
             $scope = new \Tancredi\Entity\Scope($scopeId, $this->storage, $this->logger);
-            if (array_search($scope->metadata['inheritFrom'],$inherited_scopes) === FALSE) {
+            if ( ! empty($scope->metadata['inheritFrom']) && array_search($scope->metadata['inheritFrom'],$inherited_scopes) === FALSE) {
                 $inherited_scopes[] = $scope->metadata['inheritFrom'];
             }
         }
@@ -235,7 +222,6 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
         );
     }
     $response = $response->withJson($results,200,JSON_FLAGS);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -243,7 +229,6 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
 * GET /models/{id}
 **********************************/
 $app->get('/models/{id}[/version/{version:original}]', function(Request $request, Response $response, array $args) use ($app) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $id = $args['id'];
     if (array_key_exists('version',$args) && $args['version'] == 'original') {
         $original = true;
@@ -260,7 +245,6 @@ $app->get('/models/{id}[/version/{version:original}]', function(Request $request
         $response = $response->withJson($results,404,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
     if (array_key_exists('inherit',$query) and $query['inherit'] == 1) {
@@ -269,7 +253,6 @@ $app->get('/models/{id}[/version/{version:original}]', function(Request $request
         $results = getModelScope($id, $this->storage, $this->logger, false, $original);
     }
     $response = $response->withJson($results,200,JSON_FLAGS);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -277,7 +260,6 @@ $app->get('/models/{id}[/version/{version:original}]', function(Request $request
 * POST /models
 **********************************/
 $app->post('/models', function (Request $request, Response $response, $args) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $post_data = $request->getParsedBody();
     $id = $post_data['name'];
     $display_name = ($post_data['display_name'] ? $post_data['display_name'] : "" );
@@ -290,7 +272,6 @@ $app->post('/models', function (Request $request, Response $response, $args) {
         $response = $response->withJson($results,400,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
    }
    if ($this->storage->scopeExists($id)) {
@@ -302,7 +283,6 @@ $app->post('/models', function (Request $request, Response $response, $args) {
         $response = $response->withJson($results,409,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
     $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
@@ -311,7 +291,6 @@ $app->post('/models', function (Request $request, Response $response, $args) {
     $scope->setVariables($variables);
     $response = $response->withJson(getModelScope($id, $this->storage, $this->logger),201,JSON_FLAGS);
     $response = $response->withHeader('Location', '/tancredi/api/v1/models/' . $id);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -319,7 +298,6 @@ $app->post('/models', function (Request $request, Response $response, $args) {
 * PATCH /models/{id}
 **********************************/
 $app->patch('/models/{id}', function (Request $request, Response $response, $args) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $id = $args['id'];
     $patch_data = $request->getParsedBody();
 
@@ -331,8 +309,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
         $response = $response->withJson($results,404,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
-	return $response;
+    	return $response;
     }
 
     if (array_key_exists('name',$patch_data)) {
@@ -343,7 +320,6 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
         $response = $response->withJson($results,403,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
 
@@ -358,11 +334,9 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
              $scope->setVariables();
         }
         $response = $response->withStatus(204);
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
         return $response;
     }
     $response = $response->withStatus(400);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -370,7 +344,6 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
 * DELETE /models/{id}
 **********************************/
 $app->delete('/models/{id}', function (Request $request, Response $response, $args) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $id = $args['id'];
 
     if (!$this->storage->scopeExists($id)) {
@@ -381,8 +354,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
         $response = $response->withJson($results,404,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
-	return $response;
+        return $response;
     }
 
     if ($this->storage->scopeInUse($id)) {
@@ -393,13 +365,11 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
         $response = $response->withJson($results,409,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
-        $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
-	return $response;
+        return $response;
     }
 
     $this->storage->deleteScope($id);
     $response = $response->withStatus(204);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -407,11 +377,9 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
 * GET /defaults
 **********************************/
 $app->get('/defaults', function(Request $request, Response $response) use ($app) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $scope = new \Tancredi\Entity\Scope('defaults', $this->storage, $this->logger);
     $scope_data = $scope->getVariables();
     $response = $response->withJson($scope_data,200,JSON_FLAGS);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -419,7 +387,6 @@ $app->get('/defaults', function(Request $request, Response $response) use ($app)
 * PATCH /defaults
 **********************************/
 $app->patch('/defaults', function (Request $request, Response $response, $args) {
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() . " " . json_encode($request->getParsedBody()));
     $patch_data = $request->getParsedBody();
 
     $scope = new \Tancredi\Entity\Scope('defaults', $this->storage, $this->logger);
@@ -432,7 +399,6 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
 
     $scope->setVariables($patch_data);
     $response = $response->withStatus(204);
-    $this->logger->debug($request->getMethod() ." " . $request->getUri() .' Result:' . $response->getStatusCode() . ' ' . __FILE__.':'.__LINE__);
     return $response;
 });
 
@@ -448,7 +414,7 @@ function getModelScope($id,$storage,$logger,$inherit = false, $original = false)
         'name' => $id,
         'display_name' => $scope->metadata['displayName'],
         'variables' => $scope_data,
-        'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
+        'model_url' => $config['api_url_path'] . "models/" . $id,
     );
     return $results;
 }
