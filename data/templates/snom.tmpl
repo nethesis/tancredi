@@ -153,6 +153,8 @@
         <lcserver1 perm=""></lcserver1>
         <http_proxy perm=""></http_proxy>
         <http_port perm=""></http_port>
+        <http_user perm=""></http_user>
+        <http_pass perm=""></http_pass>
         <http_scheme perm="">on</http_scheme>
         <https_port perm="">443</https_port>
         <webserver_type perm="">http_https</webserver_type>
@@ -709,32 +711,32 @@
         <msw_cp_pat perm=""></msw_cp_pat>
         <listen_in_on_handset perm="">off</listen_in_on_handset>
 
-        {% for number in 1..4 %}
-            {% if _context['softkey_type_' ~ number] is defined %}
-                {% if _context['softkey_type_' ~ number] == 'disabled' %}
-                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'forward' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_REDIRECT</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'dnd' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_DND</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'recall' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_REDIAL</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'history' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_CALL_LIST</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'menu' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_SETTINGS</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'status' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_STATUS</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'ldap' or _context['softkey_type_' ~ number] == 'directory' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_DIRECTORY_SEARCH</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'local_directory' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_ADR_BOOK</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'favorite' %}
-                    <gui_fkey{{ number }} perm="">keyevent F_FAVORITES</gui_fkey{{ number }}>
-                {% else %}
-                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey{{ number }}>
-                {% endif %}
-            {% endif %}
+        {% for number in 1..cap_softkey_count %}
+            {%- if _context['softkey_type_' ~ number] is defined -%}
+                {% if _context['softkey_type_' ~ number] == 'disabled' -%}
+                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'forward' -%}
+                    <gui_fkey{{ number }} perm="">keyevent F_REDIRECT</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'dnd' -%}
+                    <gui_fkey{{ number }} perm="">keyevent F_DND</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'recall' -%}
+                    <gui_fkey{{ number }} perm="">keyevent F_REDIAL</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'history' -%}
+                    <gui_fkey{{ number }} perm="">keyevent F_CALL_LIST</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'menu' -%}
+                    <gui_fkey{{ number }} perm="">keyevent F_SETTINGS</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'status' -%}
+                    <gui_fkey{{ number }} perm="">keyevent F_STATUS</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'ldap' or _context['softkey_type_' ~ number] == 'directory' -%}
+                    <gui_fkey{{ number }} perm="">keyevent F_DIRECTORY_SEARCH</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'local_directory' -%}
+                    <gui_fkey{{ number }} perm="">keyevent F_ADR_BOOK</gui_fkey1>
+                {% elseif _context['softkey_type_' ~ number] == 'favorite' -%}
+                    <gui_fkey{{ number }} perm="">keyevent F_FAVORITES</gui_fkey1>
+                {% else -%}
+                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey1>
+                {% endif -%}
+            {%- endif -%}
         {% endfor %}
     </phone-settings>
     <firmware-settings>
@@ -748,21 +750,6 @@
             {% for number in 1..(cap_linekey_count) %}
                 {% if _context['linekey_type_' ~ number] is defined %}
                     {{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number)}}
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-        {# soft keys #}
-        {% if cap_softkey_count > 0 %}
-            {% for number in 1..(cap_softkey_count) %}
-                {% if _context['softkey_type_' ~ number] is defined %}
-                    <gui_fkey{{number}} perm="">{{snom.softkey_type_map(_context['softkey_type_' ~ number])}}</gui_fkey{{number}}>
-                {% else %}
-                    <gui_fkey{{number}} perm="">keyevent F_NONE</gui_fkey{{number}}>
-                {% endif %}
-                {% if _context['softkey_label_' ~ number] is defined %}
-                    <gui_fkey_label idx="{{ (number-1) }}" perm="">{{_context['softkey_label_' ~ number]}}</gui_fkey_label>
-                {% else %}
-                    <gui_fkey_label idx="{{ (number-1) }}" perm=""/>
                 {% endif %}
             {% endfor %}
         {% endif %}
