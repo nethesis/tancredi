@@ -47,8 +47,8 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         $this->logger->debug('Template not found for "{filename}". It does not match our patterns.d/ rules', $data);
         return $response->withStatus(404);
     } elseif(empty($scope_data[$data['template']])) {
-        $this->logger->error(sprintf('Template not found for "%s". The variable "%s" from pattern "%s" is not set properly', $filename, $data['template'], $data['pattern_name']));
-        return $response->withStatus(404);
+        $this->logger->error('Template not found for "{filename}". The variable "{template}" from pattern "{pattern_name}" is not set properly', $data);
+        return $response->withStatus(500);
     }
 
     // Load filters
