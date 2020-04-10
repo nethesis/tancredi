@@ -77,8 +77,8 @@
     <param name="NetDir.LDAP.0.NumberFilter" value="{{ ldap_number_filter }}"/>
     <param name="NetDir.LDAP.0.DisplayFormat" value="{{ ldap_name_display }}"/>
     <param name="NetDir.LDAP.0.MaxNumberOfSearchResults" value="50"/>
-    <param name="NetDir.LDAP.0.FirstName" value="{{ ldap_name_attr | split(' ')[0] }}"/>                
-    <param name="NetDir.LDAP.0.Surname" value="{{ ldap_name_attr | split(' ')[1:] }}"/>
+    <param name="NetDir.LDAP.0.FirstName" value="{{ ldap_name_attr | split(' ')[0] | default('') }}"/>
+    <param name="NetDir.LDAP.0.Surname" value="{{ ldap_name_attr | split(' ')[1] | default('') }}"/>
     <param name="NetDir.LDAP.0.PhoneHome" value="{{ ldap_mainphone_number_attr }}"/>
     <param name="NetDir.LDAP.0.PhoneOffice" value="{{ ldap_otherphone_number_attr }}"/>
     <param name="NetDir.LDAP.0.PhoneMobile" value="{{ ldap_mobilephone_number_attr }}"/>
