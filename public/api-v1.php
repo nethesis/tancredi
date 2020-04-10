@@ -14,7 +14,7 @@ $container['app'] = function($c) use ($app) {
 };
 $container['config'] = $config;
 $container['logger'] = function($c) {
-    return \Tancredi\LoggerFactory::createLogger($c);
+    return \Tancredi\LoggerFactory::createLogger('api-v1', $c);
 };
 
 $container['storage'] = function($c) {

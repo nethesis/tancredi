@@ -9,7 +9,7 @@ $app = new \Slim\App;
 $container = $app->getContainer();
 $container['config'] = $config;
 $container['logger'] = function($c) {
-    return \Tancredi\LoggerFactory::createLogger($c);
+    return \Tancredi\LoggerFactory::createLogger('provisioning', $c);
 };
 
 $container['storage'] = function($c) {
@@ -139,7 +139,7 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         $response = $response->withHeader('Content-Type', $data['content_type']);
         $response->getBody()->write(renderTwigTemplate($scope_data[$data['template']], $scope_data));
         $this->logger->debug('Rendered template "{template}" with data: {data}', ['data' => json_encode($scope_data), 'template' => $scope_data[$data['template']]]);
-        $this->logger->info('Request from {address} {ua}: {uri}', ['uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
+        $this->logger->info('Serving request from {address} {ua}: {uri}', ['uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
         return $response;
     } catch (Exception $e) {
         $this->logger->error($e);
