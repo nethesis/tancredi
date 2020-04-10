@@ -70,14 +70,14 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     // Add user agent
     $scope_data['provisioning_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
-    $this->logger->debug(print_r($scope_data,true));
     try {
         $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
         $response->getBody()->write(renderTwigTemplate($scope_data[$data['template']], $scope_data));
+        $this->logger->debug('Rendered template "{template}" with data: {data}', ['data' => json_encode($scope_data), 'template' => $scope_data[$data['template']]]);
         return $response;
     } catch (Exception $e) {
-        $this->logger->error($e->getMessage());
+        $this->logger->error($e);
         $response = $response->withStatus(500);
         return $response;
     }
