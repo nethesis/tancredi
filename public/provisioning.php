@@ -79,7 +79,11 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         return $response;
     } catch (Exception $e) {
         $this->logger->error($e);
-        $response = $response->withStatus(500);
+        $response = $response
+            ->withHeader('Content-type', 'text/plain')
+            ->withStatus(500)
+        ;
+        $response->getBody()->write("Internal server error\n\nSee the application log for details.\n");
         return $response;
     }
 });
@@ -139,7 +143,11 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         return $response;
     } catch (Exception $e) {
         $this->logger->error($e);
-        $response = $response->withStatus(500);
+        $response = $response
+            ->withHeader('Content-type', 'text/plain')
+            ->withStatus(500)
+        ;
+        $response->getBody()->write("Internal server error\n\nSee the application log for details.\n");
         return $response;
     }
 });
