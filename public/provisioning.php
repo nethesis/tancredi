@@ -29,18 +29,14 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     global $config;
     $filename = $args['filename'];
     $token = $args['token'];
-    $this->logger->info('Received a token and file request. Token: ' .$token . '. File: ' . $filename);
     $id = \Tancredi\Entity\TokenManager::getIdFromToken($token);
     if ($id === FALSE) {
         // Token doesn't exists
-        $this->logger->error('Invalid token requested. Token: ' . $token);
-        $response = $response->withStatus(403);
+        $this->logger->info('Invalid token request from {address} {ua}: {uri}', ['uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
+        $response = $response->withStatus(404);
         return $response;
     }
 
-    $this->logger->debug('Token '.$token.' is valid');
-    // Instantiate scope
-    $this->logger->debug("New scope id: \"$id\"");
     $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $this->storage, $this->logger, TRUE);
     // Get template variable name from file
     $data = getDataFromFilename($filename,$this->logger);
