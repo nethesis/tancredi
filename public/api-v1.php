@@ -193,7 +193,6 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
 $app->get('/models', function(Request $request, Response $response) use ($app) {
     global $config;
     $query_params = $request->getQueryParams();
-    $this->logger->debug("GET /models/ " . json_encode($query_params));
     $scopes = $this->storage->listScopes('model');
     $results = array();
 
