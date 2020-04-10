@@ -44,7 +44,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     unset($scope_data['variables']);
 
     if (empty($data['template'])) {
-        $this->logger->error(sprintf('Template not found for "%s". It does not match our patterns.d/ rules', $filename));
+        $this->logger->debug('Template not found for "{filename}". It does not match our patterns.d/ rules', $data);
         return $response->withStatus(404);
     } elseif(empty($scope_data[$data['template']])) {
         $this->logger->error(sprintf('Template not found for "%s". The variable "%s" from pattern "%s" is not set properly', $filename, $data['template'], $data['pattern_name']));
@@ -158,7 +158,9 @@ function renderTwigTemplate($template, $scope_data) {
 
 function getDataFromFilename($filename,$logger) {
     global $config;
-    $result = array();
+    $result = array(
+        'filename' => $filename,
+    );
     $patterns = array();
     foreach (glob($config['ro_dir'] . 'patterns.d/*.ini') as $pattern_file) {
         $patterns = array_merge($patterns, parse_ini_file($pattern_file, true));
@@ -167,7 +169,6 @@ function getDataFromFilename($filename,$logger) {
         if (preg_match('/'.$pattern['pattern'].'/', $filename, $tmp)) {
             $result['pattern_name'] = $pattern_name;
             $result['template'] = $pattern['template'];
-            $logger->debug($pattern['pattern'].' '.$pattern['scopeid'] .' '.  $filename);
             $result['scopeid'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
             $result['content_type'] = empty($pattern['content_type']) ? 'text/plain; charset=utf-8' : $pattern['content_type'];
             break;
