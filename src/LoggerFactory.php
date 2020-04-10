@@ -38,7 +38,7 @@ class LoggerFactory
         } else {
             $handler = new \Monolog\Handler\ErrorLogHandler();
             // We assume the error_log already adds a time stamp to log messages:
-            $formatter = new \Monolog\Formatter\LineFormatter("%level_name%: %message%");
+            $formatter = new \Monolog\Formatter\LineFormatter("%channel%.%level_name%: %message%");
         }
         $handler->setFormatter($formatter);
 
