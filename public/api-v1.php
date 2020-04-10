@@ -47,7 +47,7 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
             'model' => $scope->metadata['inheritFrom'],
             'display_name' => $scope->metadata['displayName'],
             'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom'],
-            'phone_url' => $config['api_url_path'] . "models/" . $scopeId
+            'phone_url' => $config['api_url_path'] . "phones/" . $scopeId
         );
     }
 
