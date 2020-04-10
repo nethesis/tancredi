@@ -27,6 +27,7 @@ jobs:
       run: for F in $(find public/ src/ -name '*.php'); do php -l $F || exit 1; done
     - name: Run Twig lint checks
       run: >
+        export tancredi_conf="tancredi.conf.sample" ;
         find data/ -name '*.tmpl' -or -name '*.macros' |
         php -B 'require_once("vendor/autoload.php"); $errors = 0; $twig = new \Twig\Environment(new \Twig\Loader\FilesystemLoader("data/templates"));' 
         -R 'printf("[NOTICE] Checking %s\n",  $argn); try { $twig->tokenize(file_get_contents($argn)); } catch (Exception $ex) { ++$errors ; printf("[ERROR] in %s: %s\n", $argn, $ex->getMessage()); }'
