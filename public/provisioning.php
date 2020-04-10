@@ -18,6 +18,9 @@ $container['storage'] = function($c) {
     return $storage;
 };
 
+// Add request/response logging middleware
+$app->add(new \Tancredi\LoggingMiddleware($container));
+
 $app->get('/check/ping', function(Request $request, Response $response, array $args) use ($app) {
     return $response->withJson(filemtime('/etc/tancredi.conf'),200);
 });

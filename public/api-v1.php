@@ -30,7 +30,7 @@ if (array_key_exists('auth_class',$config) and !empty($config['auth_class'])) {
 }
 
 // Add request/response logging middleware
-$app->add(\Tancredi\LoggerFactory::createLoggingMiddleware($container));
+$app->add(new \Tancredi\LoggingMiddleware($container));
 
 /*********************************
 * GET /phones

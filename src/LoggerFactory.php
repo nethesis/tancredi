@@ -57,21 +57,4 @@ class LoggerFactory
         return $logger;
     }
 
-    public static function createLoggingMiddleware($container)
-    {
-        return function($request, $response, $next) use ($container) {
-            $logger = $container['logger'];
-            $response = $next($request, $response);
-            $context = [
-                'method' => $request->getMethod(),
-                'uri' => $request->getUri(),
-                'status' => $response->getStatusCode(),
-                'request' => substr($request->getBody(), 0, 4096),
-                'response' => substr($request->getBody()->getContents(), 0, 4096),
-            ];
-            $logger->debug('{method} {uri} ({status}) [{request}, {response}]', $context);
-            return $response;
-        };
-    }
-
 }
