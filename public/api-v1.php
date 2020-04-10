@@ -203,7 +203,7 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
         $inherited_scopes = array();
         foreach ($this->storage->listScopes() as $scopeId) {
             $scope = new \Tancredi\Entity\Scope($scopeId, $this->storage, $this->logger);
-            if (array_search($scope->metadata['inheritFrom'],$inherited_scopes) === FALSE) {
+            if ( ! empty($scope->metadata['inheritFrom']) && array_search($scope->metadata['inheritFrom'],$inherited_scopes) === FALSE) {
                 $inherited_scopes[] = $scope->metadata['inheritFrom'];
             }
         }
@@ -414,7 +414,7 @@ function getModelScope($id,$storage,$logger,$inherit = false, $original = false)
         'name' => $id,
         'display_name' => $scope->metadata['displayName'],
         'variables' => $scope_data,
-        'model_url' => $config['api_url_path'] . "models/" . $scope->metadata['inheritFrom']
+        'model_url' => $config['api_url_path'] . "models/" . $id,
     );
     return $results;
 }
