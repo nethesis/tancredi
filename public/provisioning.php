@@ -164,9 +164,8 @@ function getDataFromFilename($filename,$logger) {
     global $config;
     $result = array();
     $patterns = array();
-    foreach (scandir($config['ro_dir'] . 'patterns.d/') as $pattern_file) {
-        if ($pattern_file === '.' or $pattern_file === '..' or substr($pattern_file,-4) !== '.ini') continue;
-        $patterns = array_merge($patterns,parse_ini_file($config['ro_dir'] . 'patterns.d/'.$pattern_file,true));
+    foreach (glob($config['ro_dir'] . 'patterns.d/*.ini') as $pattern_file) {
+        $patterns = array_merge($patterns, parse_ini_file($pattern_file, true));
     }
     foreach ($patterns as $pattern_name => $pattern) {
         if (preg_match('/'.$pattern['pattern'].'/', $filename, $tmp)) {
