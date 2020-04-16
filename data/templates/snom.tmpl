@@ -61,7 +61,7 @@
         <admin_mode_password perm="">{{ adminpw | default('admin') }}</admin_mode_password>
         <admin_mode_password_confirm perm="">{{ adminpw | default('admin') }}</admin_mode_password_confirm>
         <http_user perm="">admin</http_user>
-        <http_pass perm="">{{ adminpw | default('admin') }}</http_password>
+        <http_pass perm="">{{ adminpw | default('admin') }}</http_pass>
 
         <setting_server perm="RW">{{ provisioning_url2 }}</setting_server>
         {# snom allowed values: 3..15. active_backlight_level values: 1..10 #}
