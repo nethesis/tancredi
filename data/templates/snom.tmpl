@@ -38,13 +38,7 @@
         <ldap_number_filter perm="">{{ ldap_number_filter }}</ldap_number_filter>
         <ldap_search_filter perm="">{{ ldap_name_filter }}</ldap_search_filter>
 
-        {% if backlight_time == 0 %}
-            <dim_timer perm="">4294967296</dim_timer>
-        {% elseif backlight_time == 1 %}
-            <dim_timer perm="">0</dim_timer>
-        {% else %}
-            <dim_timer perm="">{{ backlight_time }}</dim_timer>
-        {% endif %}
+        <dim_timer perm="">30</dim_timer>
 
         <screen_saver_timeout perm="">{{ screensaver_wait_time }}</screen_saver_timeout>
         <custom_bg_image_url perm="">{{ wallpaper_url }}</custom_bg_image_url>
