@@ -85,22 +85,6 @@
 {% endif %}
 {% endmacro ringtone_map %}
 
-
-#
-# dtmf_map -- translate "account_dtmf_type" value to Snom code
-#
-{% macro dtmf_map(account_dtmf_type) %}
-{% if account_dtmf_type == 'inband' %}
-    {{- 'off' -}}
-{% elseif account_dtmf_type == 'rfc4733' %}
-    {{- 'on' -}}
-{% elseif account_dtmf_type == 'sip_info' %}
-    {{- 'sip_info_only' -}}
-{% else %}
-    {{- 'off' -}}
-{% endif %}
-{% endmacro dtmf_map %}
-
 #
 # Map ISO 639-1 codes to localized languages used by Snom
 #

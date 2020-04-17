@@ -133,7 +133,7 @@
                 <dnd_on_code idx="{{ identity }}" perm="">{{ dndon }}</dnd_on_code>
                 <dnd_off_code idx="{{ identity }}" perm="">{{ dndoff }}</dnd_off_code>
                 <user_custom idx="{{ identity }}" perm="">{{ ringtone_url }}</user_custom>
-                <user_dtmf_info idx="{{ identity }}" perm="">{{ snom.dtmf_map(_context['account_dtmf_type_' ~ identity]) }}</user_dtmf_info>
+                <user_dtmf_info idx="{{ identity }}" perm="">{{ _context['account_dtmf_type_' ~ identity] == 'sip_info' ? 'sip_info_only' : 'off' }}</user_dtmf_info>
                 <user_realname idx="{{ identity }}" perm="">{{ _context['account_display_name_' ~ identity] }}</user_realname>
                 <user_ringer idx="{{ identity }}" perm="">{{ snom.ringtone_map(ringtone) }}</user_ringer>
                 <user_ringer_private_line idx="{{ identity }}" perm="">Ringer2</user_ringer_private_line>
