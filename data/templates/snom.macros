@@ -1,7 +1,7 @@
 #
 # linekey_type_map -- translate "linekey_type_"
 #
-{% macro linekey_type_map(linekey_type, linekey_value, linekey_label, dndtoggle, pickup_group, number) %}
+{% macro linekey_type_map(linekey_type, linekey_value, linekey_label, dndtoggle, pickup_group, number, queuetoggle) %}
 {% if linekey_type == "blf" %}
     <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">blf {{ linekey_value }}</fkey>
 {% elseif linekey_type == "conference" %}
@@ -26,6 +26,8 @@
     <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">url {{ linekey_value }}</fkey>
 {% elseif linekey_type == "dnd" %}
     <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">speed {{ dndtoggle }}</fkey>
+{% elseif linekey_type == "queuetoggle" %}
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">speed {{ queuetoggle }}</fkey>
 {% elseif linekey_type == "ldap" %}
     <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">keyevent F_DIRECTORY_SEARCH</fkey>
 {% elseif linekey_type == "mute" %}

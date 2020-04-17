@@ -741,7 +741,7 @@
         {% if cap_linekey_count > 0 %}
             {% for number in 1..(cap_linekey_count) %}
                 {% if _context['linekey_type_' ~ number] is defined %}
-                    {{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number)}}
+                    {{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number, queuetoggle)}}
                 {% endif %}
             {% endfor %}
         {% endif %}
