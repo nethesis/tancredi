@@ -663,6 +663,10 @@ Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | defa
 Fkey{{ index }} Type               :1
 Fkey{{ index }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/f' }}
 Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
+{% elseif _context['linekey_type_' ~ index] == 'queuetoggle' %}
+Fkey{{ index }} Type               :1
+Fkey{{ index }} Value              :{{ queuetoggle ~ '@1/f' }}
+Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'transfer' %}
 Fkey{{ index }} Type               :3
 Fkey{{ index }} Value              :F_B_TRANSFER
