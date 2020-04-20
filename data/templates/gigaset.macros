@@ -1,7 +1,7 @@
 #
 # linekey_type_map -- translate "linekey_type_"
 #
-{% macro linekey_type_map(linekey_type, number, linekey_value, dndtoggle, pickup_group) %}
+{% macro linekey_type_map(linekey_type, number, linekey_value, dndtoggle, pickup_group, queuetoggle) %}
 {% if linekey_type == "blf" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="4" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.PhoneNumber" value="{{ linekey_value }}" />
@@ -23,6 +23,9 @@
 {% elseif linekey_type == "dnd" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="10" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.EnableCode" value="{{ dndtoggle }}" />
+{% elseif linekey_type == "queuetoggle" %}
+    <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="10" />
+    <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.EnableCode" value="{{ queuetoggle }}" />
 {% elseif linekey_type == "group_pickup" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="10" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.EnableCode" value="{{ pickup_group }}" />

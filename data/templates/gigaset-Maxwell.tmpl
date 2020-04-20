@@ -95,7 +95,7 @@
     {% if cap_linekey_count > 0 %}
       {% for number in 1..(cap_linekey_count) %}
         {% if _context['linekey_type_' ~ number] is defined %}
-          {{ gigaset.linekey_type_map(_context['linekey_type_' ~ number], (number-1), _context['linekey_value_' ~ number], dndtoggle, pickup_group) }}
+          {{ gigaset.linekey_type_map(_context['linekey_type_' ~ number], (number-1), _context['linekey_value_' ~ number], dndtoggle, pickup_group, queuetoggle) }}
         {% else %}
             <param name="PhoneUI.Keys.FunctionKeys.{{number-1}}.Type" value="-1" />
         {% endif %}
