@@ -2258,7 +2258,11 @@ programablekey.type_range.custom =
 # Linekey {{ number }}
 linekey.{{ number }}.type = {{ yealink.linekey_type(_context['linekey_type_' ~ number]) }}
 linekey.{{ number }}.line = {{ _context['linekey_line_' ~ number] | default('1') }}
-linekey.{{ number }}.value = {{ _context['linekey_value_' ~ number] | default('%NULL%') }}
+{% if _context['linekey_type_' ~ number] == "queuetoggle" %}
+    linekey.{{ number }}.value = {{ queuetoggle | default('%NULL%') }}
+{% else %}
+    linekey.{{ number }}.value = {{ _context['linekey_value_' ~ number] | default('%NULL%') }}
+{% endif %}
 linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number] | default('%NULL%') }}
 linekey.{{ number }}.extension = %NULL%
 linekey.{{ number }}.xml_phonebook = %NULL%

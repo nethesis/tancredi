@@ -811,6 +811,11 @@ Fkey{{ lkidx }} Type               :1
 Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/f' }}
 Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
+{% elseif _context['linekey_type_' ~ index] == 'queuetoggle' %}
+Fkey{{ lkidx }} Type               :1
+Fkey{{ lkidx }} Value              :{{ queuetoggle ~ '@1/f' }}
+Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
+Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'transfer' %}
 Fkey{{ lkidx }} Type               :3
 Fkey{{ lkidx }} Value              :F_B_TRANSFER

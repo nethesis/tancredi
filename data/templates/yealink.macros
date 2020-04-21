@@ -994,6 +994,7 @@
         "phone_lock": "50",
         "prefix": "40",
         "private_hold": "20",
+        "queuetoggle": "13",
         "recall": "7",
         "record": "25",
         "retrieve_park": "56",
