@@ -386,6 +386,7 @@
     "":"0",
     "line":"1",
     "speed_dial":"2",
+    "queuetoggle":"2",
     "blf":"3",
     "voice_mail":"5",
     "direct_pickup":"6",
