@@ -64,8 +64,13 @@
         <P8684 para="DhcpVlan">{{ vlan_dhcp_enable }}</P8684>
         <!--FunctionKeys-->
         {% for idx in 1..cap_linekey_count %}
+        {% if _context["linekey_type_#{idx}"] == "queuetoggle" %}
+            {% set linekey_value = queuetoggle %}
+        {% else %}
+            {% set linekey_value = _context["linekey_value_#{idx}"] %}
+        {% endif %}
         {{- sangoma.pcode("LineKey#{idx}.Type", sangoma.linekey_type_map(_context["linekey_type_#{idx}"]), '0') }}
-        {{ sangoma.pcode("LineKey#{idx}.Value", _context["linekey_value_#{idx}"], '') }}
+        {{ sangoma.pcode("LineKey#{idx}.Value", linekey_value, '') }}
         {{ sangoma.pcode("LineKey#{idx}.Label", _context["linekey_label_#{idx}"], '') }}
         {% endfor %}
 
