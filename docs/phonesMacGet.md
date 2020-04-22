@@ -15,6 +15,7 @@ Success response:
 ```json
 {
     "mac": "01-23-45-67-89-AB",
+    "short_mac": "0123456789ab",
     "model": "acme19.2",
     "display_name": "Acme",
     "tok1": "3cb63010-6e80-41ff-9437-c4b1413975db",

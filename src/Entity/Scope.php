@@ -123,9 +123,16 @@ class Scope {
         $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger, null);
         $vars = $scope->getVariables();
 
+        $short_mac = strtolower(str_replace('-', '', $mac));
         $hostname = empty($vars['hostname']) ? gethostname() : $vars['hostname'];
         $provisioning_url_path = trim($config['provisioning_url_path'], '/') . '/';
         $provisioning_url_scheme = empty($vars['provisioning_url_scheme']) ? 'http' : $vars['provisioning_url_scheme'];
+        $provisioning_url_filename = strtr($vars['provisioning_url_filename'], [
+            '$mac' => $short_mac, // Fanvil
+            '%25MACD' => $short_mac, // Gigaset+urlencode
+            '%MACD' => $short_mac, // Gigaset
+            '{mac}' => $short_mac, // Snom
+        ]);
 
         if ($inherit) {
             $scope_data = $vars;
@@ -139,6 +146,7 @@ class Scope {
         $tok2 = \Tancredi\Entity\TokenManager::getToken2($mac);
         $results = array(
             'mac' => $mac,
+            'short_mac' => $short_mac,
             'model' => $scope->metadata['inheritFrom'],
             'display_name' => $scope->metadata['displayName'],
             'tok1' => $tok1,
@@ -148,12 +156,12 @@ class Scope {
         );
 
         if($tok1 && $provisioning_url_scheme && $hostname) {
-            $results['provisioning_url1'] = trim("{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok1}/{$vars['provisioning_url_filename']}", '/');
+            $results['provisioning_url1'] = trim("{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok1}/{$provisioning_url_filename}", '/');
         } else {
             $results['provisioning_url1'] = NULL;
         }
         if($tok2 && $provisioning_url_scheme && $hostname) {
-            $results['provisioning_url2'] = trim("{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok2}/{$vars['provisioning_url_filename']}", '/');
+            $results['provisioning_url2'] = trim("{$provisioning_url_scheme}://{$hostname}/{$provisioning_url_path}{$tok2}/{$provisioning_url_filename}", '/');
         } else {
             // Never return back an invalid provisioning URL!
             throw new \LogicException(sprintf("%s - malformed provisioning_url2", 1582905675));
