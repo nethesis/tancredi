@@ -184,12 +184,15 @@
         <P196 para="UserPassword" >{{ userpw | default('1234') }}</P196>
         <!--Management/AutoProvision-->
         <P212 para="FirmwareUpGrade.UrgrateMode">{{ provisioning_url_scheme == 'https' ? '3' : '1' }}</P212>
-        <P192 para="FirmwareUpGrade.FirmwareServerPath">{{ provisioning_url2 }}</P192>
+        <P192 para="FirmwareUpGrade.FirmwareServerPath">{{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/firmware/#{firmware_file}?" : "" }}</P192>
         <P237 para="FirmwareUpGrade.ConfigServerPath">{{ provisioning_url2 }}</P237>
         <P1145 para="FirmwareUpGrade.AllowDHCPOption">66</P1145>
         <P145 para="FirmwareUpGrade.ToOverrideServer">0</P145>
         <P194 para="FirmwareUpGrade.AutoUpgrade">{{ ( provisioning_complete and provisioning_freq == 'never' ) ? '0' : '1' }}</P194>
         <P193 para="FirmwareUpGrade.CheckUpgradeTimes">{{ provisioning_complete ? sangoma.upgrade_wait_minutes(timezone) : '10' }}</P193>
+        <P232 para="FirmwareUpGrade.FilePrefix"></P232>
+        <P233 para="FirmwareUpGrade.FilePostfix"></P233>
+        <P238 para="FirmwareUpGrade.CheckMode">0</P238>
 
         <!--Global Config-->
         <P8951 para="GlobalConfig.LogoText">{{ logo_text }}</P8951>
