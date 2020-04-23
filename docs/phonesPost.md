@@ -8,6 +8,7 @@ properties are assigned automatically and must not be supplied:
 * `tok1`
 * `tok2`
 * `model_url`
+* `short_mac`
 
 
 ```text

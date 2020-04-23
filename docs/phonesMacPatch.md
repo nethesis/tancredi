@@ -41,6 +41,7 @@ Success response:
 ```json
 {
     "mac": "01-23-45-67-89-AB",
+    "short_mac": "0123456789ab",
     "model": "acme19.2-custom",
     "display_name": "Acme",
     "tok1": "3cb63010-6e80-41ff-9437-c4b1413975db",
@@ -61,7 +62,7 @@ can be changed accordingly.
 
 ## Read only attributes
 
-Attributes `mac`, `tok1`, `tok2`, `provisioning_url1`, `provisioning_url2` are
+Attributes `mac`, `short_mac`, `tok1`, `tok2`, `provisioning_url1`, `provisioning_url2` are
 read-only. Attempt to change their values causes the whole request to fail.
 
     PATCH /tancredi/api/v1/phones/01-23-45-67-89-AB
@@ -69,6 +70,7 @@ read-only. Attempt to change their values causes the whole request to fail.
 ```json
 {
     "mac": "doesn't work",
+    "short_mac": "doesn't work",
     "model_url": "doesn't work",
     "tok1": "doesn't work",
     "tok2": "doesn't work",

@@ -135,7 +135,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
         return $response;
     }
 
-    $readonly_params = ['mac', 'model_url', 'tok1', 'tok2', 'provisioning_url1', 'provisioning_url2'];
+    $readonly_params = ['mac', 'short_mac', 'model_url', 'tok1', 'tok2', 'provisioning_url1', 'provisioning_url2'];
     if (array_intersect($readonly_params, array_keys($patch_data))) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute',
