@@ -280,7 +280,7 @@ static.managementserver.connection_request_username =
 #######################################################################################
 ##                            Firmware Update                                        ##
 #######################################################################################
-static.firmware.url = {{ provisioning_url2 }}
+static.firmware.url = {{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/firmware/#{firmware_file}" : "" }}
 
 #######################################################################################
 ##                            Confguration                                           ##
