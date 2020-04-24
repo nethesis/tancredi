@@ -1,0 +1,2 @@
+# DELETE /firmware/{file}
+
