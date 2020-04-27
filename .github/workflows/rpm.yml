@@ -1,0 +1,23 @@
+name: Build nethserver-tancredi RPM
+on:
+  push:
+    branches:
+      - master
+      - github-workflow-rpm
+
+jobs:
+  checks:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout nethserver-tancredi code
+      uses: actions/checkout@v2
+      with:
+        repository: nethesis/nethserver-tancredi
+        ref: master
+
+    - name: "Edit the .spec file"
+      run: |
+        sed -i -e '/^Source1/ c\https://github.com/nethesis/tancredi/archive/${{ github.sha }}/tancredi.tar.gz' nethserver-tancredi.spec
+
+    - name: Send a pull request to nethserver-tancredi
+      uses: peter-evans/create-pull-request@v2
