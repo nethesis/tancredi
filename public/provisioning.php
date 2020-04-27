@@ -25,6 +25,35 @@ $app->get('/check/ping', function(Request $request, Response $response, array $a
     return $response->withJson(filemtime('/etc/tancredi.conf'),200);
 });
 
+$app->get('/{token}/firmware/{filename}', function(Request $request, Response $response, array $args) use ($app) {
+    global $config;
+    $filename = $args['filename'];
+    $token = $args['token'];
+    $id = \Tancredi\Entity\TokenManager::getIdFromToken($token);
+    if ($id === FALSE) {
+        // Token doesn't exists
+        $this->logger->info('Invalid token request from {address} {ua}: {uri}', ['uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
+        $response = $response->withStatus(404);
+        return $response;
+    }
+
+    $realfile = realpath($config['rw_dir'] . 'firmware/' . $filename);
+    if( ! $realfile || dirname($realfile) != ($config['rw_dir'] . 'firmware')) {
+        // File not found
+        return $response->withStatus(404);
+    }
+
+    $response = $response->withHeader('Content-Type', 'application/octet-stream');
+
+    if(isset($config['file_reader']) && $config['file_reader'] == 'apache') {
+        return $response->withHeader('X-Sendfile', $realfile);
+    } elseif(isset($config['file_reader']) && $config['file_reader'] == 'nginx') {
+        return $response->withHeader('X-Accel-Redirect', $realfile);
+    } else {
+        return $response->withBody(new \Slim\Http\Stream(fopen($realfile, 'r')));
+    }
+});
+
 $app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     global $config;
     $filename = $args['filename'];

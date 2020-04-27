@@ -27,3 +27,8 @@ api_url_path = "/tancredi/api/v1/"
 runtime_filters = "SampleFilter"
 samplefilter_format = "d M Y H:i:s"
 
+; Methods to return static files to the client:
+; - native - use PHP itself (default)
+; - apache - return X-Sendfile header
+; - nginx - return X-Accel-Redirect
+file_reader = "native"
