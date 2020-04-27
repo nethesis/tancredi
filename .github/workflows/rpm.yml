@@ -29,5 +29,5 @@ jobs:
         author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
         title: Bump tancredi version
         body: |
-          ${{ github.repository }}@${{ github.sha }}
+          Triggered by commit ${{ github.repository }}@${{ github.sha }}
         branch: upstream-updates
