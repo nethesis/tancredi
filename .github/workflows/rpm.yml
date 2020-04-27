@@ -18,6 +18,12 @@ jobs:
     - name: "Edit the .spec file"
       run: |
         sed -i -e '/^Source1/ c\https://github.com/nethesis/tancredi/archive/${{ github.sha }}/tancredi.tar.gz' nethserver-tancredi.spec
+        git diff
 
     - name: Send a pull request to nethserver-tancredi
       uses: peter-evans/create-pull-request@v2
+      with:
+        title: Bump tancredi version
+        body: |
+          ${github.repository}@${{ github.sha }}
+        branch: upstream-updates
