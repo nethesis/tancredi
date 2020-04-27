@@ -31,3 +31,7 @@ jobs:
         body: |
           Triggered by commit ${{ github.repository }}@${{ github.sha }}
         branch: upstream-updates
+        commit-message: |
+          Bump tancredi version
+          
+          Update to upstream version ${{ github.repository }}@${{ github.sha }}
