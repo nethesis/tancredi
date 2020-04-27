@@ -43,22 +43,14 @@ $app->get('/{token}/firmware/{filename}', function(Request $request, Response $r
         return $response->withStatus(404);
     }
 
+    $response = $response->withHeader('Content-Type', 'application/octet-stream');
+
     if(isset($config['file_reader']) && $config['file_reader'] == 'apache') {
-        return $response
-            ->withHeader('Content-Type', 'application/octet-stream')
-            ->withHeader('X-Sendfile', $realfile)
-        ;
+        return $response->withHeader('X-Sendfile', $realfile);
     } elseif(isset($config['file_reader']) && $config['file_reader'] == 'nginx') {
-        return $response
-            ->withHeader('Content-Type', 'application/octet-stream')
-            ->withHeader('X-Accel-Redirect', $realfile)
-        ;
+        return $response->withHeader('X-Accel-Redirect', $realfile);
     } else {
-        $stream = new \Slim\Http\Stream(fopen($realfile, 'r'));
-        return $response
-            ->withHeader('Content-Type', 'application/octet-stream')
-            ->withBody($stream)
-        ;
+        return $response->withBody(new \Slim\Http\Stream(fopen($realfile, 'r')));
     }
 });
 
