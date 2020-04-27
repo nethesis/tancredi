@@ -1,4 +1,4 @@
-name: Build nethserver-tancredi RPM
+name: PR for nethserver-tancredi RPM
 on:
   push:
     branches:
@@ -6,7 +6,7 @@ on:
       - github-workflow-rpm
 
 jobs:
-  checks:
+  open-pr:
     runs-on: ubuntu-18.04
     steps:
     - name: Checkout nethserver-tancredi code
@@ -17,12 +17,15 @@ jobs:
 
     - name: "Edit the .spec file"
       run: |
-        sed -i -e '/^Source1/ c\https://github.com/nethesis/tancredi/archive/${{ github.sha }}/tancredi.tar.gz' nethserver-tancredi.spec
+        sed -i -e '/^Source1: / c\Source1: https://github.com/nethesis/tancredi/archive/${{ github.sha }}/tancredi.tar.gz' nethserver-tancredi.spec
         git diff
 
     - name: Send a pull request to nethserver-tancredi
       uses: peter-evans/create-pull-request@v2
       with:
+        token: ${{ secrets.NETHBOT_TOKEN }}
+        committer: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+        author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
         title: Bump tancredi version
         body: |
           ${github.repository}@${{ github.sha }}
