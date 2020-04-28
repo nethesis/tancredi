@@ -64,6 +64,7 @@
         <backlight_idle perm="">{{ inactive_backlight_level * 15 }}</backlight_idle>
         <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
         <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
+        <update_policy perm="">{{ firmware_file ? "auto_update" }}</update_policy>
         <firmware_status perm="">{{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/snom-firmware.xml" : "" }}</firmware_status>
         <web_language perm="">{{ snom.language(language) }}</web_language>
         <eth_pc perm="">{{ pc_port ? 'auto' : 'off' }}</eth_pc>
