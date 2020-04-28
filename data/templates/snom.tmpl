@@ -64,7 +64,8 @@
         <backlight_idle perm="">{{ inactive_backlight_level * 15 }}</backlight_idle>
         <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
         <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
-        <firmware perm="">{{ firmware_url }}</firmware>
+        <update_policy perm="">{{ firmware_file ? "auto_update" }}</update_policy>
+        <firmware_status perm="">{{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/snom-firmware.xml" : "" }}</firmware_status>
         <web_language perm="">{{ snom.language(language) }}</web_language>
         <eth_pc perm="">{{ pc_port ? 'auto' : 'off' }}</eth_pc>
 
@@ -250,9 +251,6 @@
         <require_prack perm="">on</require_prack>
         <offer_gruu perm="">on</offer_gruu>
         <offer_mpo perm="">off</offer_mpo>
-        <firmware_status perm=""></firmware_status>
-        <firmware_interval perm=""></firmware_interval>
-        <firmware_uxm perm=""></firmware_uxm>
         <call_completion perm="">off</call_completion>
         <use_backlight perm="">on</use_backlight>
         <reset_settings perm=""></reset_settings>
@@ -310,7 +308,6 @@
         <cancel_desktop perm="">off</cancel_desktop>
         <scroll_outgoing perm="">on</scroll_outgoing>
         <show_local_line perm="">off</show_local_line>
-        <firmware_version perm="">snomD785-SIP 10.1.25.0</firmware_version>
         <redirect_ringing perm="">off</redirect_ringing>
         <auto_redial_value perm="">10</auto_redial_value>
         <action_log_on_url perm=""></action_log_on_url>
@@ -731,11 +728,6 @@
             {%- endif -%}
         {% endfor %}
     </phone-settings>
-    <firmware-settings>
-        {# //// verify: already present in <phone-settings> #}
-        <firmware perm="">{{ firmware_url }}</firmware>
-        <firmware_uxm perm=""></firmware_uxm>
-    </firmware-settings>
     <functionKeys>
         {# line keys #}
         {% if cap_linekey_count > 0 %}
