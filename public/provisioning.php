@@ -202,7 +202,7 @@ function getDataFromFilename($filename,$logger) {
         $patterns = array_merge($patterns, parse_ini_file($pattern_file, true));
     }
     foreach ($patterns as $pattern_name => $pattern) {
-        if (preg_match('/'.$pattern['pattern'].'/', $filename, $tmp)) {
+        if (preg_match('/^'.$pattern['pattern'].'$/', $filename, $tmp)) {
             $result['pattern_name'] = $pattern_name;
             $result['template'] = $pattern['template'];
             $result['scopeid'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
