@@ -36,7 +36,29 @@ Success response:
 }
 ```
 
-Failed response:
+Failed responses:
+
+    Status: 400 Bad Request
+    Content-Type: application/problem+json
+    Content-Language: en
+
+```json
+{
+    "type": "https://github.com/nethesis/tancredi/wiki/problems#malformed-data",
+    "title": "Illegal character(s) in model name"
+}
+```
+
+    Status: 400 Bad Request
+    Content-Type: application/problem+json
+    Content-Language: en
+
+```json
+{
+    "type": "https://github.com/nethesis/tancredi/wiki/problems#malformed-data",
+    "title": "Missing model name"
+}
+```
 
     Status: 409 Conflict
     Content-Type: application/problem+json

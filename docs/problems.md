@@ -23,6 +23,13 @@ This is the reference index of error types, as required by [RFC
 
     The model name is already registered
 
+## Malformed data
+
+    Data provided are wrong
+    Missing MAC Address in POST /phones
+    Missing model name in POST /models
+    Illega characters in mode name in POST /models. Only [a-z], [A-Z], [0-9], "_", "-" and "." are allowed
+
 ## Forbidden
 
     Access to resource is forbidden with current client privileges
