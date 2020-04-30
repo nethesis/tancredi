@@ -273,8 +273,18 @@ $app->post('/models', function (Request $request, Response $response, $args) {
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
-   }
-   if ($this->storage->scopeExists($id)) {
+    }
+    if (preg_match('/^[a-zA-Z0-9_\-\.]+$/',$id) == 0) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+            'title' => 'Illegal character(s) in model name'
+        );
+        $response = $response->withJson($results,400,JSON_FLAGS);
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response;
+    }
+    if ($this->storage->scopeExists($id)) {
         // Error: scope is already configured
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#phone-exists',
@@ -421,4 +431,3 @@ function getModelScope($id,$storage,$logger,$inherit = false, $original = false)
 
 // Run app
 $app->run();
-
