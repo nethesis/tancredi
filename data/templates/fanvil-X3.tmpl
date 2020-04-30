@@ -637,7 +637,7 @@ Fkey{{ index }} Value              :F_LDAP:1
 Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Phonebook', language)) | slice(0,10)  }}
 {% elseif _context['linekey_type_' ~ index] == 'line' %}
 Fkey{{ index }} Type               :2
-Fkey{{ index }} Value              :SIP{{ index }}
+Fkey{{ index }} Value              :SIP1
 Fkey{{ index }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Line %s', language) | format(index)) | slice(0,10) }}
 {% elseif _context['linekey_type_' ~ index] == 'multicast_paging' %}
 Fkey{{ index }} Type               :14

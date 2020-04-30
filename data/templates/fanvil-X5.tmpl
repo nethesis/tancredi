@@ -778,7 +778,7 @@ Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | defa
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'line' %}
 Fkey{{ lkidx }} Type               :2
-Fkey{{ lkidx }} Value              :SIP{{ lkidx }}
+Fkey{{ lkidx }} Value              :SIP1
 Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Line %s', language) | format(lkidx)) | slice(0,10) }}
 Fkey{{ lkidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'multicast_paging' %}
