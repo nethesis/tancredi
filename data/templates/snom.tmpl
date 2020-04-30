@@ -64,7 +64,7 @@
         <backlight_idle perm="">{{ inactive_backlight_level * 15 }}</backlight_idle>
         <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
         <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
-        <update_policy perm="">{{ firmware_file ? "auto_update" }}</update_policy>
+        <update_policy perm="">auto_update</update_policy>
         <firmware_status perm="">{{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/snom-firmware.xml" : "" }}</firmware_status>
         <web_language perm="">{{ snom.language(language) }}</web_language>
         <eth_pc perm="">{{ pc_port ? 'auto' : 'off' }}</eth_pc>
@@ -227,7 +227,6 @@
         <no_dnd perm="">off</no_dnd>
         <dirty_host_ttl perm=""></dirty_host_ttl>
         <headset_active perm="">off</headset_active>
-        <update_policy perm="">settings_only</update_policy>
         <enum_suffix perm="">e164.arpa</enum_suffix>
         <block_url_dialing perm="">on</block_url_dialing>
         <release_sound perm="">off</release_sound>
