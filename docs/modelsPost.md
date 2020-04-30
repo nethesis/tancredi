@@ -3,7 +3,7 @@
 ## Create a new model
 
 Create a new phone model instance and add it to the models collection.
-only [a-z], [A-Z], [0-9], "\_", "-" and "." characters are allowd as model name
+Only `a-z`, `A-Z`, `0-9`, `_`, `-` and `.` characters are allowed as model name
 
 ```text
 POST /tancredi/api/v1/models
