@@ -274,7 +274,7 @@ $app->post('/models', function (Request $request, Response $response, $args) {
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    if (preg_match('/^[a-zA-Z0-9_\-\.]*$/',$id) == 0) {
+    if (preg_match('/^[a-zA-Z0-9_\-\.]+$/',$id) == 0) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
             'title' => 'Illegal character(s) in model name'
@@ -431,4 +431,3 @@ function getModelScope($id,$storage,$logger,$inherit = false, $original = false)
 
 // Run app
 $app->run();
-
