@@ -3,6 +3,11 @@
 {% import 'language.macros' as l10n %}
 {% autoescape %}
 <provisioning version="1.1">
+{% if firmware_file %}
+  <firmware>
+    <file version="9.9.9" url="{{ "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/firmware/#{firmware_file}" }}" />
+  </firmware>
+{% endif %}
   <nvm>
     <param name="WebUI.AdminPassword" value="{{ adminpw | default('admin') }}" />
     <param name="WebUI.UserPassword" value="{{ userpw | default('1234') }}" />
@@ -20,7 +25,7 @@
     <param name="PhoneUI.Settings.Language" value="{{ gigaset.language_code(language) }}" />
     <param name="WebUI.Language" value="{{ gigaset.language_code(language) }}" />
     
-    <param name="FirmwareManagment.AutomaticCheckForUpdates" value="0" />
+    <param name="FirmwareManagment.AutomaticCheckForUpdates" value="{{ firmware_file ? '1' : '0' }}" />
     <param name="System.Provision.Period" value="{{ provisioning_complete ? '0' : '600' }}" />
     <param name="System.Provision.ProvisioningServer" value="{{ provisioning_url2 | replace({'%25': '%'}) }}" />
 
