@@ -15,7 +15,7 @@ Success response:
 ```json
 [
     {"name": "firmware1", "size": 38491164, "mtime": 1568203320 },
-    "firmware2",
-    "firmware3"
+    {"name": "firmware2", "size": 42174822, "mtime": 1568203320 },
+    {"name": "firmware3", "size": 103237501, "mtime": 1568203320 }
 ]
 ```
