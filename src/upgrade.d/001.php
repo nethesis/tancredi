@@ -42,7 +42,7 @@ foreach ($container['storage']->listScopes($typeFilter = 'phone') as $id) {
 
 # Increment defaults version
 $scope = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
-$scope->metadata['version'] = $current_version + 1 ;
+$scope->metadata['version'] = 1 ;
 $scope->setVariables();
 
 
