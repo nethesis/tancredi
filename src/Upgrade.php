@@ -6,7 +6,7 @@ use Pimple\Container;
 $container = new Container();
 $container['config'] = $config;
 $container['logger'] = function($c) {
-    return \Tancredi\LoggerFactory::createLogger('Upgrader', $c);
+    return \Tancredi\LoggerFactory::createLogger('upgrade', $c);
 };
 
 $container['storage'] = function($c) {
