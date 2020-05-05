@@ -15,39 +15,14 @@ $container['storage'] = function($c) {
     return $storage;
 };
 
-$container['UpgradeHelper'] = function($c) {
-    $helper = new \Tancredi\Entity\UpgradeHelper($c['logger']);
-    return $helper;
-};
-
-# Get final version
-$target_version = getVersion($current_version = false);
-
-while ($target_version > getVersion()) {
-    $current_version = getVersion();
-    $next_version = $current_version + 1;
-    $container['logger']->info("Upgrading from $current_version to $next_version...");
-
-    # Launch update scripts
-    if (class_exists("\\Tancredi\\Upgrades\\Upgrader" . $next_version)) {
-        $upgrader = "\\Tancredi\\Upgrades\\Upgrader" . $next_version;
-        $upgraderObj = new $upgrader($container['storage'], $container['config'], $container['logger']);
-        $results = $upgraderObj();
-    }
-
-    # Increment current version
-    $scope = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
-    $scope->metadata['version'] = $next_version ;
-    $scope->setVariables();
+$container['logger']->info("Launching upgrade scripts");
+# Launch update scripts
+$filesArray=glob(__DIR__ . "/upgrades.d/*.php");
+foreach ($filesArray as $file) {
+    $container['logger']->debug("Launching upgrade script $file");
+    $incf = function() use ($container,$file) {
+        include $file;
+    };
+    $incf();
 }
 
-
-function getVersion($current_version = true) {
-    global $container;
-    $defaults = $container['storage']->storageRead('defaults', $original = !$current_version);
-    $version = 0;
-    if (array_key_exists('metadata',$defaults) && array_key_exists('version',$defaults['metadata'])) {
-        $version = $defaults['metadata']['version'];
-    }
-    return $version;
-}
