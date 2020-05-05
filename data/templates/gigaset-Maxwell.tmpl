@@ -3,9 +3,9 @@
 {% import 'language.macros' as l10n %}
 {% autoescape %}
 <provisioning version="1.1">
-{% if firmware_file %}
+{% if firmware_file matches '/(\\d+\\.\\d+\\.\\d+)/' %}
   <firmware>
-    <file version="" url="{{ "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/firmware/#{firmware_file}" }}" />
+    <file version="{{ firmware_file | preg_replace('/^.+(\\d+\\.\\d+\\.\\d+).+$/', '$1') }}" url="{{ "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/firmware/#{firmware_file}" }}" />
   </firmware>
 {% endif %}
   <nvm>
