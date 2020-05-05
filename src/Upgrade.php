@@ -1,4 +1,4 @@
-<?php namespace Tancredi\Upgrades;
+<?php namespace Tancredi;
 
 require_once '../vendor/autoload.php';
 use Pimple\Container;
@@ -20,7 +20,7 @@ $container['UpgradeHelper'] = function($c) {
     return $helper;
 };
 
-# 
+# Get final version
 $target_version = getVersion($current_version = false);
 
 while ($target_version > getVersion()) {
@@ -36,7 +36,6 @@ while ($target_version > getVersion()) {
     }
 
     # Increment current version
-    break;
     $scope = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
     $scope->metadata['version'] = $next_version ;
     $scope->setVariables();

@@ -1,4 +1,4 @@
-<?php namespace Tancredi\Upgrades;
+<?php namespace Tancredi;
 
 class Upgrader1
 {
