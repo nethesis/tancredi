@@ -20,8 +20,5 @@ $container['logger']->info("Launching upgrade scripts");
 $filesArray=glob(__DIR__ . "/upgrade.d/*.php");
 foreach ($filesArray as $file) {
     $container['logger']->info("Launching upgrade script $file");
-    $incf = function() use ($container,$file) {
-        include $file;
-    };
-    $incf();
+    include $file;
 }
