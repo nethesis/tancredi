@@ -2,8 +2,9 @@
 
 namespace upgrade1;
 
-$current_version = getDefaultsVersion();
-if ($current_version != 0 ) {
+# Upgrade only if current version isn't set
+$defaults = $container['storage']->storageRead('defaults', false);
+if (!empty($defaults['metadata']['version'])) {
     return;
 }
 
@@ -44,14 +45,3 @@ foreach ($container['storage']->listScopes($typeFilter = 'phone') as $id) {
 $scope = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
 $scope->metadata['version'] = 1 ;
 $scope->setVariables();
-
-
-function getDefaultsVersion($original = false) {
-    global $container;
-    $defaults = $container['storage']->storageRead('defaults', $original);
-    $version = 0;
-    if (empty($defaults['metadata']['version'])) {
-        return 0;
-    }
-    return intval($defaults['metadata']['version']);
-}
