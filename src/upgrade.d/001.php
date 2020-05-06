@@ -41,7 +41,36 @@ foreach ($container['storage']->listScopes($typeFilter = 'phone') as $id) {
     }
 }
 
+# Fix display names
+$displaynames = array(
+    "fanvil-X3" => "Fanvil X3S/SP/G",
+    "fanvil-X4" => "Fanvil X4/G",
+    "fanvil-X5" => "Fanvil X5S",
+    "yealink-T23" => "Yealink T23P/G",
+    "yealink-T27" => "Yealink T27P/G",
+    "yealink-T41" => "Yealink T41P/S/U",
+    "yealink-T42" => "Yealink T42G/S/U",
+    "yealink-T46" => "Yealink T46G/S/U",
+    "yealink-T48" => "Yealink T48G/S/U",
+    "yealink-T53" => "Yealink T53/W",
+    "yealink-T55" => "Yealink T54/W",
+    "yealink-T56" => "Yealink T56A",
+    "yealink-T57" => "Yealink T57W",
+    "yealink-T58" => "Yealink T58V/A"
+);
+
+# Rename scope files
+foreach ($displaynames as $id => $new_displayname) {
+    $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+    if (empty($scope->metadata['version']) && $scope->metadata['displayName'] != $new_displayname) {
+        $scope->metadata['displayName'] = $new_displayname;
+        $scope->metadata['version'] = 1;
+    }
+}
+
 # Increment defaults version
 $scope = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
-$scope->metadata['version'] = 1 ;
+$scope->metadata['version'] = 1;
 $scope->setVariables();
+
+
