@@ -13,7 +13,6 @@ $container['storage'] = function($c) {
     return $storage;
 };
 
-$container['logger']->info("Launching upgrade scripts");
 # Launch update scripts
 $filesArray=glob(__DIR__ . "/upgrade.d/*.php");
 foreach ($filesArray as $file) {
