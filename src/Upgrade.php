@@ -1,9 +1,7 @@
 <?php namespace Tancredi;
 
 require_once '../vendor/autoload.php';
-use Pimple\Container;
-
-$container = new Container();
+$container = new \Pimple\Container();
 $container['config'] = $config;
 $container['logger'] = function($c) {
     return \Tancredi\LoggerFactory::createLogger('upgrade', $c);
