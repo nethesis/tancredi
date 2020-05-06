@@ -50,9 +50,8 @@ function getDefaultsVersion($original = false) {
     global $container;
     $defaults = $container['storage']->storageRead('defaults', $original);
     $version = 0;
-    if (array_key_exists('metadata',$defaults) && array_key_exists('version',$defaults['metadata'])) {
-        $version = $defaults['metadata']['version'];
+    if (empty($defaults['metadata']['version'])) {
+        return 0;
     }
-    return $version;
+    return intval($defaults['metadata']['version']);
 }
-
