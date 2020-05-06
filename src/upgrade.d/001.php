@@ -65,6 +65,7 @@ foreach ($displaynames as $id => $new_displayname) {
     if (empty($scope->metadata['version']) && $scope->metadata['displayName'] != $new_displayname) {
         $scope->metadata['displayName'] = $new_displayname;
         $scope->metadata['version'] = 1;
+        $scope->setVariables();
     }
 }
 
@@ -72,5 +73,4 @@ foreach ($displaynames as $id => $new_displayname) {
 $scope = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
 $scope->metadata['version'] = 1;
 $scope->setVariables();
-
 
