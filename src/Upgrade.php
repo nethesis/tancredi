@@ -1,6 +1,6 @@
 <?php namespace Tancredi;
 
-require_once '../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 $container = new \Pimple\Container();
 $container['config'] = $config;
 $container['logger'] = function($c) {
