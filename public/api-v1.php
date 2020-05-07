@@ -412,6 +412,24 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
     return $response;
 });
 
+/*********************************
+* GET /firmware
+**********************************/
+$app->get('/firmware', function(Request $request, Response $response) use ($app) {
+    $files = glob($this->config['rw_dir'] . 'firmware/*');
+    $res = array();
+    foreach ($files as $file) {
+        $stats = stat($file);
+        $res[] = array(
+            'name' => basename($file),
+            'size' => $stats['size'],
+            'mtime' => $stats['mtime']
+        );
+    }
+    $response = $response->withJson($res,200,JSON_FLAGS);
+    return $response;
+});
+
 function getModelScope($id,$storage,$logger,$inherit = false, $original = false) {
     global $config;
     $scope = new \Tancredi\Entity\Scope($id, $storage, $logger, null, $original);
