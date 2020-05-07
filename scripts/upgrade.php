@@ -1,6 +1,6 @@
-<?php namespace Tancredi;
+<?php
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 $container = new \Pimple\Container();
 $container['config'] = $config;
 $container['logger'] = function($c) {
@@ -14,7 +14,7 @@ $container['storage'] = function($c) {
 };
 
 # Launch update scripts
-$filesArray=glob(__DIR__ . "/src/upgrade.d/*.php");
+$filesArray=glob(__DIR__ . "/upgrade.d/*.php");
 foreach ($filesArray as $file) {
     $container['logger']->info("Launching upgrade script $file");
     include $file;
