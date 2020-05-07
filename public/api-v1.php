@@ -430,6 +430,21 @@ $app->get('/firmware', function(Request $request, Response $response) use ($app)
     return $response;
 });
 
+/*********************************
+* DELETE /firmware
+**********************************/
+$app->delete('/firmware/{file}', function(Request $request, Response $response, $args) use ($app) {
+    $file = $args['file'];
+    if (!file_exists($this->config['rw_dir'] . 'firmware/' . $file)) {
+        $response = $response->withStatus(404);
+    } elseif (unlink($this->config['rw_dir'] . 'firmware/' . $file)) {
+        $response = $response->withStatus(204);
+    } else {
+        $response = $response->withStatus(500);
+    }
+    return $response;
+});
+
 function getModelScope($id,$storage,$logger,$inherit = false, $original = false) {
     global $config;
     $scope = new \Tancredi\Entity\Scope($id, $storage, $logger, null, $original);
