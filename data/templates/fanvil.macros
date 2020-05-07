@@ -102,8 +102,18 @@
 #
 # Calculate the hours to wait before the next upgrade round
 #
-{% macro upgrade_wait_hours(timezone) %}
-    {{- ((('tomorrow 01:00' | date('U', timezone)) - ('now' | date('U', timezone)))/3600 + random(0,4)) | round -}}
+0123
+4567
+89ab
+cdef
+{% macro upgrade_wait_hours(timezone, short_mac) %}
+{% set offset = short_mac[-1:] | replace({
+  '0':'0', '1':'0', '2':'0', '3':'0',
+  '4':'1', '5':'2', '6':'3', '7':'4',
+  '8':'1', '9':'2', 'a':'3', 'b':'4',
+  'c':'1', 'd':'2', 'e':'3', 'f':'4'
+}) %}
+    {{- ((('tomorrow 01:00' | date('U', timezone)) - ('now' | date('U', timezone)))/3600 + offset) | round -}}
 {% endmacro upgrade_wait_hours %}
 
 #
