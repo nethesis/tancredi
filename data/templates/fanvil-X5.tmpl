@@ -441,13 +441,13 @@ HandFree Ring Vol  :5
 Ring Type          :Type 1
 --DateTime Config--:
 Enable SNTP        :1
-SNTP Server        :192.168.5.211
-Second SNTP Server :time.nist.gov
-Time Zone          :4
-Time Zone Name     :UTC+1
-SNTP Timeout       :60
+SNTP Server        :{{ ntp_server | default('pool.ntp.org') }}
+Second SNTP Server :
+Time Zone          :{{ fanvil.tz_map(timezone, 'offset') }}
+Time Zone Name     :{{ fanvil.tz_map(timezone, 'name') }}
+SNTP Timeout       :3600
 DST Type           :1
-DST Location       :13
+DST Location       :{{ fanvil.tz_map(timezone, 'location') }}
 DST Rule Mode      :0
 DST Min Offset     :60
 DST Start Mon      :3
