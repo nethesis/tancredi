@@ -422,7 +422,7 @@ Account2 Password  :{{ userpw | default('1234') }}
 Account2 Level     :5
 
 <QOS CONFIG MODULE>
-Enable VLAN        :{{ vlan_id_voice > 0 ? '1' : '0' }}
+Enable VLAN        :{{ vlan_id_phone > 0 ? '1' : '0' }}
 Enable diffServ    :0
 LLDP Transmit      :1
 LLDP Refresh Time  :60
@@ -431,13 +431,13 @@ CDP Enabled        :0
 CDP Refresh Time   :60
 Singalling DSCP    :46
 Voice DSCP         :46
-VLAN ID            :{{ (vlan_id_voice > 0 and vlan_id_voice < 4096) ? vlan_id_voice : '0' }}
+VLAN ID            :{{ (vlan_id_phone > 0 and vlan_id_phone < 4096) ? vlan_id_phone : '0' }}
 Signalling Priority:0
 Voice Priority     :0
 LAN Port Priority  :0
 VLAN Recv Check    :1
-Enable PVID        :{{ vlan_id_data > 0 ? '2' : '0' }}
-PVID Value         :{{ (vlan_id_data > 0 and vlan_id_data < 4096) ? vlan_id_data : '0' }}
+Enable PVID        :{{ vlan_id_pcport > 0 ? '2' : '0' }}
+PVID Value         :{{ (vlan_id_pcport > 0 and vlan_id_pcport < 4096) ? vlan_id_pcport : '0' }}
 DHCP Option Vlan   :0
 
 <DEBUG CONFIG MODULE>
