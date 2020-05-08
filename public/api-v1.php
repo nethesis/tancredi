@@ -6,6 +6,7 @@ define("JSON_FLAGS",JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use \Slim\Http\UploadedFile;
 
 $app = new \Slim\App;
 $container = $app->getContainer();
@@ -409,6 +410,20 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
 
     $scope->setVariables($patch_data);
     $response = $response->withStatus(204);
+    return $response;
+});
+
+/*********************************
+* POST /firmware
+**********************************/
+$app->post('/firmware', function(Request $request, Response $response) use ($app) {
+    $uploadedFile = array_pop($request->getUploadedFiles());
+    if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+        $uploadedFile->moveTo($this->config['rw_dir'] . 'firmware' . DIRECTORY_SEPARATOR . $uploadedFile->getClientFilename() );
+        $response = $response->withStatus(204);
+    } else {
+        $response = $response->withStatus(500);
+    }
     return $response;
 });
 
