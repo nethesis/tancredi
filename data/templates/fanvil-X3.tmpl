@@ -422,7 +422,7 @@ Account2 Password  :{{ userpw | default('1234') }}
 Account2 Level     :5
 
 <QOS CONFIG MODULE>
-Enable VLAN        :{{ fanvil.b2v(voice_vlan_enable) }}
+Enable VLAN        :{{ vlan_id_voice > 0 ? '1' : '0' }}
 Enable diffServ    :0
 LLDP Transmit      :1
 LLDP Refresh Time  :60
@@ -431,14 +431,14 @@ CDP Enabled        :0
 CDP Refresh Time   :60
 Singalling DSCP    :46
 Voice DSCP         :46
-VLAN ID            :{{ (voice_vlan_id >= 0 and voice_vlan_id < 4096) ? voice_vlan_id : '0' }}
-Signalling Priority:
-Voice Priority     :{{ (voice_vlan_priority >= 0 and voice_vlan_priority < 8) ? voice_vlan_priority : '0' }}
-LAN Port Priority  :{{ (data_vlan_priority >= 0 and data_vlan_priority < 8) ? data_vlan_priority : '0' }}
+VLAN ID            :{{ (vlan_id_voice > 0 and vlan_id_voice < 4096) ? vlan_id_voice : '0' }}
+Signalling Priority:0
+Voice Priority     :0
+LAN Port Priority  :0
 VLAN Recv Check    :1
-Enable PVID        :{{ fanvil.b2v(data_vlan_enable) }}
-PVID Value         :{{ (data_vlan_id >= 0 and data_vlan_id < 4096) ? data_vlan_id : '0' }}
-DHCP Option Vlan   :{{ vlan_dhcp_enable == '1' ? '132' : '0' }}
+Enable PVID        :{{ vlan_id_data > 0 ? '2' : '0' }}
+PVID Value         :{{ (vlan_id_data > 0 and vlan_id_data < 4096) ? vlan_id_data : '0' }}
+DHCP Option Vlan   :0
 
 <DEBUG CONFIG MODULE>
 MGR Trace Level    :0
