@@ -1030,14 +1030,14 @@ Upgrade Server 2   :
 Auto Upgrade Interval:24
 
 <QOS CONFIG MODULE>
-Enable VLAN        :{{ fanvil.b2v(voice_vlan_enable) }}
-VLAN ID            :{{ (voice_vlan_id >= 0 and voice_vlan_id < 4096) ? voice_vlan_id : '0' }}
-Enable PVID        :{{ fanvil.b2v(data_vlan_enable) }}
-PVID Value         :{{ (data_vlan_id >= 0 and data_vlan_id < 4096) ? data_vlan_id : '0' }}
+Enable VLAN        :{{ vlan_id_voice > 0 ? '1' : '0' }}
+VLAN ID            :{{ (vlan_id_voice > 0 and vlan_id_voice < 4096) ? vlan_id_voice : '0' }}
+Enable PVID        :{{ vlan_id_data > 0 ? '2' : '0' }}
+PVID Value         :{{ (vlan_id_data > 0 and vlan_id_data < 4096) ? vlan_id_data : '0' }}
 Signalling Priority:0
-Voice Priority     :{{ (voice_vlan_priority >= 0 and voice_vlan_priority < 8) ? voice_vlan_priority : '0' }}
+Voice Priority     :0
 Video Priority     :0
-LAN Port Priority  :{{ (data_vlan_priority >= 0 and data_vlan_priority < 8) ? data_vlan_priority : '0' }}
+LAN Port Priority  :0
 Enable diffServ    :0
 Singalling DSCP    :46
 Voice DSCP         :46
@@ -1048,7 +1048,7 @@ LLDP Learn Policy  :1
 LLDP Save Learn Data:0
 CDP Enable         :0
 CDP Refresh Time   :60
-DHCP Option Vlan   :{{ vlan_dhcp_enable == '1' ? '132' : '0' }}
+DHCP Option Vlan   :0
 
 <DOT1X CONFIG MODULE>
 Xsup Mode          :0
