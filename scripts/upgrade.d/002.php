@@ -10,6 +10,7 @@ if ($defaults['metadata']['version'] >= 2) {
 # Increment defaults version
 $scope = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
 $scope->metadata['version'] = 2;
-$scope->variables['vlan_id_phone'] = '';
-$scope->variables['vlan_id_pcport'] = '';
-$scope->setVariables();
+$scope->setVariables([
+    'vlan_id_phone' => '',
+    'vlan_id_pcport' => '',
+]);
