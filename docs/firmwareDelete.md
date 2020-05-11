@@ -31,8 +31,7 @@ or:
 
 ```json
 {
-    "type": 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+    "type": "https://github.com/nethesis/tancredi/wiki/problems#malformed-data",
     "title": "Invalid file name"
 }
 ```
-
