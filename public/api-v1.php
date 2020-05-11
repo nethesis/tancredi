@@ -464,7 +464,9 @@ $app->get('/firmware', function(Request $request, Response $response) use ($app)
 **********************************/
 $app->delete('/firmware/{file}', function(Request $request, Response $response, $args) use ($app) {
     $file = $args['file'];
-    if (!file_exists($this->config['rw_dir'] . 'firmware/' . $file)) {
+    if ( ! preg_match('/^[a-zA-Z0-9\-_\.()]+$/', $file)) {
+        $response = $response->withStatus(400);
+    } elseif ( ! file_exists($this->config['rw_dir'] . 'firmware/' . $file)) {
         $response = $response->withStatus(404);
     } elseif (unlink($this->config['rw_dir'] . 'firmware/' . $file)) {
         $response = $response->withStatus(204);
