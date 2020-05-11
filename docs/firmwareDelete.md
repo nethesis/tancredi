@@ -4,7 +4,9 @@
 
 Remove a firmware file from previously uploaded firmware
 
-    DELETE /firmware/fw500.rom
+```text
+DELETE /firmware/fw500.rom
+```
 
 (empty request body)
 

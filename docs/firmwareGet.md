@@ -4,7 +4,9 @@
 
 Get the list of firmware files uploaded by the user
 
-    GET /firmware
+```text
+GET /firmware
+```
 
 (empty request body)
 
