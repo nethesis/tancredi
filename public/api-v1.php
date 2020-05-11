@@ -419,12 +419,26 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
 $app->post('/firmware', function(Request $request, Response $response) use ($app) {
     $uploadedFile = array_pop($request->getUploadedFiles());
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-        $uploadedFile->moveTo($this->config['rw_dir'] . 'firmware' . DIRECTORY_SEPARATOR . $uploadedFile->getClientFilename() );
-        $response = $response->withStatus(204);
-    } else {
-        $response = $response->withStatus(500);
+        if (! preg_match('/^[a-zA-Z0-9\-_\.()]+$/', $uploadedFile->getClientFilename())) {
+            $response = $response->withStatus(400);
+            $results = array(
+                'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+                'title' => 'Resource not found'
+            );
+            $response = $response->withJson($results,404,JSON_FLAGS);
+            $response = $response->withHeader('Content-Type', 'application/problem+json');
+            $response = $response->withHeader('Content-Language', 'en');
+            return $response;
+        }
+        $uploadedFile->moveTo($this->config['rw_dir'] . 'firmware' . '/' . $uploadedFile->getClientFilename());
+        $realfile = realpath($this->config['rw_dir'] . 'firmware' . '/' . $uploadedFile->getClientFilename());
+        if( ! $realfile || dirname($realfile) != ($config['rw_dir'] . 'firmware')) {
+            // File not found
+            return $response->withStatus(404);
+        }
+        return $response->withStatus(204);
     }
-    return $response;
+    return $response->withStatus(500);
 });
 
 /*********************************
