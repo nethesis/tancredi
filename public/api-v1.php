@@ -423,7 +423,7 @@ $app->post('/firmware', function(Request $request, Response $response) use ($app
             $response = $response->withStatus(400);
             $results = array(
                 'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
-                'title' => 'Resource not found'
+                'title' => 'Invalid file name'
             );
             $response = $response->withJson($results,404,JSON_FLAGS);
             $response = $response->withHeader('Content-Type', 'application/problem+json');
