@@ -13,15 +13,12 @@
         {% endif %}
 
         <auto_redial perm="">{{ auto_redial ? 'on' : 'off' }}</auto_redial>
-        <vlan_id perm="">{{ voice_vlan_enable ? voice_vlan_id : '' }}</vlan_id>
-        <vlan_pc_id perm="">{{ data_vlan_enable ? data_vlan_id : '' }}</vlan_pc_id>
-        <vlan_qos perm="">{{ voice_vlan_priority }}</vlan_qos>
 
-        {# //// verify #}
-        <vlan_port_tagging perm="">{{ data_vlan_enable ? 'on' : 'off' }}</vlan_port_tagging>
-
-        {# //// verify #}
-        <vlan_pc_priority perm=""></vlan_pc_priority>
+        <lldp_enable perm="">off</lldp_enable>
+        <vlan_id perm="">{{ (vlan_id_phone > 0 and vlan_id_phone < 4095) ? vlan_id_phone : '' }}</vlan_id>
+        <vlan_qos perm="">{{ (vlan_id_phone > 0 and vlan_id_phone < 4095) ? '0' : '' }}</vlan_qos>
+        <vlan_pc_id perm="">{{ (vlan_id_pcport > 0 and vlan_id_pcport < 4095) ? vlan_id_pcport : '' }}</vlan_pc_id>
+        <vlan_pc_priority perm="">{{ (vlan_id_pcport > 0 and vlan_id_pcport < 4095) ? '0' : '' }}</vlan_pc_priority>
 
         <ntp_server perm="">{{ ntp_server ?: 'pool.ntp.org' }}</ntp_server>
         <date_us_format perm="">{{ snom.date_format(date_format) }}</date_us_format>
@@ -438,8 +435,8 @@
         <led_message_usage perm="">CurrentIdentityHasVoiceMessages PhoneHasVoiceMessages</led_message_usage>
         <dialnumber_us_format perm="">on</dialnumber_us_format>
         <ignore_dhcp_findings perm=""></ignore_dhcp_findings>
-        <dhcp_options_on_ip_aquire perm="">1 3 4 6 12 15 42 43 51 66 67 120 125 132 133</dhcp_options_on_ip_aquire>
-        <dhcp_options_on_inform perm="">43 120 125</dhcp_options_on_inform>
+        <dhcp_options_on_ip_aquire perm="">1 3 4 6 12 15 42 43 51 66 67 120 125 133</dhcp_options_on_ip_aquire>
+        <dhcp_options_on_inform perm="">43 120 125 132</dhcp_options_on_inform>
         <use_NTLMv2 perm="">on</use_NTLMv2>
         <user_agent_string perm="">snomD785/10.1.25.0</user_agent_string>
         <http_user_agent_string perm="">!!$(::)!!User-Agent: Mozilla/4.0 (compatible; $(firmware_version) $(uboot_version) $(mac) SXM:$(sxm_count) UXM:$(uxm_count))</http_user_agent_string>

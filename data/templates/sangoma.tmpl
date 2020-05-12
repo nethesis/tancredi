@@ -36,16 +36,19 @@
 
         <!--Network/Basic-->
         <P8 para="IPv4WanMode">0</P8>
-        <P231 para="PcPort">{{ pc_port ?? '1' }}</P231>
+{% if vlan_id_pcport != '' %}
+        <P231 para="PcPort">1</P231>
+{% else %}
+        <!--Configure P231 PcPort from web UI-->
+{% endif %}
         <!--Network/Advance-->
         <!--Network/Advance/LLDP-->
         <P5438 para="Active">1</P5438>
         <P5439 para="PackedInterval">120</P5439>
         <!--Network/Advance/Qos Set -->
         <P38 para="Layer3QoS">48</P38>
-        <P51 para="VLAN.WANPort.VID">{{ voice_vlan_id }}</P51>
-        <P87 para="VLAN.WANPort.Priority">{{ voice_vlan_priority }}</P87>
-        <P229 para="VLAN.PCPort.VID">{{ data_vlan_id }}</P229>
+        <P51 para="VLAN.WANPort.VID">{{ (vlan_id_phone != '' and vlan_id_phone < 4095) ? vlan_id_phone : '0' }}</P51>
+        <P229 para="VLAN.PCPort.VID">{{ (vlan_id_pcport != '' and vlan_id_pcport < 4095) ? vlan_id_pcport : '0' }}</P229>
         <!--Network/Advance/NTP Server-->
         <P30 para="UrlOrIpAddress">{{ ntp_server ?: 'pool.ntp.org' }}</P30>
         <P144 para="DHCPOverrideNTP">0</P144>
@@ -61,7 +64,7 @@
         <!--Network/Advance/Others-->
         <P76 para="STUN Server" />
         <P84 para="KeepAtiveInterval">20</P84>
-        <P8684 para="DhcpVlan">{{ vlan_dhcp_enable }}</P8684>
+        <P8684 para="DhcpVlan">0</P8684>
         <!--FunctionKeys-->
         {% for idx in 1..cap_linekey_count %}
         {% if _context["linekey_type_#{idx}"] == "queuetoggle" %}
@@ -210,10 +213,8 @@
         <P20642 para="Preference.InactiveLevel">{{ inactive_backlight_level }}</P20642>
         <P20643 para="Preference.ActiveLevel">{{ active_backlight_level }}</P20643>
 
-        <P24053 para="VLAN.WANPort.Active">{{ voice_vlan_enable }}</P24053>
-        <P24054 para="VLAN.PCPort.Active">{{ data_vlan_enable }}</P24054>
-        <P23130 para="VLAN.VoiceQos">46</P23130>
-        <P23129 para="VLAN.SipQos">26</P23129>
+        <P24053 para="VLAN.WANPort.Active">{{ vlan_id_phone != '' ? '1' : '0' }}</P24053>
+        <P24054 para="VLAN.PCPort.Active">{{ vlan_id_pcport != '' ? '1' : '0' }}</P24054>
 
     </config>
 </hl_provision>
