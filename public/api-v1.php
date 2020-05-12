@@ -436,6 +436,7 @@ $app->post('/firmware', function(Request $request, Response $response) use ($app
             // File not found
             return $response->withStatus(404);
         }
+        $uploadedFile->moveTo($realfile);
         return $response->withStatus(204);
     }
     return $response->withStatus(500);
