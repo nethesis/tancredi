@@ -102,10 +102,6 @@
 #
 # Calculate the hours to wait before the next upgrade round
 #
-0123
-4567
-89ab
-cdef
 {% macro upgrade_wait_hours(timezone, short_mac) %}
 {% set offset = short_mac[-1:] | replace({
   '0':'0', '1':'0', '2':'0', '3':'0',
