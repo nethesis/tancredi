@@ -430,7 +430,6 @@ $app->post('/firmware', function(Request $request, Response $response) use ($app
             $response = $response->withHeader('Content-Language', 'en');
             return $response;
         }
-        $uploadedFile->moveTo($this->config['rw_dir'] . 'firmware' . '/' . $uploadedFile->getClientFilename());
         $realfile = realpath($this->config['rw_dir'] . 'firmware' . '/' . $uploadedFile->getClientFilename());
         if( ! $realfile || dirname($realfile) != ($config['rw_dir'] . 'firmware')) {
             // File not found
