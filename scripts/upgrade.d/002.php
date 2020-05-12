@@ -14,3 +14,4 @@ $scope->setVariables([
     'vlan_id_phone' => '',
     'vlan_id_pcport' => '',
 ]);
+$container['logger']->info("Added vlan_id_phone and vlan_id_pcport to defaults");
