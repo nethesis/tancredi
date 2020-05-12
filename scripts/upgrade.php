@@ -16,6 +16,6 @@ $container['storage'] = function($c) {
 # Launch update scripts
 $filesArray=glob(__DIR__ . "/upgrade.d/*.php");
 foreach ($filesArray as $file) {
-    $container['logger']->info("Launching upgrade script $file");
+    $container['logger']->debug("Launching upgrade script $file");
     include $file;
 }
