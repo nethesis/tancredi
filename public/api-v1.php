@@ -419,7 +419,7 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
 $app->post('/firmware', function(Request $request, Response $response) use ($app) {
     $uploadedFile = array_pop($request->getUploadedFiles());
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-        if (! preg_match('/^[a-zA-Z0-9\-_\.()]+$/', $uploadedFile->getClientFilename())) {
+        if (! preg_match('/^[a-zA-Z0-9\-_\.\(\)]+$/', $uploadedFile->getClientFilename())) {
             $response = $response->withStatus(400);
             $results = array(
                 'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
