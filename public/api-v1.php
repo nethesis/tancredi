@@ -464,15 +464,8 @@ $app->get('/firmware', function(Request $request, Response $response) use ($app)
 **********************************/
 $app->delete('/firmware/{file}', function(Request $request, Response $response, $args) use ($app) {
     $file = $args['file'];
-    if ( ! preg_match('/^[a-zA-Z0-9\-_\.()]+$/', $file)) {
-        $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
-            'title' => 'Wrong file name'
-        );
-        $response = $response->withJson($results,400,JSON_FLAGS);
-        $response = $response->withHeader('Content-Type', 'application/problem+json');
-        $response = $response->withHeader('Content-Language', 'en');
-    } elseif ( ! file_exists($this->config['rw_dir'] . 'firmware/' . $file)) {
+    $realfile = realpath($this->config['rw_dir'] . 'firmware' . '/' . $file);
+    if( ! $realfile ) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
@@ -480,11 +473,21 @@ $app->delete('/firmware/{file}', function(Request $request, Response $response, 
         $response = $response->withJson($results,404,JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
+        return $response;
+    } elseif( dirname($realfile) != ($config['rw_dir'] . 'firmware')) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+            'title' => 'Wrong file name'
+        );
+        $response = $response->withJson($results,400,JSON_FLAGS);
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response;
     } elseif (unlink($this->config['rw_dir'] . 'firmware/' . $file)) {
         $response = $response->withStatus(204);
-    } else {
-        $response = $response->withStatus(500);
+        return $response;
     }
+    $response = $response->withStatus(500);
     return $response;
 });
 
