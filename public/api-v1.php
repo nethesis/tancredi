@@ -6,6 +6,7 @@ define("JSON_FLAGS",JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use \Slim\Http\UploadedFile;
 
 $app = new \Slim\App;
 $container = $app->getContainer();
@@ -409,6 +410,74 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
 
     $scope->setVariables($patch_data);
     $response = $response->withStatus(204);
+    return $response;
+});
+
+/*********************************
+* POST /firmware
+**********************************/
+$app->post('/firmware', function(Request $request, Response $response) use ($app) {
+    $uploadedFile = array_pop($request->getUploadedFiles());
+    if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+        if (! preg_match('/^[a-zA-Z0-9\-_\.()]+$/', $uploadedFile->getClientFilename())) {
+            $results = array(
+                'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+                'title' => 'Invalid file name'
+            );
+            $response = $response->withJson($results,404,JSON_FLAGS);
+            $response = $response->withHeader('Content-Type', 'application/problem+json');
+            $response = $response->withHeader('Content-Language', 'en');
+            return $response;
+        }
+        $uploadedFile->moveTo($this->config['rw_dir'] . 'firmware' . '/' . $uploadedFile->getClientFilename());
+        $realfile = realpath($this->config['rw_dir'] . 'firmware' . '/' . $uploadedFile->getClientFilename());
+        if( ! $realfile || dirname($realfile) != ($this->config['rw_dir'] . 'firmware')) {
+            // File not found
+            return $response->withStatus(404);
+        }
+        return $response->withStatus(204);
+    }
+    return $response->withStatus(500);
+});
+
+/*********************************
+* GET /firmware
+**********************************/
+$app->get('/firmware', function(Request $request, Response $response) use ($app) {
+    $files = glob($this->config['rw_dir'] . 'firmware/*');
+    $res = array();
+    foreach ($files as $file) {
+        $stats = stat($file);
+        $res[] = array(
+            'name' => basename($file),
+            'size' => $stats['size'],
+            'mtime' => $stats['mtime']
+        );
+    }
+    $response = $response->withJson($res,200,JSON_FLAGS);
+    return $response;
+});
+
+/*********************************
+* DELETE /firmware
+**********************************/
+$app->delete('/firmware/{file}', function(Request $request, Response $response, $args) use ($app) {
+    $file = $args['file'];
+    $realfile = realpath($this->config['rw_dir'] . 'firmware' . '/' . $file);
+    if( ! $realfile  || dirname($realfile) != ($this->config['rw_dir'] . 'firmware')) {
+        $results = array(
+            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'title' => 'Resource not found'
+        );
+        $response = $response->withJson($results,404,JSON_FLAGS);
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response;
+    } elseif (unlink($this->config['rw_dir'] . 'firmware/' . $file)) {
+        $response = $response->withStatus(204);
+        return $response;
+    }
+    $response = $response->withStatus(500);
     return $response;
 });
 
