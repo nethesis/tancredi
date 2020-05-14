@@ -6,7 +6,22 @@ Upload a firmware file that could be used in scopes. The POST payload is `multip
 
 Example request:
 ```text
-curl -kv -F "firmware=@/etc/hosts" 'https://192.168.122.76/tancredi/api/v1/firmware' -H 'Accept: application/json, text/plain, */*' --compressed -H 'User: admin' -H 'Secretkey: 71531d20e69d0e9d83a666e9b4fd5fae11dcdbb1'
+POST /tancredi/api/v1/firmware HTTP/1.1
+User-Agent: curl/7.29.0
+Host: 192.168.122.76
+Accept-Encoding: deflate, gzip
+Accept: application/json, text/plain, */*
+User: admin
+Secretkey: 71531d20e69d0e9d83a666e9b4fd5fae11dcdbb1
+Content-Length: 746285
+Expect: 100-continue
+Content-Type: multipart/form-data; boundary=--------------------
+--------3d6bc1ab5f55
+
+------------------------------3d6bc1ab5f55
+Content-Disposition: form-data; name="firmware"; filename="fw.bin"
+Content-Type: application/octet-stream
+
 ```
 
 
