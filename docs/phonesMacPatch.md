@@ -17,7 +17,7 @@ Change the `variables` attribute value, and merge them with scope variables. Nul
 
 Success response:
 
-    Status: 204 No Content
+    Status: 200 OK
 
 Empty response - the new `variables` value corresponds to the object passed in
 the request body.

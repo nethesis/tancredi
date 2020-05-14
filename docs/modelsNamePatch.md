@@ -19,7 +19,7 @@ Also display_name is changed.
 
 Success response:
 
-    Status: 204 No Content
+    Status: 200 OK
 
 Empty response - the new `variables` value corresponds to the object passed in
 the request body and the `display_name` is set to a new string.
