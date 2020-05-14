@@ -2,7 +2,8 @@
 
 ## Change the resource attributes
 
-Change the `variables` and the `display_name` values
+Change the `variables` attribute value, and merge them with scope variables. Null variables are removed from scope.
+Also display_name is changed.
 
     PATCH /tancredi/api/v1/models/acme19.2
 
@@ -18,10 +19,18 @@ Change the `variables` and the `display_name` values
 
 Success response:
 
-    Status: 204 No Content
+    Status: 200 OK
 
-Empty response - the new `variables` value corresponds to the object passed in
-the request body and the `display_name` is set to a new string.
+```json
+{
+    "name": "acme19.2",
+    "display_name": "Acme IP phone v19 rev. 2 (changed)",
+    "variables": {
+        "var1": "value1-changed",
+        "var2": "value2"
+    }
+}
+```
 
 ## Read only attributes
 
