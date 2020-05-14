@@ -2,8 +2,7 @@
 
 ## Upload a firmware file
 
-Upload a firmware file that could be used in scopes
-Use RFC1867
+Upload a firmware file that could be used in scopes. The POST payload is `multipart/form-data` (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST for details).
 
 Example request:
 ```text
