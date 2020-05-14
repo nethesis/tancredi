@@ -2,7 +2,8 @@
 
 ## Change the resource attributes
 
-Change the `variables` and the `display_name` values
+Change the `variables` attribute value, and merge them with scope variables. Null variables are removed from scope.
+Also display_name is changed.
 
     PATCH /tancredi/api/v1/models/acme19.2
 

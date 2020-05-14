@@ -2,7 +2,7 @@
 
 ## Change variable values
 
-Change the `variables` attribute value, by assigning a completely new object.
+Change the `variables` attribute value, and merge them with scope variables. Null variables are removed from scope.
 
     PATCH /tancredi/api/v1/phones/01-23-45-67-89-AB
 
