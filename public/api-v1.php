@@ -158,7 +158,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
     if (array_key_exists('variables',$patch_data)) {
         $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
         $scope->setVariables($patch_data['variables']);
-        $response = $response->withStatus(200);
+        $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger), 200, JSON_FLAGS);
         return $response;
     }
     $response = $response->withStatus(400);
