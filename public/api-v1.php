@@ -344,7 +344,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
         } else {
              $scope->setVariables();
         }
-        $response = $response->withStatus(200);
+        $response = $response->withJson(getModelScope($id, $this->storage, $this->logger, false, false), 200, JSON_FLAGS);
         return $response;
     }
     $response = $response->withStatus(400);

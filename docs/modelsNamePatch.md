@@ -21,8 +21,16 @@ Success response:
 
     Status: 200 OK
 
-Empty response - the new `variables` value corresponds to the object passed in
-the request body and the `display_name` is set to a new string.
+```json
+{
+    "name": "acme19.2",
+    "display_name": "Acme IP phone v19 rev. 2",
+    "variables": {
+        "var1": "value1",
+        "var2": "value2"
+    }
+}
+```
 
 ## Read only attributes
 
