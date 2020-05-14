@@ -24,9 +24,9 @@ Success response:
 ```json
 {
     "name": "acme19.2",
-    "display_name": "Acme IP phone v19 rev. 2",
+    "display_name": "Acme IP phone v19 rev. 2 (changed)",
     "variables": {
-        "var1": "value1",
+        "var1": "value1-changed",
         "var2": "value2"
     }
 }
