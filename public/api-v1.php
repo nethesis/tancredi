@@ -158,7 +158,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
     if (array_key_exists('variables',$patch_data)) {
         $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
         $scope->setVariables($patch_data['variables']);
-        $response = $response->withStatus(204);
+        $response = $response->withStatus(200);
         return $response;
     }
     $response = $response->withStatus(400);
@@ -344,7 +344,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
         } else {
              $scope->setVariables();
         }
-        $response = $response->withStatus(204);
+        $response = $response->withStatus(200);
         return $response;
     }
     $response = $response->withStatus(400);
