@@ -61,6 +61,12 @@ Error responses use media type `application/problem+json` as defined by [RFC
 * [GET /defaults](defaultsGet) return the default values for known variables
 * [PATCH /defaults](defaultsPatch) change the default value of some variables
 
+### firmware/
+
+* [GET /firmware](firmwareGet) list of available firmware files
+* [POST /firmware](firmwarePost) upload a firmware file
+* [DELETE /firmware/{file}](firmwareDelete) delete a firmware file
+
 ## API authentication
 
 The Tancredi administrative API does not implement an authentication method
