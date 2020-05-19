@@ -124,12 +124,12 @@ static.network.vlan.dhcp_enable = 0
 static.network.vlan.dhcp_option = 132
 static.network.vlan.vlan_change.enable = 1
 
-static.network.vlan.pc_port_vid = {{ vlan_id_pcport > 0 ? vlan_id_pcport : '1' }}
+static.network.vlan.pc_port_vid = {{ vlan_id_pcport > 0 and vlan_id_pcport < 4095 ? vlan_id_pcport : '1' }}
 static.network.vlan.pc_port_enable = {{ vlan_id_pcport > 0 ? '1' : '0' }}
 static.network.vlan.pc_port_priority = 0
 
 static.network.vlan.internet_port_priority = 0
-static.network.vlan.internet_port_vid = {{ vlan_id_phone > 0 ? vlan_id_phone : '1' }}
+static.network.vlan.internet_port_vid = {{ vlan_id_phone > 0 and vlan_id_phone < 4095 ? vlan_id_phone : '1' }}
 static.network.vlan.internet_port_enable = {{ vlan_id_phone > 0 ? '1' : '0' }}
 
 #######################################################################################
