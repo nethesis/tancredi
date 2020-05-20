@@ -47,8 +47,8 @@
         <P5439 para="PackedInterval">120</P5439>
         <!--Network/Advance/Qos Set -->
         <P38 para="Layer3QoS">48</P38>
-        <P51 para="VLAN.WANPort.VID">{{ (vlan_id_phone != '' and vlan_id_phone < 4095) ? vlan_id_phone : '0' }}</P51>
-        <P229 para="VLAN.PCPort.VID">{{ (vlan_id_pcport != '' and vlan_id_pcport < 4095) ? vlan_id_pcport : '0' }}</P229>
+        <P51 para="VLAN.WANPort.VID">{{ (vlan_id_phone > 0 and vlan_id_phone < 4095) ? vlan_id_phone : '0' }}</P51>
+        <P229 para="VLAN.PCPort.VID">{{ (vlan_id_pcport > 0 and vlan_id_pcport < 4095) ? vlan_id_pcport : '0' }}</P229>
         <!--Network/Advance/NTP Server-->
         <P30 para="UrlOrIpAddress">{{ ntp_server ?: 'pool.ntp.org' }}</P30>
         <P144 para="DHCPOverrideNTP">0</P144>
