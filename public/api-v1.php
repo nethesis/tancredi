@@ -24,6 +24,10 @@ $container['storage'] = function($c) {
     return $storage;
 };
 
+// Register the client IP address for logging
+$upstreamProxies = array_map('trim', explode(',', isset($config['upstream_proxies']) ? $config['upstream_proxies'] : ''));
+$app->add(new \RKA\Middleware\IpAddress( ! empty($upstreamProxies), $upstreamProxies));
+
 // load auth middleware if it exists
 if (array_key_exists('auth_class',$config) and !empty($config['auth_class'])) {
     $auth_class = "\\Tancredi\\Entity\\" . $config['auth_class'];
