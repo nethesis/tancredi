@@ -62,6 +62,6 @@ chmod g+w /var/log/tancredi
 Add configuration to your HTTP server to allow reaching `public/provisioning.php`
 and `public/api-v1.php`.
 
-Tancredi can be configured unsing '/etc/tancredi.conf' configuration file. there
+Tancredi can be configured using `/etc/tancredi.conf` configuration file. there
 is a `tancredi.conf.sample` configuration file in the root directory that can be
 copied and renamed in /etc and used as template.

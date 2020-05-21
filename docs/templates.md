@@ -30,7 +30,7 @@ order, the first match stops the rules evaluation.
 
 1. The `scopeid = ` line is the identifier of the returned scope. Variable
 values depend also on values inherited from parent scopes (see [Phone variables
-inheritance](./API#phone-variables-inheritance)) for details) and from
+inheritance](./API#phone-variables-inheritance) for details) and from
 "run-time" variables (see the sections below).
 
 1. The `template = ` line is the **name of a variable** containing the template
@@ -83,14 +83,14 @@ runtime_filters = "SampleFilter"
 ```
 Where "SampleFilter" is your filter class.
 
-SampleFilter Class is istantiated just before template rendering and it's __invoke function is called with scope variables as argument.
-The __invoke() function can add, remove or modify variables in $variables array and must return it.
-Look at src/Entity/SampleFilter.php for a sample filter class.
+SampleFilter Class is istantiated just before template rendering and its `__invoke()` function is called with scope variables as argument.
+The `__invoke()` function can add, remove or modify variables in the `$variables` array and must return it.
+Look at `src/Entity/SampleFilter.php` for a sample filter class.
 Filter classes are able to access configuration. If you add
 ```
 samplefilter_format = "d M Y H:i:s"
 
 ```
-to configuration, you are able to define the format of the thate that the SampleFilter class add to your scope
+to configuration, you are able to define the format of the date that the SampleFilter class add to your scope
 
 
