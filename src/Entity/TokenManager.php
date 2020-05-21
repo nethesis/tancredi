@@ -1,7 +1,5 @@
 <?php namespace Tancredi\Entity;
 
-include_once(__DIR__.'/../init.php');
-
 class TokenManager {
     public static function getIdFromToken($token){
         global $config;
