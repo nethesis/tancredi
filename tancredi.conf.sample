@@ -32,3 +32,12 @@ samplefilter_format = "d M Y H:i:s"
 ; - apache - return X-Sendfile header
 ; - nginx - return X-Accel-Redirect
 file_reader = "native"
+
+; Comma-separated list of IP addresses for trusted upstream proxies.
+;
+; If Tancredi is behind a proxy, set its IP address here to get the
+; original phone IP address in the log files.
+;
+; Refer to https://github.com/akrabat/ip-address-middleware for more
+; information.
+upstream_proxies =

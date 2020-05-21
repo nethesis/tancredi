@@ -18,6 +18,10 @@ $container['storage'] = function($c) {
     return $storage;
 };
 
+// Register the client IP address for logging
+$upstreamProxies = array_map('trim', explode(',', isset($config['upstream_proxies']) ? $config['upstream_proxies'] : ''));
+$app->add(new \RKA\Middleware\IpAddress( ! empty($upstreamProxies), $upstreamProxies));
+
 // Add request/response logging middleware
 $app->add(new \Tancredi\LoggingMiddleware($container));
 
