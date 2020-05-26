@@ -64,7 +64,7 @@
         <update_policy perm="">auto_update</update_policy>
         <firmware_status perm="">{{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/snom-firmware.xml" : "" }}</firmware_status>
         <web_language perm="">{{ snom.language(language) }}</web_language>
-        <eth_pc perm="">{{ pc_port ? 'auto' : 'off' }}</eth_pc>
+        <eth_pc perm="">auto</eth_pc>
 
         <idle_status_btn_index perm="">4</idle_status_btn_index>
         <idle_ok_key_action perm="">keyevent F_REDIAL</idle_ok_key_action>
