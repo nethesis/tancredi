@@ -1,0 +1,71 @@
+name: Tancredi APIs Test
+
+# Controls when the action will run. Triggers the workflow on pull request for the master branch
+on: [push, pull_request]
+
+jobs:
+  run-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your under $GITHUB_WORKSPACE
+    - uses: actions/checkout@v2
+
+    # Install packages needed on runner
+    - name: Install required packages
+      run: sudo apt-get install -y apache2 libapache2-mod-xsendfile php-fpm bats
+
+
+    # download and explode tancredi tarball
+    - name: explode Tancredi
+      run: |
+        composer install --no-dev
+        rm -v src/Entity/SampleFilter.php
+        sudo mkdir -p /usr/share/tancredi/data/
+        sudo cp -a {public,scripts,src,vendor}/ /usr/share/tancredi/
+        sudo cp -a data/{templates,patterns.d,scopes} /usr/share/tancredi/data/
+        sudo mkdir -p /var/lib/tancredi/data/{first_access_tokens,scopes,templates-custom,tokens,firmware}
+        sudo chown -R www-data:www-data /var/lib/tancredi
+        echo 'rw_dir = "/var/lib/tancredi/data/"' | sudo tee -a /etc/tancredi.conf
+        echo 'ro_dir = "/usr/share/tancredi/data/"' | sudo tee -a /etc/tancredi.conf
+        echo 'provisioning_url_path = "/provisioning/"' | sudo tee -a /etc/tancredi.conf
+        echo 'api_url_path = "/tancredi/api/v1/"' | sudo tee -a /etc/tancredi.conf
+        echo 'file_reader = "apache"' | sudo tee -a /etc/tancredi.conf
+
+    - name: configure php-fpm
+      run: |
+        echo '[tancredi]' | sudo tee -a /etc/php/7.4/fpm/pool.d/tancredi.conf
+        echo 'user = www-data' | sudo tee -a /etc/php/7.4/fpm/pool.d/tancredi.conf
+        echo 'group = www-data' | sudo tee -a /etc/php/7.4/fpm/pool.d/tancredi.conf
+        echo 'listen = 127.0.0.1:9605' | sudo tee -a /etc/php/7.4/fpm/pool.d/tancredi.conf
+        echo 'listen.allowed_clients = 127.0.0.1' | sudo tee -a /etc/php/7.4/fpm/pool.d/tancredi.conf
+        echo 'pm = dynamic' | sudo tee -a /etc/php/7.4/fpm/pool.d/tancredi.conf
+        echo 'pm.max_children = 50' | sudo tee -a /etc/php/7.4/fpm/pool.d/tancredi.conf
+        echo 'pm.start_servers = 5' | sudo tee -a /etc/php/7.4/fpm/pool.d/tancredi.conf
+        echo 'pm.min_spare_servers = 5' | sudo tee -a /etc/php/7.4/fpm/pool.d/tancredi.conf
+        echo 'pm.max_spare_servers = 35' | sudo tee -a /etc/php/7.4/fpm/pool.d/tancredi.conf
+        sudo systemctl restart php7.4-fpm
+
+    - name: configure httpd
+      run: |
+        echo '<Location "/provisioning">' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'ProxyPass "fcgi://127.0.0.1:9605/usr/share/tancredi/public/provisioning.php"' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo '</Location>' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo '<Location "/tancredi/api/v1">' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'ProxyPass "fcgi://127.0.0.1:9605/usr/share/tancredi/public/api-v1.php"' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo '</Location>' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'XSendFile on' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'XSendFilePath /var/lib/tancredi/data/firmware' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        sudo a2ensite tancredi.conf
+        sudo a2dissite 000-default.conf
+        sudo a2enmod proxy_fcgi
+        sudo systemctl restart apache2
+
+    - name: run bats
+      run: |
+        cd test
+        sudo ./run.sh
+
+
