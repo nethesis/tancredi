@@ -273,7 +273,7 @@ P1 DND End Time       :1730
 P1 Enable White List  :1
 P1 Enable Black List  :1
 P1 Enable CallBar     :1
-P1 Mute Ringing       :0
+P1 Mute Ringing       :{{ ringtone == '0' ? 1 : 0 }}
 P1 Ban Dial Out       :0
 P1 Ban Empty CID      :0
 P1 Enable CLIP        :1
@@ -399,7 +399,7 @@ BLF Failed Ctl     :0
 BLF Parked Color   :0
 BLF Parked Ctl     :3
 --Voice Volume--   :
-Ring Type          :Type {{ ringtone }}
+Ring Type          :Type {{ ringtone in 1 .. cap_ringtone_count ? ringtone : 1 }}
 --DateTime Config--:
 Enable SNTP        :1
 SNTP Server        :{{ ntp_server | default('pool.ntp.org') }}
