@@ -145,7 +145,7 @@ SIP{{ line }} WarmLine Time      :0
 SIP{{ line }} Pickup Num         :{{ pickup_direct }}
 SIP{{ line }} Join Num           :
 SIP{{ line }} Intercom Num       :
-SIP{{ line }} Ring Type          :Type 1
+SIP{{ line }} Ring Type          :default
 SIP{{ line }} NAT UDPUpdate      :2
 SIP{{ line }} UDPUpdate TTL      :60
 SIP{{ line }} Server Type        :0
@@ -399,7 +399,7 @@ BLF Failed Ctl     :0
 BLF Parked Color   :0
 BLF Parked Ctl     :3
 --Voice Volume--   :
-Ring Type          :Type 1
+Ring Type          :Type {{ ringtone }}
 --DateTime Config--:
 Enable SNTP        :1
 SNTP Server        :{{ ntp_server | default('pool.ntp.org') }}
