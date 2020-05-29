@@ -66,7 +66,7 @@
         <P84 para="KeepAtiveInterval">20</P84>
         <P8684 para="DhcpVlan">0</P8684>
         <!--FunctionKeys-->
-        {% for idx in 1..cap_linekey_count %}
+        {% for idx in cap_linekey_count ? range(1, cap_linekey_count) : [] %}
         {% if _context["linekey_type_#{idx}"] == "queuetoggle" %}
             {% set linekey_value = queuetoggle %}
         {% else %}
