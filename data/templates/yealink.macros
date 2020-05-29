@@ -948,21 +948,18 @@
 #
 # Translate ringtone to yealink code
 #
-{% macro ringtone(ringtone) %}
-    {%- set map = {
-        "0": "Silent.wav",
-        "1": "Ring1.wav",
-        "2": "Ring2.wav",
-        "3": "Ring3.wav",
-        "4": "Ring4.wav",
-        "5": "Ring5.wav",
-        "6": "Ring6.wav",
-        "7": "Ring7.wav",
-        "8": "Ring8.wav",
-        "10": "Splash.wav"
-        }
-    -%}
-{{- map[ringtone] ?? 'Ring1.wav' -}}
+{% macro ringtone(ringtone, ringtone_file, cap_ringtone_count) %}
+{% if ringtone == -1 and ringtone_file %}
+    {{- ringtone_file -}}
+{% elseif ringtone == 0 %}
+    {{- 'Silent.wav' -}}
+{% elseif ringtone > 0 and ringtone < (cap_ringtone_count|default(10)) %}
+    {{- "Ring#{ringtone}.wav" -}}
+{% elseif ringtone == (cap_ringtone_count|default(10)) %}
+    {{- 'Splash.wav' -}}
+{% else %}
+    {{- 'Ring1.wav' -}}
+{% endif %}
 {% endmacro ringtone %}
 
 #
