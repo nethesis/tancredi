@@ -22,16 +22,25 @@
 
 $models = $container['storage']->listScopes('model');
 foreach ($models as $id) {
-    if(substr($id, 0, 6) != 'fanvil') {
-        continue;
-    } 
-    $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
-    if($scope->metadata['version'] >= 3) {
-        continue;
+    if(substr($id, 0, 6) == 'fanvil') {
+        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        if($scope->metadata['version'] >= 3) {
+            continue;
+        }
+        $scope->metadata['version'] = 3;
+        $scope->setVariables([
+            'cap_ringtone_blacklist' => '-1',
+        ]);
+        $container['logger']->info("Fixed cap_ringtone_blacklist for model $id");
+    } elseif(substr($id, 0, 7) == 'yealink') {
+        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        if($scope->metadata['version'] >= 3) {
+            continue;
+        }
+        $scope->metadata['version'] = 3;
+        $scope->setVariables([
+            'cap_ringtone_count' => '10',
+        ]);
+        $container['logger']->info("Fixed cap_ringtone_count for model $id");
     }
-    $scope->metadata['version'] = 3;
-    $scope->setVariables([
-        'cap_ringtone_blacklist' => '-1',
-    ]);
-    $container['logger']->info("Fixed cap_ringtone_blacklist for model $id");
 }
