@@ -73,14 +73,14 @@
 
 
 #
-# ringtone_map -- translate "account_"
+# ringtone_map
 #
-{% macro ringtone_map(ringtone) %}
+{% macro ringtone_map(ringtone, cap_ringtone_count) %}
 {% if ringtone == 0 %}
     {{- 'Silent' -}}
 {% elseif ringtone == -1 %}
     {{- 'Custom' -}}
-{% elseif ringtone <= 10 %}
+{% elseif ringtone <= cap_ringtone_count %}
     {{- 'Ringer' ~ ringtone -}}
 {% else %}
     {{- 'Ringer1' -}}

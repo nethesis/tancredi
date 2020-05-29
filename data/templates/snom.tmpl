@@ -4,14 +4,7 @@
 {% autoescape %}
     <phone-settings>
         <language perm="">{{ snom.language(language) }}</language>
-        {% if default_ringtone == 0 %}
-            <ring_sound perm="">Silent</ring_sound>
-        {% elseif default_ringtone <= 10 %}
-            <ring_sound perm="">Ringer{{ default_ringtone }}</ring_sound>
-        {% else %}
-            <ring_sound perm="">Ringer1</ring_sound>
-        {% endif %}
-
+        <ring_sound>{{ snom.ringtone_map(ringtone, cap_ringtone_count) | replace({'Custom':'Ringer1'}) }}</ring_sound>
         <auto_redial perm="">{{ auto_redial ? 'on' : 'off' }}</auto_redial>
 
         <lldp_enable perm="">off</lldp_enable>
@@ -130,10 +123,10 @@
                 <fwd_time_off_code idx="{{ identity }}" perm="">{{ cftimeoutoff }}</fwd_time_off_code>
                 <dnd_on_code idx="{{ identity }}" perm="">{{ dndon }}</dnd_on_code>
                 <dnd_off_code idx="{{ identity }}" perm="">{{ dndoff }}</dnd_off_code>
-                <user_custom idx="{{ identity }}" perm="">{{ ringtone_url }}</user_custom>
+                <user_custom idx="{{ identity }}" perm="">{{ ringtone_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/ringtone/#{ringtone_file}?" : "" }}</user_custom>
                 <user_dtmf_info idx="{{ identity }}" perm="">{{ _context['account_dtmf_type_' ~ identity] == 'sip_info' ? 'sip_info_only' : 'off' }}</user_dtmf_info>
                 <user_realname idx="{{ identity }}" perm="">{{ _context['account_display_name_' ~ identity] }}</user_realname>
-                <user_ringer idx="{{ identity }}" perm="">{{ snom.ringtone_map(ringtone) }}</user_ringer>
+                <user_ringer idx="{{ identity }}" perm="">{{ snom.ringtone_map(ringtone, cap_ringtone_count) }}</user_ringer>
                 <user_ringer_private_line idx="{{ identity }}" perm="">Ringer2</user_ringer_private_line>
                 <user_ringer_forwarded_calls idx="{{ identity }}" perm="">Ringer3</user_ringer_forwarded_calls>
             {% endif %}
