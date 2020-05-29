@@ -37,3 +37,9 @@ This is the reference index of error types, as required by [RFC
 See the `detail` attribute for detailed failure reason. For instance
 
     "Wrong credentials"
+
+## Invalid file name
+
+    The uploaded file name contains invalid characters.
+    Only letters, numbers and the following symbols are allowed:
+    "_", "-", "(", ")", "."

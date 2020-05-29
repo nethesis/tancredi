@@ -445,10 +445,10 @@ $app->post('/firmware', function(Request $request, Response $response) use ($app
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
         if (! preg_match('/^[a-zA-Z0-9\-_\.()]+$/', $uploadedFile->getClientFilename())) {
             $results = array(
-                'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+                'type' => 'https://github.com/nethesis/tancredi/wiki/problems#invalid-file-name',
                 'title' => 'Invalid file name'
             );
-            $response = $response->withJson($results,404,JSON_FLAGS);
+            $response = $response->withJson($results, 400, JSON_FLAGS);
             $response = $response->withHeader('Content-Type', 'application/problem+json');
             $response = $response->withHeader('Content-Language', 'en');
             return $response;
@@ -456,8 +456,14 @@ $app->post('/firmware', function(Request $request, Response $response) use ($app
         $uploadedFile->moveTo($this->config['rw_dir'] . 'firmware' . '/' . $uploadedFile->getClientFilename());
         $realfile = realpath($this->config['rw_dir'] . 'firmware' . '/' . $uploadedFile->getClientFilename());
         if( ! $realfile || dirname($realfile) != ($this->config['rw_dir'] . 'firmware')) {
-            // File not found
-            return $response->withStatus(404);
+            $results = array(
+                'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+                'title' => 'Resource not found'
+            );
+            $response = $response->withJson($results, 404, JSON_FLAGS);
+            $response = $response->withHeader('Content-Type', 'application/problem+json');
+            $response = $response->withHeader('Content-Language', 'en');
+            return $response;
         }
         return $response->withStatus(204);
     }
