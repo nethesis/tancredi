@@ -39,6 +39,18 @@ Failed response:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#malformed-data",
+    "type": "https://github.com/nethesis/tancredi/wiki/problems#invalid-file-name",
     "title": "Invalid file name"
 }
+```
+
+Failed response:
+
+    Status: 404
+
+```json
+{
+    "type": "https://github.com/nethesis/tancredi/wiki/problems#not-found",
+    "title": "Resource not found"
+}
+```
