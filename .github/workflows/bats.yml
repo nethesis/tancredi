@@ -26,7 +26,7 @@ jobs:
         sudo mkdir -p /usr/share/tancredi/data/
         sudo cp -a {public,scripts,src,vendor}/ /usr/share/tancredi/
         sudo cp -a data/{templates,patterns.d,scopes} /usr/share/tancredi/data/
-        sudo mkdir -p /var/lib/tancredi/data/{first_access_tokens,scopes,templates-custom,tokens,firmware}
+        sudo mkdir -p /var/lib/tancredi/data/{first_access_tokens,scopes,templates-custom,tokens,backgrounds,firmware,ringtones,screensavers}
         sudo chown -R www-data:www-data /var/lib/tancredi
         echo 'rw_dir = "/var/lib/tancredi/data/"' | sudo tee -a /etc/tancredi.conf
         echo 'ro_dir = "/usr/share/tancredi/data/"' | sudo tee -a /etc/tancredi.conf
@@ -57,7 +57,10 @@ jobs:
         echo 'ProxyPass "fcgi://127.0.0.1:9605/usr/share/tancredi/public/api-v1.php"' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo '</Location>' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo 'XSendFile on' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'XSendFilePath /var/lib/tancredi/data/backgrounds' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo 'XSendFilePath /var/lib/tancredi/data/firmware' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'XSendFilePath /var/lib/tancredi/data/ringtones' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'XSendFilePath /var/lib/tancredi/data/screensavers' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         sudo a2ensite tancredi.conf
         sudo a2dissite 000-default.conf
         sudo a2enmod proxy_fcgi
