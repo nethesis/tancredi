@@ -438,9 +438,9 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
 });
 
 /*********************************
-* POST /firmware
+* POST /background, /firmware, /ringtone, /screensaver
 **********************************/
-$app->post('/firmware', function(Request $request, Response $response) use ($app) {
+$app->post('/{filetype:background|firmware|ringtone|screensaver}', function(Request $request, Response $response, $args) use ($app) {
     $uploadedFile = array_pop($request->getUploadedFiles());
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
         if (! preg_match('/^[a-zA-Z0-9\-_\.()]+$/', $uploadedFile->getClientFilename())) {
@@ -453,9 +453,14 @@ $app->post('/firmware', function(Request $request, Response $response) use ($app
             $response = $response->withHeader('Content-Language', 'en');
             return $response;
         }
-        $uploadedFile->moveTo($this->config['rw_dir'] . 'firmware' . '/' . $uploadedFile->getClientFilename());
-        $realfile = realpath($this->config['rw_dir'] . 'firmware' . '/' . $uploadedFile->getClientFilename());
-        if( ! $realfile || dirname($realfile) != ($this->config['rw_dir'] . 'firmware')) {
+        if ($args['filetype'] === 'firmware') {
+            $files_directory = $args['filetype'];
+        } else {
+            $files_directory = $args['filetype'].'s';
+        }
+        $uploadedFile->moveTo($this->config['rw_dir'] . $files_directory . '/' . $uploadedFile->getClientFilename());
+        $realfile = realpath($this->config['rw_dir'] . $files_directory . '/' . $uploadedFile->getClientFilename());
+        if( ! $realfile || dirname($realfile) != ($this->config['rw_dir'] . $files_directory)) {
             $results = array(
                 'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
                 'title' => 'Resource not found'
@@ -471,10 +476,10 @@ $app->post('/firmware', function(Request $request, Response $response) use ($app
 });
 
 /*********************************
-* GET /firmware
+* GET /backgrounds, /firmware, /ringtones, /screensavers
 **********************************/
-$app->get('/firmware', function(Request $request, Response $response) use ($app) {
-    $files = glob($this->config['rw_dir'] . 'firmware/*');
+$app->get('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(Request $request, Response $response, $args) use ($app) {
+    $files = glob($this->config['rw_dir'] . $args['filetype'] . '/*');
     $res = array();
     foreach ($files as $file) {
         $stats = stat($file);
@@ -489,12 +494,17 @@ $app->get('/firmware', function(Request $request, Response $response) use ($app)
 });
 
 /*********************************
-* DELETE /firmware
+* DELETE /background, /firmware, /ringtone, /screensaver
 **********************************/
-$app->delete('/firmware/{file}', function(Request $request, Response $response, $args) use ($app) {
+$app->delete('/{filetype:background|firmware|ringtone|screensaver}/{file}', function(Request $request, Response $response, $args) use ($app) {
     $file = $args['file'];
-    $realfile = realpath($this->config['rw_dir'] . 'firmware' . '/' . $file);
-    if( ! $realfile  || dirname($realfile) != ($this->config['rw_dir'] . 'firmware')) {
+    if ($args['filetype'] === 'firmware') {
+        $files_directory = $args['filetype'];
+    } else {
+        $files_directory = $args['filetype'].'s';
+    }
+    $realfile = realpath($this->config['rw_dir'] . $files_directory . '/' . $file);
+    if( ! $realfile  || dirname($realfile) != ($this->config['rw_dir'] . $files_directory)) {
         $results = array(
             'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
             'title' => 'Resource not found'
@@ -503,7 +513,7 @@ $app->delete('/firmware/{file}', function(Request $request, Response $response, 
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
-    } elseif (unlink($this->config['rw_dir'] . 'firmware/' . $file)) {
+    } elseif (unlink($this->config['rw_dir'] . $files_directory . '/' . $file)) {
         $response = $response->withStatus(204);
         return $response;
     }
