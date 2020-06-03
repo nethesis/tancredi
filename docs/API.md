@@ -61,11 +61,26 @@ Error responses use media type `application/problem+json` as defined by [RFC
 * [GET /defaults](defaultsGet) return the default values for known variables
 * [PATCH /defaults](defaultsPatch) change the default value of some variables
 
+### backgrounds/
+* [GET /backgrounds](backgroundsGet) list of available background files
+* [POST /background](backgroundPost) upload a background file
+* [DELETE /background/{file}](backgroundDelete) delete a background file
+
 ### firmware/
 
 * [GET /firmware](firmwareGet) list of available firmware files
 * [POST /firmware](firmwarePost) upload a firmware file
 * [DELETE /firmware/{file}](firmwareDelete) delete a firmware file
+
+### ringtones/
+* [GET /ringtones](ringtonesGet) list of available ringtone files
+* [POST /ringtone](ringtonePost) upload a ringtone file
+* [DELETE /ringtone/{file}](ringtoneDelete) delete a ringtone file
+
+### screensavers/
+* [GET /screensavers](screensaversGet) list of available screensaver files
+* [POST /screensaver](screensaverPost) upload a screensaver file
+* [DELETE /screensaver/{file}](screensaverDelete) delete a screensaver file
 
 ## API authentication
 
