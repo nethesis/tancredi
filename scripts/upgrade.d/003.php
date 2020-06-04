@@ -32,6 +32,7 @@ foreach ($models as $id) {
             'cap_ringtone_blacklist' => '-1',
         ]);
         $container['logger']->info("Fixed cap_ringtone_blacklist for model $id");
+
     } elseif(substr($id, 0, 7) == 'yealink') {
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
         if($scope->metadata['version'] >= 3) {
@@ -42,5 +43,16 @@ foreach ($models as $id) {
             'cap_ringtone_count' => '10',
         ]);
         $container['logger']->info("Fixed cap_ringtone_count for model $id");
+
+    } elseif(substr($id, 0, 7) == 'gigaset') {
+        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        if($scope->metadata['version'] >= 3) {
+            continue;
+        }
+        $scope->metadata['version'] = 3;
+        $scope->setVariables([
+            'cap_ringtone_blacklist' => '-1,0',
+        ]);
+        $container['logger']->info("Fixed cap_ringtone_blacklist for model $id");
     }
 }
