@@ -13,6 +13,8 @@
         <vlan_pc_id perm="">{{ (vlan_id_pcport > 0 and vlan_id_pcport < 4095) ? vlan_id_pcport : '' }}</vlan_pc_id>
         <vlan_pc_priority perm="">{{ (vlan_id_pcport > 0 and vlan_id_pcport < 4095) ? '0' : '' }}</vlan_pc_priority>
 
+        <transfer_on_hangup perm="">on</transfer_on_hangup>
+
         <ntp_server perm="">{{ ntp_server ?: 'pool.ntp.org' }}</ntp_server>
         <date_us_format perm="">{{ snom.date_format(date_format) }}</date_us_format>
         <time_24_format perm="">{{ time_format == '12' ? 'off' : 'on' }}</time_24_format>
