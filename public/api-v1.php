@@ -498,11 +498,7 @@ $app->get('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(Re
 **********************************/
 $app->delete('/{filetype:backgrounds|firmware|ringtones|screensavers}/{file}', function(Request $request, Response $response, $args) use ($app) {
     $file = $args['file'];
-    if ($args['filetype'] === 'firmware') {
-        $files_directory = $args['filetype'];
-    } else {
-        $files_directory = $args['filetype'].'s';
-    }
+    $files_directory = $args['filetype'];
     $realfile = realpath($this->config['rw_dir'] . $files_directory . '/' . $file);
     if( ! $realfile  || dirname($realfile) != ($this->config['rw_dir'] . $files_directory)) {
         $results = array(
