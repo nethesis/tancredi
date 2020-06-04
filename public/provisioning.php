@@ -49,9 +49,10 @@ $app->get('/check/ping', function(Request $request, Response $response, array $a
     return $response->withJson(filemtime('/etc/tancredi.conf'),200);
 });
 
-$app->get('/{token}/firmware/{filename}', function(Request $request, Response $response, array $args) use ($app) {
+$app->get('/{token}/{filetype:backgrounds|firmware|ringtones|screensavers}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     global $config;
     $filename = $args['filename'];
+    $files_directory = $args['filetype'];
     $token = $args['token'];
     $id = \Tancredi\Entity\TokenManager::getIdFromToken($token);
     if ($id === FALSE) {
@@ -61,8 +62,8 @@ $app->get('/{token}/firmware/{filename}', function(Request $request, Response $r
         return $response;
     }
 
-    $realfile = realpath($config['rw_dir'] . 'firmware/' . $filename);
-    if( ! $realfile || dirname($realfile) != ($config['rw_dir'] . 'firmware')) {
+    $realfile = realpath($config['rw_dir'] . $args['filetype'] . '/' . $filename);
+    if( ! $realfile || dirname($realfile) != ($config['rw_dir'] . $args['filetype'])) {
         // File not found
         return $response->withStatus(404);
     }
