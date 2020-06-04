@@ -1,4 +1,41 @@
 #
+# ringtone -- translate ringtone to Gigaset builtin file names
+#
+{% macro ringtone_map(index) %}
+{% set map = {
+    '1': '01.mp3',
+    '2': '02_Memo.mp3',
+    '3': '03_Vibe.mp3',
+    '4': '04_Listen.mp3',
+    '5': '05_Down.mp3',
+    '6': '06_Gigaset.mp3',
+    '7': '07_Egg.mp3',
+    '8': '08_Peak.mp3',
+    '9': '09_Step 3.mp3',
+    '10': '10_P Cut.mp3',
+    '11': '11_Set.mp3',
+    '12': '12_Sim.mp3',
+    '13': '13_Tone one.mp3',
+    '14': '14_Dunken.mp3',
+    '15': '15_Piano.mp3',
+    '16': '16_Officebuffer.mp3',
+    '17': '17_Twelve.mp3',
+    '18': '18_Flightzone.mp3',
+    '19': '19_Waste.mp3',
+    '20': '20_Smooth_G.mp3',
+    '21': '21_Green Tea.mp3',
+    '22': 'bellcore_dr1.ogg',
+    '23': 'bellcore_dr2.ogg',
+    '24': 'bellcore_dr3.ogg',
+    '25': 'bellcore_dr4.ogg',
+    '26': 'bellcore_dr5.ogg',
+    '27': 'Evolve 1.ogg',
+    '28': 'Evolve 2.ogg',
+} %}
+{{- map[index] ?: map['6'] -}}
+{% endmacro ringtone_map %}
+
+#
 # linekey_type_map -- translate "linekey_type_"
 #
 {% macro linekey_type_map(linekey_type, number, linekey_value, dndtoggle, pickup_group, queuetoggle) %}
