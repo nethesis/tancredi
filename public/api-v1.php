@@ -496,7 +496,7 @@ $app->get('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(Re
 /*********************************
 * DELETE /background, /firmware, /ringtone, /screensaver
 **********************************/
-$app->delete('/{filetype:background|firmware|ringtone|screensaver}/{file}', function(Request $request, Response $response, $args) use ($app) {
+$app->delete('/{filetype:backgrounds|firmware|ringtones|screensavers}/{file}', function(Request $request, Response $response, $args) use ($app) {
     $file = $args['file'];
     if ($args['filetype'] === 'firmware') {
         $files_directory = $args['filetype'];
