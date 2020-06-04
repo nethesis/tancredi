@@ -66,7 +66,7 @@
         <P84 para="KeepAtiveInterval">20</P84>
         <P8684 para="DhcpVlan">0</P8684>
         <!--FunctionKeys-->
-        {% for idx in 1..cap_linekey_count %}
+        {% for idx in cap_linekey_count ? range(1, cap_linekey_count) : [] %}
         {% if _context["linekey_type_#{idx}"] == "queuetoggle" %}
             {% set linekey_value = queuetoggle %}
         {% else %}
@@ -96,7 +96,7 @@
         <P20046 para="ProgrammableKey4.Label">{{ softkey_label_4 }}</P20046>
 
         <!--ExpKeys-->
-        {%- for m in 0..(cap_expmodule_count - 1) -%}
+        {%- for m in cap_expmodule_count ? range(0, cap_expmodule_count - 1) : [] -%}
         {%- for k in 0..(cap_expkey_count - 1) -%}
         {%- set idx = 1 + k + (m * cap_expkey_count) -%}
         {%- if _context["expkey_type_#{idx}"] is defined %}
