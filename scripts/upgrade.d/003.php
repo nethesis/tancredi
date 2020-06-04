@@ -51,7 +51,7 @@ foreach ($models as $id) {
         }
         $scope->metadata['version'] = 3;
         $scope->setVariables([
-            'cap_ringtone_blacklist' => '-1,0',
+            'cap_ringtone_blacklist' => '"-1,0"',
         ]);
         $container['logger']->info("Fixed cap_ringtone_blacklist for model $id");
     }
