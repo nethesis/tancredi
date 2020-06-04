@@ -145,7 +145,7 @@ SIP{{ line }} WarmLine Time      :0
 SIP{{ line }} Pickup Num         :{{ pickup_direct }}
 SIP{{ line }} Join Num           :
 SIP{{ line }} Intercom Num       :
-SIP{{ line }} Ring Type          :Type 1
+SIP{{ line }} Ring Type          :default
 SIP{{ line }} NAT UDPUpdate      :2
 SIP{{ line }} UDPUpdate TTL      :60
 SIP{{ line }} Server Type        :0
@@ -273,7 +273,7 @@ P1 DND End Time       :1730
 P1 Enable White List  :1
 P1 Enable Black List  :1
 P1 Enable CallBar     :1
-P1 Mute Ringing       :0
+P1 Mute Ringing       :{{ ringtone == '0' ? 1 : 0 }}
 P1 Ban Dial Out       :0
 P1 Ban Empty CID      :0
 P1 Enable CLIP        :1
@@ -430,15 +430,7 @@ BLF Failed Ctl     :0
 BLF Parked Color   :0
 BLF Parked Ctl     :3
 --Voice Volume--   :
-Handset Vol        :5
-Handset Mic Vol    :3
-Headset Vol        :5
-Headset Mic Vol    :3
-Headset Ring Vol   :5
-HandFree Vol       :1
-HandFree Mic Vol   :3
-HandFree Ring Vol  :5
-Ring Type          :Type 1
+Ring Type          :Type {{ ringtone in 1 .. cap_ringtone_count ? ringtone : 1 }}
 --DateTime Config--:
 Enable SNTP        :1
 SNTP Server        :{{ ntp_server | default('pool.ntp.org') }}

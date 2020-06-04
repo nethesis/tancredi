@@ -1153,9 +1153,9 @@ phone_setting.inactive_backlight_level = {{ inactive_backlight_level }}
 phone_setting.active_backlight_level = {{ active_backlight_level }}
 phone_setting.predial_autodial = 1
 
-ringtone.url = {{ ringtone_url }}
+ringtone.url = {{ ringtone_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/ringtones/#{ringtone_file}?" : "" }}
 ringtone.delete =
-phone_setting.ring_type = {{ yealink.ringtone(ringtone) }}
+phone_setting.ring_type = {{ yealink.ringtone(ringtone, ringtone_file, cap_ringtone_count) }}
 phone_setting.inter_digit_time = 4
 
 ##Only T54S Model supports the parameter

@@ -8,7 +8,8 @@ rw	timezone		Local timezone of the phone.  - Must be a valid TZ database entry (
 rw	tonezone		Local tones code for the call state (busy, ringing, off-hook?). Must be an ISO 3166-1 alpha-2 country code (e.g. `it`, `es`, `gb`?)	string
 rw	language		Phone UI language. Must be an ISO 639-1 language code (e.g. `it`, `en`...) 	string
 rw	ntp_server		Host name or IP address of the network time (NTP) server.	string - IP/host name
-rw	ringtone		Ringtone type selector. 0 == silent, -1 = custom, >0 phone builtin ringtone. See also cap_ringtone_count.	integer
+rw	ringtone		Ringtone type selector. 0 == silent, -1 => use ringtone_file, >0 phone builtin ringtone. See also cap_ringtone_count.	integer
+rw	ringtone_file		Name of a file under the `ringtones/` directory, e.g. `mymusic.wav`. If the file does not exist an empty string is forcibly returned.	string - must match the regexp `[a-z0-9A-Z_-\.]+`
 rw	account_dtmf_type	account	Type of DTMF transport.	string - one of `inband`, `rfc4733`, `sip_info`
 rw	account_encryption	account	If true, use SIPS and RTP encryption.	boolean
 rw	account_display_name	account	SIP line and account label for the phone UI	string

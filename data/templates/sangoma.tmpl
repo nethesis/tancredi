@@ -116,7 +116,7 @@
         <P8683 para="Preference.BacklightTime">{{ backlight_time }}</P8683>
         <P8940 para="Preference.ScreenTimeOut">{{ sangoma.screensaver_wait_time(screensaver_wait_time) }}</P8940>
         <P8950 para="Preference.ScreenSaverType">{{ screensaver_mode ?? 1 }}</P8950>
-        <P8721 para="Preference.RingTones">{{ ringtone in ["2","3","4","5"] ? ringtone : "1" }}</P8721>
+        <P8721 para="Preference.RingTones">{{ ringtone in 1 .. cap_ringtone_count ? ringtone : '1' }}</P8721>
         <P85 para="Preference.NoKeyEntryTimeout">3</P85>
         <P8672 para="Preference.IncomingCallShowMode">1</P8672>
         <P8680 para="Preference.WatchDogEnable">1</P8680>
@@ -205,10 +205,10 @@
         <P20165 para="FirmwareUpGrade.PnPActive">0</P20165>
         <P20172 para="Preference.VmTransfer">0</P20172>
         <P20173 para="Preference.VmTransferCode" />
-        <P20174 para="FirmwareUpGrade.RingUrl">{{ ringtone_url }}</P20174>
+        <P20174 para="FirmwareUpGrade.RingUrl">{{ ringtone_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/ringtones/#{ringtone_file}?" : "" }}</P20174>
         <P20051 para="FirmwareUpGrade.ScreensaverServerURL">{{ screesaver_url }}</P20051>
         <P20052 para="FirmwareUpGrade.WallpaperServerURL">{{ wallpaper_url }}</P20052>
-        <P40002 para="FirmwareUpGrade.ExpServer">{{ firmware_url }}</P40002>
+        <P40002 para="FirmwareUpGrade.ExpServer"></P40002>
 
         <P20642 para="Preference.InactiveLevel">{{ inactive_backlight_level }}</P20642>
         <P20643 para="Preference.ActiveLevel">{{ active_backlight_level }}</P20643>

@@ -87,7 +87,7 @@ P1 Enable DND      :0
 P1 DND Mode        :0
 P1 Call Record Type:0
 P1 Enable Force Rin:0
-P1 Mute Ringing    :0
+P1 Mute Ringing    :{{ ringtone == '0' ? 1 : 0 }}
 P1 CWaiting Tone   :{{ fanvil.b2v(call_waiting_tone) }}
 P1 Ban Dial Out    :0
 P1 Ban Empty CID   :0
@@ -147,7 +147,7 @@ G729 Payload Len   :1
 G723 Bit Rate      :1
 G722 Timestamps    :0
 VAD                :0
-Ring Type          :0
+Ring Type          :{{ ringtone in 1 .. cap_ringtone_count ? ringtone : 1 }}
 Dtmf Payload Type  :101
 TX AGC             :0
 RX AGC             :0
@@ -166,14 +166,6 @@ Delay Critical     :200
 Phone Report       :0
 WEB Report         :0
 --Port Config--    :
-P1 General Spk Vol :9
-P1 General Mic Vol :3
-P1 Headset Vol     :9
-P1 Ring in Headset :0
-P1 Auto Headset    :0
-P1 Headset Ring Vol:5
-P1 HandFree Vol    :1
-P1 RingTone Vol    :0
 P1 Voice Codec1    :PCMU/8000
 P1 Voice Codec2    :PCMA/8000
 P1 Voice Codec3    :G729/8000
