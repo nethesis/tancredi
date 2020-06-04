@@ -52,7 +52,6 @@ $app->get('/check/ping', function(Request $request, Response $response, array $a
 $app->get('/{token}/{filetype:backgrounds|firmware|ringtones|screensavers}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     global $config;
     $filename = $args['filename'];
-    $files_directory = $args['filetype'];
     $token = $args['token'];
     $id = \Tancredi\Entity\TokenManager::getIdFromToken($token);
     if ($id === FALSE) {
