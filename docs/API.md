@@ -63,8 +63,8 @@ Error responses use media type `application/problem+json` as defined by [RFC
 
 ### backgrounds/
 * [GET /backgrounds](backgroundsGet) list of available background files
-* [POST /background](backgroundPost) upload a background file
-* [DELETE /background/{file}](backgroundDelete) delete a background file
+* [POST /backgrounds](backgroundsPost) upload a background file
+* [DELETE /backgrounds/{file}](backgroundsDelete) delete a background file
 
 ### firmware/
 
@@ -74,13 +74,13 @@ Error responses use media type `application/problem+json` as defined by [RFC
 
 ### ringtones/
 * [GET /ringtones](ringtonesGet) list of available ringtone files
-* [POST /ringtone](ringtonePost) upload a ringtone file
-* [DELETE /ringtone/{file}](ringtoneDelete) delete a ringtone file
+* [POST /ringtones](ringtonesPost) upload a ringtone file
+* [DELETE /ringtones/{file}](ringtonesDelete) delete a ringtone file
 
 ### screensavers/
 * [GET /screensavers](screensaversGet) list of available screensaver files
-* [POST /screensaver](screensaverPost) upload a screensaver file
-* [DELETE /screensaver/{file}](screensaverDelete) delete a screensaver file
+* [POST /screensavers](screensaversPost) upload a screensaver file
+* [DELETE /screensavers/{file}](screensaversDelete) delete a screensaver file
 
 ## API authentication
 

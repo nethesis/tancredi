@@ -1,11 +1,11 @@
-# DELETE /ringtone/{file}
+# DELETE /screensavers/{file}
 
-## Delete a ringtone file
+## Delete a screensavers file
 
-Remove a ringtone file previously uploaded
+Remove a screensavers file from previously uploaded screensavers
 
 ```text
-DELETE /ringtone/Kabuto.mp3
+DELETE /screensavers/screen.jpeg
 ```
 
 (empty request body)

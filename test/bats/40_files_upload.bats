@@ -49,8 +49,8 @@ setup () {
 
 # Backgrounds
 
-@test "POST /tancredi/api/v1/background (success)" {
-    run POSTFILE -F "file=@/etc/hosts" /tancredi/api/v1/background
+@test "POST /tancredi/api/v1/backgrounds (success)" {
+    run POSTFILE -F "file=@/etc/hosts" /tancredi/api/v1/backgrounds
     assert_http_code "204"
 }
 
@@ -60,20 +60,20 @@ setup () {
     assert_http_body_re "^\[{"
 }
 
-@test "DELETE /tancredi/api/v1/background (success)" {
-    run DELETE /tancredi/api/v1/background/hosts
+@test "DELETE /tancredi/api/v1/backgrounds (success)" {
+    run DELETE /tancredi/api/v1/backgrounds/hosts
     assert_http_code "204"
 }
 
-@test "DELETE /tancredi/api/v1/background (failed/not found)" {
-    run DELETE /tancredi/api/v1/background/hosts
+@test "DELETE /tancredi/api/v1/backgrounds (failed/not found)" {
+    run DELETE /tancredi/api/v1/backgrounds/hosts
     assert_http_code "404"
 }
 
 # Ringtones
 
-@test "POST /tancredi/api/v1/ringtone (success)" {
-    run POSTFILE -F "file=@/etc/hosts" /tancredi/api/v1/ringtone
+@test "POST /tancredi/api/v1/ringtones (success)" {
+    run POSTFILE -F "file=@/etc/hosts" /tancredi/api/v1/ringtones
     assert_http_code "204"
 }
 
@@ -83,20 +83,20 @@ setup () {
     assert_http_body_re "^\[{"
 }
 
-@test "DELETE /tancredi/api/v1/ringtone (success)" {
-    run DELETE /tancredi/api/v1/ringtone/hosts
+@test "DELETE /tancredi/api/v1/ringtones (success)" {
+    run DELETE /tancredi/api/v1/ringtones/hosts
     assert_http_code "204"
 }
 
-@test "DELETE /tancredi/api/v1/ringtone (failed/not found)" {
-    run DELETE /tancredi/api/v1/ringtone/hosts
+@test "DELETE /tancredi/api/v1/ringtones (failed/not found)" {
+    run DELETE /tancredi/api/v1/ringtones/hosts
     assert_http_code "404"
 }
 
 # Screensavers
 
-@test "POST /tancredi/api/v1/screensaver (success)" {
-    run POSTFILE -F "file=@/etc/hosts" /tancredi/api/v1/screensaver
+@test "POST /tancredi/api/v1/screensavers (success)" {
+    run POSTFILE -F "file=@/etc/hosts" /tancredi/api/v1/screensavers
     assert_http_code "204"
 }
 
@@ -106,13 +106,13 @@ setup () {
     assert_http_body_re "^\[{"
 }
 
-@test "DELETE /tancredi/api/v1/screensaver (success)" {
-    run DELETE /tancredi/api/v1/screensaver/hosts
+@test "DELETE /tancredi/api/v1/screensavers (success)" {
+    run DELETE /tancredi/api/v1/screensavers/hosts
     assert_http_code "204"
 }
 
-@test "DELETE /tancredi/api/v1/screensaver (failed/not found)" {
-    run DELETE /tancredi/api/v1/screensaver/hosts
+@test "DELETE /tancredi/api/v1/screensavers (failed/not found)" {
+    run DELETE /tancredi/api/v1/screensavers/hosts
     assert_http_code "404"
 }
 

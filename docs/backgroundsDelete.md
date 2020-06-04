@@ -1,11 +1,11 @@
-# DELETE /screensaver/{file}
+# DELETE /backgrounds/{file}
 
-## Delete a screensaver file
+## Delete a backgrounds file
 
-Remove a screensaver file from previously uploaded screensavers
+Remove a backgrounds file previously uploaded
 
 ```text
-DELETE /screensaver/screen.jpeg
+DELETE /backgrounds/mountains.png
 ```
 
 (empty request body)

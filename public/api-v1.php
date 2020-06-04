@@ -438,10 +438,11 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
 });
 
 /*********************************
-* POST /background, /firmware, /ringtone, /screensaver
+* POST /backgrounds, /firmware, /ringtones, /screensavers
 **********************************/
-$app->post('/{filetype:background|firmware|ringtone|screensaver}', function(Request $request, Response $response, $args) use ($app) {
+$app->post('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(Request $request, Response $response, $args) use ($app) {
     $uploadedFile = array_pop($request->getUploadedFiles());
+    $files_directory = $args['filetype'];
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
         if (! preg_match('/^[a-zA-Z0-9\-_\.()]+$/', $uploadedFile->getClientFilename())) {
             $results = array(
@@ -452,11 +453,6 @@ $app->post('/{filetype:background|firmware|ringtone|screensaver}', function(Requ
             $response = $response->withHeader('Content-Type', 'application/problem+json');
             $response = $response->withHeader('Content-Language', 'en');
             return $response;
-        }
-        if ($args['filetype'] === 'firmware') {
-            $files_directory = $args['filetype'];
-        } else {
-            $files_directory = $args['filetype'].'s';
         }
         $uploadedFile->moveTo($this->config['rw_dir'] . $files_directory . '/' . $uploadedFile->getClientFilename());
         $realfile = realpath($this->config['rw_dir'] . $files_directory . '/' . $uploadedFile->getClientFilename());
@@ -494,7 +490,7 @@ $app->get('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(Re
 });
 
 /*********************************
-* DELETE /background, /firmware, /ringtone, /screensaver
+* DELETE /backgrounds, /firmware, /ringtones, /screensavers
 **********************************/
 $app->delete('/{filetype:backgrounds|firmware|ringtones|screensavers}/{file}', function(Request $request, Response $response, $args) use ($app) {
     $file = $args['file'];

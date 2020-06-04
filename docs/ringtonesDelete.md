@@ -1,11 +1,11 @@
-# DELETE /background/{file}
+# DELETE /ringtones/{file}
 
-## Delete a background file
+## Delete a ringtones file
 
-Remove a background file previously uploaded
+Remove a ringtones file previously uploaded
 
 ```text
-DELETE /background/mountains.png
+DELETE /ringtones/Kabuto.mp3
 ```
 
 (empty request body)
