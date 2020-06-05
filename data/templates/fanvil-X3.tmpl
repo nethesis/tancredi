@@ -813,6 +813,7 @@ Upgrade Server 1   :
 Upgrade Server 2   :
 Auto Upgrade intval:72
 Auto Image Url     :{{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/firmware/#{firmware_file}" : "" }}
+Auto Etc Url       :{{ background_file ends with '.bmp' ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" : "" }}
 
 <VPN CONFIG MODULE>
 VPN mode           :2

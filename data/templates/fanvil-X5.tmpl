@@ -1004,6 +1004,7 @@ Flash Interval     :{{ provisioning_complete ? fanvil.upgrade_wait_hours(timezon
 update PB Interval :720
 AP Pswd Encryption :0
 Auto Image Url     :{{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/firmware/#{firmware_file}" : "" }}
+Auto Etc Url       :{{ background_file ends with '.bmp' ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" : "" }}
 --Sip Pnp List--   :
 PNP Enable         :0
 PNP IP             :224.0.1.75
