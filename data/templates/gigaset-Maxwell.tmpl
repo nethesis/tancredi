@@ -129,7 +129,7 @@
 {% endif %}
 {% if cap_screensaver_file and screensaver_file matches '\.(png|jpg|jpeg)$' %}
     <param name="PhoneUI.Settings.ScreenSaverSelection" value="3" />
-    <param name="PhoneUI.Settings.ScreenSaverHTTPSource" value="{{ screensaver_file }}"/>
+    <param name="PhoneUI.Settings.ScreenSaverHTTPSource" value="{{ "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{screensaver_file}" }}"/>
 {% endif %}
   </nvm>
   <custom>
