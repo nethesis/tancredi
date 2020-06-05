@@ -127,6 +127,10 @@
 {% if cap_background_file and background_file matches '\.(png|jpg|jpeg)$' %}
     <param name="PhoneUI.Settings.SelectedWallpapers" value="{{ background_file }}"/>
 {% endif %}
+{% if cap_screensaver_file and screensaver_file matches '\.(png|jpg|jpeg)$' %}
+    <param name="PhoneUI.Settings.ScreenSaverSelection" value="3" />
+    <param name="PhoneUI.Settings.ScreenSaverHTTPSource" value="{{ screensaver_file }}"/>
+{% endif %}
   </nvm>
   <custom>
 {% if cap_background_file and background_file matches '\.(png|jpg|jpeg)$' %}
