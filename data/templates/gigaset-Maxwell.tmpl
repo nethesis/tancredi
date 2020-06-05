@@ -136,9 +136,6 @@
 {% if cap_background_file and background_file matches '\.(png|jpg|jpeg)$' %}
     <step type="DownloadWallpaper" url="{{ "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" }}" />
 {% endif %}
-{% if cap_background_file and background_file matches '\.(png|jpg|jpeg)$' %}
-    <step type="DownloadWallpaper" url="{{ "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" }}" />
-{% endif %}
     <step type="UnlockAllFunctionKeys" />
   </custom>
   {# end line keys #}
