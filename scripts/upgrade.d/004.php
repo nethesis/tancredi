@@ -22,14 +22,16 @@
 
 $models = $container['storage']->listScopes('model');
 foreach ($models as $id) {
-    if(substr($id, 0, 16) == 'gigaset-Maxwell4') {
+    if(substr($id, 0, 16) == 'gigaset-Maxwell') {
+        $model = substr($id, 16, 1);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
         if($scope->metadata['version'] >= 4) {
             continue;
         }
         $scope->metadata['version'] = 4;
         $scope->setVariables([
-            'cap_background_file' => '1',
+            'cap_background_file' => ($model == '4') ? '1' : '',
+            'cap_screensaver_file' => ($model == '3' || $model == '4') ? '1' : '',
         ]);
         $container['logger']->info("Fixed cap_background_file for model $id");
 
