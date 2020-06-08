@@ -40,8 +40,8 @@ $defaults = new \Tancredi\Entity\Scope('defaults', $container['storage'], $conta
 if($defaults->metadata['version'] < 4) {
     $defaults->metadata['version'] = 4;
     $defaults->setVariables([
-        'cap_ringtone_count' => "",
-        'cap_ringtone_blacklist' => "",
+        'cap_ringtone_count' => "1",
+        'cap_ringtone_blacklist' => "-1,0",
         'background_file' => "",
         'screensaver_file' => "",
         'cap_background_file' => "",
