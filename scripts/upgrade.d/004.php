@@ -39,6 +39,8 @@ foreach ($models as $id) {
             'contrast' => '4',
             'cap_brightness' => $is_second_generation ? '1' : '',
             'brightness' => $is_second_generation ? '5' : '',
+            'cap_backlight_time_blacklist' => '',
+            'cap_screensaver_time_blacklist' => '',
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
