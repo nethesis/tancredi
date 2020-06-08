@@ -77,6 +77,8 @@ if($defaults->metadata['version'] < 4) {
         'cap_contrast' => '',
         'brightness' => '5',
         'contrast' => '5',
+        'cap_backlight_time_blacklist' => '',
+        'cap_screensaver_time_blacklist' => '',
     ]);
-    $container['logger']->info("Fixed screensaver, ringtone and background variables in defaults scope");
+    $container['logger']->info("Fixed display and ringtone variables in defaults scope");
 }
