@@ -32,8 +32,8 @@
 
         <dim_timer perm="">30</dim_timer>
 
-        <screen_saver_timeout perm="">{{ screensaver_wait_time }}</screen_saver_timeout>
-        <custom_bg_image_url perm="">{{ wallpaper_url }}</custom_bg_image_url>
+        <screen_saver_timeout perm="">{{ screensaver_time }}</screen_saver_timeout>
+        <custom_bg_image_url perm="">{{ background_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" : "" }}</custom_bg_image_url>
         <dhcp perm="">on</dhcp>
         <dhcp_v6 perm="">off</dhcp_v6>
 
