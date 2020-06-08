@@ -31,6 +31,7 @@ foreach ($models as $id) {
         $scope->setVariables([
             'cap_background_file' => '1',
             'cap_screensaver_file' => '',
+            'screensaver_time' => '600',
         ]);
         $container['logger']->info("Fixed cap_background_file, cap_screensaver_file in model $id");
     }
@@ -44,6 +45,7 @@ if($defaults->metadata['version'] < 4) {
         'cap_ringtone_blacklist' => "-1,0",
         'background_file' => "",
         'screensaver_file' => "",
+        'screensaver_time' => '600',
         'cap_background_file' => "",
         'cap_screensaver_file' => "",
     ]);
