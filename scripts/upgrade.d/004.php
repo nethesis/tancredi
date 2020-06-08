@@ -27,7 +27,7 @@ foreach ($models as $id) {
         if($scope->metadata['version'] >= 4) {
             continue;
         }
-        $model = substr($id, 8, 1);
+        $model = substr($id, 9, 1);
         $is_second_generation = $model == '5' || $model == '6' || substr($id, 10, 2) == 'SG';
         $scope->metadata['version'] = 4;
         $scope->setVariables([
