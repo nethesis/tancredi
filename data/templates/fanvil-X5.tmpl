@@ -398,9 +398,9 @@ XML Update Interval:30
 Vqm Display Order  :
 --Display Input--  :
 LCD Title          :{{ logo_text | default('Fanvil') }}
-LCD Constrast      :5
+LCD Constrast      :{{ fanvil.contrast_map(contrast) }}
 Enable Energysaving:4
-LCD Luminance Level:12
+LCD Luminance Level:{{ fanvil.brightness_map(brightness) }}
 Backlight Off Time :{{ backlight_time >= 0 and backlight_time <= 3600 ? backlight_time : '0' }}
 Disable CHN IME    :0
 Phone Model        :

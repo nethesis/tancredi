@@ -27,12 +27,18 @@ foreach ($models as $id) {
         if($scope->metadata['version'] >= 4) {
             continue;
         }
+        $model = substr($id, 8, 1);
+        $is_second_generation = $model == '5' || $model == '6' || substr($id, 10, 2) == 'SG';
         $scope->metadata['version'] = 4;
         $scope->setVariables([
             'cap_background_file' => '1',
             'cap_screensaver_file' => '',
             'screensaver_time' => '600',
             'backlight_time' => '30',
+            'cap_contrast' => '1',
+            'contrast' => '4',
+            'cap_brightness' => $is_second_generation ? '1' : '',
+            'brightness' => $is_second_generation ? '5' : '',
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
@@ -67,6 +73,10 @@ if($defaults->metadata['version'] < 4) {
         'cap_background_file' => "",
         'cap_screensaver_file' => "",
         'backlight_time' => '30',
+        'cap_brightness' => '',
+        'cap_contrast' => '',
+        'brightness' => '5',
+        'contrast' => '5',
     ]);
     $container['logger']->info("Fixed screensaver, ringtone and background variables in defaults scope");
 }
