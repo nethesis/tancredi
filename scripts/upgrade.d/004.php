@@ -32,6 +32,7 @@ foreach ($models as $id) {
             'cap_background_file' => '1',
             'cap_screensaver_file' => '',
             'screensaver_time' => '600',
+            'backlight_time' => '30',
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
@@ -47,6 +48,7 @@ foreach ($models as $id) {
             'cap_screensaver_file' => ($model == '3' || $model == '4') ? '1' : '',
             'cap_screensaver_time' => ($model == '2' || $model == 'B') ? '1' : '',
             'screensaver_time'  => ($model == '2' || $model == 'B') ? '600' : '',
+            'backlight_time' => '60',
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
@@ -64,6 +66,7 @@ if($defaults->metadata['version'] < 4) {
         'screensaver_time' => '600',
         'cap_background_file' => "",
         'cap_screensaver_file' => "",
+        'backlight_time' => '30',
     ]);
     $container['logger']->info("Fixed screensaver, ringtone and background variables in defaults scope");
 }

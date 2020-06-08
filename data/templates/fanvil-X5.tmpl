@@ -401,7 +401,7 @@ LCD Title          :{{ logo_text | default('Fanvil') }}
 LCD Constrast      :5
 Enable Energysaving:4
 LCD Luminance Level:12
-Backlight Off Time :45
+Backlight Off Time :{{ backlight_time >= 0 and backlight_time <= 3600 ? backlight_time : '0' }}
 Disable CHN IME    :0
 Phone Model        :
 Host Name          :

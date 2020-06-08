@@ -458,7 +458,7 @@ Emergency Call     :{{ fanvil.emergency_map(tonezone) }}
 LCD Title          :{{ logo_text | default('Fanvil') }}
 LCD Constrast      :5
 LCD Luminance      :1
-Backlight Off Time :30
+Backlight Off Time :{{ backlight_time >= 0 and backlight_time <= 3600 ? backlight_time : '0' }}
 ScrnSaver Wait Time:{{ screensaver_time >= 0 and screensaver_time <= 3600 ? screensaver_time : '0' }}
 Power Led Refresh  :0
 KeyLock Timeout    :0
