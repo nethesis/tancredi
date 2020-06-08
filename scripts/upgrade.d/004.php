@@ -32,8 +32,10 @@ foreach ($models as $id) {
         $scope->setVariables([
             'cap_background_file' => ($model == '4') ? '1' : '',
             'cap_screensaver_file' => ($model == '3' || $model == '4') ? '1' : '',
+            'cap_screensaver_time' => ($model == '2' || $model == 'B') ? '1' : '',
+            'screensaver_time'  => ($model == '2' || $model == 'B') ? '600' : '',
         ]);
-        $container['logger']->info("Fixed cap_background_file for model $id");
+        $container['logger']->info("Fixed background and screensaver settings for model $id");
 
     }
 }
