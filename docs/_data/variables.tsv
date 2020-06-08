@@ -85,8 +85,8 @@ rw	expkey_label	expkey	Expansion label. See the `softkey_label` description for 
 rw	expkey_value	expkey	Expansion key value. See the `softkey_value` description for more information.	string
 rw	background_file		Name of a file under the `backgrounds/` directory, e.g. `mywallpaper.png`. If the file does not exist an empty string is forcibly returned.   string - must match the regexp `[a-z0-9A-Z_-\.]+	string
 rw	screensaver_file	Name of a file under the `screensavers/` directory, e.g. `mywallpaper.png`. If the file does not exist an empty string is forcibly returned.   string - must match the regexp `[a-z0-9A-Z_-\.]+	string
-rw	backlight_time		Seconds before the phone backlight goes off. -1 = never, 0 = always on, if > 0 is the number of seconds. Allowed values: "-1, 0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600".	integer
-rw	screensaver_time	Seconds the screen saver starts. -1 = never, 0 = always on, if > 0 is the number of seconds. Allowed values: "-1, 0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600".	integer
+rw	backlight_time		Seconds before the phone backlight goes off. 0 = never goes off, N > 0 is the number of seconds to wait among the allowed values: "3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600".	integer
+rw	screensaver_time	Seconds the screen saver starts. 0 = never starts, N > 0 is the number of seconds to wait among the allowed values: "3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600".	integer
 rw	contrast	Set a custom contrast for phone display.	integer, range 0-9
 rw	brightness	Set a custom brightness for phone display.	integer, range 0-9
 rw	cap_linekey_count		Number of line keys available in the phone.	integer
@@ -101,6 +101,6 @@ rw	cap_expmodule_count		Number of pluggable expansion modules.	integer
 rw	cap_contrast	Capability to change display contrast.	Boolean ("","1")
 rw	cap_screensaver_file	Capability to use a custom screensaver.	Boolean ("","1")
 rw	cap_background_file	Capability to use a custom background. Boolean ("","1")
-rw	cap_backlight_time_blacklist	Comma separated list of backlight time not supported by the phone. Full list is: "-1, 0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600"	string
-rw	cap_screensaver_time_blacklist	Comma separated list of screensaver time not supported by the phone. Full list is: "-1, 0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600"	string
+rw	cap_backlight_time_blacklist	Comma separated list of backlight_time values not supported by the phone. Full list is: "0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600"	string
+rw	cap_screensaver_time_blacklist	Comma separated list of screensaver_time values not supported by the phone. Full list is: "0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600"	string
 rw	cap_brightness	Capability to set a custom brightness. Boolean ("","1")
