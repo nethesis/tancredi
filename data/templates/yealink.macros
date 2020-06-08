@@ -1091,7 +1091,7 @@
 #
 # Backlight timer
 #
-{% macro backlight_timer(time) %}
+{% macro backlight_time(time) %}
     {%- set map = {
         "-1" : "0",
         "0" : "1",
@@ -1105,5 +1105,5 @@
         }
     -%}
 {{- map[time] ?? '' -}}
-{% endmacro backlight_timer %}
+{% endmacro backlight_time %}
 
