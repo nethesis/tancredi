@@ -33,7 +33,23 @@ foreach ($models as $id) {
             'cap_screensaver_file' => '',
             'screensaver_time' => '600',
         ]);
-        $container['logger']->info("Fixed cap_background_file, cap_screensaver_file in model $id");
+        $container['logger']->info("Fixed background and screensaver settings for model $id");
+
+    } elseif(substr($id, 0, 16) == 'gigaset-Maxwell') {
+        $model = substr($id, 16, 1);
+        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        if($scope->metadata['version'] >= 4) {
+            continue;
+        }
+        $scope->metadata['version'] = 4;
+        $scope->setVariables([
+            'cap_background_file' => ($model == '4') ? '1' : '',
+            'cap_screensaver_file' => ($model == '3' || $model == '4') ? '1' : '',
+            'cap_screensaver_time' => ($model == '2' || $model == 'B') ? '1' : '',
+            'screensaver_time'  => ($model == '2' || $model == 'B') ? '600' : '',
+        ]);
+        $container['logger']->info("Fixed background and screensaver settings for model $id");
+
     }
 }
 
