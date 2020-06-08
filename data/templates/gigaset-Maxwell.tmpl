@@ -131,7 +131,7 @@
     <param name="PhoneUI.Settings.ScreenSaverSelection" value="3" />
     <param name="PhoneUI.Settings.ScreenSaverHTTPSource" value="{{ "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{screensaver_file}" }}"/>
 {% endif %}
-{% if cap_screensaver_time %}
+{% if screensaver_time != '' %}
 {% set gigaset_screensaver_time = (screensaver_time / 600 | round(0, "ceil") * 10) %}
     <param name="PhoneUI.Settings.ScreenSaverTimeout" value="{{ gigaset_screensaver_time >= 0 and gigaset_screensaver_time <= 60 ? gigaset_screensaver_time : 0 }}" />
 {% endif %}
