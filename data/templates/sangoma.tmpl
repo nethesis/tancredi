@@ -206,8 +206,8 @@
         <P20172 para="Preference.VmTransfer">0</P20172>
         <P20173 para="Preference.VmTransferCode" />
         <P20174 para="FirmwareUpGrade.RingUrl">{{ ringtone_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/ringtones/#{ringtone_file}?" : "" }}</P20174>
-        <P20051 para="FirmwareUpGrade.ScreensaverServerURL">{{ screesaver_url }}</P20051>
-        <P20052 para="FirmwareUpGrade.WallpaperServerURL">{{ wallpaper_url }}</P20052>
+        <P20051 para="FirmwareUpGrade.ScreensaverServerURL">{{ screensaver_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/screensavers/#{screensaver_file}" : "" }}</P20051>
+        <P20052 para="FirmwareUpGrade.WallpaperServerURL">{{ background_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" : "" }}</P20052>
         <P40002 para="FirmwareUpGrade.ExpServer"></P40002>
 
         <P20642 para="Preference.InactiveLevel">{{ inactive_backlight_level }}</P20642>

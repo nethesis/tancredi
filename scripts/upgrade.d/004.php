@@ -22,7 +22,20 @@
 
 $models = $container['storage']->listScopes('model');
 foreach ($models as $id) {
-    if(substr($id, 0, 16) == 'gigaset-Maxwell') {
+    if(substr($id, 0, 6) == 'fanvil') {
+        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        if($scope->metadata['version'] >= 4) {
+            continue;
+        }
+        $scope->metadata['version'] = 4;
+        $scope->setVariables([
+            'cap_background_file' => '1',
+            'cap_screensaver_file' => '',
+            'screensaver_time' => '600',
+        ]);
+        $container['logger']->info("Fixed background and screensaver settings for model $id");
+
+    } elseif(substr($id, 0, 16) == 'gigaset-Maxwell') {
         $model = substr($id, 16, 1);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
         if($scope->metadata['version'] >= 4) {
@@ -38,4 +51,19 @@ foreach ($models as $id) {
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
     }
+}
+
+$defaults = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
+if($defaults->metadata['version'] < 4) {
+    $defaults->metadata['version'] = 4;
+    $defaults->setVariables([
+        'cap_ringtone_count' => "1",
+        'cap_ringtone_blacklist' => "-1,0",
+        'background_file' => "",
+        'screensaver_file' => "",
+        'screensaver_time' => '600',
+        'cap_background_file' => "",
+        'cap_screensaver_file' => "",
+    ]);
+    $container['logger']->info("Fixed screensaver, ringtone and background variables in defaults scope");
 }
