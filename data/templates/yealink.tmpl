@@ -1269,12 +1269,12 @@ lang.wui = {{ yealink.language(language) }}
 #######################################################################################
 screensaver.type = {{ screensaver_mode }}
 screensaver.delete =
-screensaver.upload_url = {{ screesaver_url }}
+screensaver.upload_url = {{ screensaver_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/screensavers/#{screensaver_file}" : "" }}
 features.blf_active_backlight.enable = 1
 screensaver.display_clock.enable = 1
 screensaver.clock_move_interval = 600
 screensaver.picture_change_interval = 60
-screensaver.wait_time = {{ screensaver_wait_time }}
+screensaver.wait_time = {{ screensaver_time }}
 screensaver.xml_browser.url =
 
 #######################################################################################
