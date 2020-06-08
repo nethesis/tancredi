@@ -57,6 +57,10 @@ foreach ($models as $id) {
             'cap_screensaver_time' => ($model == '2' || $model == 'B') ? '1' : '',
             'screensaver_time'  => ($model == '2' || $model == 'B') ? '600' : '',
             'backlight_time' => '60',
+            'cap_contrast' => $model == 'B' ? '1' : '',
+            'contrast' => $model == 'B' ? '5' : '',
+            'cap_brightness' => '1',
+            'brightness' => '5',
             'cap_backlight_time_blacklist' => '3,5,7,10,15,30',
             'cap_screensaver_time_blacklist' => ($model == '2' || $model == 'B') ? '3,5,7,10,15,30,60,120,300' : '',
         ]);

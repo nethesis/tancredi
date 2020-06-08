@@ -135,6 +135,12 @@
 {% set gigaset_screensaver_time = (screensaver_time / 600 | round(0, "ceil") * 10) %}
     <param name="PhoneUI.Settings.ScreenSaverTimeout" value="{{ gigaset_screensaver_time >= 0 and gigaset_screensaver_time <= 60 ? gigaset_screensaver_time : 0 }}" />
 {% endif %}
+{% if cap_contrast %}
+    <param name="PhoneUI.Settings.Contrast" value="{{ contrast + 1 }}" />
+{% endif %}
+{% if cap_brightness %}
+    <param name="PhoneUI.Settings.Backlight" value="{{ brightness + 1 }}" />
+{% endif %}
     <param name="PhoneUI.Settings.BacklightTimeout" value="{{ backlight_time / 60 | round(0, "ceil") }}" />
   </nvm>
   <custom>
