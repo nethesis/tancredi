@@ -44,12 +44,12 @@ rw	pickup_direct		Direct pickup code.	string
 rw	vlan_id_phone		VLAN VID for phone ethernet port.	integer - empty/0 = disabled, range 1-4095
 rw	vlan_id_pcport		VLAN VID for PC/DATA ethernet port.	integer - empty/0 = disabled, range 1-4095
 rw	date_format		Date display format in the phone UI	string - one of ``,`DD MM YY`, `DD MM YYYY`, `DD MMM WW`, `DD MMM YY`, `DD MMM YYYY`, `WWW DD MMM`, `WWW MMM DD`, `MM DD YY`, `MM DD YYYY`, `MMM DD WW`, `YY MM DD`, `YYYY MM DD`
-rw	cap_date_format_blacklist		List of valid date_format values not supported by the phone. Must be a comma separated list of values among those allowed for `date_format`.	string
+ro	cap_date_format_blacklist		List of valid date_format values not supported by the phone. Must be a comma separated list of values among those allowed for `date_format`.	string
 rw	time_format		Time display format in the phone UI	string - one of `12`,`24`
 rw	ldap_server		Host name or IP address of the LDAP phonebook server.	string - hostname or IP
 rw	ldap_port		TCP port number of the LDAP phonebook server. Required if different than the usual 389 (ldap) and 636 (ldaps).	integer
 rw	ldap_tls		Enable and set the TLS method for LDAP connections.	string - one of `none`,`starttls`,`ldaps`
-rw	cap_ldap_tls_blacklist		List of valid ldap_tls values that are not supported by the phone LDAP client library.	string
+ro	cap_ldap_tls_blacklist		List of valid ldap_tls values that are not supported by the phone LDAP client library.	string
 rw	ldap_user		LDAP user name if authentication is required.	string
 rw	ldap_password		LDAP password if authentication is required.	string
 rw	ldap_base		istinguished Name for search base; e.g. `dc=phonebook,dc=example,dc=com`	string
@@ -61,7 +61,7 @@ rw	ldap_name_attr		LDAP attributes list (space separated) containing the contact
 rw	ldap_number_filter		LDAP search by number filter. The placeholder `%` is replaced by the number to search.	string
 rw	ldap_name_filter		LDAP search by name filter. The placeholder `%` is replaced by the name to search.	
 rw	dss_transfer		Call transfer mode.	string - one of `verify`,`attended`,`blind`
-rw	cap_dss_transfer_blacklist		Comma separate list of `dss_transfer` modes that are not supported by the phone.	string
+ro	cap_dss_transfer_blacklist		Comma separate list of `dss_transfer` modes that are not supported by the phone.	string
 rw	adminpw		Phone and web UI admin password.	string
 rw	userpw		Phone and web UI user password.	string
 ro	provisioning_complete		The provisioning is considered complete when the phone uses `tok2` for authentication. The temporary `tok1` token is invalidated.	boolean
@@ -89,18 +89,18 @@ rw	backlight_time		Seconds before the phone backlight goes off. 0 = never goes o
 rw	screensaver_time	Seconds the screen saver starts. 0 = never starts, N > 0 is the number of seconds to wait among the allowed values: "3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600".	integer
 rw	contrast	Set a custom contrast for phone display.	integer, range 0-9
 rw	brightness	Set a custom brightness for phone display.	integer, range 0-9
-rw	cap_linekey_count		Number of line keys available in the phone.	integer
-rw	cap_linekey_type_blacklist		Comma separated list of `linekey_type` values, not allowed by the phone.	string
-rw	cap_softkey_count		Number of soft keys available in the phone.	integer
-rw	cap_softkey_type_blacklist		Comma separated list of `softkey_type` values, not allowed by the phone.	string
-rw	cap_expkey_count		Number of expansion keys available in a single expansion module.	integer
-rw	cap_expkey_type_blacklist		Comma separated list of `expkey_type` values, not allowed by the phone.	string
-rw	cap_ringtone_count		Number of ringtones supported by the phone.	integer
-rw	cap_ringtone_blacklist		Comma separated list of ringtone identifiers not supported by the phone. E.g. `-1` (custom ringtone)	string
-rw	cap_expmodule_count		Number of pluggable expansion modules.	integer
-rw	cap_contrast	Capability to change display contrast.	Boolean ("","1")
-rw	cap_screensaver_file	Capability to use a custom screensaver.	Boolean ("","1")
-rw	cap_background_file	Capability to use a custom background. Boolean ("","1")
-rw	cap_backlight_time_blacklist	Comma separated list of backlight_time values not supported by the phone. Full list is: "0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600"	string
-rw	cap_screensaver_time_blacklist	Comma separated list of screensaver_time values not supported by the phone. Full list is: "0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600"	string
-rw	cap_brightness	Capability to set a custom brightness. Boolean ("","1")
+ro	cap_linekey_count		Number of line keys available in the phone.	integer
+ro	cap_linekey_type_blacklist		Comma separated list of `linekey_type` values, not allowed by the phone.	string
+ro	cap_softkey_count		Number of soft keys available in the phone.	integer
+ro	cap_softkey_type_blacklist		Comma separated list of `softkey_type` values, not allowed by the phone.	string
+ro	cap_expkey_count		Number of expansion keys available in a single expansion module.	integer
+ro	cap_expkey_type_blacklist		Comma separated list of `expkey_type` values, not allowed by the phone.	string
+ro	cap_ringtone_count		Number of ringtones supported by the phone.	integer
+ro	cap_ringtone_blacklist		Comma separated list of ringtone identifiers not supported by the phone. E.g. `-1` (custom ringtone)	string
+ro	cap_expmodule_count		Number of pluggable expansion modules.	integer
+ro	cap_contrast	Capability to change display contrast.	Boolean ("","1")
+ro	cap_screensaver_file	Capability to use a custom screensaver.	Boolean ("","1")
+ro	cap_background_file	Capability to use a custom background. Boolean ("","1")
+ro	cap_backlight_time_blacklist	Comma separated list of backlight_time values not supported by the phone. Full list is: "0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600"	string
+ro	cap_screensaver_time_blacklist	Comma separated list of screensaver_time values not supported by the phone. Full list is: "0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600"	string
+ro	cap_brightness	Capability to set a custom brightness. Boolean ("","1")
