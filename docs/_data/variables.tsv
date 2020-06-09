@@ -1,5 +1,5 @@
 access	name	index	description	datatype	domain
-ro	mac		The phone MAC address in IEEE 802 notation, e.g. `11-22-33-AA-BB-CC`	string
+ro	mac		The phone MAC address in IEEE 802 notation, e.g. `11-22-33-AA-BB-CC`	string	
 ro	short_mac		The phone MAC address in hexadecimal notation, e.g. `112233aabbcc`	string
 ro	model		The parent scope identifier (model)	string
 rw	sip_tls_port		TCP port number of the PBX host that phones connect to with SIPS protocol.	integer
