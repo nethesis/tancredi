@@ -44,13 +44,35 @@ foreach ($models as $id) {
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
-    } elseif(substr($id, 0, 16) == 'gigaset-Maxwell') {
+    } elseif(substr($id, 0, 15) == 'gigaset-Maxwell') {
         $model = substr($id, 16, 1);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
         if($scope->metadata['version'] >= 4) {
             continue;
         }
         $scope->metadata['version'] = 4;
+        $scope->setVariables([
+            'cap_background_file' => ($model == 'T29' || $model == 'T46' || $model == 'T48' || $model == 'T54' || $model == 'T56' || $model == 'T57' || $model == 'T57' || $model == 'VP59') ? '1' : '',
+            'cap_screensaver_file' => ($model == 'T29' || $model == 'T46' || $model == 'T48' || $model == 'T54' || $model == 'T56' || $model == 'T57' || $model == 'T57' || $model == 'VP59') ? '1' : '',
+            'screensaver_time'  => '600',
+            'backlight_time' => ($model == 'T21' || $model == 'T23' || $model == 'T27' || $model == 'T40' || $model == '41' || $model == '42') ? '30' : '0',
+            'cap_contrast' => ($model == 'T40' || $model == 'T43' || $model == 'T49' || $model == 'T52' || $model == 'T53') ? '1' : '',
+            'contrast' => ($model == 'T40' || $model == 'T43' || $model == 'T49' || $model == 'T52' || $model == 'T53') ? '6' : '',
+            'cap_brightness' => ($model == 'T27' || $model == 'T29' || $model == 'T43' || $model == 'T46' || $model == 'T48' || $model == 'T53' || $model == 'T54' || $model == 'T57' || $model == 'T58' || $model == 'VP59') ? '1' : '',
+            'brightness' => ($model == 'T27' || $model == 'T29' || $model == 'T43' || $model == 'T46' || $model == 'T48' || $model == 'T53' || $model == 'T54' || $model == 'T57' || $model == 'T58' || $model == 'VP59') ? '8' : '',
+            'cap_backlight_time_blacklist' => $model == 'T19' ? '0,3,5,7,10,15,30,60,120,300,600,1200,1800,2400,3000,3600' : '3,5,7,10,1200,2400,3000,3600',
+            'cap_screensaver_time_blacklist' => $model == 'T19' ? '0,3,5,7,10,15,30,60,120,300,600,1200,1800,2400,3000,3600' : '3,5,7,10,1200,2400,3000,3600',
+        ]);
+        $container['logger']->info("Fixed background and screensaver settings for model $id");
+
+    } elseif(substr($id, 0,7) == 'yealink') {
+        $model = preg_replace('/yealink-([A-Z0-9]*)$/','$1',$id);
+        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        if($scope->metadata['version'] >= 4) {
+            continue;
+        }
+        $scope->metadata['version'] = 4;
+        echo "$model\n";
         $scope->setVariables([
             'cap_background_file' => ($model == '4') ? '1' : '',
             'cap_screensaver_file' => ($model == '3' || $model == '4') ? '1' : '',
@@ -65,7 +87,7 @@ foreach ($models as $id) {
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
-    }
+        }
 }
 
 $defaults = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
