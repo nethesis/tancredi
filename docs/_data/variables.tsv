@@ -1,3 +1,4 @@
+access	name	index	description	datatype
 ro	mac		The phone MAC address in IEEE 802 notation, e.g. `11-22-33-AA-BB-CC`	string
 ro	short_mac		The phone MAC address in hexadecimal notation, e.g. `112233aabbcc`	string
 ro	model		The parent scope identifier (model)	string
@@ -85,8 +86,8 @@ rw	expkey_label	expkey	Expansion label. See the `softkey_label` description for 
 rw	expkey_value	expkey	Expansion key value. See the `softkey_value` description for more information.	string
 rw	background_file		Name of a file under the `backgrounds/` directory, e.g. `mywallpaper.png`. If the file does not exist an empty string is forcibly returned.   string - must match the regexp `[a-z0-9A-Z_-\.]+	string
 rw	screensaver_file	Name of a file under the `screensavers/` directory, e.g. `mywallpaper.png`. If the file does not exist an empty string is forcibly returned.   string - must match the regexp `[a-z0-9A-Z_-\.]+	string
-rw	backlight_time		Seconds before the phone backlight goes off. 0 = never goes off, N > 0 is the number of seconds to wait among the allowed values: "3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600".	integer
-rw	screensaver_time	Seconds the screen saver starts. 0 = never starts, N > 0 is the number of seconds to wait among the allowed values: "3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600".	integer
+rw	backlight_time		Seconds before the phone backlight goes off. 0 = never goes off, N > 0 is the number of seconds to wait among the allowed values: 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600.	integer
+rw	screensaver_time	Seconds the screen saver starts. 0 = never starts, N > 0 is the number of seconds to wait among the allowed values: 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600.	integer
 rw	contrast	Set a custom contrast for phone display.	integer, range 0-9
 rw	brightness	Set a custom brightness for phone display.	integer, range 0-9
 ro	cap_linekey_count		Number of line keys available in the phone.	integer
@@ -101,6 +102,6 @@ ro	cap_expmodule_count		Number of pluggable expansion modules.	integer
 ro	cap_contrast	Capability to change display contrast.	boolean
 ro	cap_screensaver_file	Capability to use a custom screensaver.	boolean
 ro	cap_background_file	Capability to use a custom background. boolean
-ro	cap_backlight_time_blacklist	Comma separated list of backlight_time values not supported by the phone. Full list is: "0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600"	string
-ro	cap_screensaver_time_blacklist	Comma separated list of screensaver_time values not supported by the phone. Full list is: "0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600"	string
+ro	cap_backlight_time_blacklist	Comma separated list of backlight_time values not supported by the phone. Full list is: 0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600	string
+ro	cap_screensaver_time_blacklist	Comma separated list of screensaver_time values not supported by the phone. Full list is: 0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600	string
 ro	cap_brightness	Capability to set a custom brightness. boolean
