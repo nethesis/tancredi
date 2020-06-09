@@ -210,6 +210,10 @@
         <P20052 para="FirmwareUpGrade.WallpaperServerURL">{{ cap_background_file and background_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" : "" }}</P20052>
         <P40002 para="FirmwareUpGrade.ExpServer"></P40002>
 
+{% if cap_contrast %}
+        <!-- Undocumented P tag for "LCD Gray Level" for models S4xx S3xx S2xx ranging 0-19 -->
+        <P20995 para="Preference.LcdGrayLevel">{{ contrast != '' ? contrast * 2 : '12' }}</P20995>
+{% endif %}
         <P20642 para="Preference.InactiveLevel">0</P20642>
         <P20643 para="Preference.ActiveLevel">{{ brightness != '' ? brightness + 1 : '1' }}</P20643>
 

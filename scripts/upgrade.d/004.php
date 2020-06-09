@@ -101,8 +101,8 @@ foreach ($models as $id) {
             'cap_screensaver_time_blacklist' => "3,5,7,10,15,30,1200,2400,3000,3600",
             'backlight_time' => ($model == '5' || $model == '7') ? '60' : '',
             'cap_backlight_time_blacklist' => ($model == '5' || $model == '7') ? "" : "0,3,5,7,10,15,30,60,120,300,600,1200,1800,2400,3000,3600",
-            // 'cap_contrast' => $model == 'B' ? '1' : '',
-            // 'contrast' => $model == 'B' ? '5' : '',
+            'cap_contrast' => ($model == '4' || $model == '3' || $model == '2') ? '1' : '',
+            'contrast' => ($model == '4' || $model == '3' || $model == '2') ? '6' : '',
             'cap_brightness' => '1',
             'brightness' => '8',
         ]);
