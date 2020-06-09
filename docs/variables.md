@@ -2,6 +2,7 @@
 layout: default
 title: Variables
 ---
+
 <h1>Variables</h1>
 {% assign sorted_vars = site.data.variables | sort:'name' %}
 {% for var in sorted_vars %}
