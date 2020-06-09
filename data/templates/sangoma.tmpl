@@ -113,9 +113,9 @@
         <P75 para="Preference.DaylightSavingTime">2</P75>
         <P102 para="Preference.DateDisplayFormat">{{ sangoma.date_format(date_format) }}</P102>
         <P8624 para="Preference.TimeFormat">{{ time_format == '12' ? '1' : '0' }}</P8624>
-        <P8683 para="Preference.BacklightTime">{{ backlight_time }}</P8683>
-        <P8940 para="Preference.ScreenTimeOut">{{ sangoma.screensaver_wait_time(screensaver_wait_time) }}</P8940>
-        <P8950 para="Preference.ScreenSaverType">{{ screensaver_mode ?? 1 }}</P8950>
+        <P8683 para="Preference.BacklightTime">{{ backlight_time ?: '0' }}</P8683>
+        <P8940 para="Preference.ScreenTimeOut">{{ sangoma.screensaver_wait_time(screensaver_time) }}</P8940>
+        <P8950 para="Preference.ScreenSaverType">{{ cap_screensaver_file and screensaver_file ? '3' : '0' }}</P8950>
         <P8721 para="Preference.RingTones">{{ ringtone in 1 .. cap_ringtone_count ? ringtone : '1' }}</P8721>
         <P85 para="Preference.NoKeyEntryTimeout">3</P85>
         <P8672 para="Preference.IncomingCallShowMode">1</P8672>
@@ -198,7 +198,7 @@
         <P238 para="FirmwareUpGrade.CheckMode">0</P238>
 
         <!--Global Config-->
-        <P8951 para="GlobalConfig.LogoText">{{ logo_text }}</P8951>
+        <P8951 para="GlobalConfig.LogoText">{{ logo_text | default('Sangoma') }}</P8951>
 
         <P20058 para="ToneSelectCountry">{{ sangoma.tonezone(tonezone) }}</P20058>
 
@@ -206,12 +206,12 @@
         <P20172 para="Preference.VmTransfer">0</P20172>
         <P20173 para="Preference.VmTransferCode" />
         <P20174 para="FirmwareUpGrade.RingUrl">{{ ringtone_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/ringtones/#{ringtone_file}?" : "" }}</P20174>
-        <P20051 para="FirmwareUpGrade.ScreensaverServerURL">{{ screensaver_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/screensavers/#{screensaver_file}" : "" }}</P20051>
-        <P20052 para="FirmwareUpGrade.WallpaperServerURL">{{ background_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" : "" }}</P20052>
+        <P20051 para="FirmwareUpGrade.ScreensaverServerURL">{{ cap_screensaver_file and screensaver_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/screensavers/#{screensaver_file}" : "" }}</P20051>
+        <P20052 para="FirmwareUpGrade.WallpaperServerURL">{{ cap_background_file and background_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" : "" }}</P20052>
         <P40002 para="FirmwareUpGrade.ExpServer"></P40002>
 
-        <P20642 para="Preference.InactiveLevel">{{ inactive_backlight_level }}</P20642>
-        <P20643 para="Preference.ActiveLevel">{{ active_backlight_level }}</P20643>
+        <P20642 para="Preference.InactiveLevel">0</P20642>
+        <P20643 para="Preference.ActiveLevel">{{ brightness != '' ? brightness + 1 : '1' }}</P20643>
 
         <P24053 para="VLAN.WANPort.Active">{{ vlan_id_phone != '' ? '1' : '0' }}</P24053>
         <P24054 para="VLAN.PCPort.Active">{{ vlan_id_pcport != '' ? '1' : '0' }}</P24054>

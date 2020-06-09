@@ -87,7 +87,28 @@ foreach ($models as $id) {
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
+    } elseif(substr($id, 0, 7) == 'sangoma') {
+        $model = substr($id, 10, 1);
+        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        if($scope->metadata['version'] >= 4) {
+            continue;
         }
+        $scope->metadata['version'] = 4;
+        $scope->setVariables([
+            'cap_background_file' => ($model == '5' || $model == '7') ? '1' : '',
+            'cap_screensaver_file' => ($model == '5' || $model == '7') ? '1' : '',
+            'screensaver_time'  => '600',
+            'cap_screensaver_time_blacklist' => "3,5,7,10,15,30,1200,2400,3000,3600",
+            'backlight_time' => ($model == '5' || $model == '7') ? '60' : '',
+            'cap_backlight_time_blacklist' => ($model == '5' || $model == '7') ? "" : "0,3,5,7,10,15,30,60,120,300,600,1200,1800,2400,3000,3600",
+            // 'cap_contrast' => $model == 'B' ? '1' : '',
+            // 'contrast' => $model == 'B' ? '5' : '',
+            'cap_brightness' => '1',
+            'brightness' => '8',
+        ]);
+        $container['logger']->info("Fixed background and screensaver settings for model $id");
+
+    }
 }
 
 $defaults = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);

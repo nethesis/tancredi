@@ -89,10 +89,17 @@
 {% endmacro %}
 
 #
-# map screensaver_wait_time from seconds to sangoma values
+# map seconds from seconds to sangoma values
 #
-{% macro screensaver_wait_time(screensaver_wait_time) %}
-{% if screensaver_wait_time == 0 %}0{% elseif screensaver_wait_time < 60 %}1{% elseif screensaver_wait_time < 120 %}2{% elseif screensaver_wait_time < 300 %}3{% elseif screensaver_wait_time < 600 %}4{% else %}5{% endif %}
+{% macro screensaver_wait_time(seconds) %}
+{% set map = {
+    '60': '1',
+    '120': '2',
+    '300': '3',
+    '600': '4',
+    '1800': '5',
+} %}
+    {{- map[seconds] ?: '0' -}}
 {% endmacro %}
 
 #
