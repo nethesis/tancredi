@@ -83,7 +83,7 @@ foreach ($models as $id) {
             'cap_brightness' => '1',
             'brightness' => '5',
             'cap_backlight_time_blacklist' => '3,5,7,10,15,30',
-            'cap_screensaver_time_blacklist' => ($model == '2' || $model == 'B') ? '3,5,7,10,15,30,60,120,300' : '0,3,5,7,10,15,30,60,120,300,600,1200,1800,2400,3000,3600',
+            'cap_screensaver_time_blacklist' => '3,5,7,10,1200,2400,3000,3600',
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
