@@ -1,3 +1,8 @@
+---
+parent: Paths
+grand_parent: Tancredi API v1
+---
+
 # POST /models
 
 ## Create a new model

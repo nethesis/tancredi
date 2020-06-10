@@ -1,3 +1,8 @@
+---
+parent: Paths
+grand_parent: Tancredi API v1
+---
+
 # GET /phones/{mac}
 
 ## Simple query
@@ -32,7 +37,7 @@ Success response:
 
 It is possible to query `model_url` with parameter `inherit=1` to obtain the
 default values for the items in `variables`. See also [GET
-/models/{name}](modelsNameGet).
+/models/{name}]({{ "/paths/modelsNameGet" | relative_url }}).
 
 Failed response:
 

@@ -1,3 +1,8 @@
+---
+parent: Paths
+grand_parent: Tancredi API v1
+---
+
 # DELETE /ringtones/{file}
 
 ## Delete a ringtones file

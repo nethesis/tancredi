@@ -1,12 +1,17 @@
-# POST /screensavers
+---
+parent: Paths
+grand_parent: Tancredi API v1
+---
 
-## Upload a screensavers file
+# POST /ringtones
 
-Upload a screensavers file that could be used in scopes. The POST payload is `multipart/form-data` (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST for details).
+## Upload a ringtones file
+
+Upload a ringtones file that could be used in scopes. The POST payload is `multipart/form-data` (see [HTTP POST method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST) for details).
 
 Example request:
 ```text
-POST /tancredi/api/v1/screensavers HTTP/1.1
+POST /tancredi/api/v1/ringtones HTTP/1.1
 User-Agent: curl/7.29.0
 Host: 192.168.122.76
 Accept-Encoding: deflate, gzip
@@ -19,14 +24,14 @@ Content-Type: multipart/form-data; boundary=--------------------
 --------3d6bc1ab5f55
 
 ------------------------------3d6bc1ab5f55
-Content-Disposition: form-data; name="screensavers"; filename="screen.jpeg"
+Content-Disposition: form-data; name="ringtones"; filename="Kabuto.mp3"
 Content-Type: application/octet-stream
 
 ```
 
 
 ```text
-POST /screensavers
+POST /ringtones
 ```
 
 Success response:

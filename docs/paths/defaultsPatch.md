@@ -1,3 +1,8 @@
+---
+parent: Paths
+grand_parent: Tancredi API v1
+---
+
 # PATCH /defaults
 
 Each entity attribute represents a **variable** for phones and models templates.

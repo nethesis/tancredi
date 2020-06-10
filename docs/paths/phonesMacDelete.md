@@ -1,3 +1,8 @@
+---
+parent: Paths
+grand_parent: Tancredi API v1
+---
+
 # DELETE /phones/{mac}
 
 ## Delete a phone

@@ -1,11 +1,16 @@
-# DELETE /backgrounds/{file}
+---
+parent: Paths
+grand_parent: Tancredi API v1
+---
 
-## Delete a backgrounds file
+# DELETE /screensavers/{file}
 
-Remove a backgrounds file previously uploaded
+## Delete a screensavers file
+
+Remove a screensavers file from previously uploaded screensavers
 
 ```text
-DELETE /backgrounds/mountains.png
+DELETE /screensavers/screen.jpeg
 ```
 
 (empty request body)

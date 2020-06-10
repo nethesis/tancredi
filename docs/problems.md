@@ -1,3 +1,7 @@
+---
+nav_exclude: true
+---
+
 # Problems
 
 This is the reference index of error types, as required by [RFC

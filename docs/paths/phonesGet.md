@@ -1,9 +1,14 @@
+---
+parent: Paths
+grand_parent: Tancredi API v1
+---
+
 # GET /phones
 
 ## Retrieve all phones
 
 Retrieve the complete phone inventory. See also [GET
-/phones/{mac}](phonesMacGet).
+/phones/{mac}]({{ "/paths/phonesMacGet" | relative_url }}).
 
     GET /tancredi/api/v1/phones
 

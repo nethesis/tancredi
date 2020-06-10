@@ -1,28 +1,61 @@
 ---
-layout: default
-title: Variables
+title: Variables reference
+nav_order: 3
 ---
 
-<h1>Variables</h1>
+# Variables reference 
+{: .no_toc }
+
+- TOC
+{:toc}
+
+## Data types
+
+- The `boolean` type is represented by the empty string for _FALSE_ and "1" for _TRUE_
+- The `integer` type is the zero or any positive integer
+- The `string` type is for any other string
+
+## Indexed variables
+
+Some variables are marked as _indexed_. That means their scope actual name ends with a `_N` suffix, where N is an integer. 
+
+For instance the *account_username* variable is an indexed variable, so in the scope it becomes `account_username_1` or `account_username_2` etc.
+
+## Read only access
+
+Some variables are marked as _read-only_. Tancredi does not enforce any access control: it only means that those variables are not designed to be modified by the administrative API. 
+
+## Variables list
+
 {% assign sorted_vars = site.data.variables | sort:'name' %}
 {% for var in sorted_vars %}
 
-<h2>{{ var.name }}</h2>
+### {{ var.name }}
+{: .no_toc }
 
 {% if var.access == "ro" %}
-<p><em>Read-only access</em></p>
+_Read-only access_
 {% endif %}
 
 {% if var.index %}
-<p>Indexed by <em>{{ var.index }}</em></p>
+Indexed by _{{ var.index }}_
 {% endif %}
 
-<p>{{ var.description | markdownify }}</p>
+{{ var.description | markdownify }}
 
 {% if var.domain %}
-<p><tt>{{ var.datatype }}</tt> - {{ var.domain | markdownify }}</p>
+{% capture datatype %}`{{ var.datatype }}` - {{ var.domain }}{% endcapture %}
 {% else %}
-<p><tt>{{ var.datatype }}</tt></p>
+{% capture datatype %}`{{ var.datatype }}`{% endcapture %}
 {% endif %}
+{{ datatype | markdownify }}
 
 {% endfor %}
+
+## Line key types
+
+TODO
+
+## Soft key types
+
+TODO

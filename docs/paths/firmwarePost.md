@@ -1,8 +1,13 @@
+---
+parent: Paths
+grand_parent: Tancredi API v1
+---
+
 # POST /firmware
 
 ## Upload a firmware file
 
-Upload a firmware file that could be used in scopes. The POST payload is `multipart/form-data` (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST for details).
+Upload a firmware file that could be used in scopes. The POST payload is `multipart/form-data` (see [HTTP POST method]([HTTP POST method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST)) for details).
 
 Example request:
 ```text
