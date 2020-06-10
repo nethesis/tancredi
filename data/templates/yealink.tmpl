@@ -1147,10 +1147,10 @@ phone_setting.lcd_logo.mode = {{ lcd_logo_mode }}
 lcd_logo.delete =
 lcd_logo.url = {{ lcd_logo_url }}
 
-phone_setting.contrast = {{ contrast }}
-phone_setting.backlight_time = {{ backlight_time }}
-phone_setting.inactive_backlight_level = {{ inactive_backlight_level }}
-phone_setting.active_backlight_level = {{ active_backlight_level }}
+phone_setting.contrast = {{ ( contrast == '0' or contrast >= 1 ) ? contrast + 1 }}
+phone_setting.backlight_time = {{ backlight_time | default('0') }}
+phone_setting.inactive_backlight_level =
+phone_setting.active_backlight_level = {{ ( brightness == '0' or brightness >= 1 ) ? brightness + 1 }}
 phone_setting.predial_autodial = 1
 
 ringtone.url = {{ ringtone_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/ringtones/#{ringtone_file}?" : "" }}
@@ -1269,12 +1269,12 @@ lang.wui = {{ yealink.language(language) }}
 #######################################################################################
 screensaver.type = {{ screensaver_mode }}
 screensaver.delete =
-screensaver.upload_url = {{ screesaver_url }}
+screensaver.upload_url = {{ cap_screensaver_file and screensaver_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/screensavers/#{screensaver_file}" : "" }}
 features.blf_active_backlight.enable = 1
 screensaver.display_clock.enable = 1
 screensaver.clock_move_interval = 600
 screensaver.picture_change_interval = 60
-screensaver.wait_time = {{ screensaver_wait_time }}
+screensaver.wait_time = {{ screensaver_time | default('600') }}
 screensaver.xml_browser.url =
 
 #######################################################################################
@@ -1306,8 +1306,8 @@ features.power_saving.intelligent_mode = 0
 ##Single File Size: <=5MB
 ##2MB of space should bereserved for the phone
 
-wallpaper_upload.url = {{ wallpaper_url }}
-phone_setting.backgrounds = {{ wallpaper }}
+wallpaper_upload.url = {{ cap_background_file and background_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" : "" }}
+phone_setting.backgrounds = {{ background_file }}
 
 ## phone_setting.backgrounds_with_dsskey_unfold(Only support T48G/S)
 phone_setting.backgrounds_with_dsskey_unfold = Auto

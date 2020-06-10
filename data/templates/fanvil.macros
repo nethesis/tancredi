@@ -1,3 +1,40 @@
+#
+# contrast_map -- map range 0-9 to 1-16
+#
+{% macro contrast_map(value) %}
+{% set map = {
+  '0': '1',
+  '1': '2',
+  '2': '3',
+  '3': '4',
+  '4': '5',
+  '5': '6',
+  '6': '7',
+  '7': '9',
+  '8': '11',
+  '9': '16',
+} %}
+    {{- map[value] ?: '10' -}}
+{% endmacro contrast_map %}
+
+#
+# brightness_map -- map range 0-9 to 1-16
+#
+{% macro brightness_map(value) %}
+{% set map = {
+  '0': '1',
+  '1': '4',
+  '2': '8',
+  '3': '9',
+  '4': '10',
+  '5': '12',
+  '6': '13',
+  '7': '14',
+  '8': '15',
+  '9': '16',
+} %}
+    {{- map[value] ?: '10' -}}
+{% endmacro brightness_map %}
 
 #
 # scheme_map -- translate "provisioning_url_scheme" to Fanvil code
