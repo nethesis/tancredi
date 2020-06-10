@@ -52,14 +52,14 @@ foreach ($models as $id) {
         }
         $scope->metadata['version'] = 4;
         $scope->setVariables([
-            'cap_background_file' => ($model == 'T29' || $model == 'T46' || $model == 'T48' || $model == 'T54' || $model == 'T56' || $model == 'T57' || $model == 'T57' || $model == 'VP59') ? '1' : '',
-            'cap_screensaver_file' => ($model == 'T29' || $model == 'T46' || $model == 'T48' || $model == 'T54' || $model == 'T56' || $model == 'T57' || $model == 'T57' || $model == 'VP59') ? '1' : '',
+            'cap_background_file' => in_array($model, ['T29', 'T46', 'T48', 'T54', 'T56', 'T57', 'T57', 'VP59']) ? '1' : '',
+            'cap_screensaver_file' => in_array($model, ['T29', 'T46', 'T48', 'T54', 'T56', 'T57', 'T57', 'VP59']) ? '1' : '',
             'screensaver_time'  => '600',
-            'backlight_time' => ($model == 'T21' || $model == 'T23' || $model == 'T27' || $model == 'T40' || $model == '41' || $model == '42') ? '30' : '0',
-            'cap_contrast' => ($model == 'T40' || $model == 'T43' || $model == 'T49' || $model == 'T52' || $model == 'T53') ? '1' : '',
-            'contrast' => ($model == 'T40' || $model == 'T43' || $model == 'T49' || $model == 'T52' || $model == 'T53') ? '6' : '',
-            'cap_brightness' => ($model == 'T27' || $model == 'T29' || $model == 'T43' || $model == 'T46' || $model == 'T48' || $model == 'T53' || $model == 'T54' || $model == 'T57' || $model == 'T58' || $model == 'VP59') ? '1' : '',
-            'brightness' => ($model == 'T27' || $model == 'T29' || $model == 'T43' || $model == 'T46' || $model == 'T48' || $model == 'T53' || $model == 'T54' || $model == 'T57' || $model == 'T58' || $model == 'VP59') ? '8' : '',
+            'backlight_time' => in_array($model, ['T21', 'T23', 'T27', 'T40', '41', '42']) ? '30' : '0',
+            'cap_contrast' => in_array($model, ['T40', 'T43', 'T49', 'T52', 'T53']) ? '1' : '',
+            'contrast' => in_array($model, ['T40', 'T43', 'T49', 'T52', 'T53']) ? '6' : '',
+            'cap_brightness' => in_array($model, ['T27', 'T29', 'T43', 'T46', 'T48', 'T53', 'T54', 'T57', 'T58', 'VP59']) ? '1' : '',
+            'brightness' => in_array($model, ['T27', 'T29', 'T43', 'T46', 'T48', 'T53', 'T54', 'T57', 'T58', 'VP59']) ? '8' : '',
             'cap_backlight_time_blacklist' => $model == 'T19' ? '0,3,5,7,10,15,30,60,120,300,600,1200,1800,2400,3000,3600' : '3,5,7,10,1200,2400,3000,3600',
             'cap_screensaver_time_blacklist' => $model == 'T19' ? '0,3,5,7,10,15,30,60,120,300,600,1200,1800,2400,3000,3600' : '3,5,7,10,1200,2400,3000,3600',
         ]);
