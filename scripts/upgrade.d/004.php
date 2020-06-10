@@ -116,7 +116,7 @@ foreach ($models as $id) {
         }
         $scope->metadata['version'] = 4;
         $scope->setVariables([
-            'cap_background_file' => ($model == 'D375' || $model == 'D385' || $model == 'D717' || $model == 'D735' || $model == 'D765' || $model == 'D785') ? '1' : '',
+            'cap_background_file' => in_array($model, ['D375', 'D385', 'D717', 'D735', 'D765', 'D785']) ? '1' : '',
             'cap_screensaver_file' => '',
             'screensaver_time'  => '',
             'cap_screensaver_time_blacklist' => '0,3,5,7,10,15,30,60,120,300,600,1200,1800,2400,3000,3600',
