@@ -44,8 +44,8 @@ foreach ($models as $id) {
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
-    } elseif(substr($id, 0, 15) == 'gigaset-Maxwell') {
-        $model = substr($id, 16, 1);
+    } elseif(substr($id, 0,7) == 'yealink') {
+        $model = preg_replace('/yealink-([A-Z0-9]*)$/','$1',$id);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
         if($scope->metadata['version'] >= 4) {
             continue;
@@ -65,8 +65,8 @@ foreach ($models as $id) {
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
-    } elseif(substr($id, 0,7) == 'yealink') {
-        $model = preg_replace('/yealink-([A-Z0-9]*)$/','$1',$id);
+    } elseif(substr($id, 0, 15) == 'gigaset-Maxwell') {
+        $model = substr($id, 16, 1);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
         if($scope->metadata['version'] >= 4) {
             continue;
