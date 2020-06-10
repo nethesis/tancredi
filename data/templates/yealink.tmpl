@@ -1274,7 +1274,7 @@ features.blf_active_backlight.enable = 1
 screensaver.display_clock.enable = 1
 screensaver.clock_move_interval = 600
 screensaver.picture_change_interval = 60
-screensaver.wait_time = {{ screensaver_time }}
+screensaver.wait_time = {{ screensaver_time | default('600') }}
 screensaver.xml_browser.url =
 
 #######################################################################################
