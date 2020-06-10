@@ -1306,7 +1306,7 @@ features.power_saving.intelligent_mode = 0
 ##Single File Size: <=5MB
 ##2MB of space should bereserved for the phone
 
-wallpaper_upload.url = {{ background_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" : "" }}
+wallpaper_upload.url = {{ cap_background_file and background_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" : "" }}
 phone_setting.backgrounds = {{ background_file }}
 
 ## phone_setting.backgrounds_with_dsskey_unfold(Only support T48G/S)
