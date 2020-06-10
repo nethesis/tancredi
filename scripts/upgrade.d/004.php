@@ -108,6 +108,27 @@ foreach ($models as $id) {
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
+    } elseif(substr($id, 0, 4) == 'snom') {
+        $model = substr($id, 6, 4);
+        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        if($scope->metadata['version'] >= 4) {
+            continue;
+        }
+        $scope->metadata['version'] = 4;
+        $scope->setVariables([
+            'cap_background_file' => ($model == 'D375' || $model == 'D385' || $model == 'D717' || $model == 'D735' || $model == 'D765' || $model == 'D785') ? '1' : '',
+            'cap_screensaver_file' => '',
+            'screensaver_time'  => '',
+            'cap_screensaver_time_blacklist' => '',
+            'backlight_time' => '20',
+            'cap_backlight_time_blacklist' => '',
+            'cap_contrast' => '',
+            'contrast' => ($model == '4' || $model == '3' || $model == '2') ? '6' : '',
+            'cap_brightness' => '1',
+	    'brightness' => '9',
+        ]);
+        $container['logger']->info("Fixed background and screensaver settings for model $id");
+
     }
 }
 
