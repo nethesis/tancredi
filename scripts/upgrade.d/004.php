@@ -125,7 +125,7 @@ foreach ($models as $id) {
             'cap_contrast' => '',
             'contrast' =>  '',
             'cap_brightness' => '1',
-	    'brightness' => '9',
+            'brightness' => '9',
         ]);
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
