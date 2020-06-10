@@ -1148,7 +1148,7 @@ lcd_logo.delete =
 lcd_logo.url = {{ lcd_logo_url }}
 
 phone_setting.contrast = {{ ( contrast == '0' or contrast >= 1 ) ? contrast + 1 }}
-phone_setting.backlight_time = {{ yealink.backlight_time(backlight_time) }}
+phone_setting.backlight_time = {{ backlight_time | default('0') }}
 phone_setting.inactive_backlight_level =
 phone_setting.active_backlight_level = {{ ( brightness == '0' or brightness >= 1 ) ? brightness + 1 }}
 phone_setting.predial_autodial = 1
