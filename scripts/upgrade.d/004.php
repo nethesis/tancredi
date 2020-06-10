@@ -72,7 +72,6 @@ foreach ($models as $id) {
             continue;
         }
         $scope->metadata['version'] = 4;
-        echo "$model\n";
         $scope->setVariables([
             'cap_background_file' => ($model == '4') ? '1' : '',
             'cap_screensaver_file' => ($model == '3' || $model == '4') ? '1' : '',
