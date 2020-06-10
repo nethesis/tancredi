@@ -123,7 +123,7 @@ foreach ($models as $id) {
             'backlight_time' => '30',
             'cap_backlight_time_blacklist' => '',
             'cap_contrast' => '',
-            'contrast' => ($model == '4' || $model == '3' || $model == '2') ? '6' : '',
+            'contrast' =>  '',
             'cap_brightness' => '1',
 	    'brightness' => '9',
         ]);
