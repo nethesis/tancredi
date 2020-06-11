@@ -24,7 +24,7 @@ $models = $container['storage']->listScopes('model');
 foreach ($models as $id) {
     if(substr($id, 0, 6) == 'fanvil') {
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
-        if($scope->metadata['version'] >= 3) {
+        if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 3) {
             continue;
         }
         $scope->metadata['version'] = 3;
@@ -35,7 +35,7 @@ foreach ($models as $id) {
 
     } elseif(substr($id, 0, 7) == 'yealink') {
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
-        if($scope->metadata['version'] >= 3) {
+        if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 3) {
             continue;
         }
         $scope->metadata['version'] = 3;
@@ -46,7 +46,7 @@ foreach ($models as $id) {
 
     } elseif(substr($id, 0, 7) == 'gigaset') {
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
-        if($scope->metadata['version'] >= 3) {
+        if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 3) {
             continue;
         }
         $scope->metadata['version'] = 3;
