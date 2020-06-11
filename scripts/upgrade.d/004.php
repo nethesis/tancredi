@@ -24,7 +24,7 @@ $models = $container['storage']->listScopes('model');
 foreach ($models as $id) {
     if(substr($id, 0, 6) == 'fanvil') {
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
-        if($scope->metadata['version'] >= 4) {
+        if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
         $model = substr($id, 9, 1);
@@ -47,7 +47,7 @@ foreach ($models as $id) {
     } elseif(substr($id, 0,7) == 'yealink') {
         $model = preg_replace('/yealink-([A-Z0-9]*)$/','$1',$id);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
-        if($scope->metadata['version'] >= 4) {
+        if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
         $scope->metadata['version'] = 4;
@@ -68,7 +68,7 @@ foreach ($models as $id) {
     } elseif(substr($id, 0, 15) == 'gigaset-Maxwell') {
         $model = substr($id, 16, 1);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
-        if($scope->metadata['version'] >= 4) {
+        if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
         $scope->metadata['version'] = 4;
@@ -89,7 +89,7 @@ foreach ($models as $id) {
     } elseif(substr($id, 0, 7) == 'sangoma') {
         $model = substr($id, 10, 1);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
-        if($scope->metadata['version'] >= 4) {
+        if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
         $scope->metadata['version'] = 4;
@@ -110,7 +110,7 @@ foreach ($models as $id) {
     } elseif(substr($id, 0, 4) == 'snom') {
         $model = substr($id, 6, 4);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
-        if($scope->metadata['version'] >= 4) {
+        if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
         $scope->metadata['version'] = 4;

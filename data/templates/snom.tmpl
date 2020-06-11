@@ -51,7 +51,7 @@
 
         <setting_server perm="RW">{{ provisioning_url2 }}</setting_server>
         {# snom allowed values: 3..15. active_backlight_level values: 1..10 #}
-        <backlight perm="">{{ ((15 - 3 / 10) * brightness + 3)|round  }}</backlight>
+        <backlight perm="">{{ (1.2 * brightness + 3)|round  }}</backlight>
         <backlight_idle perm="">8</backlight_idle>
         <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
         <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
