@@ -1,0 +1,13 @@
+type	description	value	label
+[empty string]	soft key is not available or not assigned		
+forward			
+dnd			
+recall			
+pick_up			
+speed_dial			
+group_pickup			
+history			
+menu			
+status			
+ldap			
+prefix			

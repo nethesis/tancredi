@@ -1,0 +1,22 @@
+type	description	value	label
+blf			
+conference			
+direct_pickup			
+dnd	enable/disable *do not disturb*		
+dtmf			
+forward			
+group_pickup			
+hold			
+ldap			
+line			
+multicast_paging			
+[empty string]	line key is not available or not assigned		
+phone_lock			
+prefix			
+recall			
+record			
+speed_dial	call a number pressing the button		
+transfer			
+url	run HTTP GET request		
+voice_mail			
+queuetoggle	enable login/logout to/from queue with the function code held by the `queuetoggle` variable		

@@ -50,12 +50,23 @@ Indexed by _{{ var.index }}_
 {% endif %}
 {{ datatype | markdownify }}
 
+----
+
 {% endfor %}
 
 ## Line key types
 
-TODO
+{% assign sorted_vars = site.data.linekeys | sort:'type' %}
+Type | Description | Value | Label
+--- | --- | --- | ---
+{% for var in sorted_vars %}`{{ var.type | trim }}` | {{ var.description }} | {{ var.value }} | {{ var.label }}
+{% endfor %}
+
 
 ## Soft key types
 
-TODO
+{% assign sorted_vars = site.data.softkeys | sort:'type' %}
+Type | Description | Value | Label
+--- | --- | --- | ---
+{% for var in sorted_vars %}`{{ var.type | trim }}` | {{ var.description }} | {{ var.value }} | {{ var.label }}
+{% endfor %}
