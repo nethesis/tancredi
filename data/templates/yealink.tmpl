@@ -1267,7 +1267,7 @@ lang.wui = {{ yealink.language(language) }}
 #######################################################################################
 ##                                   Screensaver                                     ##
 #######################################################################################
-screensaver.type = {{ screensaver_mode }}
+screensaver.type = {{ cap_screensaver_file and screensaver_file ? '1' : '0' }}
 screensaver.delete =
 screensaver.upload_url = {{ cap_screensaver_file and screensaver_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/screensavers/#{screensaver_file}" : "" }}
 features.blf_active_backlight.enable = 1
