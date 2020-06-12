@@ -44,7 +44,7 @@ Failed response:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#invalid-file-name",
+    "type": "https://nethesis.github.io/tancredi/problems/#invalid-file-name",
     "title": "Invalid file name"
 }
 ```
@@ -55,7 +55,7 @@ Failed response:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#not-found",
+    "type": "https://nethesis.github.io/tancredi/problems/#not-found",
     "title": "Resource not found"
 }
 ```
