@@ -27,7 +27,7 @@ foreach ($models as $id) {
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
-        $model = substr($id, 9, 1);
+        $model = substr($id, 8, 1);
         $is_second_generation = $model == '5' || $model == '6' || substr($id, 10, 2) == 'SG';
         $scope->metadata['version'] = 4;
         $scope->setVariables([
@@ -66,7 +66,7 @@ foreach ($models as $id) {
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
     } elseif(substr($id, 0, 15) == 'gigaset-Maxwell') {
-        $model = substr($id, 16, 1);
+        $model = substr($id, 15, 1);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
@@ -108,7 +108,7 @@ foreach ($models as $id) {
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
     } elseif(substr($id, 0, 4) == 'snom') {
-        $model = substr($id, 6, 4);
+        $model = substr($id, 5, 4);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
