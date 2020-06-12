@@ -87,7 +87,7 @@ foreach ($models as $id) {
         $container['logger']->info("Fixed background and screensaver settings for model $id");
 
     } elseif(substr($id, 0, 7) == 'sangoma') {
-        $model = substr($id, 10, 1);
+        $model = substr($id, 9, 1);
         $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
