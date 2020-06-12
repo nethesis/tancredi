@@ -49,7 +49,7 @@ Failed responses:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#malformed-data",
+    "type": "https://nethesis.github.io/tancredi/problems/#malformed-data",
     "title": "Illegal character(s) in model name"
 }
 ```
@@ -60,7 +60,7 @@ Failed responses:
 
 ```json
 {
-    "type": "https://github.com/nethesis/tancredi/wiki/problems#malformed-data",
+    "type": "https://nethesis.github.io/tancredi/problems/#malformed-data",
     "title": "Missing model name"
 }
 ```

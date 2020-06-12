@@ -88,7 +88,7 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
     // get all scopes of type "phone"
     if (!$this->storage->scopeExists($mac)) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
         $response = $response->withJson($results,404,JSON_FLAGS);
@@ -111,7 +111,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $variables = array_key_exists('variables',$post_data) ? $post_data['variables'] : array();
     if (empty($mac)) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#malformed-data',
             'title' => 'Missing MAC address'
         );
         $response = $response->withJson($results,400,JSON_FLAGS);
@@ -122,7 +122,7 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     if ($this->storage->scopeExists($mac)) {
         // Error: scope is already configured
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#phone-exists',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#phone-exists',
             'title' => 'The phone mac address is already registered'
         );
         $response = $response->withJson($results,409,JSON_FLAGS);
@@ -151,7 +151,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
 
     if (!$this->storage->scopeExists($mac)) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
         $response = $response->withJson($results,404,JSON_FLAGS);
@@ -163,7 +163,7 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
     $readonly_params = ['mac', 'short_mac', 'model_url', 'tok1', 'tok2', 'provisioning_url1', 'provisioning_url2'];
     if (array_intersect($readonly_params, array_keys($patch_data))) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#read-only-attribute',
             'title' => 'Cannot change a read-only attribute'
         );
         $response = $response->withJson($results,403,JSON_FLAGS);
@@ -197,7 +197,7 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
 
     if (!$this->storage->scopeExists($mac)) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
         $response = $response->withJson($results,404,JSON_FLAGS);
@@ -264,7 +264,7 @@ $app->get('/models/{id}[/version/{version:original}]', function(Request $request
     // get all scopes of type "model"
     if (!$this->storage->scopeExists($id) or $this->storage->getScopeMeta($id,'scopeType') !== 'model') {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
         $response = $response->withJson($results,404,JSON_FLAGS);
@@ -291,7 +291,7 @@ $app->post('/models', function (Request $request, Response $response, $args) {
     $variables = $post_data['variables'];
     if (empty($id)) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#malformed-data',
             'title' => 'Missing model name'
         );
         $response = $response->withJson($results,400,JSON_FLAGS);
@@ -301,7 +301,7 @@ $app->post('/models', function (Request $request, Response $response, $args) {
     }
     if (preg_match('/^[a-zA-Z0-9_\-\.]+$/',$id) == 0) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#malformed-data',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#malformed-data',
             'title' => 'Illegal character(s) in model name'
         );
         $response = $response->withJson($results,400,JSON_FLAGS);
@@ -312,7 +312,7 @@ $app->post('/models', function (Request $request, Response $response, $args) {
     if ($this->storage->scopeExists($id)) {
         // Error: scope is already configured
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#phone-exists',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#phone-exists',
             'title' => 'The model name is already registered'
         );
         $response = $response->withJson($results,409,JSON_FLAGS);
@@ -338,7 +338,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
 
     if (!$this->storage->scopeExists($id)) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
         $response = $response->withJson($results,404,JSON_FLAGS);
@@ -349,7 +349,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
 
     if (array_key_exists('name',$patch_data)) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#read-only-attribute',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#read-only-attribute',
             'title' => 'Cannot change a read-only attribute'
         );
         $response = $response->withJson($results,403,JSON_FLAGS);
@@ -383,7 +383,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
 
     if (!$this->storage->scopeExists($id)) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
         $response = $response->withJson($results,404,JSON_FLAGS);
@@ -394,7 +394,7 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
 
     if ($this->storage->scopeInUse($id)) {
          $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#resource-in-use',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#resource-in-use',
             'title' => 'The resource is in use by other resources and cannot be deleted'
         );
         $response = $response->withJson($results,409,JSON_FLAGS);
@@ -446,7 +446,7 @@ $app->post('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(R
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
         if (! preg_match('/^[a-zA-Z0-9\-_\.()]+$/', $uploadedFile->getClientFilename())) {
             $results = array(
-                'type' => 'https://github.com/nethesis/tancredi/wiki/problems#invalid-file-name',
+                'type' => 'https://nethesis.github.io/tancredi/problems/#invalid-file-name',
                 'title' => 'Invalid file name'
             );
             $response = $response->withJson($results, 400, JSON_FLAGS);
@@ -458,7 +458,7 @@ $app->post('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(R
         $realfile = realpath($this->config['rw_dir'] . $files_directory . '/' . $uploadedFile->getClientFilename());
         if( ! $realfile || dirname($realfile) != ($this->config['rw_dir'] . $files_directory)) {
             $results = array(
-                'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+                'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
                 'title' => 'Resource not found'
             );
             $response = $response->withJson($results, 404, JSON_FLAGS);
@@ -498,7 +498,7 @@ $app->delete('/{filetype:backgrounds|firmware|ringtones|screensavers}/{file}', f
     $realfile = realpath($this->config['rw_dir'] . $files_directory . '/' . $file);
     if( ! $realfile  || dirname($realfile) != ($this->config['rw_dir'] . $files_directory)) {
         $results = array(
-            'type' => 'https://github.com/nethesis/tancredi/wiki/problems#not-found',
+            'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
         $response = $response->withJson($results,404,JSON_FLAGS);
