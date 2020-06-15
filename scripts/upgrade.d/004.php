@@ -104,8 +104,14 @@ foreach ($models as $id) {
             'contrast' => ($model == '4' || $model == '3' || $model == '2') ? '6' : '',
             'cap_brightness' => '1',
             'brightness' => '8',
+            'linekey_type_1' => 'line',
+            'linekey_type_2' => 'line',
+            'softkey_type_1' => 'history',
+            'softkey_type_2' => 'ldap',
+            'softkey_type_3' => 'pickup',
+            'softkey_type_4' => ($model == '2' || $model == '3') ? 'menu' : 'dnd',
         ]);
-        $container['logger']->info("Fixed background and screensaver settings for model $id");
+        $container['logger']->info("Fixed display and line keys settings for model $id");
 
     } elseif(substr($id, 0, 4) == 'snom') {
         $model = substr($id, 5, 4);
