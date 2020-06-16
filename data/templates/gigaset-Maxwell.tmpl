@@ -124,10 +124,10 @@
     <param name="NET.VLAN.PC.Identifier" value ="{{ vlan_id_pcport > 0 and vlan_id_phone < 4095 ? vlan_id_pcport : '0' }}" />
     <param name="NET.VLAN.PC.Priority" value ="0" />
 
-{% if cap_background_file and background_file matches '\.(png|jpg|jpeg)$' %}
+{% if cap_background_file and background_file matches '/\.(png|jpg|jpeg)$/' %}
     <param name="PhoneUI.Settings.SelectedWallpapers" value="{{ background_file }}"/>
 {% endif %}
-{% if cap_screensaver_file and screensaver_file matches '\.(png|jpg|jpeg)$' %}
+{% if cap_screensaver_file and screensaver_file matches '/\.(png|jpg|jpeg)$/' %}
     <param name="PhoneUI.Settings.ScreenSaverSelection" value="3" />
     <param name="PhoneUI.Settings.ScreenSaverHTTPSource" value="{{ "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{screensaver_file}" }}"/>
 {% endif %}
@@ -144,7 +144,7 @@
     <param name="PhoneUI.Settings.BacklightTimeout" value="{{ backlight_time / 60 | round(0, "ceil") }}" />
   </nvm>
   <custom>
-{% if cap_background_file and background_file matches '\.(png|jpg|jpeg)$' %}
+{% if cap_background_file and background_file matches '/\.(png|jpg|jpeg)$/' %}
     <step type="DownloadWallpaper" url="{{ "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/backgrounds/#{background_file}" }}" />
 {% endif %}
     <step type="UnlockAllFunctionKeys" />
