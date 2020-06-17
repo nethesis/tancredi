@@ -25,15 +25,14 @@ with PHP-FPM are typical setup.
 1. Set up write access permissions on 
 
    * `data/first_access_tokens`, 
-   * `data/not_found_scopes`, 
    * `data/scopes`, 
    * `data/templates-custom`, 
    * `data/tokens`
    
    On CentOS 7 the `apache` user is a good choice:
 
-       chown -R root:apache data/{first_access_tokens,not_found_scopes,scopes,templates-custom,tokens}
-       chmod g+w data/{first_access_tokens,not_found_scopes,scopes,templates-custom,tokens}
+       chown -R root:apache data/{first_access_tokens,scopes,templates-custom,tokens}
+       chmod g+w data/{first_access_tokens,scopes,templates-custom,tokens}
 
 1. Create a directory for log files and make sure the Tancredi user has granted write access.
 
