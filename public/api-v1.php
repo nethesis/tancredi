@@ -513,6 +513,25 @@ $app->delete('/{filetype:backgrounds|firmware|ringtones|screensavers}/{file}', f
     return $response;
 });
 
+/*********************************
+* GET /mac
+**********************************/
+$app->get('/mac', function(Request $request, Response $response, $args) use ($app) {
+    $macVendors = array(
+        "0C383E" => "fanvil",
+        "7C2F80" => "gigaset",
+        "589EC6" => "gigaset",
+        "005058" => "sangoma",
+        "000413" => "snom",
+        "001565" => "yealink",
+        "805E0C" => "yealink",
+        "805EC0" => "yealink"
+        );
+    $response = $response->withJson($macVendors,200,JSON_FLAGS);
+    return $response;
+});
+
+
 function getModelScope($id,$storage,$logger,$inherit = false, $original = false) {
     global $config;
     $scope = new \Tancredi\Entity\Scope($id, $storage, $logger, null, $original);
