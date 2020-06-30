@@ -514,9 +514,9 @@ $app->delete('/{filetype:backgrounds|firmware|ringtones|screensavers}/{file}', f
 });
 
 /*********************************
-* GET /mac
+* GET /macvendors
 **********************************/
-$app->get('/mac', function(Request $request, Response $response, $args) use ($app) {
+$app->get('/macvendors', function(Request $request, Response $response, $args) use ($app) {
     $macVendors = array(
         "0C383E" => "fanvil",
         "7C2F80" => "gigaset",
