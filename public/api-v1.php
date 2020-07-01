@@ -517,17 +517,8 @@ $app->delete('/{filetype:backgrounds|firmware|ringtones|screensavers}/{file}', f
 * GET /macvendors
 **********************************/
 $app->get('/macvendors', function(Request $request, Response $response, $args) use ($app) {
-    $macVendors = array(
-        "0C383E" => "fanvil",
-        "7C2F80" => "gigaset",
-        "589EC6" => "gigaset",
-        "005058" => "sangoma",
-        "000413" => "snom",
-        "001565" => "yealink",
-        "805E0C" => "yealink",
-        "805EC0" => "yealink"
-        );
-    $response = $response->withJson($macVendors,200,JSON_FLAGS);
+    global $macvendors;
+    $response = $response->withJson($macvendors,200,JSON_FLAGS);
     return $response;
 });
 
