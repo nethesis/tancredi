@@ -48,4 +48,4 @@ if($ini_config === false) {
 }
 
 $GLOBALS['config'] = array_merge($default_config, isset($ini_config['config']) ? $ini_config['config'] : array());
-$GLOBALS['macvendors'] = $ini_config['macvendors'];
+$GLOBALS['macvendors'] = isset($ini_config['macvendors']) ? $ini_config['macvendors'] : array();
