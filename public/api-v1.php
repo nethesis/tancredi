@@ -513,6 +513,16 @@ $app->delete('/{filetype:backgrounds|firmware|ringtones|screensavers}/{file}', f
     return $response;
 });
 
+/*********************************
+* GET /macvendors
+**********************************/
+$app->get('/macvendors', function(Request $request, Response $response, $args) use ($app) {
+    global $macvendors;
+    $response = $response->withJson($macvendors,200,JSON_FLAGS);
+    return $response;
+});
+
+
 function getModelScope($id,$storage,$logger,$inherit = false, $original = false) {
     global $config;
     $scope = new \Tancredi\Entity\Scope($id, $storage, $logger, null, $original);

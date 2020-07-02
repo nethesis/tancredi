@@ -37,7 +37,7 @@ $cfg_file = getenv("tancredi_conf") ?: '/etc/tancredi.conf';
 $ini_config = false;
 
 if (file_exists($cfg_file)) {
-    $ini_config = parse_ini_file($cfg_file);
+    $ini_config = parse_ini_file($cfg_file,true);
 }
 
 if($ini_config === false) {
@@ -47,5 +47,5 @@ if($ini_config === false) {
     exit(1);
 }
 
-$GLOBALS['config'] = array_merge($default_config, $ini_config);
-
+$GLOBALS['config'] = array_merge($default_config, isset($ini_config['config']) ? $ini_config['config'] : array());
+$GLOBALS['macvendors'] = isset($ini_config['macvendors']) ? $ini_config['macvendors'] : array();

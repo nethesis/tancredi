@@ -1,5 +1,8 @@
 ; Tancredi sample configuration file
 
+; Configuration section
+[config]
+
 ; Tancredi log verbosity level. Allowed level names are
 ;  - DEBUG (default)
 ;  - INFO
@@ -41,3 +44,15 @@ file_reader = "native"
 ; Refer to https://github.com/akrabat/ip-address-middleware for more
 ; information.
 upstream_proxies =
+
+; macvendors section contains a list of MAC addresses and the brand associated with them
+[macvendors]
+0C383E = fanvil
+7C2F80 = gigaset
+589EC6 = gigaset
+005058 = sangoma
+000413 = snom
+001565 = yealink
+805E0C = yealink
+805EC0 = yealink
+

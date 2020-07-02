@@ -28,11 +28,23 @@ jobs:
         sudo cp -a data/{templates,patterns.d,scopes} /usr/share/tancredi/data/
         sudo mkdir -p /var/lib/tancredi/data/{first_access_tokens,scopes,templates-custom,tokens,backgrounds,firmware,ringtones,screensavers}
         sudo chown -R www-data:www-data /var/lib/tancredi
-        echo 'rw_dir = "/var/lib/tancredi/data/"' | sudo tee -a /etc/tancredi.conf
-        echo 'ro_dir = "/usr/share/tancredi/data/"' | sudo tee -a /etc/tancredi.conf
-        echo 'provisioning_url_path = "/provisioning/"' | sudo tee -a /etc/tancredi.conf
-        echo 'api_url_path = "/tancredi/api/v1/"' | sudo tee -a /etc/tancredi.conf
-        echo 'file_reader = "apache"' | sudo tee -a /etc/tancredi.conf
+        sudo tee /etc/tancredi.conf <<'EOF' 
+        [config]
+        rw_dir = "/var/lib/tancredi/data/"
+        ro_dir = "/usr/share/tancredi/data/"
+        provisioning_url_path = "/provisioning/"
+        api_url_path = "/tancredi/api/v1/"
+        file_reader = "apache"
+        [macvendors]
+        0C383E = fanvil
+        7C2F80 = gigaset
+        589EC6 = gigaset
+        005058 = sangoma
+        000413 = snom
+        001565 = yealink
+        805E0C = yealink
+        805EC0 = yealink
+        EOF
 
     - name: configure php-fpm
       run: |
@@ -70,5 +82,4 @@ jobs:
       run: |
         cd test
         sudo ./run.sh
-
 
