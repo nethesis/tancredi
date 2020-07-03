@@ -1,6 +1,6 @@
 type	description	value	label
 [empty string]	The soft key is not available or not assigned	N/A	N/A
-forward	Enable/disable the *forward* state. If enabled all incoming calls are forwarded to the given extension	The extension number	Free text label
+forward	Enable/disable the *forward* state. If enabled all incoming calls are forwarded to the given number	The phone or extension number	Free text label
 dnd	Enable/disable the *do not disturb* state (DND). If enabled all incoming calls are rejected	N/A	N/A
 recall	Call the last dialled number	N/A	Free text label, empty for default
 pick_up	Answer a ringing call directed to the given extension	The extension number	Free text label

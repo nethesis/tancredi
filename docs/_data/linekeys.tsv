@@ -4,7 +4,7 @@ conference	Active calls are joined together in a conference call, where all part
 direct_pickup	Answer a ringing call directed to the given extension	The extension number	Free text label
 dnd	Enable/disable the *do not disturb* state (DND). If enabled all incoming calls are rejected	N/A	N/A
 dtmf	Play a DTMF (dial tones) sequence	The symbols corresponding to the tones	Free text label
-forward	Enable/disable the *forward* state. If enabled all incoming calls are forwarded to the given extension	The extension number	Free text label
+forward	Enable/disable the *forward* state. If enabled all incoming calls are forwarded to the given number	The phone or extension number	Free text label
 group_pickup	Answer a ringing call directed to an extension of your pickup group	N/A	N/A
 hold	Put the current call on hold	N/A	Free text label, empty for default
 ldap	Display the LDAP address book	N/A	Free text label, empty for default
