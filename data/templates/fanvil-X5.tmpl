@@ -1030,7 +1030,7 @@ Auto Upgrade Interval:24
 <QOS CONFIG MODULE>
 Enable VLAN        :{{ vlan_id_phone > 0 ? '1' : '0' }}
 VLAN ID            :{{ (vlan_id_phone > 0 and vlan_id_phone < 4095) ? vlan_id_phone : '0' }}
-Enable PVID        :{{ vlan_id_pcport > 0 ? '2' : '0' }}
+Enable PVID        :{{ vlan_id_pcport > 0 ? '2' : '1' }}
 PVID Value         :{{ (vlan_id_pcport > 0 and vlan_id_pcport < 4095) ? vlan_id_pcport : '0' }}
 Signalling Priority:0
 Voice Priority     :0
