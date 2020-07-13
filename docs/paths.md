@@ -32,7 +32,7 @@ parent: Tancredi API v1
 
 ### macvendors/
 
-* [GET /macvendors]({{ "/paths/macvendorsGet" | relative_url }}) return list of mac prefixes associated with vendors
+* [GET /macvendors]({{ "/paths/macvendorsGet" | relative_url }}) return list of MAC prefixes associated with vendors
 
 ## Assets management
 
@@ -59,4 +59,3 @@ parent: Tancredi API v1
 * [GET /screensavers]({{ "/paths/screensaversGet" | relative_url }}) list of available screensaver files
 * [POST /screensavers]({{ "/paths/screensaversPost" | relative_url }}) upload a screensaver file
 * [DELETE /screensavers/{file}]({{ "/paths/screensaversDelete" | relative_url }}) delete a screensaver file
-
