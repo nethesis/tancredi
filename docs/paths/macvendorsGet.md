@@ -5,7 +5,13 @@ grand_parent: Tancredi API v1
 
 # GET /macvendors
 
+A **vendor** is identified by a lower case letters and digits string. It has one or more
+MAC address prefixes, configured in the `[macvendors]` section of `tancredi.conf`.
+
 ## Get list of MAC prefixes associated with vendors
+
+Starting from a phone MAC address it is possible to obtain a list of suitable phone models, before
+creating a new _phone_ instance.
 
     GET /tancredi/api/v1/macvendors
 

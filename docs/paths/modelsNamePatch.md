@@ -10,7 +10,7 @@ grand_parent: Tancredi API v1
 Change the `variables` attribute value, and merge them with scope variables. Null variables are removed from scope.
 Also display_name is changed.
 
-    PATCH /tancredi/api/v1/models/acme19.2
+    PATCH /tancredi/api/v1/models/acme-19.2
 
 ```json
 {
@@ -28,7 +28,7 @@ Success response:
 
 ```json
 {
-    "name": "acme19.2",
+    "name": "acme-19.2",
     "display_name": "Acme IP phone v19 rev. 2 (changed)",
     "variables": {
         "var1": "value1-changed",
@@ -42,11 +42,11 @@ Success response:
 The attribute `name` is read-only. Attempt to change its value causes the whole
 request to fail.
 
-    PATCH /tancredi/api/v1/models/acme19.2
+    PATCH /tancredi/api/v1/models/acme-19.2
 
 ```json
 {
-    "name": "acme19.2",
+    "name": "acme-19.2",
     "display_name": "Acme IP phone v19 rev. 2 (allowed, but not applied)"
 }
 ```

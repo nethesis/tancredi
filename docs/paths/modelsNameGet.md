@@ -9,7 +9,7 @@ grand_parent: Tancredi API v1
 
 Get a model with the given `name`
 
-    GET /tancredi/api/v1/models/acme19.2
+    GET /tancredi/api/v1/models/acme-19.2
 
 (empty request body)
 
@@ -19,7 +19,7 @@ Success response:
 
 ```json
 {
-    "name": "acme19.2",
+    "name": "acme-19.2",
     "display_name": "Acme IP phone v19 rev. 2",
     "variables": {
         "var1": "value1",
@@ -43,10 +43,10 @@ Failed response:
 
 ## Get inherited variables
 
-Get the model `acme19.2` with inherited variables values, by adding `inherit=1`
+Get the model `acme-19.2` with inherited variables values, by adding `inherit=1`
 parameter to the query string:
 
-    GET /tancredi/api/v1/models/acme19.2?inherit=1
+    GET /tancredi/api/v1/models/acme-19.2?inherit=1
 
 (empty request body)
 
@@ -56,7 +56,7 @@ Success response:
 
 ```json
 {
-    "name": "acme19.2",
+    "name": "acme-19.2",
     "display_name": "Acme IP phone v19 rev. 2",
     "variables": {
         "var1": "value1",
@@ -72,9 +72,9 @@ Success response:
 As a model resource gets modified by subsequent PATCH requests, its past states
 could be still available and retrieved from the `version` secondary collection.
 
-Get the version "original" of model `acme19.2`
+Get the version "original" of model `acme-19.2`
 
-    GET /tancredi/api/v1/models/acme19.2/version/original
+    GET /tancredi/api/v1/models/acme-19.2/version/original
 
 (empty request body)
 
@@ -84,7 +84,7 @@ Success response:
 
 ```json
 {
-    "name": "acme19.2",
+    "name": "acme-19.2",
     "display_name": "Acme IP phone v19 rev. 2",
     "variables": {
         "var1": "original value1",

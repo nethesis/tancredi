@@ -19,13 +19,13 @@ Response:
 
 ```json
 [{
-    "name": "acme19.2",
+    "name": "acme-19.2",
     "display_name": "Acme IP phone v19 rev. 2",
-    "model_url": "/tancredi/api/v1/models/acme19.2",
+    "model_url": "/tancredi/api/v1/models/acme-19.2",
 },{
-    "name": "acme19.2",
+    "name": "acme-19.2",
     "display_name": "Acme IP phone v19 rev. 2",
-    "model_url": "/tancredi/api/v1/models/acme19.2",
+    "model_url": "/tancredi/api/v1/models/acme-19.2",
 }]
 ```
 

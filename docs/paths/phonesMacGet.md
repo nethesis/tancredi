@@ -21,11 +21,11 @@ Success response:
 {
     "mac": "01-23-45-67-89-AB",
     "short_mac": "0123456789ab",
-    "model": "acme19.2",
+    "model": "acme-19.2",
     "display_name": "Acme",
     "tok1": "3cb63010-6e80-41ff-9437-c4b1413975db",
     "tok2": "88eebf1d-b860-498f-8bfa-4947e170873b",
-    "model_url": "/tancredi/api/v1/models/acme19.2",
+    "model_url": "/tancredi/api/v1/models/acme-19.2",
     "provisioning_url1": "https://myexample.com/provisioning/3cb63010-6e80-41ff-9437-c4b1413975db/%MACD.xml",
     "provisioning_url2": "https://myexample.com/provisioning/88eebf1d-b860-498f-8bfa-4947e170873b/%MACD.xml",
     "variables": {
