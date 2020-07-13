@@ -5,7 +5,7 @@ grand_parent: Tancredi API v1
 
 # GET /macvendors
 
-## Get list of mac prefixes associated with vendors
+## Get list of MAC prefixes associated with vendors
 
     GET /tancredi/api/v1/macvendors
 
