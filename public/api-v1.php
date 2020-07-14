@@ -85,6 +85,7 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
 **********************************/
 $app->get('/phones/{mac}', function(Request $request, Response $response, array $args) use ($app) {
     $mac = $args['mac'];
+    $query = $request->getQueryParams();
     // get all scopes of type "phone"
     if (!$this->storage->scopeExists($mac)) {
         $results = array(
@@ -96,7 +97,12 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
+    if (array_key_exists('inherit',$query) and $query['inherit'] == 1) {
+        $results = \Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger, TRUE);
+    } else {
+        $results = \Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger, FALSE);
+    }
+    $response = $response->withJson($results,200,JSON_FLAGS);
     return $response;
 });
 
