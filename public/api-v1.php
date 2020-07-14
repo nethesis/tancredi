@@ -97,11 +97,8 @@ $app->get('/phones/{mac}', function(Request $request, Response $response, array 
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    if (array_key_exists('inherit',$query) and $query['inherit'] == 1) {
-        $results = \Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger, TRUE);
-    } else {
-        $results = \Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger, FALSE);
-    }
+    $inherit = isset($query['inherit']) && $query['inherit'] == 1;
+    $results = \Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger, $inherit);
     $response = $response->withJson($results,200,JSON_FLAGS);
     return $response;
 });
