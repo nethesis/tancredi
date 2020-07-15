@@ -53,6 +53,12 @@ EOF
     assert_http_body "Адриан Нестор"
 }
 
+@test "GET /tancredi/api/v1/phones/01-23-45-67-89-AB?inherit=1 (success)" {
+    run GET /tancredi/api/v1/phones/01-23-45-67-89-AB?inherit=1
+    assert_http_code "200"
+    assert_http_body '"var1":"value1-changed"'
+}
+
 @test "POST /tancredi/api/v1/phones (01-23-45-67-89-AB, failed/conflict)" {
     run POST /tancredi/api/v1/phones <<EOF
 {

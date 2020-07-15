@@ -35,9 +35,8 @@ Success response:
 }
 ```
 
-It is possible to query `model_url` with parameter `inherit=1` to obtain the
-default values for the items in `variables`. See also [GET
-/models/{name}]({{ "/paths/modelsNameGet" | relative_url }}).
+It is possible to add parameter `inherit=1` to obtain the values inherited from model and defaults for the items in `variables`.
+See also [GET/models/{name}]({{ "/paths/modelsNameGet" | relative_url }}).
 
 Failed response:
 
