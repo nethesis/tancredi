@@ -21,9 +21,9 @@ Response:
 ```json
 [{
     "mac": "01-23-45-67-89-AB",
-    "model": "acme19.2",
+    "model": "acme-19.2",
     "display_name": "Acme",
-    "model_url": "/tancredi/api/v1/models/acme19.2",
+    "model_url": "/tancredi/api/v1/models/acme-19.2",
     "phone_url": "/tancredi/api/v1/phones/01-23-45-67-89-AB"
 },{
     "mac": "01-23-45-76-98-DE",

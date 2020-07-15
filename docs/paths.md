@@ -30,9 +30,14 @@ parent: Tancredi API v1
 * [GET /defaults]({{ "/paths/defaultsGet" | relative_url }}) return the default values for known variables
 * [PATCH /defaults]({{ "/paths/defaultsPatch" | relative_url }}) change the default value of some variables
 
+### macvendors/
+
+* [GET /macvendors]({{ "/paths/macvendorsGet" | relative_url }}) return list of MAC prefixes associated with vendors
+
 ## Assets management
 
 ### backgrounds/
+
 * [GET /backgrounds]({{ "/paths/backgroundsGet" | relative_url }}) list of available background files
 * [POST /backgrounds]({{ "/paths/backgroundsPost" | relative_url }}) upload a background file
 * [DELETE /backgrounds/{file}]({{ "/paths/backgroundsDelete" | relative_url }}) delete a background file
@@ -44,11 +49,13 @@ parent: Tancredi API v1
 * [DELETE /firmware/{file}]({{ "/paths/firmwareDelete" | relative_url }}) delete a firmware file
 
 ### ringtones/
+
 * [GET /ringtones]({{ "/paths/ringtonesGet" | relative_url }}) list of available ringtone files
 * [POST /ringtones]({{ "/paths/ringtonesPost" | relative_url }}) upload a ringtone file
 * [DELETE /ringtones/{file}]({{ "/paths/ringtonesDelete" | relative_url }}) delete a ringtone file
 
 ### screensavers/
+
 * [GET /screensavers]({{ "/paths/screensaversGet" | relative_url }}) list of available screensaver files
 * [POST /screensavers]({{ "/paths/screensaversPost" | relative_url }}) upload a screensaver file
 * [DELETE /screensavers/{file}]({{ "/paths/screensaversDelete" | relative_url }}) delete a screensaver file

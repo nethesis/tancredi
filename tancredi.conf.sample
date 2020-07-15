@@ -45,7 +45,9 @@ file_reader = "native"
 ; information.
 upstream_proxies =
 
-; macvendors section contains a list of MAC addresses and the brand associated with them
+; macvendors section contains a list of MAC address prefixes
+; and the brand associated with them. The prefixes must be
+; in hexadecimal format with upper case letters.
 [macvendors]
 0C383E = fanvil
 7C2F80 = gigaset

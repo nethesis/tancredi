@@ -8,7 +8,10 @@ grand_parent: Tancredi API v1
 ## Create a new model
 
 Create a new phone model instance and add it to the models collection.
-Only `a-z`, `A-Z`, `0-9`, `_`, `-` and `.` characters are allowed as model name
+Only `a-z`, `A-Z`, `0-9`, `_`, `-` and `.` characters are allowed as a model name.
+
+The model name must begin with a vendor identifier, followed by `-`. See also [GET
+/macvendors]({{ "/paths/macvendorsGet" | relative_url }}).
 
 ```text
 POST /tancredi/api/v1/models
@@ -16,7 +19,7 @@ POST /tancredi/api/v1/models
 
 ```json
 {
-    "name": "acme19.2",
+    "name": "acme-19.2",
     "display_name": "Acme IP phone v19 rev. 2",
     "variables": {
         "var1": "value1",
@@ -28,11 +31,11 @@ POST /tancredi/api/v1/models
 Success response:
 
     Status: 201 Created
-    Location: /tancredi/api/v1/models/acme19.2
+    Location: /tancredi/api/v1/models/acme-19.2
 
 ```json
 {
-    "name": "acme19.2",
+    "name": "acme-19.2",
     "display_name": "Acme IP phone v19 rev. 2",
     "variables": {
         "var1": "value1",

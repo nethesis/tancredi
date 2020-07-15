@@ -23,6 +23,9 @@ global default values are assumed.
 
 A third entity, **defaults** contains the global default values.
 
+Besides the main entities **phone**, **model** and **defaults** there is also the
+**vendor** entity, useful to discover phone models, starting from a given MAC address.
+
 ## Phone variables inheritance
 
 The entities discussed above acts like a variables *scope* during the generation

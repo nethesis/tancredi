@@ -9,7 +9,7 @@ grand_parent: Tancredi API v1
 
 Delete a model.
 
-    DELETE /tancredi/api/v1/model/acme19.2
+    DELETE /tancredi/api/v1/model/acme-19.2
 
 (empty request body)
 
