@@ -220,6 +220,7 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
 **********************************/
 $app->get('/models', function(Request $request, Response $response) use ($app) {
     global $config;
+    global $macvendors;
     $query_params = $request->getQueryParams();
     $scopes = $this->storage->listScopes('model');
     $results = array();
@@ -239,6 +240,9 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
 
     foreach ($scopes as $scopeId) {
         if ($filter_used && array_search($scopeId,$inherited_scopes) === FALSE) {
+            continue;
+        }
+        if (isset($macvendors) && array_search(preg_replace('/^([^\-]*)-.*/','$1',$scopeId),$macvendors) === FALSE) {
             continue;
         }
         $scope = new \Tancredi\Entity\Scope($scopeId, $this->storage, $this->logger);
