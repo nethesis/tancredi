@@ -2219,7 +2219,6 @@ bw.virtual_user.1.xsi.user =
 ##Programablekey X ranges(T48G/T48S/T46G/T46S: X=1-10, 12-14;T42G/T42S/T41P/T41S/T40P/T40G: X=1-10, 13;T29G/T27P/T27G: X=1-14;T23P/T23G/T21(P) E2: 1-10, 14;T19(P) E2: X=1-9, 13, 14;)##
 
 {% for softkey in 1..cap_softkey_count %}
-{% if _context['softkey_type_' ~ softkey] is defined and _context['softkey_type_' ~ softkey] != "" %}
 # Softkey {{ number }}
 programablekey.{{ softkey }}.type = {{ yealink.softkey_type(_context['softkey_type_' ~ softkey]) }}
 programablekey.{{ softkey }}.line = 1
@@ -2236,7 +2235,6 @@ programablekey.{{ softkey }}.pickup_value =
  %NULL%
 {% endif %}
 
-{% endif %}
 {% endfor %}
 ##V83 Add
 programablekey.type_range.custom =
@@ -2254,7 +2252,6 @@ programablekey.type_range.custom =
 ## Not support T19P_E2
 
 {% for number in 1..cap_linekey_count %}
-{% if _context['linekey_type_' ~ number] is defined and _context['linekey_type_' ~ number] != "" %}
 # Linekey {{ number }}
 linekey.{{ number }}.type = {{ yealink.linekey_type(_context['linekey_type_' ~ number]) }}
 linekey.{{ number }}.line = {{ _context['linekey_line_' ~ number] | default('1') }}
@@ -2267,7 +2264,6 @@ linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number] | default('%
 linekey.{{ number }}.extension = %NULL%
 linekey.{{ number }}.xml_phonebook = %NULL%
 
-{% endif %}
 {% endfor %}
 #######################################################################################
 ##                                Expansion Key                                      ##
