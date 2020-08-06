@@ -173,12 +173,6 @@
                     {{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number, queuetoggle)}}
             {% endfor %}
         {% endif %}
-        {# expansion keys #}
-        {% for number in lineKeys..125 %}
-            {% if _context['expkey_type_' ~ number] is defined %}
-                <fkey idx="{{ number }}" context="active" label="{{ _context['expkey_label_' ~ number] }}" lp="on" default_text="$name" perm="">{{ _context['expkey_type_' ~ number] }} {{ _context['expkey_value_' ~ number] }}</fkey>
-            {% endif %}
-        {% endfor %}
     </functionKeys>
 {% endautoescape %}
 </settings>
