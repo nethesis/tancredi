@@ -86,6 +86,8 @@
     <param name="PhoneUI.Keys.SoftKeys.{{number}}.DisableCode" value="*8"/>
     <param name="PhoneUI.Keys.SoftKeys.{{number}}.EnableName" value="Pickup"/>
     <param name="PhoneUI.Keys.SoftKeys.{{number}}.DisableName" value="Pickup"/>
+{% else %}
+    <param name="PhoneUI.Keys.SoftKeys.{{number}}.Type" value="-1"/>
 {% endif %}
 {% endmacro softkey_type_map %}
 
