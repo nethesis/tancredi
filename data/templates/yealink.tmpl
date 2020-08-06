@@ -2221,11 +2221,8 @@ bw.virtual_user.1.xsi.user =
 {% for softkey in 1..cap_softkey_count %}
 # Softkey {{ number }}
 programablekey.{{ softkey }}.type = {{ yealink.softkey_type(_context['softkey_type_' ~ softkey]) }}
-programablekey.{{ softkey }}.line = 1
-programablekey.{{ softkey }}.value = {{ _context['softkey_value_' ~ softkey] | default('%NULL%') }}
-programablekey.{{ softkey }}.label = {{ _context['softkey_label_' ~ softkey] | default('%NULL%') }}
-programablekey.{{ softkey }}.extension = %NULL%
-programablekey.{{ softkey }}.xml_phonebook = %NULL%
+programablekey.{{ softkey }}.value = {{ _context['softkey_value_' ~ softkey] }}
+programablekey.{{ softkey }}.label = {{ _context['softkey_label_' ~ softkey] }}
 programablekey.{{ softkey }}.pickup_value = 
 {%- if _context['softkey_type_' ~ softkey] == 'pick_up' %}
     {{ pickup_direct }}
@@ -2242,27 +2239,16 @@ programablekey.type_range.custom =
 #######################################################################################
 ##                                  Linekey                                          ##
 #######################################################################################
-##linekey.X.type
-##linekey.X.line
-##linekey.X.value
-##linekey.X.label
-##linekey.X.extension
-##linekey.X.xml_phonebook
-##LineKeyX ranges(T57W/T48G/S: X ranges from 1 to 29. T53W/T54W/T54S/T46G/T46S/T29G: X ranges from 1 to 27. T42G/T42S/T41P/T41S: X ranges from 1 to 15. T40P/T40G/T23P/T23G: X ranges from 1 to 3. T52S/T27P/T27G: X ranges from 1 to 21. T21(P) E2: X ranges from 1 to 2.)##
-## Not support T19P_E2
 
 {% for number in 1..cap_linekey_count %}
 # Linekey {{ number }}
 linekey.{{ number }}.type = {{ yealink.linekey_type(_context['linekey_type_' ~ number]) }}
-linekey.{{ number }}.line = {{ _context['linekey_line_' ~ number] | default('1') }}
 {% if _context['linekey_type_' ~ number] == "queuetoggle" %}
-    linekey.{{ number }}.value = {{ queuetoggle | default('%NULL%') }}
+    linekey.{{ number }}.value = {{ queuetoggle }}
 {% else %}
-    linekey.{{ number }}.value = {{ _context['linekey_value_' ~ number] | default('%NULL%') }}
+    linekey.{{ number }}.value = {{ _context['linekey_value_' ~ number] }}
 {% endif %}
-linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number] | default('%NULL%') }}
-linekey.{{ number }}.extension = %NULL%
-linekey.{{ number }}.xml_phonebook = %NULL%
+linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number] }}
 
 {% endfor %}
 #######################################################################################
@@ -2282,17 +2268,12 @@ linekey.{{ number }}.xml_phonebook = %NULL%
 {% for number in 1..cap_expkey_count %}
 {# Skip expkey 21 #}
 {% if cap_expmodule_count != 38 and number != 21 %}
-{% if _context['expkey_type_' ~ expkey] is defined and _context['expkey_type_' ~ expkey] != "" %}
 # Expansion module {{ module }}, Key {{ number }}
 expansion_module.{{ module }}.key.{{ number }}.type = {{ yealink.linekey_type(_context['expkey_type_' ~ expkey]) }}
-expansion_module.{{ module }}.key.{{ number }}.line = {{ _context['expkey_line_' ~ expkey] | default('1') }}
-expansion_module.{{ module }}.key.{{ number }}.value = {{ _context['expkey_value_' ~ expkey] | default('%NULL%') }}
-expansion_module.{{ module }}.key.{{ number }}.label = {{ _context['expkey_label_' ~ expkey] | default('%NULL%') }}
-expansion_module.{{ module }}.key.{{ number }}.extension = %NULL%
-expansion_module.{{ module }}.key.{{ number }}.xml_phonebook = %NULL%
+expansion_module.{{ module }}.key.{{ number }}.value = {{ _context['expkey_value_' ~ expkey] }}
+expansion_module.{{ module }}.key.{{ number }}.label = {{ _context['expkey_label_' ~ expkey] }}
 
 {% set expkey =  expkey + 1 %}
-{% endif %}
 {% endif %}
 {% endfor %}
 {% endfor %}
