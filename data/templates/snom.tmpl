@@ -143,10 +143,7 @@
         <prov_polling_time_rand_end perm="">04:00</prov_polling_time_rand_end>
 
         {% for number in 1..cap_softkey_count %}
-            {%- if _context['softkey_type_' ~ number] is defined -%}
-                {% if _context['softkey_type_' ~ number] == 'disabled' -%}
-                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'forward' -%}
+                {% if _context['softkey_type_' ~ number] == 'forward' -%}
                     <gui_fkey{{ number }} perm="">keyevent F_REDIRECT</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'dnd' -%}
                     <gui_fkey{{ number }} perm="">keyevent F_DND</gui_fkey{{ number }}>
@@ -167,7 +164,6 @@
                 {% else -%}
                     <gui_fkey{{ number }} perm="">keyevent none</gui_fkey{{ number }}>
                 {% endif -%}
-            {%- endif -%}
         {% endfor %}
     </phone-settings>
     <functionKeys>
