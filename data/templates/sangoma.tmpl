@@ -98,10 +98,8 @@
         <!--ExpKeys-->
         {%- for m in cap_expmodule_count ? range(0, cap_expmodule_count - 1) : [] -%}
         {%- for k in 0..(cap_expkey_count - 1) -%}
-        {%- set idx = 1 + k + (m * cap_expkey_count) -%}
-        {%- if _context["expkey_type_#{idx}"] is defined %}
+        {%- set idx = 1 + k + (m * cap_expkey_count) %}
         {{ sangoma.pcode_expkey(m, k, _context["expkey_type_#{idx}"], _context["expkey_value_#{idx}"], _context["expkey_label_#{idx}"]) -}}
-        {%- endif -%}
         {%- endfor -%}
         {% endfor %}
 
