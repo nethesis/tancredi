@@ -41,7 +41,7 @@
 {% elseif linekey_type == "group_pickup" %}
     <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">speed {{ pickup_group }}</fkey>
 {% else %}
-    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">none {{ linekey_value }}</fkey>
+    <fkey idx="{{ (number-1) }}" context="active" label="" lp="on" perm="">line</fkey>
 {% endif %}
 {% endmacro linekey_type_map %}
 
