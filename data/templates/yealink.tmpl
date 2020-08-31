@@ -2260,7 +2260,9 @@ linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number] }}
 {% for module in 1..cap_expmodule_count %}
 {% for number in 1..cap_expkey_count %}
 {# Skip expkey 21 #}
-{% if number != 21 %}
+{% if cap_expkey_count == 38 and number == 21 %}
+# Skip button 21 of EXP20 -- page switch button
+{% else %}
 # Expansion module {{ module }}, Key {{ number }}
 expansion_module.{{ module }}.key.{{ number }}.type = {{ yealink.linekey_type(_context['expkey_type_' ~ expkey]) }}
 expansion_module.{{ module }}.key.{{ number }}.value = {{ _context['expkey_value_' ~ expkey] }}
