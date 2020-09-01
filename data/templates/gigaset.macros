@@ -69,6 +69,8 @@
 {% elseif linekey_type == "voice_mail" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="10" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.EnableCode" value="{{ account_voicemail_1 }}" />
+{% else %}
+    <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="-1" />
 {% endif %}
 {% endmacro linekey_type_map %}
 
@@ -84,6 +86,8 @@
     <param name="PhoneUI.Keys.SoftKeys.{{number}}.DisableCode" value="*8"/>
     <param name="PhoneUI.Keys.SoftKeys.{{number}}.EnableName" value="Pickup"/>
     <param name="PhoneUI.Keys.SoftKeys.{{number}}.DisableName" value="Pickup"/>
+{% else %}
+    <param name="PhoneUI.Keys.SoftKeys.{{number}}.Type" value="-1"/>
 {% endif %}
 {% endmacro softkey_type_map %}
 

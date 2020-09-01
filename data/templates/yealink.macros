@@ -1007,7 +1007,7 @@
         "zero_touch": "41"
         }
     -%}
-{{- map[linekey_type] ?? '0' -}}
+{{- map[linekey_type] ?: '0' -}}
 {% endmacro linekey_type %}
 
 #
@@ -1050,7 +1050,7 @@
         "dect_intercom": "310"
         }
     -%}
-{{- map[softkey_type] ?? '0' -}}
+{{- map[softkey_type] ?: '0' -}}
 {% endmacro softkey_type %}
 
 #

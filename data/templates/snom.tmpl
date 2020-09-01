@@ -143,10 +143,7 @@
         <prov_polling_time_rand_end perm="">04:00</prov_polling_time_rand_end>
 
         {% for number in 1..cap_softkey_count %}
-            {%- if _context['softkey_type_' ~ number] is defined -%}
-                {% if _context['softkey_type_' ~ number] == 'disabled' -%}
-                    <gui_fkey{{ number }} perm="">keyevent none</gui_fkey{{ number }}>
-                {% elseif _context['softkey_type_' ~ number] == 'forward' -%}
+                {% if _context['softkey_type_' ~ number] == 'forward' -%}
                     <gui_fkey{{ number }} perm="">keyevent F_REDIRECT</gui_fkey{{ number }}>
                 {% elseif _context['softkey_type_' ~ number] == 'dnd' -%}
                     <gui_fkey{{ number }} perm="">keyevent F_DND</gui_fkey{{ number }}>
@@ -167,24 +164,15 @@
                 {% else -%}
                     <gui_fkey{{ number }} perm="">keyevent none</gui_fkey{{ number }}>
                 {% endif -%}
-            {%- endif -%}
         {% endfor %}
     </phone-settings>
     <functionKeys>
         {# line keys #}
         {% if cap_linekey_count > 0 %}
             {% for number in 1..(cap_linekey_count) %}
-                {% if _context['linekey_type_' ~ number] is defined %}
                     {{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number, queuetoggle)}}
-                {% endif %}
             {% endfor %}
         {% endif %}
-        {# expansion keys #}
-        {% for number in lineKeys..125 %}
-            {% if _context['expkey_type_' ~ number] is defined %}
-                <fkey idx="{{ number }}" context="active" label="{{ _context['expkey_label_' ~ number] }}" lp="on" default_text="$name" perm="">{{ _context['expkey_type_' ~ number] }} {{ _context['expkey_value_' ~ number] }}</fkey>
-            {% endif %}
-        {% endfor %}
     </functionKeys>
 {% endautoescape %}
 </settings>
