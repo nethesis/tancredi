@@ -59,6 +59,8 @@
     <param name="SIP.Account.{{ idx }}.DTMFTransmission" value="{{ gigaset.dtmf_map(_context['account_dtmf_type_' ~ line]) }}" />
     <param name="SIP.Account.{{ idx }}.FailoverServer.Enabled" value="0" />
     <param name="SIP.Account.{{ idx }}.STUN.Enabled" value="0" />
+    <param name="SIP.Account.{{ idx }}.VoiceMail.Active" value="1" />
+    <param name="SIP.Account.{{ idx }}.VoiceMail.Mailbox" value="{{ _context['account_voicemail_' ~ line]|default }}" />
     {%- endif %}
     {%- endfor %}
 
