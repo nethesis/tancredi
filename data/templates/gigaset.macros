@@ -42,6 +42,7 @@
 {% if linekey_type == "blf" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="4" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.PhoneNumber" value="{{ linekey_value }}" />
+    <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Color" value="3" />
 {% elseif linekey_type == "dtmf" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="7" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.EnableCode" value="{{ linekey_value }}" />
@@ -51,6 +52,7 @@
 {% elseif linekey_type == "line" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="0" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Connection" value="{{ linekey_value }}" />
+    <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Color" value="3" /
 {% elseif linekey_type == "speed_dial" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="3" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.PhoneNumber" value="{{ linekey_value }}" />
