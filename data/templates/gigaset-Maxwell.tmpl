@@ -104,7 +104,7 @@
     {# soft keys #}
     {% if cap_softkey_count > 0 %}
       {% for number in 1..(cap_softkey_count) %}
-          {{ gigaset.softkey_type_map(_context['softkey_type_' ~ number], (number-1)) }}
+          {{ gigaset.softkey_type_map(_context['softkey_type_' ~ number], (number-1), _context['softkey_value_' ~ number], dndtoggle) }}
       {% endfor %}
     {% endif %}
     {# end soft keys #}

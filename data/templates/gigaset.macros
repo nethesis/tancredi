@@ -79,15 +79,15 @@
 #
 # softkey_type_map -- translate "softkey_type"
 #
-{% macro softkey_type_map(softkey_type, number) %}
+{% macro softkey_type_map(softkey_type, number, softkey_value, dndtoggle) %}
 {% if softkey_type == "redial" %}
     <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="17"/>
 {% elseif softkey_type == "forward" %}
     <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="6" />
-    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.PhoneNumber" value="{{ linekey_value }}" />
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.PhoneNumber" value="{{ softkey_value }}" />
 {% elseif softkey_type == "speed_dial" %}
     <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="3" />
-    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.PhoneNumber" value="{{ linekey_value }}" />
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.PhoneNumber" value="{{ softkey_value }}" />
 {% elseif softkey_type == "dnd" %}
     <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="10" />
     <param name="PhoneUI.Keys.SoftKeys.{{ number }}.EnableCode" value="{{ dndtoggle }}" />
