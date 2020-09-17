@@ -42,6 +42,7 @@
 {% if linekey_type == "blf" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="4" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.PhoneNumber" value="{{ linekey_value }}" />
+    <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Color" value="3" />
 {% elseif linekey_type == "dtmf" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="7" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.EnableCode" value="{{ linekey_value }}" />
@@ -51,6 +52,7 @@
 {% elseif linekey_type == "line" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="0" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Connection" value="{{ linekey_value }}" />
+    <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Color" value="3" />
 {% elseif linekey_type == "speed_dial" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="3" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.PhoneNumber" value="{{ linekey_value }}" />
@@ -77,17 +79,28 @@
 #
 # softkey_type_map -- translate "softkey_type"
 #
-{% macro softkey_type_map(softkey_type, number) %}
+{% macro softkey_type_map(softkey_type, number, softkey_value, dndtoggle) %}
 {% if softkey_type == "redial" %}
-    <param name="PhoneUI.Keys.SoftKeys.{{number}}.Type" value="17"/>
-{% elseif softkey_type == "pickup" %}
-    <param name="PhoneUI.Keys.SoftKeys.{{number}}.Type" value="10"/>
-    <param name="PhoneUI.Keys.SoftKeys.{{number}}.EnableCode" value="*8"/>
-    <param name="PhoneUI.Keys.SoftKeys.{{number}}.DisableCode" value="*8"/>
-    <param name="PhoneUI.Keys.SoftKeys.{{number}}.EnableName" value="Pickup"/>
-    <param name="PhoneUI.Keys.SoftKeys.{{number}}.DisableName" value="Pickup"/>
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="17"/>
+{% elseif softkey_type == "forward" %}
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="6" />
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.PhoneNumber" value="{{ softkey_value }}" />
+{% elseif softkey_type == "speed_dial" %}
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="3" />
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.PhoneNumber" value="{{ softkey_value }}" />
+{% elseif softkey_type == "dnd" %}
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="10" />
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.EnableCode" value="{{ dndtoggle }}" />
+{% elseif softkey_type == "ldap" %}
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="13" />
+{% elseif softkey_type == "group_pickup" %}
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="10"/>
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.EnableCode" value="*8"/>
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.DisableCode" value="*8"/>
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.EnableName" value="Pickup"/>
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.DisableName" value="Pickup"/>
 {% else %}
-    <param name="PhoneUI.Keys.SoftKeys.{{number}}.Type" value="-1"/>
+    <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="-1"/>
 {% endif %}
 {% endmacro softkey_type_map %}
 

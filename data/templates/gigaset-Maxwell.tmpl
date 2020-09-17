@@ -59,6 +59,18 @@
     <param name="SIP.Account.{{ idx }}.DTMFTransmission" value="{{ gigaset.dtmf_map(_context['account_dtmf_type_' ~ line]) }}" />
     <param name="SIP.Account.{{ idx }}.FailoverServer.Enabled" value="0" />
     <param name="SIP.Account.{{ idx }}.STUN.Enabled" value="0" />
+    <param name="SIP.Account.{{ idx }}.VoiceMail.Active" value="1" />
+    <param name="SIP.Account.{{ idx }}.VoiceMail.Mailbox" value="{{ _context['account_voicemail_' ~ line]|default }}" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.External" value="06_Gigaset.mp3" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderExternal" value="&lt;http://www.notused.com&gt;;info=ring2" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.Internal" value="02_Memo.wav" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderInternal" value="&lt;http://www.notused.com&gt;;info=ring1" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.Group" value="03_Vibe.wav" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderGroup" value="&lt;http://www.notused.com&gt;;info=ring3" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.Doorstation" value="04_Listen.wav" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderDoorstation" value="&lt;http://www.notused.com&gt;;info=ring4" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.Optional" value="05_Down.wav" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderOptional" value="&lt;http://www.notused.com&gt;;info=ring5" />
     {%- endif %}
     {%- endfor %}
 
@@ -92,7 +104,7 @@
     {# soft keys #}
     {% if cap_softkey_count > 0 %}
       {% for number in 1..(cap_softkey_count) %}
-          {{ gigaset.softkey_type_map(_context['softkey_type_' ~ number], (number-1)) }}
+          {{ gigaset.softkey_type_map(_context['softkey_type_' ~ number], (number-1), _context['softkey_value_' ~ number], dndtoggle) }}
       {% endfor %}
     {% endif %}
     {# end soft keys #}
@@ -106,6 +118,9 @@
     <param name="Telephony.ShowKeysDisplayName" value="1"/>
     <param name="PhoneUI.Keys.FunctionKeys.Icons" value="1"/>
     <param name="PhoneUI.Keys.FunctionKeys.Indicator" value="1"/>
+    <param name="PhoneUI.Keys.ProgrammableKeys.DND.Type" value="1"/>
+    <param name="PhoneUI.Keys.ProgrammableKeys.DND.FAC.enable" value="{{ dndon }}"/>
+    <param name="PhoneUI.Keys.ProgrammableKeys.DND.FAC.disable" value="{{ dndoff }}"/>
 
 {% if vlan_id_phone > 0 and vlan_id_pcport > 0 %}
     <param name="NET.VLAN.Tagging" value="2" />
