@@ -32,7 +32,7 @@
 
     <param name="SIP.Port" value="{{ account_encryption_1 ? sip_tls_port : sip_udp_port }}" />
     <param name="SIP.RTP.Port" value="5004"  />
-    <param name="SIP.Security.UseSIPS" value="{{ account_encryption_1 ? '2' : '0' }}" />
+    <param name="SIP.Security.UseSIPS" value="{{ account_encryption_1 ? '1' : '0' }}" />
     <param name="SIP.TransportProtocol" value="{{ account_encryption_1 ? '2' : '1' }}" />
     <param name="SIP.Security.SRTP" value="{{ account_encryption_1 ? '1' : '0' }}" />
     <param name="SIP.Security.AcceptNonSRTPCalls" value="{{ account_encryption_1 ? '0' : '1' }}" />
