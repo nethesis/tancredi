@@ -2244,6 +2244,7 @@ programablekey.type_range.custom =
 {% for number in 1..cap_linekey_count %}
 # Linekey {{ number }}
 linekey.{{ number }}.type = {{ yealink.linekey_type(_context['linekey_type_' ~ number]) }}
+linekey.{{ number }}.line = 1
 {% if _context['linekey_type_' ~ number] == "queuetoggle" -%}
     linekey.{{ number }}.value = {{ queuetoggle }}
 {% else -%}
