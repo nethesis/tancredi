@@ -319,7 +319,7 @@ static.auto_provision.local_log.backup.append.limit_mode = 0
 #######################################################################################
 ##                                   User Mode                                       ##
 #######################################################################################
-static.security.var_enable = 0
+static.security.var_enable = 1
 static.web_item_level.url =
 
 #######################################################################################
@@ -2244,7 +2244,6 @@ programablekey.type_range.custom =
 {% for number in 1..cap_linekey_count %}
 # Linekey {{ number }}
 linekey.{{ number }}.type = {{ yealink.linekey_type(_context['linekey_type_' ~ number]) }}
-linekey.{{ number }}.line = 1
 {% if _context['linekey_type_' ~ number] == "queuetoggle" -%}
     linekey.{{ number }}.value = {{ queuetoggle }}
 {% else -%}
