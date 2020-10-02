@@ -2,9 +2,7 @@ name: PR for nethserver-tancredi RPM
 on:
   push:
     branches:
-      - nethvoice
-    tags:
-      - v1*
+      - master
 
 jobs:
   open-pr:
