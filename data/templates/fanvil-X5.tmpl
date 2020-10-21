@@ -724,7 +724,7 @@ DSS Extend5 IP      :
 --Dsskey Config{{ lkpage }}--:
 {% endif %}
 {% for lkidx in range(1, lkpage == 0 ? fanvil_sidekey_count : lkcount) %}
-{% set index = lkidx + (lkpage == 0 ? 0 : (lkcount * (lkpage-1) + fanvil_sidekey_count) %}
+{% set index = lkidx + (lkpage == 0 ? 0 : (lkcount * (lkpage-1) + fanvil_sidekey_count)) %}
 {% if _context['linekey_type_' ~ index] == 'blf' %}
 Fkey{{ lkidx }} Type               :1
 Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/b'
