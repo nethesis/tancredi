@@ -30,7 +30,7 @@ $fixes = [
     'fanvil-X210' => ['cap_linekey_count' => 106],
 ];
 
-foreach (array_keys($fixes) as $model_id => $variables) {
+foreach ($fixes as $model_id => $variables) {
     $scope = new \Tancredi\Entity\Scope($model_id, $container['storage'], $container['logger']);
     if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 5) {
         continue;
