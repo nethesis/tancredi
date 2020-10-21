@@ -30,28 +30,7 @@ $fixes = [
     'fanvil-X210' => ['cap_linekey_count' => 106],
 ];
 
-function seek_fixes($model_id)
-{
-    if(isset($fixes[$model_id])) {
-        // exact match found
-        return $fixes[$model_id];
-    }
-    foreach(array_keys($fixes) as $key) {
-        if(substr($model_id, 0, strlen($key) + 1) == $key . '-') {
-            // prefix match found
-            return $fixes[$key];
-        }
-    }
-    // no match found
-    return [];
-}
-
-foreach ($container['storage']->listScopes('model') as $model_id) {
-    $variables = seek_fixes($model_id);
-    if(empty($variables)) {
-        continue;
-    }
-
+foreach (array_keys($fixes) as $model_id => $variables) {
     $scope = new \Tancredi\Entity\Scope($model_id, $container['storage'], $container['logger']);
     if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 5) {
         continue;
