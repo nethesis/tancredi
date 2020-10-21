@@ -715,14 +715,16 @@ DSS Extend5 IP      :
     'attended': 'a',
 } %}
 {% set lkpages = fanvil_lkpages_count | default(5) %}
+{% set fanvil_sidekey_count = fanvil_sidekey_count | default(0) %}
+{% set lkcount = (cap_linekey_count - fanvil_sidekey_count) // lkpages %}
 {% for lkpage in range((fanvil_sidekey_count > 0 ? 0 : 1), lkpages) %}
 {% if lkpage == 0 %}
 --Sidekey Config1--:
 {% else %}
 --Dsskey Config{{ lkpage }}--:
 {% endif %}
-{% for lkidx in range(1, lkpage == 0 ? (fanvil_sidekey_count) : (cap_linekey_count // lkpages)) %}
-{% set index = lkidx + (lkpage == 0 ? 0 : (cap_linekey_count // lkpages * (lkpage-1) + (fanvil_sidekey_count|default(0)))) %}
+{% for lkidx in range(1, lkpage == 0 ? fanvil_sidekey_count : lkcount) %}
+{% set index = lkidx + (lkpage == 0 ? 0 : (lkcount * (lkpage-1) + fanvil_sidekey_count)) %}
 {% if _context['linekey_type_' ~ index] == 'blf' %}
 Fkey{{ lkidx }} Type               :1
 Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/b'
