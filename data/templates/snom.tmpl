@@ -10,6 +10,7 @@
         <lldp_enable perm="">off</lldp_enable>
         <vlan_id perm="">{{ (vlan_id_phone > 0 and vlan_id_phone < 4095) ? vlan_id_phone : '' }}</vlan_id>
         <vlan_qos perm="">{{ (vlan_id_phone > 0 and vlan_id_phone < 4095) ? '0' : '' }}</vlan_qos>
+        <vlan_port_tagging perm="">{{ (vlan_id_pcport > 0 and vlan_id_pcport < 4095) ? 'on' : 'off' }}</vlan_port_tagging>
         <vlan_pc_id perm="">{{ (vlan_id_pcport > 0 and vlan_id_pcport < 4095) ? vlan_id_pcport : '' }}</vlan_pc_id>
         <vlan_pc_priority perm="">{{ (vlan_id_pcport > 0 and vlan_id_pcport < 4095) ? '0' : '' }}</vlan_pc_priority>
 
