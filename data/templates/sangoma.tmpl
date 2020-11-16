@@ -80,19 +80,19 @@
         <!--FunctionKeys/ProgrammableKey-->
         <P43200 para="SoftKey1.Type">{{ sangoma.softkey_type_map(softkey_type_1) }}</P43200>
         <P43300 para="SoftKey1.Account">0</P43300>
-        <P43400 para="SoftKey1.Value">{{ softkey_value_1 }}</P43400>
+        <P43400 para="SoftKey1.Value">{{ softkey_type_1 == "group_pickup" ? pickup_group : softkey_value_1 }}</P43400>
         <P20043 para="ProgrammableKey1.Label">{{ softkey_label_1 }}</P20043>
         <P43201 para="SoftKey2.Type">{{ sangoma.softkey_type_map(softkey_type_2) }}</P43201>
         <P43301 para="SoftKey2.Account">0</P43301>
-        <P43401 para="SoftKey2.Value">{{ softkey_value_2 }}</P43401>
+        <P43401 para="SoftKey2.Value">{{ softkey_type_2 == "group_pickup" ? pickup_group : softkey_value_2 }}</P43401>
         <P20044 para="ProgrammableKey2.Label">{{ softkey_label_2 }}</P20044>
         <P43202 para="SoftKey3.Type">{{ sangoma.softkey_type_map(softkey_type_3) }}</P43202>
         <P43302 para="SoftKey3.Account">0</P43302>
-        <P43402 para="SoftKey3.Value">{{ softkey_value_3 }}</P43402>
+        <P43402 para="SoftKey3.Value">{{ softkey_type_3 == "group_pickup" ? pickup_group : softkey_value_3 }}</P43402>
         <P20045 para="ProgrammableKey3.Label">{{ softkey_label_3 }}</P20045>
         <P43203 para="SoftKey4.Type">{{ sangoma.softkey_type_map(softkey_type_4) }}</P43203>
         <P43303 para="SoftKey4.Account">0</P43303>
-        <P43403 para="SoftKey4.Value">{{ softkey_value_4 }}</P43403>
+        <P43403 para="SoftKey4.Value">{{ softkey_type_4 == "group_pickup" ? pickup_group : softkey_value_4 }}</P43403>
         <P20046 para="ProgrammableKey4.Label">{{ softkey_label_4 }}</P20046>
 
         <!--ExpKeys-->
@@ -169,7 +169,7 @@
         <P5435 para="LDAP.UserName">{{ ldap_user }}</P5435>
         <P5436 para="LDAP.Password">{{ ldap_password }}</P5436>
         <P5437 para="LDAP.Max.Hits">50</P5437>
-        <P5440 para="LDAP.DisplayName">{{ ldap_name_display | replace({'%': ''}) }}</P5440>
+        <P5440 para="LDAP.DisplayName"></P5440>
         <P23136 para="Directory.LDAPNameAttributes">{{ ldap_name_attr }}</P23136>
         <P23137 para="Directory.LDAPNumberAttributes">{{ [ldap_mainphone_number_attr, ldap_mobilephone_number_attr, ldap_otherphone_number_attr] | join(' ') }}</P23137>
         <P5442 para="LDAP.SearchDelay">200</P5442>
