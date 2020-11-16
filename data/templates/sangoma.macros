@@ -439,7 +439,7 @@
     "history":"36",
     "menu":"38",
     "status":"40",
-    "ldap":"37",
+    "ldap":"15",
     "prefix":"11",
 } %}
     {{- type_map[type] ?: '0' -}}
