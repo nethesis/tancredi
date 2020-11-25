@@ -173,6 +173,13 @@
             {% for number in 1..(cap_linekey_count) %}
                     {{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number, queuetoggle)}}
             {% endfor %}
+            {% if cap_expmodule_count > 0 %}
+                {% for expmodule in 1..(cap_expmodule_count) %}
+                    {% for expkey in (cap_linekey_count + ((expmodule-1) * 18))..(cap_linekey_count + (expmodule * 18)) %}
+                        {{snom.expkey_type_map(_context['expkey_type_' ~ expkey], _context['expkey_value_' ~ expkey], _context['expkey_label_' ~ expkey], dndtoggle, pickup_group, expkey, queuetoggle)}}
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
         {% endif %}
     </functionKeys>
 {% endautoescape %}
