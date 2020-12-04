@@ -1,4 +1,4 @@
-<?php namespace upgrade5;
+<?php namespace upgrade7;
 
 /*
  * Copyright (C) 2020 Nethesis S.r.l.
