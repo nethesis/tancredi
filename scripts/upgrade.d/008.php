@@ -1,4 +1,4 @@
-<?php namespace upgrade7;
+<?php namespace upgrade8;
 
 /*
  * Copyright (C) 2020 Nethesis S.r.l.
@@ -34,5 +34,5 @@ foreach ($fixes as $model_id => $variables) {
     }
     $scope->metadata['version'] = 8;
     $scope->setVariables($variables);
-    $container['logger']->info("Fixed cap_linekey_count in model $model_id");
+    $container['logger']->info("Fixed cap_screensaver_time_blacklist in model $model_id");
 }
