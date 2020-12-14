@@ -80,7 +80,7 @@
 # softkey_type_map -- translate "softkey_type"
 #
 {% macro softkey_type_map(softkey_type, number, softkey_value, dndtoggle) %}
-{% if softkey_type == "redial" %}
+{% if softkey_type == "recall" %}
     <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="17"/>
 {% elseif softkey_type == "forward" %}
     <param name="PhoneUI.Keys.SoftKeys.{{ number }}.Type" value="6" />
