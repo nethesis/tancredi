@@ -135,8 +135,23 @@
 #
 {% macro tones_code(country) %}
     {%- set tones = {
-        "it": "ITA",
-        "us": "USA"
+       "it" : "ITA",
+       "at" : "AUT",
+       "cz" : "CZE",
+       "dk" : "DNK",
+       "fi" : "FIN",
+       "fr" : "FRA",
+       "de" : "DEU",
+       "gr" : "GRC",
+       "nl" : "NLD",
+       "pl" : "POL",
+       "pt" : "PRT",
+       "ru" : "RUS",
+       "za" : "ZAF",
+       "es" : "ESP",
+       "se" : "SWE",
+       "uk" : "GBR",
+       "us" : "USA"
 } -%}
     {{- tones[country] ?? 'INT' -}}
 {% endmacro tones_code %}
