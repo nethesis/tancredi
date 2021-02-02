@@ -22,6 +22,8 @@
     <param name="Telephony.ToneScheme" value="{{ gigaset.tones_code(tonezone) }}" />
     <param name="Telephony.CallTransfer.HoldOnTransfer.Attended" value="{{ dss_transfer != 'attended' ? 'Disabled' : 'Enabled' }}" />
     <param name="Telephony.CallTransfer.HoldOnTransfer.Unattended" value="{{ dss_transfer == 'attended' ? 'Disabled' : 'Enabled' }}" />
+    <param name="Telephony.DnD.Active" value="{{ account_dnd_enable_1 ? '1' : '0' }}" />
+
     <param name="PhoneUI.Settings.Language" value="{{ gigaset.language_code(language) }}" />
     <param name="WebUI.Language" value="{{ gigaset.language_code(language) }}" />
     
@@ -71,6 +73,16 @@
     <param name="SIP.Account.{{ idx }}.Ringtone.HeaderDoorstation" value="&lt;http://www.notused.com&gt;;\info=ring4" />
     <param name="SIP.Account.{{ idx }}.Ringtone.Optional" value="05_Down.wav" />
     <param name="SIP.Account.{{ idx }}.Ringtone.HeaderOptional" value="&lt;http://www.notused.com&gt;;\info=ring5" />
+    <param name="Telephony.CallDivert.{{ idx }}.All.Active" value="{{ _context['account_always_fwd_target_' ~ line] ? '1' : '0' }" />
+    <param name="Telephony.CallDivert.{{ idx }}.All.VoiceMail" value="0" />
+    <param name="Telephony.CallDivert.{{ idx }}.All.Target" value="{{ _context['account_always_fwd_target_' ~ line]|default }}" />
+    <param name="Telephony.CallDivert.{{ idx }}.Busy.Active" value="{{ _context['account_busy_fwd_target_' ~ line] ? '1' : '0' }}" />
+    <param name="Telephony.CallDivert.{{ idx }}.Busy.VoiceMail" value="0" />
+    <param name="Telephony.CallDivert.{{ idx }}.Busy.Target" value="{{ _context['account_busy_fwd_target_' ~ line]|default }}" />
+    <param name="Telephony.CallDivert.{{ idx }}.NoAnswer.Active" value="{{ _context['account_timeout_fwd_target_' ~ line] ? '1' : '0' }}" />
+    <param name="Telephony.CallDivert.{{ idx }}.NoAnswer.Delay" value="{{ _context['account_cftimeout_' ~ line] | default('120') }}" />
+    <param name="Telephony.CallDivert.{{ idx }}.NoAnswer.VoiceMail" value="0" />
+    <param name="Telephony.CallDivert.{{ idx }}.NoAnswer.Target" value="{{ _context['account_timeout_fwd_target_' ~ line]|default }}" />
     {%- endif %}
     {%- endfor %}
 
