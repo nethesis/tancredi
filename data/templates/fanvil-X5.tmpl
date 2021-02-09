@@ -1,6 +1,8 @@
 <<VOIP CONFIG FILE>>Version:2.0000000000                      
 {% import 'fanvil.macros' as fanvil %}
 {% import 'language.macros' as l10n %}
+{% set fanvil_lkpages_count = fanvil_lkpages_count | default(5) %}
+{% set fanvil_sidepages_count = fanvil_sidepages_count | default(0) %}
 
 <NET CONFIG MODULE>
 WAN TYPE           :0
@@ -686,10 +688,8 @@ MCAST10 Channel            :0
 <DSSKEY CONFIG MODULE>
 Select DsskeyAction:0
 Memory Key to BXfer:{{ dss_transfer }}
-{% set lkpages = fanvil_lkpages_count | default(5) %}
-{% set sidepages = fanvil_sidepages_count | default(0) %}
-FuncKey Page Num   :{{ lkpages }}
-SideKey Page Num   :{{ sidepages }}
+FuncKey Page Num   :{{ fanvil_lkpages_count }}
+SideKey Page Num   :{{ fanvil_sidepages_count }}
 DSS Home Page      :1
 DSS DIAL Switch Mode :0
 First Call Wait Time :16
@@ -710,140 +710,44 @@ DSS Extend4 MAC     :
 DSS Extend4 IP      :
 DSS Extend5 MAC     :
 DSS Extend5 IP      :
-{% set dss_transfer_map = {
-    'verify': 'c',
-    'blind': 'b',
-    'attended': 'a',
-} %}
-{% set linekey_count = cap_linekey_count - fanvil_sidekey_count %}
-{% set lkcount = (linekey_count // lkpages) %}
-{% set sidecount = (fanvil_sidekey_count // sidepages) %}
-{% for pages in range( 1, sidepages+lkpages) %}
-{% if pages <= sidepages %}
---Sidekey Config{{ pages }}--:
-{% else %}
---Dsskey Config{{ pages - sidepages }}--:
-{% endif %}
-{% for keyidx in range(1, pages <= sidepages ? sidecount : lkcount) %}
-{% if pages == 1 %}
-{% set index = keyidx %}
-{% elseif pages <= sidepages %}
-{% set index = keyidx + (sidecount * (pages-1)) %}
-{% else %}
-{% set index = keyidx + sidecount + (lkcount * (pages-sidepages-1)) %}
-{% endif %}
-{% if _context['linekey_type_' ~ index] == 'blf' %}
-Fkey{{ keyidx }} Type               :1
-Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/b'
-                                    ~ (dss_transfer_map[dss_transfer] ?? 'a')
-                                    ~ pickup_direct ~ _context['linekey_value_' ~ index]
-                                    }}
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10)  }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'conference' %}
-Fkey{{ keyidx }} Type               :1
-Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/bf'
-                                    ~ pickup_direct ~ _context['linekey_value_' ~ index]
-                                    }}
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10)  }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'direct_pickup' %}
-Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_PICKUP
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Pickup', language)) | slice(0,10)  }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'dnd' %}
-Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_DND
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('DND', language)) | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'dtmf' %}
-Fkey{{ keyidx }} Type               :4
-Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] }}
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'forward' %}
-Fkey{{ keyidx }} Type               :1
-Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/a' }}
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'group_pickup' %}
-Fkey{{ keyidx }} Type               :1
-Fkey{{ keyidx }} Value              :{{ pickup_group ~ '@1/f' }}
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Pickup', language)) | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'hold' %}
-Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_HOLD
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Hold', language)) | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'ldap' %}
-Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_LDAPCONTACTS:1
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Phonebook', language)) | slice(0,10)  }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'line' %}
-Fkey{{ keyidx }} Type               :2
-Fkey{{ keyidx }} Value              :SIP1
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Line %s', language) | format(keyidx)) | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'multicast_paging' %}
-Fkey{{ keyidx }} Type               :14
-Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '/PCMU' }}
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index]  | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'phone_lock' %}
-Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_LOCK
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Lock phone', language)) | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'prefix' %}
-Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_PREFIX:{{ _context['linekey_value_' ~ index] }}
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'recall' %}
-Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_REDIAL
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Redial', language)) | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'record' %}
-Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_RECORD
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Record', language)) | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'speed_dial' %}
-Fkey{{ keyidx }} Type               :1
-Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/f' }}
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'queuetoggle' %}
-Fkey{{ keyidx }} Type               :1
-Fkey{{ keyidx }} Value              :{{ queuetoggle ~ '@1/f' }}
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'transfer' %}
-Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_B_TRANSFER
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Transfer', language)) | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'url' %}
-Fkey{{ keyidx }} Type               :7
-Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] }}
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('URL', language)) | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% elseif _context['linekey_type_' ~ index] == 'voice_mail' %}
-Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_MWI
-Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Voice mail', language)) | slice(0,10) }}
-Fkey{{ keyidx }} ICON               :Green
-{% else %}
-Fkey{{ keyidx }} Type               :0
-Fkey{{ keyidx }} Value              :
-Fkey{{ keyidx }} Title              :
-Fkey{{ keyidx }} ICON               :Green
-{% endif %}
 
+{# Linear index for linekey_type_{index} #}
+{% set index = 0 %}
+{# Side key loop #}
+{% for pageidx in fanvil_sidepages_count == 0 ? [] : range(1, fanvil_sidepages_count) %}
+--Sidekey Config{{ pageidx }}--:
+{% for keyidx in range(1, fanvil_sidekey_count // fanvil_sidepages_count) %}
+{% set index = index + 1 %}
+{{ fanvil.linekey_type_map(
+    _context['linekey_type_' ~ index],
+    _context['linekey_value_' ~ index],
+    _context['linekey_label_' ~ index],
+    keyidx,
+    l10n,
+    pickup_direct,
+    pickup_group,
+    dss_transfer,
+    queuetoggle
+) }}
+{% endfor %}
+{% endfor %}
+{# Dss key loop #}
+{% for pageidx in fanvil_lkpages_count == 0 ? [] : range(1, fanvil_lkpages_count) %}
+--Dsskey Config{{ pageidx }}--:
+{% for keyidx in range(1, (cap_linekey_count - fanvil_sidekey_count) // fanvil_lkpages_count) %}
+{% set index = index + 1 %}
+{{ fanvil.linekey_type_map(
+    _context['linekey_type_' ~ index],
+    _context['linekey_value_' ~ index],
+    _context['linekey_label_' ~ index],
+    keyidx,
+    l10n,
+    language,
+    pickup_direct,
+    pickup_group,
+    dss_transfer,
+    queuetoggle
+) }}
 {% endfor %}
 {% endfor %}
 
