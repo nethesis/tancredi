@@ -686,8 +686,10 @@ MCAST10 Channel            :0
 <DSSKEY CONFIG MODULE>
 Select DsskeyAction:0
 Memory Key to BXfer:{{ dss_transfer }}
-FuncKey Page Num   :5
-SideKey Page Num   :1
+{% set lkpages = fanvil_lkpages_count | default(5) %}
+{% set sidepages = fanvil_sidepages_count | default(0) %}
+FuncKey Page Num   :{{ lkpages }}
+SideKey Page Num   :{{ sidepages }}
 DSS Home Page      :1
 DSS DIAL Switch Mode :0
 First Call Wait Time :16
@@ -708,133 +710,138 @@ DSS Extend4 MAC     :
 DSS Extend4 IP      :
 DSS Extend5 MAC     :
 DSS Extend5 IP      :
-
 {% set dss_transfer_map = {
     'verify': 'c',
     'blind': 'b',
     'attended': 'a',
 } %}
-{% set lkpages = fanvil_lkpages_count | default(5) %}
-{% set fanvil_sidekey_count = fanvil_sidekey_count | default(0) %}
-{% set lkcount = (cap_linekey_count - fanvil_sidekey_count) // lkpages %}
-{% for lkpage in range((fanvil_sidekey_count > 0 ? 0 : 1), lkpages) %}
-{% if lkpage == 0 %}
---Sidekey Config1--:
+{% set linekey_count = cap_linekey_count - fanvil_sidekey_count %}
+{% set lkcount = (linekey_count // lkpages) %}
+{% set sidecount = (fanvil_sidekey_count // sidepages) %}
+{% for pages in range( 1, sidepages+lkpages) %}
+{% if pages <= sidepages %}
+--Sidekey Config{{ pages }}--:
 {% else %}
---Dsskey Config{{ lkpage }}--:
+--Dsskey Config{{ pages - sidepages }}--:
 {% endif %}
-{% for lkidx in range(1, lkpage == 0 ? fanvil_sidekey_count : lkcount) %}
-{% set index = lkidx + (lkpage == 0 ? 0 : (lkcount * (lkpage-1) + fanvil_sidekey_count)) %}
+{% for keyidx in range(1, pages <= sidepages ? sidecount : lkcount) %}
+{% if pages == 1 %}
+{% set index = keyidx %}
+{% elseif pages <= sidepages %}
+{% set index = keyidx + (sidecount * (pages-1)) %}
+{% else %}
+{% set index = keyidx + sidecount + (lkcount * (pages-sidepages-1)) %}
+{% endif %}
 {% if _context['linekey_type_' ~ index] == 'blf' %}
-Fkey{{ lkidx }} Type               :1
-Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/b'
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/b'
                                     ~ (dss_transfer_map[dss_transfer] ?? 'a')
                                     ~ pickup_direct ~ _context['linekey_value_' ~ index]
                                     }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10)  }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10)  }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'conference' %}
-Fkey{{ lkidx }} Type               :1
-Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/bf'
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/bf'
                                     ~ pickup_direct ~ _context['linekey_value_' ~ index]
                                     }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10)  }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10)  }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'direct_pickup' %}
-Fkey{{ lkidx }} Type               :3
-Fkey{{ lkidx }} Value              :F_PICKUP
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Pickup', language)) | slice(0,10)  }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_PICKUP
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Pickup', language)) | slice(0,10)  }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'dnd' %}
-Fkey{{ lkidx }} Type               :3
-Fkey{{ lkidx }} Value              :F_DND
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('DND', language)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_DND
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('DND', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'dtmf' %}
-Fkey{{ lkidx }} Type               :4
-Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :4
+Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] }}
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'forward' %}
-Fkey{{ lkidx }} Type               :1
-Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/a' }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/a' }}
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'group_pickup' %}
-Fkey{{ lkidx }} Type               :1
-Fkey{{ lkidx }} Value              :{{ pickup_group ~ '@1/f' }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Pickup', language)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ pickup_group ~ '@1/f' }}
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Pickup', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'hold' %}
-Fkey{{ lkidx }} Type               :3
-Fkey{{ lkidx }} Value              :F_HOLD
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Hold', language)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_HOLD
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Hold', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'ldap' %}
-Fkey{{ lkidx }} Type               :3
-Fkey{{ lkidx }} Value              :F_LDAPCONTACTS:1
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Phonebook', language)) | slice(0,10)  }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_LDAPCONTACTS:1
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Phonebook', language)) | slice(0,10)  }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'line' %}
-Fkey{{ lkidx }} Type               :2
-Fkey{{ lkidx }} Value              :SIP1
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Line %s', language) | format(lkidx)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :2
+Fkey{{ keyidx }} Value              :SIP1
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Line %s', language) | format(keyidx)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'multicast_paging' %}
-Fkey{{ lkidx }} Type               :14
-Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '/PCMU' }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index]  | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :14
+Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '/PCMU' }}
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index]  | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'phone_lock' %}
-Fkey{{ lkidx }} Type               :3
-Fkey{{ lkidx }} Value              :F_LOCK
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Lock phone', language)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_LOCK
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Lock phone', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'prefix' %}
-Fkey{{ lkidx }} Type               :3
-Fkey{{ lkidx }} Value              :F_PREFIX:{{ _context['linekey_value_' ~ index] }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_PREFIX:{{ _context['linekey_value_' ~ index] }}
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'recall' %}
-Fkey{{ lkidx }} Type               :3
-Fkey{{ lkidx }} Value              :F_REDIAL
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Redial', language)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_REDIAL
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Redial', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'record' %}
-Fkey{{ lkidx }} Type               :3
-Fkey{{ lkidx }} Value              :F_RECORD
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Record', language)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_RECORD
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Record', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'speed_dial' %}
-Fkey{{ lkidx }} Type               :1
-Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/f' }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] ~ '@1/f' }}
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'queuetoggle' %}
-Fkey{{ lkidx }} Type               :1
-Fkey{{ lkidx }} Value              :{{ queuetoggle ~ '@1/f' }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ queuetoggle ~ '@1/f' }}
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'transfer' %}
-Fkey{{ lkidx }} Type               :3
-Fkey{{ lkidx }} Value              :F_B_TRANSFER
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Transfer', language)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_B_TRANSFER
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Transfer', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'url' %}
-Fkey{{ lkidx }} Type               :7
-Fkey{{ lkidx }} Value              :{{ _context['linekey_value_' ~ index] }}
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('URL', language)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :7
+Fkey{{ keyidx }} Value              :{{ _context['linekey_value_' ~ index] }}
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('URL', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% elseif _context['linekey_type_' ~ index] == 'voice_mail' %}
-Fkey{{ lkidx }} Type               :3
-Fkey{{ lkidx }} Value              :F_MWI
-Fkey{{ lkidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Voice mail', language)) | slice(0,10) }}
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_MWI
+Fkey{{ keyidx }} Title              :{{ _context['linekey_label_' ~ index] | default(l10n.gettext('Voice mail', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
 {% else %}
-Fkey{{ lkidx }} Type               :0
-Fkey{{ lkidx }} Value              :
-Fkey{{ lkidx }} Title              :
-Fkey{{ lkidx }} ICON               :Green
+Fkey{{ keyidx }} Type               :0
+Fkey{{ keyidx }} Value              :
+Fkey{{ keyidx }} Title              :
+Fkey{{ keyidx }} ICON               :Green
 {% endif %}
 
 {% endfor %}
