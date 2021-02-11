@@ -1,0 +1,172 @@
+#
+# contrast_map -- map range 0-9 to 1-16
+#
+{% macro contrast_map(value) %}
+{% set map = {
+  '0': '1',
+  '1': '2',
+  '2': '3',
+  '3': '4',
+  '4': '5',
+  '5': '6',
+  '6': '7',
+  '7': '9',
+  '8': '11',
+  '9': '16',
+} %}
+    {{- map[value] ?: '10' -}}
+{% endmacro contrast_map %}
+
+#
+# brightness_map -- map range 0-9 to 1-16
+#
+{% macro brightness_map(value) %}
+{% set map = {
+  '0': '1',
+  '1': '4',
+  '2': '8',
+  '3': '9',
+  '4': '10',
+  '5': '12',
+  '6': '13',
+  '7': '14',
+  '8': '15',
+  '9': '16',
+} %}
+    {{- map[value] ?: '10' -}}
+{% endmacro brightness_map %}
+
+#
+# scheme_map -- translate "provisioning_url_scheme" to Nethesis code
+#
+{% macro scheme_map(scheme) %}
+{% if scheme == 'ftp' %}
+    {{- '1' -}}
+{% elseif scheme == 'tftp' %}
+    {{- '2' -}}
+{% elseif scheme == 'http' %}
+    {{- '4' -}}
+{% elseif scheme == 'https' %}
+    {{- '5' -}}
+{% else %}
+    {{- '0' -}}
+{% endif %}
+{% endmacro scheme_map %}
+
+#
+# dtmf_map -- translate "account_dtmf_type" value to Nethesis code
+#
+{% macro dtmf_map(account_dtmf_type) %}
+{% if account_dtmf_type == 'inband' %}
+    {{- '0' -}}
+{% elseif account_dtmf_type == 'rfc4733' %}
+    {{- '1' -}}
+{% elseif account_dtmf_type == 'sip_info' %}
+    {{- '2' -}}
+{% else %}
+    {{- '3' -}}
+{% endif %}
+{% endmacro dtmf_map %}
+
+#
+# b2v -- convert a boolean value to '0' or '1' with a fallback value for NULL
+#
+{% macro b2v(value, fallback) %}
+{% if value is null %}
+    {{- fallback ?? '0' -}}
+{% else %}
+    {{- value is empty ? '0' : '1' -}}
+{% endif %}
+{% endmacro b2v %}
+
+#
+# National emergency call number
+#
+{% macro emergency_map(country) %}
+{%- set emergency_map = {
+    "it": "118",
+} -%}
+{% if emergency_map[country] is defined %}
+    {{- emergency_map[country] -}}
+{% endif %}
+{% endmacro emergency_map %}
+
+
+#
+# Translate the tones country to Nethesis tone code
+#
+{% macro tones_code(country) %}
+    {%- set tones = {
+        "it": "21"
+} -%}
+    {{- tones[country] ?? '21' -}}
+{% endmacro tones_code %}
+
+#
+# Translate the language name to Nethesis language code
+#
+{% macro language_code(lang) %}
+    {%- set code = {
+        "en": "0",
+        "it": "7"
+} -%}
+    {{- code[lang] ?? '0' -}}
+{% endmacro language_code %}
+
+#
+# The Nethesis time zone parameters map
+#
+{% macro tz_map(tz, field) %}
+{%- set tz_map = {
+  "Europe/Rome": {
+    "location": "13",
+    "name": "UTC+1",
+    "offset": "4"
+  },
+  "UTC": {
+    "location": "1",
+    "name": "UTC",
+    "offset": "0"
+  }
+} -%}
+{% if tz_map[tz] is defined %}
+    {{- tz_map[tz][field] -}}
+{% else %}
+    {{- tz_map['UTC'][field] -}}
+{% endif %}
+{% endmacro tz_map %}
+
+#
+# Calculate the hours to wait before the next upgrade round
+#
+{% macro upgrade_wait_hours(timezone, short_mac) %}
+{% set offset = short_mac[-1:] | replace({
+  '0':'0', '1':'0', '2':'0', '3':'0',
+  '4':'1', '5':'2', '6':'3', '7':'4',
+  '8':'1', '9':'2', 'a':'3', 'b':'4',
+  'c':'1', 'd':'2', 'e':'3', 'f':'4'
+}) %}
+    {{- ((('tomorrow 01:00' | date('U', timezone)) - ('now' | date('U', timezone)))/3600 + offset) | round -}}
+{% endmacro upgrade_wait_hours %}
+
+#
+# Set date format
+#
+{% macro date_format(date_format) %}
+    {%- set map = {
+        "DD MM YY" : "4", 
+        "DD MM YYYY" : "5", 
+        "DD MMM WW" : "0", 
+        "DD MMM YY" : "0", 
+        "DD MMM YYYY" : "0", 
+        "WWW DD MMM" : "2", 
+        "WWW MMM DD" : "3", 
+        "MM DD YY" : "6", 
+        "MM DD YYYY" : "7", 
+        "MMM DD WW" : "1", 
+        "YY MM DD" : "8", 
+        "YYYY MM DD" : "9"
+        }
+    -%}
+{{- map[date_format] ?? '2' -}}
+{% endmacro date_format %}

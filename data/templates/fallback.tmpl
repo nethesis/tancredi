@@ -10,6 +10,10 @@
 {% include 'sangoma.tmpl' %}
 {%- elseif provisioning_user_agent starts with 'Maxwell' -%}
 {% include 'gigaset-Maxwell.tmpl' %}
+{%- elseif provisioning_user_agent starts with 'Nethesis NP-X3' -%}
+{% include 'nethesis-NPX3.tmpl' %}
+{%- elseif provisioning_user_agent starts with 'Nethesis NP-X5' -%}
+{% include 'nethesis-NPX5.tmpl' %}
 {%- else -%}
 {{ throw.error() }}
 {%- endif -%}
