@@ -32,7 +32,7 @@ jobs:
         cd $GITHUB_WORKSPACE/nethesis/tancredi
         references=$(git log ${commits[0]}..${commits[1]} | grep -Eo '((nethesis|nethserver)/dev)?#[0-9]+\b' | sed 's|^#|nethesis/tancredi#|' | sort | uniq)
         references="${references//$'\n'/'%0A'}"
-        echo "references=${references}" >> $GITHUB_ENV
+        echo "::set-output name=references::${references}"
 
     - name: Send a pull request to nethserver-tancredi
       uses: peter-evans/create-pull-request@v3
@@ -48,7 +48,7 @@ jobs:
 
           References:
 
-          ${{ env.references }}
+          ${{ steps.editspec.outputs.references }}
         branch: upstream-updates
         commit-message: |
           Bump tancredi version
