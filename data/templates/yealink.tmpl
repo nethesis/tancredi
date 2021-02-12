@@ -840,7 +840,7 @@ phone_setting.favorite_sequence_type = 0
 features.block_linekey_in_menu.enable = 0
 features.shorten_linekey_label.enable = 0
 features.flash_url_dsskey_led.enable = 1
-features.config_dsskey_length = 1
+features.config_dsskey_length = 0
 phone_setting.page_tip = 0
 features.keep_switch_page_key.enable = 0
 
@@ -1271,7 +1271,7 @@ lang.wui = {{ yealink.language(language) }}
 screensaver.type = {{ cap_screensaver_file and screensaver_file ? '1' : '0' }}
 screensaver.delete =
 screensaver.upload_url = {{ cap_screensaver_file and screensaver_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/screensavers/#{screensaver_file}" : "" }}
-features.blf_active_backlight.enable = 1
+features.blf_active_backlight.enable = {{ yealink_blf_active_backlight | default('1') }}
 screensaver.display_clock.enable = 1
 screensaver.clock_move_interval = 600
 screensaver.picture_change_interval = 60

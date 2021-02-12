@@ -200,3 +200,136 @@
     -%}
 {{- map[date_format] ?? '2' -}}
 {% endmacro date_format %}
+
+#
+# Side keys and DSS keys configuration
+#
+{% macro linekey_type_map(
+    linekey_type,
+    linekey_value,
+    linekey_label,
+    keyidx,
+    l10n,
+    language,
+    pickup_direct,
+    pickup_group,
+    dss_transfer,
+    queuetoggle
+) %}
+{% set dss_transfer_map = {
+    'verify': 'c',
+    'blind': 'b',
+    'attended': 'a',
+} %}
+{% if linekey_type == 'blf' %}
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ linekey_value ~ '@1/b'
+                                    ~ (dss_transfer_map[dss_transfer] ?? 'a')
+                                    ~ pickup_direct ~ linekey_value
+                                    }}
+Fkey{{ keyidx }} Title              :{{ linekey_label | slice(0,10)  }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'conference' %}
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ linekey_value ~ '@1/bf'
+                                    ~ pickup_direct ~ linekey_value
+                                    }}
+Fkey{{ keyidx }} Title              :{{ linekey_label | slice(0,10)  }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'direct_pickup' %}
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_PICKUP
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Pickup', language)) | slice(0,10)  }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'dnd' %}
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_DND
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('DND', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'dtmf' %}
+Fkey{{ keyidx }} Type               :4
+Fkey{{ keyidx }} Value              :{{ linekey_value }}
+Fkey{{ keyidx }} Title              :{{ linekey_label | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'forward' %}
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ linekey_value ~ '@1/a' }}
+Fkey{{ keyidx }} Title              :{{ linekey_label | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'group_pickup' %}
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ pickup_group ~ '@1/f' }}
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Pickup', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'hold' %}
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_HOLD
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Hold', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'ldap' %}
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_LDAPCONTACTS:1
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Phonebook', language)) | slice(0,10)  }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'line' %}
+Fkey{{ keyidx }} Type               :2
+Fkey{{ keyidx }} Value              :SIP1
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Line %s', language) | format(keyidx)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'multicast_paging' %}
+Fkey{{ keyidx }} Type               :14
+Fkey{{ keyidx }} Value              :{{ linekey_value ~ '/PCMU' }}
+Fkey{{ keyidx }} Title              :{{ linekey_label  | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'phone_lock' %}
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_LOCK
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Lock phone', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'prefix' %}
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_PREFIX:{{ linekey_value }}
+Fkey{{ keyidx }} Title              :{{ linekey_label | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'recall' %}
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_REDIAL
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Redial', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'record' %}
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_RECORD
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Record', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'speed_dial' %}
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ linekey_value ~ '@1/f' }}
+Fkey{{ keyidx }} Title              :{{ linekey_label | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'queuetoggle' %}
+Fkey{{ keyidx }} Type               :1
+Fkey{{ keyidx }} Value              :{{ queuetoggle ~ '@1/f' }}
+Fkey{{ keyidx }} Title              :{{ linekey_label | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'transfer' %}
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_B_TRANSFER
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Transfer', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'url' %}
+Fkey{{ keyidx }} Type               :7
+Fkey{{ keyidx }} Value              :{{ linekey_value }}
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('URL', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% elseif linekey_type == 'voice_mail' %}
+Fkey{{ keyidx }} Type               :3
+Fkey{{ keyidx }} Value              :F_MWI
+Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Voice mail', language)) | slice(0,10) }}
+Fkey{{ keyidx }} ICON               :Green
+{% else %}
+Fkey{{ keyidx }} Type               :0
+Fkey{{ keyidx }} Value              :
+Fkey{{ keyidx }} Title              :
+Fkey{{ keyidx }} ICON               :Green
+{% endif %}
+{% endmacro linekey_type_map %}
