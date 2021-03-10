@@ -134,12 +134,12 @@ SIP{{ line }} MedCrypto Key      :
 SIP{{ line }} SRTP Auth-Tag      :0
 SIP{{ line }} Enable RFC5939     :0
 SIP{{ line }} Local Domain       :
-SIP{{ line }} Always FWD         :0
-SIP{{ line }} Busy FWD           :0
-SIP{{ line }} No Answer FWD      :0
-SIP{{ line }} Always FWD Num     :
-SIP{{ line }} Busy FWD Num       :
-SIP{{ line }} NoAnswer FWD Num   :
+SIP{{ line }} Always FWD         :{{ _context['account_always_fwd_target_' ~ line] ? '1' : '0' }}
+SIP{{ line }} Busy FWD           :{{ _context['account_busy_fwd_target_' ~ line] ? '1' : '0' }}
+SIP{{ line }} No Answer FWD      :{{ _context['account_timeout_fwd_target_' ~ line] ? '1' : '0' }}
+SIP{{ line }} Always FWD Num     :{{ _context['account_always_fwd_target_' ~ line]|default }}
+SIP{{ line }} Busy FWD Num       :{{ _context['account_busy_fwd_target_' ~ line]|default }}
+SIP{{ line }} NoAnswer FWD Num   :{{ _context['account_timeout_fwd_target_' ~ line]|default }}
 SIP{{ line }} FWD Timer          :5
 SIP{{ line }} Hotline Num        :
 SIP{{ line }} Enable Hotline     :0
@@ -217,7 +217,7 @@ SIP{{ line }} Enable BLFList     :0
 SIP{{ line }} Caller Id Type     :5
 SIP{{ line }} Syn Clock Time     :0
 SIP{{ line }} Use VPN            :1
-SIP{{ line }} Enable DND         :0
+SIP{{ line }} Enable DND         :{{ _context['account_dnd_enable_' ~ line] ? '1' : '0' }}
 SIP{{ line }} Inactive Hold      :0
 SIP{{ line }} Req With Port      :0
 SIP{{ line }} Update Reg Expire  :1
@@ -268,7 +268,7 @@ P1 Enable FwdDPlan    :0
 P1 Enable Pre DPlan   :0
 P1 IP Dial Prefix     :.
 P1 Enable DND         :1
-P1 DND Mode           :0
+P1 DND Mode           :2
 P1 Enable Space DND   :0
 P1 DND Start Time     :1500
 P1 DND End Time       :1730
