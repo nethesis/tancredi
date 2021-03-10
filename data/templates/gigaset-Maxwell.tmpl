@@ -73,7 +73,7 @@
     <param name="SIP.Account.{{ idx }}.Ringtone.HeaderDoorstation" value="&lt;http://www.notused.com&gt;;\info=ring4" />
     <param name="SIP.Account.{{ idx }}.Ringtone.Optional" value="05_Down.wav" />
     <param name="SIP.Account.{{ idx }}.Ringtone.HeaderOptional" value="&lt;http://www.notused.com&gt;;\info=ring5" />
-    <param name="Telephony.CallDivert.{{ idx }}.All.Active" value="{{ _context['account_always_fwd_target_' ~ line] ? '1' : '0' }" />
+    <param name="Telephony.CallDivert.{{ idx }}.All.Active" value="{{ _context['account_always_fwd_target_' ~ line] ? '1' : '0' }}" />
     <param name="Telephony.CallDivert.{{ idx }}.All.VoiceMail" value="0" />
     <param name="Telephony.CallDivert.{{ idx }}.All.Target" value="{{ _context['account_always_fwd_target_' ~ line]|default }}" />
     <param name="Telephony.CallDivert.{{ idx }}.Busy.Active" value="{{ _context['account_busy_fwd_target_' ~ line] ? '1' : '0' }}" />
