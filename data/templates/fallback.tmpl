@@ -13,7 +13,7 @@
 {%- elseif provisioning_user_agent starts with 'Nethesis NP-X3' -%}
 {% include 'nethesis-V1.tmpl' %}
 {%- elseif provisioning_user_agent starts with 'Nethesis NP-X5' -%}
-{% include 'nethesis-V5.tmpl' %}
+{% include 'nethesis-V2.tmpl' %}
 {%- else -%}
 {{ throw.error() }}
 {%- endif -%}
