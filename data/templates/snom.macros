@@ -1,9 +1,9 @@
 #
 # linekey_type_map -- translate "linekey_type_"
 #
-{% macro linekey_type_map(linekey_type, linekey_value, linekey_label, dndtoggle, pickup_group, number, queuetoggle) %}
+{% macro linekey_type_map(linekey_type, linekey_value, linekey_label, dndtoggle, pickup_group, number, queuetoggle, pickup_direct) %}
 {% if linekey_type == "blf" %}
-    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">blf {{ linekey_value }}</fkey>
+    <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">blf {{ linekey_value }}|{{ pickup_direct }}</fkey>
 {% elseif linekey_type == "conference" %}
     <fkey idx="{{ (number-1) }}" context="1" label="{{ linekey_label }}" lp="on" perm="">conference {{ linekey_value }}</fkey>
 {% elseif linekey_type == "dtmf" %}
