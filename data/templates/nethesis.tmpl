@@ -455,7 +455,7 @@ DST End Hour       :2
 --DateTime Display--:
 Enable TimeDisplay :0
 Time Display Style :{{ time_format == '12' ? '1' : '0' }}
-Date Display Style :{{ nethesis.date_format(date_format,_context) }}
+Date Display Style :{{ nethesis.date_format(date_format,provisioning_user_agent) }}
 Date Separator     :0
 --Softkey Config-- :
 Softkey Mode       :0
