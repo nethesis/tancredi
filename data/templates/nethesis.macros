@@ -200,6 +200,25 @@
     -%}
 {{- map[date_format] ?? '2' -}}
 {% endmacro date_format %}
+# Set date format for U serie
+{% macro date_format_u(date_format) %}
+    {%- set map = {
+        "DD MM YY" : "8",
+        "DD MM YYYY" : "9",
+        "DD MMM WW" : "0",
+        "DD MMM YY" : "0",
+        "DD MMM YYYY" : "0",
+        "WWW DD MMM" : "4",
+        "WWW MMM DD" : "6",
+        "MM DD YY" : "10",
+        "MM DD YYYY" : "11",
+        "MMM DD WW" : "2",
+        "YY MM DD" : "12",
+        "YYYY MM DD" : "13"
+        }
+    -%}
+{{- map[date_format] ?? '2' -}}
+{% endmacro date_format_u %}
 
 #
 # Side keys and DSS keys configuration
