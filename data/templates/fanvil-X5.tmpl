@@ -455,12 +455,7 @@ DST End Hour       :2
 --DateTime Display--:
 Enable TimeDisplay :0
 Time Display Style :{{ time_format == '12' ? '1' : '0' }}
-{% if provisioning_user_agent matches '/Fanvil (X3U|X4U|X5U|X6U|X7C)/' %}
-Date Display Style :{{ fanvil.date_format_u(date_format) }}
-{% else %}
-Date Display Style :{{ fanvil.date_format(date_format) }}
-{% endif %}
-
+Date Display Style :{{ fanvil.date_format(date_format,_context) }}
 Date Separator     :0
 --Softkey Config-- :
 Softkey Mode       :0

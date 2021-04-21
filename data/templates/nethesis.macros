@@ -183,25 +183,7 @@
 # Set date format
 #
 {% macro date_format(date_format) %}
-    {%- set map = {
-        "DD MM YY" : "4", 
-        "DD MM YYYY" : "5", 
-        "DD MMM WW" : "0", 
-        "DD MMM YY" : "0", 
-        "DD MMM YYYY" : "0", 
-        "WWW DD MMM" : "2", 
-        "WWW MMM DD" : "3", 
-        "MM DD YY" : "6", 
-        "MM DD YYYY" : "7", 
-        "MMM DD WW" : "1", 
-        "YY MM DD" : "8", 
-        "YYYY MM DD" : "9"
-        }
-    -%}
-{{- map[date_format] ?? '2' -}}
-{% endmacro date_format %}
-# Set date format for U serie
-{% macro date_format_u(date_format) %}
+{% if _context['varargs'][0]['provisioning_user_agent'] is not empty and _context['varargs'][0]['provisioning_user_agent'] matches '/Nethesis NP-X5/' %}
     {%- set map = {
         "DD MM YY" : "8",
         "DD MM YYYY" : "9",
@@ -217,8 +199,26 @@
         "YYYY MM DD" : "13"
         }
     -%}
-{{- map[date_format] ?? '2' -}}
-{% endmacro date_format_u %}
+    {{- map[date_format] ?? '4' -}}
+{% else %}
+    {%- set map = {
+        "DD MM YY" : "4", 
+        "DD MM YYYY" : "5", 
+        "DD MMM WW" : "0", 
+        "DD MMM YY" : "0", 
+        "DD MMM YYYY" : "0", 
+        "WWW DD MMM" : "2", 
+        "WWW MMM DD" : "3", 
+        "MM DD YY" : "6", 
+        "MM DD YYYY" : "7", 
+        "MMM DD WW" : "1", 
+        "YY MM DD" : "8", 
+        "YYYY MM DD" : "9"
+        }
+    -%}
+    {{- map[date_format] ?? '2' -}}
+{% endif %}
+{% endmacro date_format %}
 
 #
 # Side keys and DSS keys configuration
