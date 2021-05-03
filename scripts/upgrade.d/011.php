@@ -25,12 +25,12 @@
 //
 
 $fixes = array(
-    'yealink-T43' => array(
-        ['cap_expkey_count' => '40'],
-    ),
-    'fanvil-X3U' => array(
-        ['fanvil_lkpages_count' => '0'],
-    ),
+    'yealink-T43' => [
+        'cap_expkey_count' => '40',
+    ],
+    'fanvil-X3U' => [
+        'fanvil_lkpages_count' => '0',
+    ],
 );
 foreach ($fixes as $model_id => $variables) {
     $scope = new \Tancredi\Entity\Scope($model_id, $container['storage'], $container['logger']);
@@ -38,8 +38,6 @@ foreach ($fixes as $model_id => $variables) {
         continue;
     }
     $scope->metadata['version'] = 11;
-    foreach ($variables as $variable) {
-        $scope->setVariables($variable);
-        $container['logger']->info("Fix ".basename(__FILE__)." applied to scope $model_id: ".array_keys($variable)[0]." => ".array_values($variable)[0]);
-    }
+    $scope->setVariables($variables);
+    $container['logger']->info("Fix ".basename(__FILE__)." applied to scope $model_id");
 }
