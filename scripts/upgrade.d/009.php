@@ -25,7 +25,6 @@
 //
 $fixes = [
     'fanvil-X210' => ['fanvil_sidepages_count' => '1'],
-    'fanvil-X3U' => ['fanvil_lkpages_count' => '0'],
     'fanvil-X3U' => ['fanvil_sidepages_count' => '1'],
     'fanvil-X4U' => ['fanvil_sidepages_count' => '1'],
     'fanvil-X5U' => ['fanvil_sidepages_count' => '1'],
