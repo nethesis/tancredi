@@ -24,7 +24,6 @@
 // Add Yealink T43 expansion module configuration
 //
 $fixes = [
-    'yealink-T43' => ['cap_expkey_count' => '40'],
     'yealink-T43' => ['cap_expmodule_count' => '3'],
 ];
 
