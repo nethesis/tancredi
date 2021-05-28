@@ -2259,11 +2259,16 @@ linekey.{{ number }}.label = {{ _context['linekey_label_' ~ number] }}
 
 {% if cap_expkey_count > 0 and cap_expmodule_count > 0 %}
 {% set expkey = 1 %}
+{% if cap_expkey_count == 38 %}
+{% set cap_expkey_count = cap_expkey_count + 2 %}
+{% set expkey_old_ver = 1 %}
+{% endif %}
 {% for module in 1..cap_expmodule_count %}
 {% for number in 1..cap_expkey_count %}
 {# Skip expkey 21 #}
-{% if cap_expkey_count == 38 and number == 21 %}
-# Skip button 21 of EXP20 -- page switch button
+{% if expkey_old_ver == 1 and (number == 1 or number == 21) %}
+# Skip button 1 and 21 of EXP20 -- page switch button
+expansion_module.{{ module }}.key.{{ number }}.type = 37
 {% else %}
 # Expansion module {{ module }}, Key {{ number }}
 expansion_module.{{ module }}.key.{{ number }}.type = {{ yealink.linekey_type(_context['expkey_type_' ~ expkey]) }}
@@ -2275,6 +2280,7 @@ expansion_module.{{ module }}.key.{{ number }}.label = {{ _context['expkey_label
 {% endfor %}
 {% endfor %}
 {% endif %}
+
 #######################################################################################
 ##                               Security                                            ##
 #######################################################################################
@@ -2285,7 +2291,7 @@ static.security.user_password = user:{{ userpw | default('1234') }}
 static.security.user_name.var = var
 static.security.user_password = var:{{ userpw | default('1234') }}
 
-{% if provisioning_user_agent matches '/SIP-(T21P_E2 5[0-4]|T23G 4[0-4]|T23P 4[0-4]|T27G 6[0-9]|T27P 6[0-9]|T40G 7[0-9]|T58 5[0-9])\.8[4-9]/' %}
+{% if provisioning_user_agent matches '/SIP-(T21P_E2 5[0-4]|T23G 4[0-4]|T23P 4[0-4]|T27G 6[0-9]|T27P 6[0-9]|T40G 7[0-9]|T46S 6[0-9]|T58 5[0-9])\.8[4-9]/' %}
 # Fix TLS error 218910881 (ASN1_item_verify-unknown message digest algorithm)
 sip.tls_cipher_list=!ECDH:AES:!ADH:!LOW:!NULL
 security.tls_cipher_list =!ECDH:AES:!ADH:!LOW:!NULL
