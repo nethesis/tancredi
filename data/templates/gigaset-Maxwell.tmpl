@@ -64,15 +64,15 @@
     <param name="SIP.Account.{{ idx }}.VoiceMail.Active" value="1" />
     <param name="SIP.Account.{{ idx }}.VoiceMail.Mailbox" value="{{ _context['account_voicemail_' ~ line]|default }}" />
     <param name="SIP.Account.{{ idx }}.Ringtone.External" value="06_Gigaset.mp3" />
-    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderExternal" value="&lt;http://www.notused.com&gt;;\info=ring2" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderExternal" value="&lt;http://www.notused.com&gt;\;info=ring2" />
     <param name="SIP.Account.{{ idx }}.Ringtone.Internal" value="{{ gigaset.ringtone_map(ringtone) }}" />
-    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderInternal" value="&lt;http://www.notused.com&gt;;\info=ring1" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderInternal" value="&lt;http://www.notused.com&gt;\;info=ring1" />
     <param name="SIP.Account.{{ idx }}.Ringtone.Group" value="03_Vibe.wav" />
-    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderGroup" value="&lt;http://www.notused.com&gt;;\info=ring3" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderGroup" value="&lt;http://www.notused.com&gt;\;info=ring3" />
     <param name="SIP.Account.{{ idx }}.Ringtone.Doorstation" value="04_Listen.wav" />
-    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderDoorstation" value="&lt;http://www.notused.com&gt;;\info=ring4" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderDoorstation" value="&lt;http://www.notused.com&gt;\;info=ring4" />
     <param name="SIP.Account.{{ idx }}.Ringtone.Optional" value="05_Down.wav" />
-    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderOptional" value="&lt;http://www.notused.com&gt;;\info=ring5" />
+    <param name="SIP.Account.{{ idx }}.Ringtone.HeaderOptional" value="&lt;http://www.notused.com&gt;\;info=ring5" />
     <param name="Telephony.CallDivert.{{ idx }}.All.Active" value="{{ _context['account_always_fwd_target_' ~ line] ? '1' : '0' }}" />
     <param name="Telephony.CallDivert.{{ idx }}.All.VoiceMail" value="0" />
     <param name="Telephony.CallDivert.{{ idx }}.All.Target" value="{{ _context['account_always_fwd_target_' ~ line]|default }}" />
