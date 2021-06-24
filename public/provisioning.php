@@ -214,8 +214,13 @@ function renderTwigTemplate($template, $scope_data) {
     $preg_replace_filter = new \Twig\TwigFilter('preg_replace', function($subject, $pattern, $replacement) {
         return preg_replace($pattern, $replacement, $subject);
     });
+    $firmware_exists_filter = new \Twig\TwigFilter('firmware_exists', function($filename) {
+        global $config;
+        return file_exists($config['rw_dir'] . 'firmware/' . $filename);
+    });
     $twig = new \Twig\Environment($loader,['autoescape' => false]);
     $twig->addFilter($preg_replace_filter);
+    $twig->addFilter($firmware_exists_filter);
     $payload = $twig->render($template, $scope_data);
     return $payload;
 }

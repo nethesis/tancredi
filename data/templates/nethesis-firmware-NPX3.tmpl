@@ -1,5 +1,5 @@
 {% set firmware_file = 'x3sg-5913-RECOVERY-P0.18.23.1.23-2.4.6.5-1159T2021-06-11-10.42.13.z' %}
-{% if firmware_file | file_exists %}
+{% if firmware_file | firmware_exists %}
 Version=2.4.6
 Firmware=firmware/{{  firmware_file }}
 BuildTime=2021.06.11 10:42
