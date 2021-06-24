@@ -1,0 +1,7 @@
+{% set firmware_file = 'x5u-6906-P0.18.23.58-2.4.2.1-3572T2021-05-17-14.53.22.z' %}
+{% if firmware_file | file_exists %}
+Version=2.4.2
+Firmware=firmware/{{  firmware_file }}
+BuildTime=2021.05.17 14:53
+Info=TXT|XML
+{% endif %}
