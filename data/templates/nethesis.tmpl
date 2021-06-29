@@ -936,7 +936,7 @@ Dhcp Option 120    :0
 
 <FIRMWARE CHECK MODULE>
 Enable Auto Upgrade:{{ firmware_file ? 0 : 1 }}
-Upgrade Server 1   :{{ firmware_file ? "" : "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/" }}
+Upgrade Server 1   :{{ firmware_file ? "" : "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}" }}
 Upgrade Server 2   :
 Auto Upgrade Interval:24
 
