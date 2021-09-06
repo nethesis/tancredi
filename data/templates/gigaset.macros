@@ -38,10 +38,11 @@
 #
 # linekey_type_map -- translate "linekey_type_"
 #
-{% macro linekey_type_map(linekey_type, number, linekey_value, dndtoggle, pickup_group, queuetoggle) %}
+{% macro linekey_type_map(linekey_type, number, linekey_value, dndtoggle, pickup_group, queuetoggle, pickup_direct) %}
 {% if linekey_type == "blf" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="4" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.PhoneNumber" value="{{ linekey_value }}" />
+    <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.CallPickupCode" value="{{ pickup_direct }}" />
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Color" value="3" />
 {% elseif linekey_type == "dtmf" %}
     <param name="PhoneUI.Keys.FunctionKeys.{{ number }}.Type" value="7" />
