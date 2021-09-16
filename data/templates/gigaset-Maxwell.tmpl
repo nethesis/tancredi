@@ -123,7 +123,7 @@
     {# line keys #}
     {% if cap_linekey_count > 0 %}
       {% for number in 1..(cap_linekey_count) %}
-        {{ gigaset.linekey_type_map(_context['linekey_type_' ~ number], (number-1), _context['linekey_value_' ~ number], dndtoggle, pickup_group, queuetoggle) }}
+        {{ gigaset.linekey_type_map(_context['linekey_type_' ~ number], (number-1), _context['linekey_value_' ~ number], dndtoggle, pickup_group, queuetoggle, pickup_direct) }}
         <param name="PhoneUI.Keys.FunctionKeys.{{number-1}}.DisplayName" value="{{_context['linekey_label_' ~ number]}}" />
       {% endfor %}
     {% endif %}
