@@ -49,6 +49,7 @@ upstream_proxies =
 ; and the brand associated with them. The prefixes must be
 ; in hexadecimal format with upper case letters.
 [macvendors]
+00A859 = fanvil
 0C383E = fanvil
 7C2F80 = gigaset
 589EC6 = gigaset

@@ -23,6 +23,7 @@ Response:
 
 ```json
 {
+    "00A859":"fanvil",
     "0C383E":"fanvil",
     "7C2F80":"gigaset",
     "589EC6":"gigaset",
