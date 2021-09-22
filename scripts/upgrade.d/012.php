@@ -51,7 +51,7 @@ foreach ($scopes as $model_id) {
     if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 12) {
         continue;
     }
-    $scope->metadata['version'] = 12;
+    $scope->metadata['version'] = 7;
     $scope->setVariables($variables);
     $container['logger']->info("Fix ldap filter in model $model_id");
 }
