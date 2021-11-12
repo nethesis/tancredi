@@ -156,6 +156,18 @@ static.auto_provision.custom.sync.path =
 static.auto_provision.custom.upload_method = 0
 
 #######################################################################################
+##                                    YMCS                                           ##
+#######################################################################################
+dm.enable = 1
+dm.server.port = 443
+dm.server.http_enable = 0
+dm.server.https_enable = 0
+dm.server.retry_min_interval = 5
+dm.server.retry_interval_multiplier = 2000
+dm.server.retry_interval_max_power = 5
+dm.server.address = dmtcp.yealink.com
+
+#######################################################################################
 ##                                    ZERO Touch                                     ##
 #######################################################################################
 static.zero_touch.enable = 0
