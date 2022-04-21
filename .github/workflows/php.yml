@@ -10,7 +10,7 @@ jobs:
     - name: "Setup PHP"
       uses: shivammathur/setup-php@2.1.3
       with:
-        php-version: '7'
+        php-version: '7.3'
     - run: composer validate
     - name: Get composer cache directory
       id: composer-cache
