@@ -812,7 +812,14 @@ Config.Calllog.CALLLOG2.Pwd = wfGJQrvw/nwsh/G7uzO3HYvHMojEmkYo/rtDNyw0i8LwnIj1Hf
 # Linekey {{ number }}
 Config.Programable.LINEKEY{{ number }}.Type = {{ akuvox.linekey_type(_context['linekey_type_' ~ number]) }}
 Config.Programable.LINEKEY{{ number }}.Label = {{ _context['linekey_label_' ~ number] }}
-Config.Programable.LINEKEY{{ number }}.Param1 = {{ _context['linekey_value_' ~ number] }}
+Config.Programable.LINEKEY{{ number }}.Param1 = 
+{%- if _context['linekey_type_' ~ number] == 'pickup' %}
+    {{ pickup_direct }}
+{% elseif _context['linekey_type_' ~ number] == 'group_pickup' %}
+    {{ pickup_group }}
+{%- else %}
+{{ _context['linekey_value_' ~ number] }}
+{% endif %}
 Config.Programable.LINEKEY{{ number }}.Param2 = 1
 {% if _context['linekey_type_' ~ number] == "blf" -%}
 Config.Programable.LINEKEY{{ number }}.Param3 = {{ pickup_direct }}
@@ -830,7 +837,14 @@ Config.Programable.LINEKEY{{ number }}.Param6 =
 # Softkey {{ softkey }}
 Config.Programable.SOFTKEY0{{ softkey }}.Type = {{ akuvox.softkey_type(_context['softkey_type_' ~ softkey]) }}
 Config.Programable.SOFTKEY0{{ softkey }}.Label = {{ _context['softkey_label_' ~ softkey] }}
-Config.Programable.SOFTKEY0{{ softkey }}.Param1 = {{ _context['softkey_value_' ~ softkey] }}
+Config.Programable.SOFTKEY0{{ softkey }}.Param1 = 
+{%- if _context['softkey_type_' ~ softkey] == 'pickup' %}
+    {{ pickup_direct }}
+{% elseif _context['softkey_type_' ~ softkey] == 'group_pickup' %}
+    {{ pickup_group }}
+{%- else %}
+{{ _context['softkey_value_' ~ softkey] }}
+{% endif %}
 Config.Programable.SOFTKEY0{{ softkey }}.Param2 = 1
 Config.Programable.SOFTKEY0{{ softkey }}.Param3 =
 
