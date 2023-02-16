@@ -886,8 +886,9 @@
     "cr" : "3",
     "cz" : "10",
     "dk" : "8",
-    "fi" : "9",
     "de" : "10",
+    "fi" : "9",
+    "it" : "14",
     "nl" : "11",
     "no" : "12",
     "phl" : "3",
@@ -908,7 +909,7 @@
 {% if ringtone > 0 and ringtone < 10 %}
     {{- "Ring#{ringtone}.wav" -}}
 {% elseif ringtone > 9  %}
-    {{- "Bellcore-dr#{{ (ringtone) -9 }}.wav" -}}
+    {{- "Bellcore-dr#{ ringtone - 9 }.wav" -}}
 {% else %}
     {{- 'Ring1.wav' -}}
 {% endif %}

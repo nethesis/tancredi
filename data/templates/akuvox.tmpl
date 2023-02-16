@@ -241,8 +241,8 @@ Config.Account{{ line }}.REJECT_ANONYMOUSCALL.Enable = 0
 Config.Account{{ line }}.REJECT_ANONYMOUSCALL.OnCode = 
 Config.Account{{ line }}.REJECT_ANONYMOUSCALL.OffCode = 
 
-Config.Account{{ line }}.REG.Timeout = {{ line }}
-Config.Account{{ line }}.REG.Timeout2 = {{ line }}
+Config.Account{{ line }}.REG.Timeout = 3600
+Config.Account{{ line }}.REG.Timeout2 = 3600
 
 Config.Account{{ line }}.CONFERENCE.Type = 0
 Config.Account{{ line }}.CONFERENCE.Uri = 
@@ -395,9 +395,22 @@ Config.Em1.SETTING.Mode = 1
 {% for number in 1..cap_expkey_count %}
 Config.Em{{ module }}.EXTKEY{{ number }}.Type = {{ akuvox.linekey_type(_context['expkey_type_' ~ expkey]) }}
 Config.Em{{ module }}.EXTKEY{{ number }}.Label = {{ _context['expkey_label_' ~ expkey] }}
-Config.Em{{ module }}.EXTKEY{{ number }}.Param1 = {{ _context['expkey_value_' ~ expkey] }}
-Config.Em{{ module }}.EXTKEY{{ number }}.Param2 =
+Config.Em{{ module }}.EXTKEY{{ number }}.Param1 =
+{%- if _context['expkey_type_' ~ expkey] == 'pickup' %}
+ {{ pickup_direct }}
+{% elseif _context['expkey_type_' ~ expkey] == 'group_pickup' %}
+ {{ pickup_group }}
+{%- else %}
+{{ _context['expkey_value_' ~ expkey] }}
+{% endif %}
+
+Config.Em{{ module }}.EXTKEY{{ number }}.Param2 = 1
+{% if _context['expkey_type_' ~ expkey] == "blf" -%}
+Config.Em{{ module }}.EXTKEY{{ number }}.Param3 = {{ pickup_direct }}
+{%- else %}
 Config.Em{{ module }}.EXTKEY{{ number }}.Param3 =
+{% endif %}
+
 Config.Em{{ module }}.EXTKEY{{ number }}.Param4 =
 Config.Em{{ module }}.EXTKEY{{ number }}.Param5 =
 Config.Em{{ module }}.EXTKEY{{ number }}.Param6 =
@@ -700,7 +713,7 @@ Config.Settings.LOGLEVEL.RemoteServer =
 
 Config.Settings.PCAP.RefreshEnable = 0
 
-Config.Settings.RINGTONE.Type = Ring1.wav
+Config.Settings.RINGTONE.Type = {{ ringtone }}
 
 Config.Settings.LOGIN.User = admin
 Config.Settings.LOGIN.Password = {{ adminpw | default('admin') }}
@@ -709,7 +722,7 @@ Config.Settings.WEB_LOGIN.User = admin
 Config.Settings.WEB_LOGIN.Password = {{ adminpw | default('admin') }}
 Config.Settings.WEB_LOGIN.Type = admin
 Config.Settings.WEB_LOGIN.User02 = user
-Config.Settings.WEB_LOGIN.Password02 = user:{{ userpw | default('1234') }}
+Config.Settings.WEB_LOGIN.Password02 = {{ userpw | default('1234') }}
 Config.Settings.WEB_LOGIN.Type02 = user
 
 Config.Settings.WEB_LOGIN_STATUS.Active = 1
@@ -814,12 +827,13 @@ Config.Programable.LINEKEY{{ number }}.Type = {{ akuvox.linekey_type(_context['l
 Config.Programable.LINEKEY{{ number }}.Label = {{ _context['linekey_label_' ~ number] }}
 Config.Programable.LINEKEY{{ number }}.Param1 = 
 {%- if _context['linekey_type_' ~ number] == 'pickup' %}
-    {{ pickup_direct }}
+ {{ pickup_direct }}
 {% elseif _context['linekey_type_' ~ number] == 'group_pickup' %}
-    {{ pickup_group }}
+ {{ pickup_group }}
 {%- else %}
 {{ _context['linekey_value_' ~ number] }}
 {% endif %}
+
 Config.Programable.LINEKEY{{ number }}.Param2 = 1
 {% if _context['linekey_type_' ~ number] == "blf" -%}
 Config.Programable.LINEKEY{{ number }}.Param3 = {{ pickup_direct }}
@@ -839,12 +853,13 @@ Config.Programable.SOFTKEY0{{ softkey }}.Type = {{ akuvox.softkey_type(_context[
 Config.Programable.SOFTKEY0{{ softkey }}.Label = {{ _context['softkey_label_' ~ softkey] }}
 Config.Programable.SOFTKEY0{{ softkey }}.Param1 = 
 {%- if _context['softkey_type_' ~ softkey] == 'pickup' %}
-    {{ pickup_direct }}
+ {{ pickup_direct }}
 {% elseif _context['softkey_type_' ~ softkey] == 'group_pickup' %}
-    {{ pickup_group }}
+ {{ pickup_group }}
 {%- else %}
 {{ _context['softkey_value_' ~ softkey] }}
 {% endif %}
+
 Config.Programable.SOFTKEY0{{ softkey }}.Param2 = 1
 Config.Programable.SOFTKEY0{{ softkey }}.Param3 =
 
@@ -861,7 +876,7 @@ Config.Programable.CANCEL.Param2 = 0
 Config.Programable.CANCEL.Param3 = 
 
 Config.Programable.BOOK.Type = 5
-Config.Programable.BOOK.Param1 = 21
+Config.Programable.BOOK.Param1 = 40
 Config.Programable.BOOK.Param2 = 
 Config.Programable.BOOK.Param3 = 
 
