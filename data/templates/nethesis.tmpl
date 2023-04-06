@@ -808,8 +808,8 @@ Account2 Password           :{{ userpw | default('1234') }}
 Account2 Level              :5
 
 <LOG CONFIG MODULE>
-Level              :INFO
-Style              :level,tag
+Level              :ERROR
+Style              :level,tag,datetimems
 Output Device      :stdout
 File Name          :platform.log
 File Size          :512KB
@@ -818,7 +818,7 @@ Syslog Server      :0.0.0.0
 Syslog Server Port :514
 
 <TR069 CONFIG MODULE>
-TR069 Tone         :1
+TR069 Tone         :0
 CPE SerialNumber   :
 ACS Server Type    :1
 Enable TR069       :0
@@ -831,7 +831,7 @@ ACS BackupPassword :
 CPE UserName       :dps
 CPE Password       :dps
 Periodix Interval  :3600
-TLS Version        :0
+TLS Version        :2
 Area Code          :020
 STUN Enable        :0
 STUN Server Addr   :
@@ -846,7 +846,7 @@ Listen IP          :224.0.2.0
 Listen Port        :16360
 Own Name           :SIP Hotspot
 Ring Mode          :0
-Enable Manage Mode :1
+Enable Manage Mode :0
 Enable Config Mode :0
 --Line Conf List-- :
 HS1 Enable             :1
@@ -979,8 +979,8 @@ Enable In Access   :0
 Enable Out Access   :0
 
 <RECORD CONFIG MODULE>
-Enabled            :1
-Voice Codec        :G729
+Enabled            :0
+Voice Codec        :PCMU
 Record Type        :0
 File Size Limit    :8
 Server Addr        :0.0.0.0
@@ -988,7 +988,7 @@ Server Port        :10000
 
 <UI DEFINED CONFIG MODULE>
 Bluetooth Enabled:0
-Bluetooth Adapter Name:
+Bluetooth Adapter Name:{{ model }} {{ account_display_name_1 }}
 Bluetooth Ring Mode:1
 
 <UI MAINTAIN CONFIG MODULE>
