@@ -1,4 +1,4 @@
-{%- import 'akuvox.macros' as akuvox -%}
+{%- import 'akuvoxw.macros' as akuvox -%}
 {%- import 'language.macros' as l10n -%}
 #!version:1.0.0.1
 
@@ -193,8 +193,8 @@ Config.Account{{ line }}.SIP.Server2 =
 Config.Account{{ line }}.SIP.Port = {{ _context['account_encryption_' ~ line] ? sip_tls_port : sip_udp_port }}
 Config.Account{{ line }}.SIP.Port2 = 5060
 Config.Account{{ line }}.SIP.TransType = {{ _context['account_encryption_' ~ line] ? '2' : '0'  }}
-Config.Account{{ line }}.SIP.ListenPortMin = 5062
-Config.Account{{ line }}.SIP.ListenPortMax = 5062
+Config.Account{{ line }}.SIP.ListenPortMin = 1024
+Config.Account{{ line }}.SIP.ListenPortMax = 65535
 
 Config.Account{{ line }}.OUTPROXY.Enable = 0
 Config.Account{{ line }}.OUTPROXY.Server = 
@@ -227,7 +227,7 @@ Config.Account{{ line }}.BLF.BlfNotifyParseType = 1
 Config.Account{{ line }}.BLF.BlfListCode = 
 Config.Account{{ line }}.BLF.BlfListBargeInCode = 
 
-Config.Account{{ line }}.VOICEMSG.Number = 
+Config.Account{{ line }}.VOICEMSG.Number = {{ _context['account_voicemail_' ~ line]|default }}
 
 Config.Account{{ line }}.MUSIC_SERVER.Uri = 
 Config.Account{{ line }}.MUSIC_SERVER.Enable = 0
@@ -250,16 +250,16 @@ Config.Account{{ line }}.CONFERENCE.Uri =
 Config.Account{{ line }}.AUTO_ANSWER.Enable = 0
 
 Config.Account{{ line }}.SESSION.EnableTimer = 0
-Config.Account{{ line }}.SESSION.Interval = {{ line }}
+Config.Account{{ line }}.SESSION.Interval = 7200
 Config.Account{{ line }}.SESSION.Refresher = 0
 
 Config.Account{{ line }}.SUBSCRIBE.SubscribeACDExpire = 1800
-Config.Account{{ line }}.SUBSCRIBE.SubsribeMWI = 0
-Config.Account{{ line }}.SUBSCRIBE.SubscribeMWIExpire = 1800
+Config.Account{{ line }}.SUBSCRIBE.SubsribeMWI = 1
+Config.Account{{ line }}.SUBSCRIBE.SubscribeMWIExpire = 3600
 Config.Account{{ line }}.SUBSCRIBE.SubscribeFKSSExpire = 1800
 
 Config.Account{{ line }}.CALL.Enable{{ line }} = 0
-Config.Account{{ line }}.CALL.CIDSource = 0
+Config.Account{{ line }}.CALL.CIDSource = 5
 Config.Account{{ line }}.CALL.Ptime = 20
 Config.Account{{ line }}.CALL.UserPhone = 0
 Config.Account{{ line }}.CALL.RdrInfoDetection = 0
@@ -298,62 +298,62 @@ Config.Account{{ line }}.FALLBACK.DetectMethod = 1
 
 Config.Account{{ line }}.Audio0.Enable = 1
 Config.Account{{ line }}.Audio0.Name = PCMU
-Config.Account{{ line }}.Audio0.Priority = 9
+Config.Account{{ line }}.Audio0.Priority = 3
 Config.Account{{ line }}.Audio0.Payload = 0
 
 Config.Account{{ line }}.Audio1.Enable = 1
 Config.Account{{ line }}.Audio1.Name = PCMA
-Config.Account{{ line }}.Audio1.Priority = 8
+Config.Account{{ line }}.Audio1.Priority = 4
 Config.Account{{ line }}.Audio1.Payload = 8
 
 Config.Account{{ line }}.Audio2.Enable = 0
 Config.Account{{ line }}.Audio2.Name = G723_53
-Config.Account{{ line }}.Audio2.Priority = 10
+Config.Account{{ line }}.Audio2.Priority = 0
 Config.Account{{ line }}.Audio2.Payload = 4
 
 Config.Account{{ line }}.Audio3.Enable = 0
 Config.Account{{ line }}.Audio3.Name = G723_63
-Config.Account{{ line }}.Audio3.Priority = 9
+Config.Account{{ line }}.Audio3.Priority = 0
 Config.Account{{ line }}.Audio3.Payload = 4
 
 Config.Account{{ line }}.Audio4.Enable = 1
 Config.Account{{ line }}.Audio4.Name = G729
-Config.Account{{ line }}.Audio4.Priority = 7
+Config.Account{{ line }}.Audio4.Priority = 1
 Config.Account{{ line }}.Audio4.Payload = 18
 
 Config.Account{{ line }}.Audio5.Enable = 1
 Config.Account{{ line }}.Audio5.Name = G722
-Config.Account{{ line }}.Audio5.Priority = 6
+Config.Account{{ line }}.Audio5.Priority = 5
 Config.Account{{ line }}.Audio5.Payload = 9
 
 Config.Account{{ line }}.Audio6.Enable = 0
 Config.Account{{ line }}.Audio6.Name = G726-16
-Config.Account{{ line }}.Audio6.Priority = 8
+Config.Account{{ line }}.Audio6.Priority = 0
 Config.Account{{ line }}.Audio6.Payload = 112
 
 Config.Account{{ line }}.Audio7.Enable = 0
 Config.Account{{ line }}.Audio7.Name = G726-24
-Config.Account{{ line }}.Audio7.Priority = 7
+Config.Account{{ line }}.Audio7.Priority = 0
 Config.Account{{ line }}.Audio7.Payload = 102
 
 Config.Account{{ line }}.Audio8.Enable = 0
 Config.Account{{ line }}.Audio8.Name = G726-32
-Config.Account{{ line }}.Audio8.Priority = 6
+Config.Account{{ line }}.Audio8.Priority = 0
 Config.Account{{ line }}.Audio8.Payload = 2
 
 Config.Account{{ line }}.Audio9.Enable = 1
 Config.Account{{ line }}.Audio9.Name = opus
-Config.Account{{ line }}.Audio9.Priority = 10
+Config.Account{{ line }}.Audio9.Priority = 7
 Config.Account{{ line }}.Audio9.Payload = 111
 
 Config.Account{{ line }}.Audio10.Enable = 0
 Config.Account{{ line }}.Audio10.Name = iLBC_13_3
-Config.Account{{ line }}.Audio10.Priority = 2
+Config.Account{{ line }}.Audio10.Priority = 0
 Config.Account{{ line }}.Audio10.Payload = 97
 
 Config.Account{{ line }}.Audio11.Enable = 0
 Config.Account{{ line }}.Audio11.Name = iLBC_15_2
-Config.Account{{ line }}.Audio11.Priority = 1
+Config.Account{{ line }}.Audio11.Priority = 0
 Config.Account{{ line }}.Audio11.Payload = 97
 
 Config.Account{{ line }}.Audio12.Enable = 0
@@ -445,8 +445,8 @@ Config.Forward.CALLPARK.Enable = 0
 Config.Forward.CALLPARK.Target = 
 Config.Forward.CALLPARK.Line = 0
 
-Config.Forward.FORWARDMODE.Mode = 0
-Config.Forward.FORWARDMODE.FeatureSync = 
+Config.Forward.FORWARDMODE.Mode = 1
+Config.Forward.FORWARDMODE.FeatureSync = 1
 
 Config.Forward.ADVANCED.UseFwdAsTransfer = 0
 
@@ -544,7 +544,7 @@ Config.Features.CALL_WAITING.OffCode = {{ call_waiting_off }}
 
 Config.Features.HOTLINE.Enable = 0
 Config.Features.HOTLINE.Number = 
-Config.Features.HOTLINE.Delay = 4
+Config.Features.HOTLINE.Delay = 0
 
 Config.Features.AUTO_REDIAL.Enable = 0
 Config.Features.AUTO_REDIAL.Interval = 10
@@ -555,7 +555,7 @@ Config.Features.DND.ReturnCode = 486
 Config.Features.DND.OnCode = {{ dndon }}
 Config.Features.DND.OffCode = {{ dndoff }}
 
-Config.Features.REJECT.ReturnCode = 486
+Config.Features.REJECT.ReturnCode = 603
 Config.Features.REJECT.EnableReasonCause = 1
 
 Config.Features.INTERCOM.Enable = 1
@@ -609,7 +609,7 @@ Config.Features.DIALNOW.OffHookDialOut = 0
 Config.Features.AUTOANSWER.Delay = 0
 
 Config.Features.Others.EarlyDTMF = 1
-Config.Features.Others.ViewDTMFNum = 0
+Config.Features.Others.ViewDTMFNum = 1
 Config.Features.Others.ViewHistoryType = 0
 
 Config.Features.ACD.ACDAutoAvailable = 0
@@ -677,32 +677,32 @@ Config.Features.BLFLED.ConfirmedForGreen = 1
 # Setting Configuration
 
 Config.Settings.LANGUAGE.Type = {{ akuvox.language(language) }}
-Config.Settings.LANGUAGE.ActiveWebLang = 0
+Config.Settings.LANGUAGE.ActiveWebLang = 1
 Config.Settings.LANGUAGE.WebLang = 0
 
 Config.Settings.DATETIME.Type = 1
 Config.Settings.DATETIME.TimeFormat = {{ time_format == '12' ? '0' : '1' }}
 Config.Settings.DATETIME.DateFormat = {{ akuvox.date_format(date_format) }}
-Config.Settings.DATETIME.Offset = 60
+Config.Settings.DATETIME.Offset = +60
 
 Config.Settings.SNTP.Enable = 1
 Config.Settings.SNTP.TimeZone = {{ akuvox.timezone(timezone) }}
 Config.Settings.SNTP.Name = {{ akuvox.timezoneName(timezone) }}
 Config.Settings.SNTP.NTPServer1 = {{ ntp_server }}
 Config.Settings.SNTP.NTPServer2 = pool.ntp.org
-Config.Settings.SNTP.DTS = 2
+Config.Settings.SNTP.DTS = 1
 Config.Settings.SNTP.Interval = 3600
-Config.Settings.SNTP.StartTime = 1/1/0
-Config.Settings.SNTP.EndTime = 12/31/23
+Config.Settings.SNTP.StartTime = 3/5/7/3
+Config.Settings.SNTP.EndTime = 10/5/7/2
 
 Config.Settings.BACKLIGHT.Level = {{ brightness | default('4') }}
 Config.Settings.BACKLIGHT.Time = {{ backlight_time | default('20') }}
 Config.Settings.BACKLIGHT.FreeLevel = 1
 
-Config.Settings.DISPLAYSTYLE.LinekeyPage = 0
-Config.Settings.DISPLAYSTYLE.PowerLedBlinkTimeOut = 20
+Config.Settings.DISPLAYSTYLE.LinekeyPage = 1
+Config.Settings.DISPLAYSTYLE.PowerLedBlinkTimeOut = 0
 
-Config.Settings.GENERAL.DirectIP = 1
+Config.Settings.GENERAL.DirectIP = 0
 Config.Settings.GENERAL.WebTitle = IP Phone
 Config.Settings.GENERAL.HttpUserAgent = 
 Config.Settings.GENERAL.UseStarForIP = 
@@ -720,10 +720,10 @@ Config.Settings.LOGIN.Password = {{ adminpw | default('admin') }}
 
 Config.Settings.WEB_LOGIN.User = admin
 Config.Settings.WEB_LOGIN.Password = {{ adminpw | default('admin') }}
-Config.Settings.WEB_LOGIN.Type = admin
+Config.Settings.WEB_LOGIN.Type = 1
 Config.Settings.WEB_LOGIN.User02 = user
 Config.Settings.WEB_LOGIN.Password02 = {{ userpw | default('1234') }}
-Config.Settings.WEB_LOGIN.Type02 = user
+Config.Settings.WEB_LOGIN.Type02 = 0
 
 Config.Settings.WEB_LOGIN_STATUS.Active = 1
 Config.Settings.WEB_LOGIN_STATUS.SessionTimeOut = 300
@@ -821,34 +821,7 @@ Config.Calllog.CALLLOG2.Pwd = wfGJQrvw/nwsh/G7uzO3HYvHMojEmkYo/rtDNyw0i8LwnIj1Hf
 
 # Programmable Key Configuration
 
-{% for number in 1..cap_linekey_count %}
-# Linekey {{ number }}
-Config.Programable.LINEKEY{{ number }}.Type = {{ akuvox.linekey_type(_context['linekey_type_' ~ number]) }}
-Config.Programable.LINEKEY{{ number }}.Label = {{ _context['linekey_label_' ~ number] }}
-Config.Programable.LINEKEY{{ number }}.Param1 = 
-{%- if _context['linekey_type_' ~ number] == 'pickup' %}
- {{ pickup_direct }}
-{% elseif _context['linekey_type_' ~ number] == 'group_pickup' %}
- {{ pickup_group }}
-{%- else %}
-{{ _context['linekey_value_' ~ number] }}
-{% endif %}
-
-Config.Programable.LINEKEY{{ number }}.Param2 = 1
-{% if _context['linekey_type_' ~ number] == "blf" -%}
-Config.Programable.LINEKEY{{ number }}.Param3 = {{ pickup_direct }}
-{%- else %}
-Config.Programable.LINEKEY{{ number }}.Param3 =
-{% endif %}
-
-Config.Programable.LINEKEY{{ number }}.Param4 =
-Config.Programable.LINEKEY{{ number }}.Param5 =
-Config.Programable.LINEKEY{{ number }}.Param6 =
-
-{% endfor %}
-
 {% for softkey in 1..cap_softkey_count %}
-# Softkey {{ softkey }}
 Config.Programable.SOFTKEY0{{ softkey }}.Type = {{ akuvox.softkey_type(_context['softkey_type_' ~ softkey]) }}
 Config.Programable.SOFTKEY0{{ softkey }}.Label = {{ _context['softkey_label_' ~ softkey] }}
 Config.Programable.SOFTKEY0{{ softkey }}.Param1 = 
@@ -875,20 +848,10 @@ Config.Programable.CANCEL.Param1 =
 Config.Programable.CANCEL.Param2 = 0
 Config.Programable.CANCEL.Param3 = 
 
-Config.Programable.HOME.Type = 2
-Config.Programable.HOME.Param1 =
-Config.Programable.HOME.Param2 =
-Config.Programable.HOME.Param3 =
-
-Config.Programable.BOOK.Type = 6
-Config.Programable.BOOK.Param1 =
+Config.Programable.BOOK.Type = 5
+Config.Programable.BOOK.Param1 = 40
 Config.Programable.BOOK.Param2 = 
 Config.Programable.BOOK.Param3 = 
-
-Config.Programable.FWD.Type = 5
-Config.Programable.FWD.Param1 = 40 
-Config.Programable.FWD.Param2 = 
-Config.Programable.FWD.Param3 = 
 
 Config.Programable.MUTE.Type = 0
 Config.Programable.MUTE.Param1 = 
@@ -900,16 +863,41 @@ Config.Programable.REDIAL.Param1 =
 Config.Programable.REDIAL.Param2 = 0
 Config.Programable.REDIAL.Param3 = 
 
-Config.Programable.VOICEMESSAGE.Type = 26
-Config.Programable.VOICEMESSAGE.Label = 
+Config.Programable.VOICEMESSAGE.Type = {{ akuvox.linekey_type(_context['linekey_type_2']) }}
+Config.Programable.VOICEMESSAGE.Label = {{ _context['linekey_label_2'] }}
 Config.Programable.VOICEMESSAGE.Param1 = 
-Config.Programable.VOICEMESSAGE.Param2 = 1
-Config.Programable.VOICEMESSAGE.Param3 = 
+{%- if _context['linekey_type_2'] == 'pickup' %}
+ {{ pickup_direct }}
+{% elseif _context['linekey_type_2'] == 'group_pickup' %}
+ {{ pickup_group }}
+{%- else %}
+{{ _context['linekey_value_2'] }}
+{% endif %}
 
-Config.Programable.TRANSFER.Type = 27
+Config.Programable.VOICEMESSAGE.Param2 = 1
+{% if _context['linekey_type_1'] == "blf" -%}
+Config.Programable.VOICEMESSAGE.Param3 = {{ pickup_direct }}
+{%- else %}
+Config.Programable.VOICEMESSAGE.Param3 = 
+{% endif %}
+
+
+Config.Programable.TRANSFER.Type = {{ akuvox.linekey_type(_context['linekey_type_1']) }}
 Config.Programable.TRANSFER.Param1 = 
-Config.Programable.TRANSFER.Param2 = 
+{%- if _context['linekey_type_1'] == 'pickup' %}
+ {{ pickup_direct }}
+{% elseif _context['linekey_type_1'] == 'group_pickup' %}
+ {{ pickup_group }}
+{%- else %}
+{{ _context['linekey_value_1'] }}
+{% endif %}
+
+Config.Programable.TRANSFER.Param2 = 1
+{% if _context['linekey_type_1'] == "blf" -%}
+Config.Programable.TRANSFER.Param3 = {{ pickup_direct }}
+{%- else %}
 Config.Programable.TRANSFER.Param3 = 
+{% endif %}
 
 Config.Programable.STAR.Type = 1
 Config.Programable.STAR.Param1 = 
