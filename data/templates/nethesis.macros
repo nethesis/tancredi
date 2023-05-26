@@ -183,7 +183,7 @@
 # Set date format
 #
 {% macro date_format(date_format,provisioning_user_agent = "") %}
-{% if provisioning_user_agent matches '/Nethesis NP-X5/' %}
+{% if provisioning_user_agent matches '/Nethesis (NP-X5|NP-X210)/' %}
     {%- set map = {
         "DD MM YY" : "8",
         "DD MM YYYY" : "9",

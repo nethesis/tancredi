@@ -35,11 +35,7 @@ DHCP6 Auto Time     :0
 Use Vendor6 Class ID:0
 Vendor6 Class ID    :
 --WIFI Config--    :
-{% if provisioning_user_agent matches '/Fanvil (W611W|X301W|X303W|X1W|V65|V64|X3SW)/' %}
-WIFI Enable        :1
-{% else %}
 WIFI Enable        :0
-{% endif %}
 
 <MM CONFIG MODULE>
 G723 Bit Rate      :1
@@ -412,7 +408,7 @@ Backlight Off Time :{{ backlight_time >= 0 and backlight_time <= 3600 ? backligh
 Disable CHN IME    :0
 Phone Model        :
 Host Name          :
-Default Language   :{{ fanvil.language_code(language) }}
+Default Language   :{{ fanvil.language_codeNEW(language) }}
 Enable Greetings   :0
 --Power LED--      :
 Power              :0
@@ -494,11 +490,7 @@ DialerPre Softkey  :send;2aB;delete;exit;
 DialerCall Softkey :send;2aB;delete;exit;
 DialerXfer Softkey :delete;xfer;send;exit;
 DialerCfwd Softkey :send;2aB;delete;exit;
-{% if provisioning_user_agent matches '/Fanvil W611W/' %}
-Desktop Click      :history;status;DssPage1;DssPage2;menu;
-{% else %}
-Desktop Click      :history;status;missed;dss2;menu;
-{% endif %}
+Desktop Click      :history;status;none;none;none;
 Dailer  Click      :pline;nline;none;none;none;
 Call    Click      :none;none;voldown;volup;none;
 Desktop Long Press :status;none;none;none;reset;
@@ -722,25 +714,6 @@ DSS Extend5 IP      :
 
 {# Linear index for linekey_type_{index} #}
 {% set index = 0 %}
-{# Side key loop #}
-{% for pageidx in fanvil_sidepages_count == 0 ? [] : range(1, fanvil_sidepages_count) %}
---Sidekey Config{{ pageidx }}--:
-{% for keyidx in range(1, fanvil_sidekey_count // fanvil_sidepages_count) %}
-{% set index = index + 1 %}
-{{ fanvil.linekey_type_map(
-    _context['linekey_type_' ~ index],
-    _context['linekey_value_' ~ index],
-    _context['linekey_label_' ~ index],
-    keyidx,
-    l10n,
-    language,
-    pickup_direct,
-    pickup_group,
-    dss_transfer,
-    queuetoggle
-) }}
-{% endfor %}
-{% endfor %}
 {# Dss key loop #}
 {% for pageidx in fanvil_lkpages_count == 0 ? [] : range(1, fanvil_lkpages_count) %}
 --Dsskey Config{{ pageidx }}--:
@@ -759,41 +732,6 @@ DSS Extend5 IP      :
     queuetoggle
 ) }}
 {% endfor %}
-{% endfor %}
-
---SoftDss Config-- :
-{% for index in 1..cap_softkey_count %}
-{% if _context['softkey_type_' ~ index] == 'ldap' %}
-Fkey{{ index }} Type     :3
-Fkey{{ index }} Value    :F_LDAPCONTACTS:1
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Phonebook', language)) }}
-Fkey{{ index }} ICON     :Green
-{% elseif _context['softkey_type_' ~ index] == 'forward' %}
-Fkey{{ index }} Type     :3
-Fkey{{ index }} Value    :F_CFWD
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Forward', language)) }}
-Fkey{{ index }} ICON     :Green
-{% elseif _context['softkey_type_' ~ index] == 'pickup' %}
-Fkey{{ index }} Type     :3
-Fkey{{ index }} Value    :F_PICKUP
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Pickup', language)) }}
-Fkey{{ index }} ICON     :Green
-{% elseif _context['softkey_type_' ~ index] == 'speed_dial' %}
-Fkey{{ index }} Type     :1
-Fkey{{ index }} Value    :{{ _context['softkey_value_' ~ index] ~ '@1/f' }}
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default('N/A') }}
-{% elseif _context['softkey_type_' ~ index] == 'group_pickup' %}
-Fkey{{ index }} Type     :1
-Fkey{{ index }} Value    :{{ pickup_group ~ '@1/f' }}
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Pickup', language)) }}
-Fkey{{ index }} ICON     :Green
-{% else %}
-Fkey{{ index }} Type     :0
-Fkey{{ index }} Value    :
-Fkey{{ index }} Title    :
-Fkey{{ index }} ICON     :Green
-{% endif %}
-
 {% endfor %}
 
 <MMI CONFIG MODULE>
