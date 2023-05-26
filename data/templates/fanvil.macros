@@ -191,7 +191,7 @@
 # Set date format
 #
 {% macro date_format(date_format,provisioning_user_agent="") %}
-{% if provisioning_user_agent matches '/Fanvil (X3U|X4U|X5U|X6U|X7C|X210|V67|V65|V64|V62)/' %}
+{% if provisioning_user_agent matches '/Fanvil (X3U|X4U|X5U|X6U|X7C|X210|X301|X303|V67|V65|V64|V62)/' %}
     {%- set map = {
         "DD MM YY" : "8",
         "DD MM YYYY" : "9",
