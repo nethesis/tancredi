@@ -765,7 +765,7 @@ DSS Extend5 IP      :
 {% for index in 1..cap_softkey_count %}
 {% if _context['softkey_type_' ~ index] == 'ldap' %}
 Fkey{{ index }} Type     :3
-Fkey{{ index }} Value    :F_LDAPCONTACTS:1
+Fkey{{ index }} Value    :F_LDAPCONTACTS:0
 Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Phonebook', language)) }}
 Fkey{{ index }} ICON     :Green
 {% elseif _context['softkey_type_' ~ index] == 'forward' %}

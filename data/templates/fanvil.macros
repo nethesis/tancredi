@@ -295,7 +295,7 @@ Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Ho
 Fkey{{ keyidx }} ICON               :Green
 {% elseif linekey_type == 'ldap' %}
 Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_LDAPCONTACTS:1
+Fkey{{ keyidx }} Value              :F_LDAPCONTACTS:0
 Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Phonebook', language)) }}
 Fkey{{ keyidx }} ICON               :Green
 {% elseif linekey_type == 'line' %}
