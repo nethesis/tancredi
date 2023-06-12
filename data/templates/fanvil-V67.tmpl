@@ -1,8 +1,8 @@
 <<VOIP CONFIG FILE>>Version:2.0000000000                      
-{% import 'nethesis.macros' as nethesis %}
+{% import 'fanvil.macros' as fanvil %}
 {% import 'language.macros' as l10n %}
-{% set nethesis_lkpages_count = nethesis_lkpages_count | default(5) %}
-{% set nethesis_sidepages_count = nethesis_sidepages_count | default(0) %}
+{% set fanvil_lkpages_count = fanvil_lkpages_count | default(5) %}
+{% set fanvil_sidepages_count = fanvil_sidepages_count | default(0) %}
 
 <NET CONFIG MODULE>
 WAN TYPE           :0
@@ -58,7 +58,7 @@ RTP Port Quantity  :1000
 RTP Keep Alive     :0
 RTCP CNAME User    :
 RTCP CNAME Host    :
-Select Your Tone   :{{ nethesis.tones_code(tonezone) }}
+Select Your Tone   :{{ fanvil.tones_code(tonezone) }}
 Sidetone GAIN      :1
 Play Egress DTMF   :0
 Dial Tone          :425/200,0/200,425/600,0/1000
@@ -157,7 +157,7 @@ SIP{{ line }} Keep AUTH          :0
 SIP{{ line }} Session Timer      :0
 SIP{{ line }} S Timer Expires    :0
 SIP{{ line }} Enable GRUU        :0
-SIP{{ line }} DTMF Mode          :{{ nethesis.dtmf_map(_context['account_dtmf_type_' ~ line]) }}
+SIP{{ line }} DTMF Mode          :{{ fanvil.dtmf_map(_context['account_dtmf_type_' ~ line]) }}
 SIP{{ line }} DTMF Info Mode     :0
 SIP{{ line }} NAT Type           :0
 SIP{{ line }} Enable Rport       :1
@@ -279,7 +279,7 @@ P1 Mute Ringing       :{{ ringtone == '0' ? 1 : 0 }}
 P1 Ban Dial Out       :0
 P1 Ban Empty CID      :0
 P1 Enable CLIP        :1
-P1 CallWaiting        :{{ nethesis.b2v(account_call_waiting_1) }}
+P1 CallWaiting        :{{ fanvil.b2v(account_call_waiting_1) }}
 P1 CallTransfer       :1
 P1 CallSemiXfer       :1
 P1 CallConference     :1
@@ -297,7 +297,7 @@ P1 AutoRedial Delay   :30
 P1 AutoRedial Times   :5
 P1 Call Complete      :0
 P1 CHolding Tone      :1
-P1 CWaiting Tone      :{{ nethesis.b2v(call_waiting_tone) }}
+P1 CWaiting Tone      :{{ fanvil.b2v(call_waiting_tone) }}
 P1 Hide DTMF Type     :0
 P1 Talk DTMF Tone     :1
 P1 Dial DTMF Tone     :1
@@ -383,7 +383,7 @@ Fast Keylock Code  :
 Enable KeyLock     :0
 KeyLock Timeout    :0
 KeyLock Status     :0
-Emergency Call     :{{ nethesis.emergency_map(tonezone) }}
+Emergency Call     :{{ fanvil.emergency_map(tonezone) }}
 Push XML IP        :
 SIP Number Plan    :0
 LDAP Search        :0
@@ -400,15 +400,15 @@ Block XML When Call:1
 XML Update Interval:30
 Vqm Display Order  :
 --Display Input--  :
-LCD Title          :{{ logo_text | default('Nethesis') }}
-LCD Constrast      :{{ nethesis.contrast_map(contrast) }}
+LCD Title          :{{ logo_text | default('Fanvil') }}
+LCD Constrast      :{{ fanvil.contrast_map(contrast) }}
 Enable Energysaving:4
-LCD Luminance Level:{{ nethesis.brightness_map(brightness) }}
+LCD Luminance Level:{{ fanvil.brightness_map(brightness) }}
 Backlight Off Time :{{ backlight_time >= 0 and backlight_time <= 3600 ? backlight_time : '0' }}
 Disable CHN IME    :0
 Phone Model        :
 Host Name          :
-Default Language   :{{ nethesis.language_code(language) }}
+Default Language   :{{ fanvil.language_codeNEW(language) }}
 Enable Greetings   :0
 --Power LED--      :
 Power              :0
@@ -438,11 +438,11 @@ Ring Type          :Type {{ ringtone in 1 .. cap_ringtone_count ? ringtone : 1 }
 Enable SNTP        :1
 SNTP Server        :{{ ntp_server | default('pool.ntp.org') }}
 Second SNTP Server :
-Time Zone          :{{ nethesis.tz_map(timezone, 'offset') }}
-Time Zone Name     :{{ nethesis.tz_map(timezone, 'name') }}
+Time Zone          :{{ fanvil.tz_map(timezone, 'offset') }}
+Time Zone Name     :{{ fanvil.tz_map(timezone, 'name') }}
 SNTP Timeout       :3600
 DST Type           :1
-DST Location       :{{ nethesis.tz_map(timezone, 'location') }}
+DST Location       :{{ fanvil.tz_map(timezone, 'location') }}
 DST Rule Mode      :0
 DST Min Offset     :60
 DST Start Mon      :3
@@ -456,7 +456,7 @@ DST End Hour       :2
 --DateTime Display--:
 Enable TimeDisplay :0
 Time Display Style :{{ time_format == '12' ? '1' : '0' }}
-Date Display Style :{{ nethesis.date_format(date_format,provisioning_user_agent) }}
+Date Display Style :{{ fanvil.date_format(date_format,provisioning_user_agent) }}
 Date Separator     :0
 --Softkey Config-- :
 Softkey Mode       :0
@@ -689,8 +689,8 @@ MCAST10 Channel            :0
 <DSSKEY CONFIG MODULE>
 Select DsskeyAction:0
 Memory Key to BXfer:{{ dss_transfer }}
-FuncKey Page Num   :{{ nethesis_lkpages_count }}
-SideKey Page Num   :{{ nethesis_sidepages_count }}
+FuncKey Page Num   :{{ fanvil_lkpages_count }}
+SideKey Page Num   :{{ fanvil_sidepages_count }}
 DSS Home Page      :1
 DSS DIAL Switch Mode :0
 First Call Wait Time :16
@@ -714,31 +714,12 @@ DSS Extend5 IP      :
 
 {# Linear index for linekey_type_{index} #}
 {% set index = 0 %}
-{# Side key loop #}
-{% for pageidx in nethesis_sidepages_count == 0 ? [] : range(1, nethesis_sidepages_count) %}
---Sidekey Config{{ pageidx }}--:
-{% for keyidx in range(1, nethesis_sidekey_count // nethesis_sidepages_count) %}
-{% set index = index + 1 %}
-{{ nethesis.linekey_type_map(
-    _context['linekey_type_' ~ index],
-    _context['linekey_value_' ~ index],
-    _context['linekey_label_' ~ index],
-    keyidx,
-    l10n,
-    language,
-    pickup_direct,
-    pickup_group,
-    dss_transfer,
-    queuetoggle
-) }}
-{% endfor %}
-{% endfor %}
 {# Dss key loop #}
-{% for pageidx in nethesis_lkpages_count == 0 ? [] : range(1, nethesis_lkpages_count) %}
+{% for pageidx in fanvil_lkpages_count == 0 ? [] : range(1, fanvil_lkpages_count) %}
 --Dsskey Config{{ pageidx }}--:
-{% for keyidx in range(1, (cap_linekey_count - nethesis_sidekey_count) // nethesis_lkpages_count) %}
+{% for keyidx in range(1, (cap_linekey_count - fanvil_sidekey_count) // fanvil_lkpages_count) %}
 {% set index = index + 1 %}
-{{ nethesis.linekey_type_map(
+{{ fanvil.linekey_type_map(
     _context['linekey_type_' ~ index],
     _context['linekey_value_' ~ index],
     _context['linekey_label_' ~ index],
@@ -751,41 +732,6 @@ DSS Extend5 IP      :
     queuetoggle
 ) }}
 {% endfor %}
-{% endfor %}
-
---SoftDss Config-- :
-{% for index in 1..cap_softkey_count %}
-{% if _context['softkey_type_' ~ index] == 'ldap' %}
-Fkey{{ index }} Type     :3
-Fkey{{ index }} Value    :F_LDAPCONTACTS:0
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Phonebook', language)) }}
-Fkey{{ index }} ICON     :Green
-{% elseif _context['softkey_type_' ~ index] == 'forward' %}
-Fkey{{ index }} Type     :3
-Fkey{{ index }} Value    :F_CFWD
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Forward', language)) }}
-Fkey{{ index }} ICON     :Green
-{% elseif _context['softkey_type_' ~ index] == 'pickup' %}
-Fkey{{ index }} Type     :3
-Fkey{{ index }} Value    :F_PICKUP
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Pickup', language)) }}
-Fkey{{ index }} ICON     :Green
-{% elseif _context['softkey_type_' ~ index] == 'speed_dial' %}
-Fkey{{ index }} Type     :1
-Fkey{{ index }} Value    :{{ _context['softkey_value_' ~ index] ~ '@1/f' }}
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default('N/A') }}
-{% elseif _context['softkey_type_' ~ index] == 'group_pickup' %}
-Fkey{{ index }} Type     :1
-Fkey{{ index }} Value    :{{ pickup_group ~ '@1/f' }}
-Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Pickup', language)) }}
-Fkey{{ index }} ICON     :Green
-{% else %}
-Fkey{{ index }} Type     :0
-Fkey{{ index }} Value    :
-Fkey{{ index }} Title    :
-Fkey{{ index }} ICON     :Green
-{% endif %}
-
 {% endfor %}
 
 <MMI CONFIG MODULE>
@@ -918,9 +864,9 @@ Save Provision Info:0
 Check FailTimes    :5
 Flash Server IP    :{{ hostname }}
 Flash File Name    :{{ 'http' in provisioning_url_scheme ? (provisioning_url_path | trim('/', 'left') ~ tok2 ~ '/$mac.cfg') : '$mac.cfg' }}
-Flash Protocol     :{{ nethesis.scheme_map(provisioning_url_scheme) }}
+Flash Protocol     :{{ fanvil.scheme_map(provisioning_url_scheme) }}
 Flash Mode         :{{ (provisioning_complete and provisioning_freq == 'never') ? '1' : '2' }}
-Flash Interval     :{{ provisioning_complete ? nethesis.upgrade_wait_hours(timezone, short_mac) : '1' }}
+Flash Interval     :{{ provisioning_complete ? fanvil.upgrade_wait_hours(timezone, short_mac) : '1' }}
 update PB Interval :720
 AP Pswd Encryption :0
 Auto Image Url     :{{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/firmware/#{firmware_file}" : "" }}
@@ -937,8 +883,8 @@ DHCPv6 Option      :0
 Dhcp Option 120    :0
 
 <FIRMWARE CHECK MODULE>
-Enable Auto Upgrade:{{ firmware_file ? 0 : 1 }}
-Upgrade Server 1   :{{ firmware_file ? "" : "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}" }}
+Enable Auto Upgrade:0
+Upgrade Server 1   :
 Upgrade Server 2   :
 Auto Upgrade Interval:24
 

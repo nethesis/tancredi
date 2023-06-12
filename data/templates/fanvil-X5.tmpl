@@ -35,7 +35,11 @@ DHCP6 Auto Time     :0
 Use Vendor6 Class ID:0
 Vendor6 Class ID    :
 --WIFI Config--    :
+{% if provisioning_user_agent matches '/Fanvil (W611W|X301W|X303W|X1W|V65|V64|X3SW)/' %}
+WIFI Enable        :1
+{% else %}
 WIFI Enable        :0
+{% endif %}
 
 <MM CONFIG MODULE>
 G723 Bit Rate      :1
@@ -490,7 +494,11 @@ DialerPre Softkey  :send;2aB;delete;exit;
 DialerCall Softkey :send;2aB;delete;exit;
 DialerXfer Softkey :delete;xfer;send;exit;
 DialerCfwd Softkey :send;2aB;delete;exit;
-Desktop Click      :history;status;none;none;none;
+{% if provisioning_user_agent matches '/Fanvil W611W/' %}
+Desktop Click      :history;status;DssPage1;DssPage2;menu;
+{% else %}
+Desktop Click      :history;status;missed;dss2;menu;
+{% endif %}
 Dailer  Click      :pline;nline;none;none;none;
 Call    Click      :none;none;voldown;volup;none;
 Desktop Long Press :status;none;none;none;reset;
@@ -757,7 +765,7 @@ DSS Extend5 IP      :
 {% for index in 1..cap_softkey_count %}
 {% if _context['softkey_type_' ~ index] == 'ldap' %}
 Fkey{{ index }} Type     :3
-Fkey{{ index }} Value    :F_LDAPCONTACTS:1
+Fkey{{ index }} Value    :F_LDAPCONTACTS:0
 Fkey{{ index }} Title    :{{ _context['softkey_label_' ~ index] | default(l10n.gettext('Phonebook', language)) }}
 Fkey{{ index }} ICON     :Green
 {% elseif _context['softkey_type_' ~ index] == 'forward' %}

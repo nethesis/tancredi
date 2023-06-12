@@ -143,6 +143,14 @@
     {{- code[lang] ?? '0' -}}
 {% endmacro language_code %}
 
+{% macro language_codeNEW(lang) %}
+    {%- set code = {
+        "en": "en",
+        "it": "it"
+} -%}
+    {{- code[lang] ?? '0' -}}
+{% endmacro language_codeNEW %}
+
 #
 # The Fanvil time zone parameters map
 #
@@ -183,7 +191,7 @@
 # Set date format
 #
 {% macro date_format(date_format,provisioning_user_agent="") %}
-{% if provisioning_user_agent matches '/Fanvil (X3U|X4U|X5U|X6U|X7C)/' %}
+{% if provisioning_user_agent matches '/Fanvil (X3U|X4U|X5U|X6U|X7C|X210|X301|X303|V67|V65|V64|V62)/' %}
     {%- set map = {
         "DD MM YY" : "8",
         "DD MM YYYY" : "9",
@@ -287,7 +295,7 @@ Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Ho
 Fkey{{ keyidx }} ICON               :Green
 {% elseif linekey_type == 'ldap' %}
 Fkey{{ keyidx }} Type               :3
-Fkey{{ keyidx }} Value              :F_LDAPCONTACTS:1
+Fkey{{ keyidx }} Value              :F_LDAPCONTACTS:0
 Fkey{{ keyidx }} Title              :{{ linekey_label | default(l10n.gettext('Phonebook', language)) }}
 Fkey{{ keyidx }} ICON               :Green
 {% elseif linekey_type == 'line' %}
