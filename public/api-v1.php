@@ -138,8 +138,8 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
     $scope->metadata['inheritFrom'] = $model;
     $scope->metadata['scopeType'] = "phone";
     $scope->setVariables($variables);
-    \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , TRUE); // create first time access token
-    \Tancredi\Entity\TokenManager::createToken(uniqid($prefix = rand(), $more_entropy = TRUE), $mac , FALSE); // create token
+    \Tancredi\Entity\TokenManager::createToken(str_replace(".", "", uniqid($prefix = rand(), $more_entropy = TRUE)), $mac , TRUE); // create first time access token
+    \Tancredi\Entity\TokenManager::createToken(str_replace(".", "", uniqid($prefix = rand(), $more_entropy = TRUE)), $mac , FALSE); // create token
     $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),201,JSON_FLAGS);
     $response = $response->withHeader('Location', '/tancredi/api/v1/phones/' . $mac);
     return $response;
