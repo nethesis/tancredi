@@ -621,3 +621,67 @@
 {% endif %}
 {% endmacro date_format %}
 
+#   
+#  The locale used to display dates and numbers on the D8xx phone UI
+#   
+{% macro locale(tonezone) %}
+{% set locale_map = {
+    "ao" : "pt_AO",
+    "ar" : "es_AR",
+    "au" : "en_AU",
+    "at" : "de_AT",
+    "be" : "fr_BE",
+    "br" : "pt_BR",
+    "bg" : "bg_BG",
+    "cl" : "es_CL",
+    "cn" : "zh_CN",
+    "co" : "es_CO",
+    "cr" : "es_CR",
+    "cz" : "cs_CZ",
+    "dk" : "da_DK",
+    "ee" : "et_EE",
+    "fi" : "fi_FI",
+    "fr" : "fr_FR",
+    "de" : "de_DE",
+    "gr" : "el_GR",
+    "hk" : "zh_HK",
+    "hu" : "hu_HU",
+    "in" : "en_IN",
+    "ir" : "en_GB",
+    "ie" : "en_IE",
+    "il" : "en_IL",
+    "it" : "it_IT",
+    "jp" : "ja_JP",
+    "ke" : "en_KE",
+    "lt" : "lt_LT",
+    "mo" : "pt_MO",
+    "my" : "en_MY",
+    "mx" : "es_MX",
+    "nl" : "nl_NL",
+    "nz" : "en_NZ",
+    "no" : "nb_NO",
+    "pk" : "en_PK",
+    "pa" : "es_PA",
+    "phl" : "es_PH",
+    "pl" : "pl_PL",
+    "pt" : "pt_PT",
+    "ro" : "ro_RO",
+    "ru" : "ru_RU",
+    "sg" : "en_SG",
+    "za" : "en_ZA",
+    "es" : "es_ES",
+    "se" : "se_SE",
+    "ch" : "de_CH",
+    "tw" : "zh_TW",
+    "tz" : "en_TZ",
+    "th" : "th_TH",
+    "tr" : "tr_TR",
+    "ug" : "en_UG",
+    "uk" : "en_GB",
+    "us" : "en_US",
+    "us-old" : "en_US",
+    "ve" : "es_ES"
+} %}
+    {{- locale_map[tonezone] ?: locale_map['us'] -}}
+{% endmacro locale %}
+
