@@ -1831,7 +1831,7 @@ account.{{ line }}.sip_server.1.transport_type = {{ _context['account_encryption
 account.{{ line }}.sip_server.1.expires = 3600
 account.{{ line }}.sip_server.1.retry_counts = 3
 
-account.{{ line }}.outbound_proxy_enable = {{ _context['outbound_proxy_' ~ line] is defined ? '1' : '0' }}
+account.{{ line }}.outbound_proxy_enable = {{ _context['outbound_proxy_' ~ line] is defined and _context['outbound_proxy_' ~ line] != '' ? '1' : '0' }}
 account.{{ line }}.outbound_proxy.1.address = {{ _context['outbound_proxy_' ~ line] is defined ? _context['outbound_proxy_' ~ line] : '' }}
 account.{{ line }}.outbound_proxy.1.port = {{ _context['outbound_proxy_port_' ~ line] is defined ? _context['outbound_proxy_port_' ~ line] : '5060' }}
 account.{{ line }}.outbound_proxy.2.address = {{ _context['outbound_proxy2_' ~ line] is defined ? _context['outbound_proxy2_' ~ line] : '' }}
