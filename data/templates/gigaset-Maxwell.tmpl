@@ -55,8 +55,16 @@
     <param name="SIP.Account.{{ idx }}.DisplayName" value="{{ _context['account_display_name_' ~ line] }}" />
     <param name="SIP.Account.{{ idx }}.Username" value="{{ _context['account_username_' ~ line] }}" />
     <param name="SIP.Account.{{ idx }}.Domain" value="{{ hostname }}" />
+    {% if _context['outbound_proxy_' ~ line] is defined and _context['outbound_proxy_' ~ line] != '' %}
+    <param name="SIP.Account.{{ idx }}.ProxyServer.Address" value="{{ _context['outbound_proxy_' ~ line] }}" />
+    <param name="SIP.Account.{{ idx }}.ProxyServer.Port" value="{{ _context['outbound_proxy_port_' ~ line] is defined ? _context['outbound_proxy_port_' ~ line] : '5060' }}" />
+    <param name="SIP.Account.{{ idx }}.OutboundProxy.Mode" value="1"/>
+    <param name="SIP.Account.{{ idx }}.OutboundProxy.Address" value="{{ _context['outbound_proxy_' ~ line] }}"/>
+    <param name="SIP.Account.{{ idx }}.OutboundProxy.Port" value="{{ _context['outbound_proxy_port_' ~ line] is defined ? _context['outbound_proxy_port_' ~ line] : '5060' }}"/>
+    {% else %}
     <param name="SIP.Account.{{ idx }}.ProxyServer.Address" value="{{ hostname }}" />
     <param name="SIP.Account.{{ idx }}.ProxyServer.Port" value="{{ _context['account_encryption_' ~ line] ? sip_tls_port : sip_udp_port }}" />
+    {% endif %}
     <param name="SIP.Account.{{ idx }}.RegistrationServer.Address" value="{{ hostname }}" />
     <param name="SIP.Account.{{ idx }}.RegistrationServer.Port" value="{{ _context['account_encryption_' ~ line] ? sip_tls_port : sip_udp_port }}" />
     <param name="SIP.Account.{{ idx }}.DTMFTransmission" value="{{ gigaset.dtmf_map(_context['account_dtmf_type_' ~ line]) }}" />
