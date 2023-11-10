@@ -10,7 +10,11 @@
         <P967 para="Account1.FailoverSipserver" />
         <P8851 para="Account1.SecondFailoverSipserver" />
         <P4567 para="Account1.PreferPrimaryServer">1</P4567>
+        {% if outbound_proxy_1 is defined and outbound_proxy_1 != '' %}
+        <P48 para="Account1.OutboundProxy">{{ outbound_proxy_1 }}:{{ outbound_proxy_port_1 is defined and outbound_proxy_port_1 != '' ? outbound_proxy_port_1 : '5060' }}</P48>
+        {% else %}
         <P48 para="Account1.OutboundProxy" />
+        {% endif %}
         <P20047 para="Account1.BackUpOutboundProxy" />
         <P130 para="Account1.SipTransport">{{ account_encryption_1 ? '2' : '0' }}</P130>
         <P52 para="Account1.NatTraversal">2</P52>
