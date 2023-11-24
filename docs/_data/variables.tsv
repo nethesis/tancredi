@@ -65,6 +65,10 @@ rw	dss_transfer		Call transfer mode.	string	one of `verify`,`attended`,`blind`
 ro	cap_dss_transfer_blacklist		Comma separate list of [dss_transfer](#dss_transfer) modes that are not supported by the phone.	string	
 rw	adminpw		Phone and web UI admin password.	string	
 rw	userpw		Phone and web UI user password.	string	
+rw	outbound_proxy_$line		string		Outbound proxy IP/host name
+rw	outbound_proxy_port_$line		integer		Outbound proxy port
+rw	outbound_proxy2_$line		string		Backup outbound proxy IP/host name
+rw	outbound_proxy2_port_$line		integer		Backup outbound proxy port
 ro	provisioning_complete		The provisioning is considered complete when the phone uses `tok2` for authentication. The temporary `tok1` token is invalidated.	boolean	
 rw	provisioning_url_scheme		URI scheme to fetch the provisioning resources.	string	one of `http`, `https`
 rw	provisioning_url_path		Basic URI path component, that is prefixed to the security token and file name components, e.g. `/provisioning/`.	string	
