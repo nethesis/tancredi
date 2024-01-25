@@ -114,7 +114,7 @@
                 <user_pass idx="{{ identity }}" perm="">{{ _context['account_password_' ~ identity] }}</user_pass>
                 <user_host idx="{{ identity }}" perm="">{{ hostname }}</user_host>
                 <user_outbound idx="{{ identity }}" perm="">
-                    {{- hostname ~ ':'
+                    {{- (_context['outbound_proxy_' ~ identity] is defined and _context['outbound_proxy_' ~ identity] != '' ? _context['outbound_proxy_' ~ identity]  : hostname) ~ ':'
                         ~ (_context['account_encryption_' ~ identity] ? sip_tls_port : sip_udp_port) ~ ';transport='
                         ~ (_context['account_encryption_' ~ identity] ? 'tls' : 'udp')
                     -}}
