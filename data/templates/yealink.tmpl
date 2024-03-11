@@ -1862,6 +1862,10 @@ account.{{ line }}.enable_user_equal_phone = 0
 account.{{ line }}.srtp_encryption = {{ _context['account_encryption_' ~ line] ? '2' : '0' }}
 account.{{ line }}.srtp_unencrypted_rtp.enable = 0
 account.{{ line }}.srtp.unencrypted_rtcp.enable = 0
+# Fix SRTP error
+{% if provisioning_user_agent matches '/SIP-(T34W|T44W)/' %}
+account.{{ line }}.srtp.cipher_list = AES_CM_128_HMAC_SHA1_80,AES_CM_128_HMAC_SHA1_32
+{% endif %}
 account.{{ line }}.ptime = 20
 account.{{ line }}.register_line = 0
 account.{{ line }}.register_mac = 0
