@@ -1863,7 +1863,7 @@ account.{{ line }}.srtp_encryption = {{ _context['account_encryption_' ~ line] ?
 account.{{ line }}.srtp_unencrypted_rtp.enable = 0
 account.{{ line }}.srtp.unencrypted_rtcp.enable = 0
 # Fix SRTP error
-{% if provisioning_user_agent matches '/SIP-(T34W|T44W)/' %}
+{% if provisioning_user_agent matches '/SIP-(T34|T44)(U|W)/' %}
 account.{{ line }}.srtp.cipher_list = AES_CM_128_HMAC_SHA1_80,AES_CM_128_HMAC_SHA1_32
 {% endif %}
 account.{{ line }}.ptime = 20
