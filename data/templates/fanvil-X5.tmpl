@@ -35,7 +35,7 @@ DHCP6 Auto Time     :0
 Use Vendor6 Class ID:0
 Vendor6 Class ID    :
 --WIFI Config--    :
-{% if provisioning_user_agent matches '/Fanvil (W611W|X301W|X303W|X1W|V65|V64|X3SW)/' %}
+{% if provisioning_user_agent matches '/Fanvil (W610W|W611W|X301W|X303W|X1W|V65|V64|X3SW)/' %}
 WIFI Enable        :1
 {% else %}
 WIFI Enable        :0
@@ -494,7 +494,7 @@ DialerPre Softkey  :send;2aB;delete;exit;
 DialerCall Softkey :send;2aB;delete;exit;
 DialerXfer Softkey :delete;xfer;send;exit;
 DialerCfwd Softkey :send;2aB;delete;exit;
-{% if provisioning_user_agent matches '/Fanvil W611W/' %}
+{% if provisioning_user_agent matches '/Fanvil (W610W|W611W)/' %}
 Desktop Click      :history;status;DssPage1;DssPage2;menu;
 {% else %}
 Desktop Click      :history;status;missed;dss2;menu;
