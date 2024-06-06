@@ -41,7 +41,7 @@ jobs:
         token: ${{ secrets.NETHBOT_TOKEN }}
         committer: NethBot <NethBot@users.noreply.github.com>
         author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-        reviewers: DavidePrincipi,Stell0  
+        reviewers: andrea-marchionni,Stell0  
         title: Bump tancredi version
         body: |
           Triggered by commit ${{ github.repository }}@${{ github.sha }}
