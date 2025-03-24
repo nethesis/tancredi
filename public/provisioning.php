@@ -183,12 +183,14 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
 
     // Remove secrets from scope data
     foreach ($scope_data as $key => $value) {
-        if (strpos($key, 'account_password_') !== FALSE ||
+        if (strpos($key, 'account_') !== FALSE ||
             strpos($key, 'adminpw') !== FALSE ||
             strpos($key, 'userpw') !== FALSE) {
             $scope_data[$key] = '';
         }
     }
+    // Use token 1 instead of token 2
+    $scope_data['tok2'] = $scope_data['tok1'];
 
     // Add provisioning_complete variable
     $scope_data['provisioning_complete'] = '';
