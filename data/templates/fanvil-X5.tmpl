@@ -82,7 +82,7 @@ Warning Tone       :
 Record Tone        :
 Auto Answer Tone   :
 --PHONE CONFIG--   :
-Audio Codec Sets   :PCMU,PCMA,G726-16,G726-24,G726-32,G726-40,G729,G723,iLBC
+Audio Codec Sets   :G729,PCMU,PCMA,G726-16,G726-24,G726-32,G726-40,G723,iLBC
 Video Codec Sets   :H264
 Video Frame Rate   :25
 Video Bit Rate     :2000000
@@ -212,7 +212,7 @@ SIP{{ line }} Send ANOn Code     :
 SIP{{ line }} Send ANOffCode     :
 SIP{{ line }} CW On Code         :{{ call_waiting_on | default('*70') }}
 SIP{{ line }} CW Off Code        :{{ call_waiting_off | default('*71') }}
-SIP{{ line }} VoiceCodecMap      :PCMU,PCMA,G726-32,G729,G723,iLBC,AMR,G722,AMR-WB,opus
+SIP{{ line }} VoiceCodecMap      :G729,PCMU,PCMA,G726-32,G723,iLBC,AMR,G722,AMR-WB,opus
 SIP{{ line }} VideoCodecMap      :H264
 SIP{{ line }} BLFList Uri        :
 SIP{{ line }} BLF Server         :
