@@ -529,6 +529,25 @@ $app->get('/macvendors', function(Request $request, Response $response, $args) u
     return $response;
 });
 
+/*********************************
+* POST /phones/{mac}/tok1
+**********************************/
+$app->post('/phones/{mac}/tok1', function(Request $request, Response $response, array $args) use ($app) {
+    $mac = $args['mac'];
+    if (!$this->storage->scopeExists($mac)) {
+        $results = array(
+            'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
+            'title' => 'Resource not found'
+        );
+        $response = $response->withJson($results,404,JSON_FLAGS);
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Language', 'en');
+        return $response;
+    }
+    \Tancredi\Entity\TokenManager::createToken(str_replace(".", "", uniqid($prefix = rand(), $more_entropy = TRUE)), $mac , TRUE); // create first time access token
+    $response = $response->withStatus(204);
+    return $response;
+});
 
 function getModelScope($id,$storage,$logger,$inherit = false, $original = false) {
     global $config;
