@@ -544,7 +544,7 @@ $app->post('/phones/{mac}/tok1', function(Request $request, Response $response, 
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    \Tancredi\Entity\TokenManager::createToken(str_replace(".", "", uniqid($prefix = rand(), $more_entropy = TRUE)), $mac , TRUE); // create first time access token
+    \Tancredi\Entity\TokenManager::createToken(str_replace(".", "", uniqid($prefix = rand(), $more_entropy = TRUE)), $mac, TRUE); // create first time access token
     $response = $response->withStatus(204);
     return $response;
 });
