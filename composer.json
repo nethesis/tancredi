@@ -17,7 +17,7 @@
     "require": {
         "php": ">=5.6",
         "slim/slim": "3.*",
-        "twig/twig": "1.*",
+        "twig/twig": "3.*",
         "monolog/monolog": "^1.25",
         "akrabat/ip-address-middleware": "^0.6.0"
     },
