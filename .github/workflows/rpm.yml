@@ -35,7 +35,7 @@ jobs:
         echo "::set-output name=references::${references}"
 
     - name: Send a pull request to nethserver-tancredi
-      uses: peter-evans/create-pull-request@v4
+      uses: peter-evans/create-pull-request@v7
       with:
         path: nethesis/nethserver-tancredi
         token: ${{ secrets.NETHBOT_TOKEN }}
