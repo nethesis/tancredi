@@ -58,6 +58,19 @@ PATCH () {
         "${@}"
 }
 
+GET_PROVISIONING () {
+    local user_agent="${1}"
+    local path="${2}"
+    curl -s -i \
+        -H "User-Agent: ${user_agent}" \
+        "${tancredi_base_url}${path}"
+}
+
+extract_token () {
+    local token_field="${1}"
+    sed -n -r '/^\s*$/,$ p' <<<"$output" | grep -o "\"${token_field}\":\"[^\"]*\"" | cut -d'"' -f4
+}
+
 assert_http_code () {
     if ! grep -q -F "HTTP/1.1 $1" <<<"${lines[@]}"; then
         echo "$output" 1>&2
@@ -99,5 +112,35 @@ assert_http_body_empty () {
         echo "$output" 1>&2
         return 1
     fi
+    return 0
+}
+
+assert_template_matches_fixture () {
+    local fixture_file="${1}"
+    local test_output_file="/tmp/tancredi_test_output_$$.txt"
+
+    # Extract body from HTTP response
+    sed -n -r '/^\s*$/,$ p' <<<"$output" | tail -n +2 > "$test_output_file"
+
+    if [[ ! -f "$fixture_file" ]]; then
+        echo "Fixture file not found: $fixture_file" 1>&2
+        echo "Actual output saved to: $test_output_file" 1>&2
+        return 1
+    fi
+
+    local diff_output diff_status
+    if ! diff_output="$(diff -u "$fixture_file" "$test_output_file")"; then
+        diff_status=$?
+        if [[ $diff_status -eq 1 ]]; then
+            printf '%s\n' "$diff_output" 1>&2
+            echo "Template output does not match fixture file" 1>&2
+        else
+            echo "Failed to compare template output: $diff_output" 1>&2
+        fi
+        rm -f "$test_output_file"
+        return 1
+    fi
+
+    rm -f "$test_output_file"
     return 0
 }
