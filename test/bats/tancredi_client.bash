@@ -124,7 +124,9 @@ assert_template_matches_fixture () {
 
     if [[ ! -f "$fixture_file" ]]; then
         echo "Fixture file not found: $fixture_file" 1>&2
-        echo "Actual output saved to: $test_output_file" 1>&2
+	    echo "----------------Fixture expected content------------------"  1>&2
+        cat "$fixture_file" 1>&2
+        echo "----------------------------------------------------------"  1>&2
         return 1
     fi
 

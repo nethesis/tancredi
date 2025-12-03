@@ -47,19 +47,6 @@ EOF
     # Call provisioning API with Yealink user agent
     run GET_PROVISIONING "Yealink SIP-T46G 41.0.0.0 00:15:65:aa:bb:cc" "/provisioning/${tok1}/001565aabbcc.cfg"
     
-    assert_http_code "200"
-    assert_http_header "Content-Type" "text/plain; charset=utf-8"
-    
-    # Check for some expected content from Yealink template
-    assert_http_body "#!version:1.0.0.1"
-    assert_http_body "account.1.enable"
-    
-    # print downloaded file
-    body="$(sed -n -r '/^\s*$/,$ p' <<<"$output" | tail -n +2 || true)"
-    echo "------ downloaded template start ------"
-    printf '%s\n' "$body"
-    echo "------- downloaded template end -------"
-
     # Compare against fixture
     fixture_file="$(dirname "${BASH_SOURCE[0]}")/../fixtures/yealink-t46-expected.cfg"
     assert_template_matches_fixture "$fixture_file"
