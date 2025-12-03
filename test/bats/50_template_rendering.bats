@@ -37,7 +37,8 @@ EOF
     assert_http_code "200"
     
     # Extract tok1 token
-    tok1=$(extract_token "tok1")
+    tok1=$(extract_field "tok1")
+    tok2=$(extract_field "tok2")
     
     if [[ -z "$tok1" ]]; then
         echo "Failed to extract tok1 token" 1>&2
@@ -47,8 +48,12 @@ EOF
     # Call provisioning API with Yealink user agent
     run GET_PROVISIONING "Yealink SIP-T46G 41.0.0.0 00:15:65:aa:bb:cc" "/provisioning/${tok1}/001565aabbcc.cfg"
     
+    output="$(sed -n -r '/^\s*$/,$ p' <<<"$output" | tail -n +2)"
+    # Substitute $tok2 value in output with $tok2
+    output=$(sed "s/${tok2}/tok2/g" <<<"$output")
+
     # Compare against fixture
-    fixture_file="$(dirname "${BASH_SOURCE[0]}")/../fixtures/yealink-t46-expected.cfg"
+    fixture_file="${BATS_TEST_DIRNAME}/../fixtures/yealink-t46-expected.cfg"
     assert_template_matches_fixture "$fixture_file"
 }
 
