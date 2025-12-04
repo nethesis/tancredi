@@ -84,3 +84,10 @@ jobs:
         cd test
         sudo ./run.sh
 
+    - name: upload fixture files
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: fixtures
+        path: /tmp/fixtures/*
+

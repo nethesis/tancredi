@@ -58,6 +58,19 @@ PATCH () {
         "${@}"
 }
 
+GET_PROVISIONING () {
+    local user_agent="${1}"
+    local path="${2}"
+    curl -s -i \
+        -H "User-Agent: ${user_agent}" \
+        "${tancredi_base_url}${path}"
+}
+
+extract_field () {
+    local field_name="${1}"
+    sed -n -r '/^\s*$/,$ p' <<<"$output" | grep -o "\"${field_name}\":\"[^\"]*\"" | cut -d'"' -f4
+}
+
 assert_http_code () {
     if ! grep -q -F "HTTP/1.1 $1" <<<"${lines[@]}"; then
         echo "$output" 1>&2
@@ -99,5 +112,35 @@ assert_http_body_empty () {
         echo "$output" 1>&2
         return 1
     fi
+    return 0
+}
+
+assert_template_matches_fixture () {
+    local fixture_file="${1}"
+    mkdir -p /tmp/fixtures
+    local test_output_file="/tmp/fixtures/${fixture_file##*/}"
+
+    echo "$output" > "$test_output_file"
+
+    if [[ ! -f "$fixture_file" ]]; then
+        echo "Fixture file not found: $fixture_file" 1>&2
+        echo "It can be found in artifacts. Put it in /test/bats/fixtures directory" 1>&2
+        return 1
+    fi
+
+    local diff_output diff_status
+    echo diff -auZEbB --strip-trailing-cr "$fixture_file" "$test_output_file"
+    if ! diff_output="$(diff -auZEbB --strip-trailing-cr "$fixture_file" "$test_output_file")"; then
+        diff_status=$?
+        if [[ $diff_status -eq 1 ]]; then
+            printf '%s\n' "$diff_output" 1>&2
+            echo "Template output does not match fixture file" 1>&2
+            echo "The fixture file $test_output_file can be found in artifacts" 1>&2
+        else
+            echo "Failed to compare template output: $diff_output" 1>&2
+        fi
+        return 1
+    fi
+
     return 0
 }
