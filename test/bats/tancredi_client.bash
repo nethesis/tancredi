@@ -117,32 +117,30 @@ assert_http_body_empty () {
 
 assert_template_matches_fixture () {
     local fixture_file="${1}"
-    local test_output_file="/tmp/tancredi_test_output_$$.txt"
+    mkdir -p /tmp/fixtures
+    local test_output_file="/tmp/fixtures/${fixture_file##*/}"
 
     echo "$output" > "$test_output_file"
 
     if [[ ! -f "$fixture_file" ]]; then
         echo "Fixture file not found: $fixture_file" 1>&2
-	    echo "----------------Fixture expected content------------------"  1>&2
-        cat "$test_output_file" 1>&2
-        echo "----------------------------------------------------------"  1>&2
+        echo "It can be found in artifacts. Put it in /test/bats/fixtures directory" 1>&2
         return 1
     fi
 
     local diff_output diff_status
-    echo diff -u "$fixture_file" "$test_output_file"
-    if ! diff_output="$(diff -u "$fixture_file" "$test_output_file")"; then
+    echo diff -auZEbB --strip-trailing-cr "$fixture_file" "$test_output_file"
+    if ! diff_output="$(diff -auZEbB --strip-trailing-cr "$fixture_file" "$test_output_file")"; then
         diff_status=$?
         if [[ $diff_status -eq 1 ]]; then
             printf '%s\n' "$diff_output" 1>&2
             echo "Template output does not match fixture file" 1>&2
+            echo "The fixture file $test_output_file can be found in artifacts" 1>&2
         else
             echo "Failed to compare template output: $diff_output" 1>&2
         fi
-        rm -f "$test_output_file"
         return 1
     fi
 
-    rm -f "$test_output_file"
     return 0
 }
