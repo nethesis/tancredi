@@ -9,14 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout tancredi code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
         repository: nethesis/tancredi
         path: nethesis/tancredi
 
     - name: Checkout nethserver-tancredi code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         repository: nethesis/nethserver-tancredi
         ref: master
