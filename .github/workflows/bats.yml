@@ -6,7 +6,7 @@ on: [push, pull_request]
 jobs:
   run-tests:
     # The type of runner that the job will run on
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -15,7 +15,7 @@ jobs:
 
     # Install packages needed on runner
     - name: Install required packages
-      run: sudo apt-get install -y apache2 libapache2-mod-xsendfile php-fpm bats
+      run: sudo apt-get install -y apache2 libapache2-mod-xsendfile bats php8.3-fpm
 
 
     # download and explode tancredi tarball
@@ -49,17 +49,17 @@ jobs:
 
     - name: configure php-fpm
       run: |
-        echo '[tancredi]' | sudo tee -a /etc/php/8.1/fpm/pool.d/tancredi.conf
-        echo 'user = www-data' | sudo tee -a /etc/php/8.1/fpm/pool.d/tancredi.conf
-        echo 'group = www-data' | sudo tee -a /etc/php/8.1/fpm/pool.d/tancredi.conf
-        echo 'listen = 127.0.0.1:9605' | sudo tee -a /etc/php/8.1/fpm/pool.d/tancredi.conf
-        echo 'listen.allowed_clients = 127.0.0.1' | sudo tee -a /etc/php/8.1/fpm/pool.d/tancredi.conf
-        echo 'pm = dynamic' | sudo tee -a /etc/php/8.1/fpm/pool.d/tancredi.conf
-        echo 'pm.max_children = 50' | sudo tee -a /etc/php/8.1/fpm/pool.d/tancredi.conf
-        echo 'pm.start_servers = 5' | sudo tee -a /etc/php/8.1/fpm/pool.d/tancredi.conf
-        echo 'pm.min_spare_servers = 5' | sudo tee -a /etc/php/8.1/fpm/pool.d/tancredi.conf
-        echo 'pm.max_spare_servers = 35' | sudo tee -a /etc/php/8.1/fpm/pool.d/tancredi.conf
-        sudo systemctl restart php8.1-fpm
+        echo '[tancredi]' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
+        echo 'user = www-data' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
+        echo 'group = www-data' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
+        echo 'listen = 127.0.0.1:9605' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
+        echo 'listen.allowed_clients = 127.0.0.1' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
+        echo 'pm = dynamic' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
+        echo 'pm.max_children = 50' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
+        echo 'pm.start_servers = 5' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
+        echo 'pm.min_spare_servers = 5' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
+        echo 'pm.max_spare_servers = 35' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
+        sudo systemctl restart php8.3-fpm
 
     - name: configure httpd
       run: |
