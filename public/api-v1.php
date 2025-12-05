@@ -24,25 +24,28 @@ require_once '../vendor/autoload.php';
 
 define("JSON_FLAGS",JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use \Slim\Http\UploadedFile;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Factory\AppFactory;
+use DI\ContainerBuilder;
 
-$app = new \Slim\App;
-$container = $app->getContainer();
-$container['app'] = function($c) use ($app) {
-    return $app;
-};
-$container['config'] = $config;
-$container['logger'] = function($c) {
-    return \Tancredi\LoggerFactory::createLogger('api-v1', $c);
-};
+$containerBuilder = new ContainerBuilder();
+$containerBuilder->addDefinitions([
+    'config' => function() {
+        global $config;
+        return $config;
+    },
+    'logger' => function($c) {
+        return \Tancredi\LoggerFactory::createLogger('api-v1', $c);
+    },
+    'storage' => function($c) {
+        return new \Tancredi\Entity\FileStorage($c->get('logger'), $c->get('config'));
+    }
+]);
 
-$container['storage'] = function($c) {
-    global $config;
-    $storage = new \Tancredi\Entity\FileStorage($c['logger'],$config);
-    return $storage;
-};
+$container = $containerBuilder->build();
+AppFactory::setContainer($container);
+$app = AppFactory::create();
 
 // Register the client IP address for logging
 $upstreamProxies = array_map('trim', explode(',', isset($config['upstream_proxies']) ? $config['upstream_proxies'] : ''));
@@ -55,17 +58,21 @@ if (array_key_exists('auth_class',$config) and !empty($config['auth_class'])) {
 }
 
 // Add request/response logging middleware
-$app->add(new \Tancredi\LoggingMiddleware($container));
+$app->add(new \Tancredi\LoggingMiddleware($container->get('logger')));
 
 /*********************************
 * GET /phones
 **********************************/
 $app->get('/phones', function(Request $request, Response $response) use ($app) {
     global $config;
-    $scopes = $this->storage->listScopes('phone');
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+    $logger = $container->get('logger');
+    
+    $scopes = $storage->listScopes('phone');
     $results = array();
     foreach ($scopes as $scopeId) {
-        $scope = new \Tancredi\Entity\Scope($scopeId, $this->storage, $this->logger);
+        $scope = new \Tancredi\Entity\Scope($scopeId, $storage, $logger);
         $scope_data = $scope->getVariables();
         $results[] = array(
             'mac' => $scopeId,
@@ -76,7 +83,7 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
         );
     }
 
-    $response = $response->withJson($results,200,JSON_FLAGS);
+    $response = withJson($response, $results, 200, JSON_FLAGS);
     return $response;
 });
 
@@ -85,28 +92,36 @@ $app->get('/phones', function(Request $request, Response $response) use ($app) {
 **********************************/
 $app->get('/phones/{mac}', function(Request $request, Response $response, array $args) use ($app) {
     $mac = $args['mac'];
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+    $logger = $container->get('logger');
+
     $query = $request->getQueryParams();
     // get all scopes of type "phone"
-    if (!$this->storage->scopeExists($mac)) {
+    if (!$storage->scopeExists($mac)) {
         $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
-        $response = $response->withJson($results,404,JSON_FLAGS);
+        $response = withJson($response, $results, 404, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
     $inherit = isset($query['inherit']) && $query['inherit'] == 1;
-    $results = \Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger, $inherit);
-    $response = $response->withJson($results,200,JSON_FLAGS);
+    $results = \Tancredi\Entity\Scope::getPhoneScope($mac, $storage, $logger, $inherit);
+    $response = withJson($response, $results, 200, JSON_FLAGS);
     return $response;
 });
 
 /*********************************
 * POST /phones
 **********************************/
-$app->post('/phones', function (Request $request, Response $response, $args) {
+$app->post('/phones', function (Request $request, Response $response, $args) use ($app) {
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+    $logger = $container->get('logger');
+
     $post_data = $request->getParsedBody();
     $mac = $post_data['mac'];
     $model = $post_data['model'];
@@ -117,30 +132,30 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
             'type' => 'https://nethesis.github.io/tancredi/problems/#malformed-data',
             'title' => 'Missing MAC address'
         );
-        $response = $response->withJson($results,400,JSON_FLAGS);
+        $response = withJson($response, $results, 400, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    if ($this->storage->scopeExists($mac)) {
+    if ($storage->scopeExists($mac)) {
         // Error: scope is already configured
         $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#phone-exists',
             'title' => 'The phone mac address is already registered'
         );
-        $response = $response->withJson($results,409,JSON_FLAGS);
+        $response = withJson($response, $results, 409, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
+    $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger);
     $scope->metadata['displayName'] = $display_name;
     $scope->metadata['inheritFrom'] = $model;
     $scope->metadata['scopeType'] = "phone";
     $scope->setVariables($variables);
     \Tancredi\Entity\TokenManager::createToken(str_replace(".", "", uniqid($prefix = rand(), $more_entropy = TRUE)), $mac , TRUE); // create first time access token
     \Tancredi\Entity\TokenManager::createToken(str_replace(".", "", uniqid($prefix = rand(), $more_entropy = TRUE)), $mac , FALSE); // create token
-    $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),201,JSON_FLAGS);
+    $response = withJson($response, \Tancredi\Entity\Scope::getPhoneScope($mac, $storage, $logger), 201, JSON_FLAGS);
     $response = $response->withHeader('Location', '/tancredi/api/v1/phones/' . $mac);
     return $response;
 });
@@ -148,16 +163,20 @@ $app->post('/phones', function (Request $request, Response $response, $args) {
 /*********************************
 * PATCH /phones/{mac}
 **********************************/
-$app->patch('/phones/{mac}', function (Request $request, Response $response, $args) {
+$app->patch('/phones/{mac}', function (Request $request, Response $response, $args) use ($app) {
     $mac = $args['mac'];
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+    $logger = $container->get('logger');
+
     $patch_data = $request->getParsedBody();
 
-    if (!$this->storage->scopeExists($mac)) {
+    if (!$storage->scopeExists($mac)) {
         $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
-        $response = $response->withJson($results,404,JSON_FLAGS);
+        $response = withJson($response, $results, 404, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
@@ -169,23 +188,23 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
             'type' => 'https://nethesis.github.io/tancredi/problems/#read-only-attribute',
             'title' => 'Cannot change a read-only attribute'
         );
-        $response = $response->withJson($results,403,JSON_FLAGS);
+        $response = withJson($response, $results, 403, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
 
     if (array_key_exists('model',$patch_data)) {
-        $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
+        $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger);
         $scope->metadata['inheritFrom'] = $patch_data['model'];
         $scope->setVariables();
-        $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger),200,JSON_FLAGS);
+        $response = withJson($response, \Tancredi\Entity\Scope::getPhoneScope($mac, $storage, $logger), 200, JSON_FLAGS);
         return $response;
     }
     if (array_key_exists('variables',$patch_data)) {
-        $scope = new \Tancredi\Entity\Scope($mac, $this->storage, $this->logger);
+        $scope = new \Tancredi\Entity\Scope($mac, $storage, $logger);
         $scope->setVariables($patch_data['variables']);
-        $response = $response->withJson(\Tancredi\Entity\Scope::getPhoneScope($mac, $this->storage, $this->logger), 200, JSON_FLAGS);
+        $response = withJson($response, \Tancredi\Entity\Scope::getPhoneScope($mac, $storage, $logger), 200, JSON_FLAGS);
         return $response;
     }
     $response = $response->withStatus(400);
@@ -195,22 +214,24 @@ $app->patch('/phones/{mac}', function (Request $request, Response $response, $ar
 /*********************************
 * DELETE /phones/{mac}
 **********************************/
-$app->delete('/phones/{mac}', function (Request $request, Response $response, $args) {
+$app->delete('/phones/{mac}', function (Request $request, Response $response, $args) use ($app) {
     $mac = $args['mac'];
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
 
-    if (!$this->storage->scopeExists($mac)) {
+    if (!$storage->scopeExists($mac)) {
         $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
-        $response = $response->withJson($results,404,JSON_FLAGS);
+        $response = withJson($response, $results, 404, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
     \Tancredi\Entity\TokenManager::deleteToken(\Tancredi\Entity\TokenManager::getToken1($mac));
     \Tancredi\Entity\TokenManager::deleteToken(\Tancredi\Entity\TokenManager::getToken2($mac));
-    $this->storage->deleteScope($mac);
+    $storage->deleteScope($mac);
     $response = $response->withStatus(204);
     return $response;
 });
@@ -221,8 +242,12 @@ $app->delete('/phones/{mac}', function (Request $request, Response $response, $a
 $app->get('/models', function(Request $request, Response $response) use ($app) {
     global $config;
     global $macvendors;
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+    $logger = $container->get('logger');
+
     $query_params = $request->getQueryParams();
-    $scopes = $this->storage->listScopes('model');
+    $scopes = $storage->listScopes('model');
     $results = array();
 
     $filter_used = FALSE;
@@ -230,8 +255,8 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
         $filter_used = TRUE;
         // get all scopes that are inherited by other scopes
         $inherited_scopes = array();
-        foreach ($this->storage->listScopes() as $scopeId) {
-            $scope = new \Tancredi\Entity\Scope($scopeId, $this->storage, $this->logger);
+        foreach ($storage->listScopes() as $scopeId) {
+            $scope = new \Tancredi\Entity\Scope($scopeId, $storage, $logger);
             if ( ! empty($scope->metadata['inheritFrom']) && array_search($scope->metadata['inheritFrom'],$inherited_scopes) === FALSE) {
                 $inherited_scopes[] = $scope->metadata['inheritFrom'];
             }
@@ -245,7 +270,7 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
         if (isset($macvendors) && array_search(preg_replace('/^([^\-]*)-.*/','$1',$scopeId),$macvendors) === FALSE) {
             continue;
         }
-        $scope = new \Tancredi\Entity\Scope($scopeId, $this->storage, $this->logger);
+        $scope = new \Tancredi\Entity\Scope($scopeId, $storage, $logger);
         $scope_data = $scope->getVariables();
         $results[] = array(
             'name' => $scopeId,
@@ -253,7 +278,7 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
             'model_url' => $config['api_url_path'] . "models/" . $scopeId
         );
     }
-    $response = $response->withJson($results,200,JSON_FLAGS);
+    $response = withJson($response, $results, 200, JSON_FLAGS);
     return $response;
 });
 
@@ -262,6 +287,10 @@ $app->get('/models', function(Request $request, Response $response) use ($app) {
 **********************************/
 $app->get('/models/{id}[/version/{version:original}]', function(Request $request, Response $response, array $args) use ($app) {
     $id = $args['id'];
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+    $logger = $container->get('logger');
+
     if (array_key_exists('version',$args) && $args['version'] == 'original') {
         $original = true;
     } else {
@@ -269,29 +298,33 @@ $app->get('/models/{id}[/version/{version:original}]', function(Request $request
     }
     $query = $request->getQueryParams();
     // get all scopes of type "model"
-    if (!$this->storage->scopeExists($id) or $this->storage->getScopeMeta($id,'scopeType') !== 'model') {
+    if (!$storage->scopeExists($id) or $storage->getScopeMeta($id,'scopeType') !== 'model') {
         $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
-        $response = $response->withJson($results,404,JSON_FLAGS);
+        $response = withJson($response, $results, 404, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
     if (array_key_exists('inherit',$query) and $query['inherit'] == 1) {
-        $results = getModelScope($id, $this->storage, $this->logger, true, $original);
+        $results = getModelScope($id, $storage, $logger, true, $original);
     } else {
-        $results = getModelScope($id, $this->storage, $this->logger, false, $original);
+        $results = getModelScope($id, $storage, $logger, false, $original);
     }
-    $response = $response->withJson($results,200,JSON_FLAGS);
+    $response = withJson($response, $results, 200, JSON_FLAGS);
     return $response;
 });
 
 /*********************************
 * POST /models
 **********************************/
-$app->post('/models', function (Request $request, Response $response, $args) {
+$app->post('/models', function (Request $request, Response $response, $args) use ($app) {
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+    $logger = $container->get('logger');
+
     $post_data = $request->getParsedBody();
     $id = $post_data['name'];
     $display_name = ($post_data['display_name'] ? $post_data['display_name'] : "" );
@@ -301,7 +334,7 @@ $app->post('/models', function (Request $request, Response $response, $args) {
             'type' => 'https://nethesis.github.io/tancredi/problems/#malformed-data',
             'title' => 'Missing model name'
         );
-        $response = $response->withJson($results,400,JSON_FLAGS);
+        $response = withJson($response, $results, 400, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
@@ -311,27 +344,27 @@ $app->post('/models', function (Request $request, Response $response, $args) {
             'type' => 'https://nethesis.github.io/tancredi/problems/#malformed-data',
             'title' => 'Illegal character(s) in model name'
         );
-        $response = $response->withJson($results,400,JSON_FLAGS);
+        $response = withJson($response, $results, 400, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    if ($this->storage->scopeExists($id)) {
+    if ($storage->scopeExists($id)) {
         // Error: scope is already configured
         $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#phone-exists',
             'title' => 'The model name is already registered'
         );
-        $response = $response->withJson($results,409,JSON_FLAGS);
+        $response = withJson($response, $results, 409, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
-    $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
+    $scope = new \Tancredi\Entity\Scope($id, $storage, $logger);
     $scope->metadata['displayName'] = $display_name;
     $scope->metadata['scopeType'] = "model";
     $scope->setVariables($variables);
-    $response = $response->withJson(getModelScope($id, $this->storage, $this->logger),201,JSON_FLAGS);
+    $response = withJson($response, getModelScope($id, $storage, $logger), 201, JSON_FLAGS);
     $response = $response->withHeader('Location', '/tancredi/api/v1/models/' . $id);
     return $response;
 });
@@ -339,16 +372,20 @@ $app->post('/models', function (Request $request, Response $response, $args) {
 /*********************************
 * PATCH /models/{id}
 **********************************/
-$app->patch('/models/{id}', function (Request $request, Response $response, $args) {
+$app->patch('/models/{id}', function (Request $request, Response $response, $args) use ($app) {
     $id = $args['id'];
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+    $logger = $container->get('logger');
+
     $patch_data = $request->getParsedBody();
 
-    if (!$this->storage->scopeExists($id)) {
+    if (!$storage->scopeExists($id)) {
         $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
-        $response = $response->withJson($results,404,JSON_FLAGS);
+        $response = withJson($response, $results, 404, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
     	return $response;
@@ -359,14 +396,14 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
             'type' => 'https://nethesis.github.io/tancredi/problems/#read-only-attribute',
             'title' => 'Cannot change a read-only attribute'
         );
-        $response = $response->withJson($results,403,JSON_FLAGS);
+        $response = withJson($response, $results, 403, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
 
     if (array_key_exists('variables',$patch_data) or array_key_exists('display_name',$patch_data)) {
-        $scope = new \Tancredi\Entity\Scope($id, $this->storage, $this->logger);
+        $scope = new \Tancredi\Entity\Scope($id, $storage, $logger);
         if (array_key_exists('display_name',$patch_data)) {
             $scope->metadata['displayName'] = $patch_data['display_name'];
         }
@@ -375,7 +412,7 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
         } else {
              $scope->setVariables();
         }
-        $response = $response->withJson(getModelScope($id, $this->storage, $this->logger, false, false), 200, JSON_FLAGS);
+        $response = withJson($response, getModelScope($id, $storage, $logger, false, false), 200, JSON_FLAGS);
         return $response;
     }
     $response = $response->withStatus(400);
@@ -385,32 +422,34 @@ $app->patch('/models/{id}', function (Request $request, Response $response, $arg
 /*********************************
 * DELETE /models/{id}
 **********************************/
-$app->delete('/models/{id}', function (Request $request, Response $response, $args) {
+$app->delete('/models/{id}', function (Request $request, Response $response, $args) use ($app) {
     $id = $args['id'];
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
 
-    if (!$this->storage->scopeExists($id)) {
+    if (!$storage->scopeExists($id)) {
         $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
-        $response = $response->withJson($results,404,JSON_FLAGS);
+        $response = withJson($response, $results, 404, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
 
-    if ($this->storage->scopeInUse($id)) {
+    if ($storage->scopeInUse($id)) {
          $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#resource-in-use',
             'title' => 'The resource is in use by other resources and cannot be deleted'
         );
-        $response = $response->withJson($results,409,JSON_FLAGS);
+        $response = withJson($response, $results, 409, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
     }
 
-    $this->storage->deleteScope($id);
+    $storage->deleteScope($id);
     $response = $response->withStatus(204);
     return $response;
 });
@@ -419,19 +458,27 @@ $app->delete('/models/{id}', function (Request $request, Response $response, $ar
 * GET /defaults
 **********************************/
 $app->get('/defaults', function(Request $request, Response $response) use ($app) {
-    $scope = new \Tancredi\Entity\Scope('defaults', $this->storage, $this->logger);
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+    $logger = $container->get('logger');
+
+    $scope = new \Tancredi\Entity\Scope('defaults', $storage, $logger);
     $scope_data = $scope->getVariables();
-    $response = $response->withJson($scope_data,200,JSON_FLAGS);
+    $response = withJson($response, $scope_data, 200, JSON_FLAGS);
     return $response;
 });
 
 /*********************************
 * PATCH /defaults
 **********************************/
-$app->patch('/defaults', function (Request $request, Response $response, $args) {
+$app->patch('/defaults', function (Request $request, Response $response, $args) use ($app) {
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+    $logger = $container->get('logger');
+
     $patch_data = $request->getParsedBody();
 
-    $scope = new \Tancredi\Entity\Scope('defaults', $this->storage, $this->logger);
+    $scope = new \Tancredi\Entity\Scope('defaults', $storage, $logger);
     foreach ($patch_data as $patch_key => $patch_value) {
         if (is_null($patch_value)) {
             unset($scope->data[$patch_key]);
@@ -448,6 +495,9 @@ $app->patch('/defaults', function (Request $request, Response $response, $args) 
 * POST /backgrounds, /firmware, /ringtones, /screensavers
 **********************************/
 $app->post('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(Request $request, Response $response, $args) use ($app) {
+    $container = $app->getContainer();
+    $config = $container->get('config');
+    
     $uploadedFile = array_pop($request->getUploadedFiles());
     $files_directory = $args['filetype'];
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
@@ -456,19 +506,19 @@ $app->post('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(R
                 'type' => 'https://nethesis.github.io/tancredi/problems/#invalid-file-name',
                 'title' => 'Invalid file name'
             );
-            $response = $response->withJson($results, 400, JSON_FLAGS);
+            $response = withJson($response, $results, 400, JSON_FLAGS);
             $response = $response->withHeader('Content-Type', 'application/problem+json');
             $response = $response->withHeader('Content-Language', 'en');
             return $response;
         }
-        $uploadedFile->moveTo($this->config['rw_dir'] . $files_directory . '/' . $uploadedFile->getClientFilename());
-        $realfile = realpath($this->config['rw_dir'] . $files_directory . '/' . $uploadedFile->getClientFilename());
-        if( ! $realfile || dirname($realfile) != ($this->config['rw_dir'] . $files_directory)) {
+        $uploadedFile->moveTo($config['rw_dir'] . $files_directory . '/' . $uploadedFile->getClientFilename());
+        $realfile = realpath($config['rw_dir'] . $files_directory . '/' . $uploadedFile->getClientFilename());
+        if( ! $realfile || dirname($realfile) != ($config['rw_dir'] . $files_directory)) {
             $results = array(
                 'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
                 'title' => 'Resource not found'
             );
-            $response = $response->withJson($results, 404, JSON_FLAGS);
+            $response = withJson($response, $results, 404, JSON_FLAGS);
             $response = $response->withHeader('Content-Type', 'application/problem+json');
             $response = $response->withHeader('Content-Language', 'en');
             return $response;
@@ -482,7 +532,10 @@ $app->post('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(R
 * GET /backgrounds, /firmware, /ringtones, /screensavers
 **********************************/
 $app->get('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(Request $request, Response $response, $args) use ($app) {
-    $files = glob($this->config['rw_dir'] . $args['filetype'] . '/*');
+    $container = $app->getContainer();
+    $config = $container->get('config');
+
+    $files = glob($config['rw_dir'] . $args['filetype'] . '/*');
     $res = array();
     foreach ($files as $file) {
         $stats = stat($file);
@@ -492,7 +545,7 @@ $app->get('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(Re
             'mtime' => $stats['mtime']
         );
     }
-    $response = $response->withJson($res,200,JSON_FLAGS);
+    $response = withJson($response, $res, 200, JSON_FLAGS);
     return $response;
 });
 
@@ -500,19 +553,22 @@ $app->get('/{filetype:backgrounds|firmware|ringtones|screensavers}', function(Re
 * DELETE /backgrounds, /firmware, /ringtones, /screensavers
 **********************************/
 $app->delete('/{filetype:backgrounds|firmware|ringtones|screensavers}/{file}', function(Request $request, Response $response, $args) use ($app) {
+    $container = $app->getContainer();
+    $config = $container->get('config');
+
     $file = $args['file'];
     $files_directory = $args['filetype'];
-    $realfile = realpath($this->config['rw_dir'] . $files_directory . '/' . $file);
-    if( ! $realfile  || dirname($realfile) != ($this->config['rw_dir'] . $files_directory)) {
+    $realfile = realpath($config['rw_dir'] . $files_directory . '/' . $file);
+    if( ! $realfile  || dirname($realfile) != ($config['rw_dir'] . $files_directory)) {
         $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
-        $response = $response->withJson($results,404,JSON_FLAGS);
+        $response = withJson($response, $results, 404, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
-    } elseif (unlink($this->config['rw_dir'] . $files_directory . '/' . $file)) {
+    } elseif (unlink($config['rw_dir'] . $files_directory . '/' . $file)) {
         $response = $response->withStatus(204);
         return $response;
     }
@@ -525,7 +581,7 @@ $app->delete('/{filetype:backgrounds|firmware|ringtones|screensavers}/{file}', f
 **********************************/
 $app->get('/macvendors', function(Request $request, Response $response, $args) use ($app) {
     global $macvendors;
-    $response = $response->withJson($macvendors,200,JSON_FLAGS);
+    $response = withJson($response, $macvendors, 200, JSON_FLAGS);
     return $response;
 });
 
@@ -534,12 +590,15 @@ $app->get('/macvendors', function(Request $request, Response $response, $args) u
 **********************************/
 $app->post('/phones/{mac}/tok1', function(Request $request, Response $response, array $args) use ($app) {
     $mac = $args['mac'];
-    if (!$this->storage->scopeExists($mac)) {
+    $container = $app->getContainer();
+    $storage = $container->get('storage');
+
+    if (!$storage->scopeExists($mac)) {
         $results = array(
             'type' => 'https://nethesis.github.io/tancredi/problems/#not-found',
             'title' => 'Resource not found'
         );
-        $response = $response->withJson($results,404,JSON_FLAGS);
+        $response = withJson($response, $results, 404, JSON_FLAGS);
         $response = $response->withHeader('Content-Type', 'application/problem+json');
         $response = $response->withHeader('Content-Language', 'en');
         return $response;
@@ -564,6 +623,13 @@ function getModelScope($id,$storage,$logger,$inherit = false, $original = false)
         'model_url' => $config['api_url_path'] . "models/" . $id,
     );
     return $results;
+}
+
+function withJson(Response $response, $data, $status = 200, $flags = 0) {
+    $response->getBody()->write(json_encode($data, $flags));
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus($status);
 }
 
 // Run app

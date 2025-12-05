@@ -20,29 +20,35 @@
  * along with Tancredi.  If not, see COPYING.
  */
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
+
 /**
  * Send a debug message to logger for each request
  */
-class LoggingMiddleware
+class LoggingMiddleware implements MiddlewareInterface
 {
-    private $container;
+    private $logger;
     
-    public function __construct($container)
+    public function __construct(LoggerInterface $logger)
     {
-        $this->container = $container;
+        $this->logger = $logger;
     }
     
-    public function __invoke($request, $response, $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = $next($request, $response);
+        $response = $handler->handle($request);
         $context = [
             'method' => $request->getMethod(),
-            'uri' => $request->getUri(),
+            'uri' => (string) $request->getUri(),
             'status' => $response->getStatusCode(),
-            'request' => $this->formatPayload(strval($request->getBody())),
-            'response' => $this->formatPayload(strval($response->getBody())),
+            'request' => $this->formatPayload((string) $request->getBody()),
+            'response' => $this->formatPayload((string) $response->getBody()),
         ];
-        $this->container['logger']->debug('{method} {uri} ({status}) [{request}, {response}]', $context);
+        $this->logger->debug('{method} {uri} ({status}) [{request}, {response}]', $context);
         return $response;
     }
 
