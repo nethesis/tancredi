@@ -50,6 +50,7 @@ $app = AppFactory::create();
 $basePath = rtrim($config['api_url_path'], '/');
 $app->setBasePath($basePath);
 $app->addBodyParsingMiddleware();
+$app->addRoutingMiddleware();
 
 // Register the client IP address for logging
 $upstreamProxies = array_map('trim', explode(',', isset($config['upstream_proxies']) ? $config['upstream_proxies'] : ''));
@@ -63,6 +64,7 @@ if (array_key_exists('auth_class',$config) and !empty($config['auth_class'])) {
 
 // Add request/response logging middleware
 $app->add(new \Tancredi\LoggingMiddleware($container->get('logger')));
+$app->addErrorMiddleware(true, true, true);
 
 /*********************************
 * GET /phones

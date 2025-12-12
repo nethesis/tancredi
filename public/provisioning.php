@@ -47,6 +47,7 @@ $container = $containerBuilder->build();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 $app->setBasePath(rtrim($config['provisioning_url_path'], '/'));
+$app->addRoutingMiddleware();
 
 // Register the client IP address for logging
 $upstreamProxies = array_map('trim', explode(',', isset($config['upstream_proxies']) ? $config['upstream_proxies'] : ''));
@@ -54,6 +55,7 @@ $app->add(new \RKA\Middleware\IpAddress( ! empty($upstreamProxies), $upstreamPro
 
 // Add request/response logging middleware
 $app->add(new \Tancredi\LoggingMiddleware($container->get('logger')));
+$app->addErrorMiddleware(true, true, true);
 
 $app->get('/check/ping', function(Request $request, Response $response, array $args) use ($app) {
     $response->getBody()->write(json_encode(filemtime('/etc/tancredi.conf')));
