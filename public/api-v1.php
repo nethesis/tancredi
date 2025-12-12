@@ -49,6 +49,7 @@ AppFactory::setContainer($container);
 $app = AppFactory::create();
 $basePath = rtrim($config['api_url_path'], '/');
 $app->setBasePath($basePath);
+$app->addBodyParsingMiddleware();
 
 // Register the client IP address for logging
 $upstreamProxies = array_map('trim', explode(',', isset($config['upstream_proxies']) ? $config['upstream_proxies'] : ''));
