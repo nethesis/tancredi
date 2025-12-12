@@ -20,7 +20,8 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../src/init.php';
 
 define("JSON_FLAGS",JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 
@@ -46,6 +47,8 @@ $containerBuilder->addDefinitions([
 $container = $containerBuilder->build();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
+$basePath = rtrim($config['api_url_path'], '/');
+$app->setBasePath($basePath);
 
 // Register the client IP address for logging
 $upstreamProxies = array_map('trim', explode(',', isset($config['upstream_proxies']) ? $config['upstream_proxies'] : ''));

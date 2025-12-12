@@ -15,7 +15,7 @@ jobs:
 
     # Install packages needed on runner
     - name: Install required packages
-      run: sudo apt-get install -y apache2 libapache2-mod-xsendfile bats php8.3-fpm
+      run: sudo apt-get install -y apache2 libapache2-mod-xsendfile bats libapache2-mod-php
 
 
     # download and explode tancredi tarball
@@ -47,28 +47,13 @@ jobs:
         805EC0 = yealink
         EOF
 
-    - name: configure php-fpm
-      run: |
-        echo '[tancredi]' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
-        echo 'user = www-data' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
-        echo 'group = www-data' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
-        echo 'listen = 127.0.0.1:9605' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
-        echo 'listen.allowed_clients = 127.0.0.1' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
-        echo 'pm = dynamic' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
-        echo 'pm.max_children = 50' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
-        echo 'pm.start_servers = 5' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
-        echo 'pm.min_spare_servers = 5' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
-        echo 'pm.max_spare_servers = 35' | sudo tee -a /etc/php/8.3/fpm/pool.d/tancredi.conf
-        sudo systemctl restart php8.3-fpm
-
     - name: configure httpd
       run: |
-        echo '<Location "/provisioning">' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
-        echo 'ProxyPass "fcgi://127.0.0.1:9605/usr/share/tancredi/public/provisioning.php"' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
-        echo '</Location>' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
-        echo '<Location "/tancredi/api/v1">' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
-        echo 'ProxyPass "fcgi://127.0.0.1:9605/usr/share/tancredi/public/api-v1.php"' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
-        echo '</Location>' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'Alias /provisioning /usr/share/tancredi/public/provisioning.php' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'Alias /tancredi/api/v1 /usr/share/tancredi/public/api-v1.php' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo '<Directory /usr/share/tancredi/public>' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'Require all granted' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo '</Directory>' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo 'XSendFile on' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo 'XSendFilePath /var/lib/tancredi/data/backgrounds' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo 'XSendFilePath /var/lib/tancredi/data/firmware' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
@@ -76,13 +61,18 @@ jobs:
         echo 'XSendFilePath /var/lib/tancredi/data/screensavers' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         sudo a2ensite tancredi.conf
         sudo a2dissite 000-default.conf
-        sudo a2enmod proxy_fcgi
         sudo systemctl restart apache2
 
     - name: run bats
       run: |
         cd test
         sudo ./run.sh
+
+    - name: print apache logs
+      if: failure()
+      run: |
+        sudo cat /var/log/apache2/error.log
+        sudo cat /var/log/apache2/access.log
 
     - name: upload fixture files
       if: always()

@@ -20,7 +20,8 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../src/init.php';
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -45,6 +46,7 @@ $containerBuilder->addDefinitions([
 $container = $containerBuilder->build();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
+$app->setBasePath(rtrim($config['provisioning_url_path'], '/'));
 
 // Register the client IP address for logging
 $upstreamProxies = array_map('trim', explode(',', isset($config['upstream_proxies']) ? $config['upstream_proxies'] : ''));
