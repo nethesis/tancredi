@@ -24,7 +24,7 @@ use Monolog\Level;
 use Psr\Container\ContainerInterface;
 
 /**
- * Instantiate and configure a Monolog\Logger instancea
+ * Instantiate and configure a Monolog\Logger instance
  *
  */
 class LoggerFactory 
