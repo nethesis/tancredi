@@ -55,7 +55,14 @@ $app->add(new \RKA\Middleware\IpAddress( ! empty($upstreamProxies), $upstreamPro
 
 // Add request/response logging middleware
 $app->add(new \Tancredi\LoggingMiddleware($container->get('logger')));
-$app->addErrorMiddleware(true, true, true);
+// Determine whether to display error details based on configuration or environment
+$displayErrorDetails = false;
+if (isset($config['debug'])) {
+    $displayErrorDetails = (bool)$config['debug'];
+} elseif (getenv('APP_DEBUG') !== false) {
+    $displayErrorDetails = filter_var(getenv('APP_DEBUG'), FILTER_VALIDATE_BOOLEAN);
+}
+$app->addErrorMiddleware($displayErrorDetails, true, true);
 
 $app->get('/check/ping', function(Request $request, Response $response, array $args) use ($app) {
     $response->getBody()->write(json_encode(filemtime('/etc/tancredi.conf')));
