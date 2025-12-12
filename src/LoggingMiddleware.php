@@ -72,9 +72,9 @@ class LoggingMiddleware implements MiddlewareInterface
      * @param string $payload The payload to sanitize
      * @return string The sanitized payload with sensitive data masked
      */
-    protected function sanitizePayload($payload)
+    protected function sanitizePayload(string $payload): string
     {
-        if (empty($payload) || !is_string($payload)) {
+        if (empty($payload)) {
             return $payload;
         }
 
@@ -87,20 +87,15 @@ class LoggingMiddleware implements MiddlewareInterface
 
         // For non-JSON payloads, use regex to mask sensitive patterns
         // This handles query strings and other formatted data
-        $patterns = [
-            // Match password fields: password=value or "password":"value"
-            '/(["\']?(?:password|passwd|pwd|secret)["\']?\s*[:=]\s*["\']?)([^"\'&\s,}]+)(["\']?)/i' => '$1***REDACTED***$3',
-            // Match account fields: account_xxx=value or "account_xxx":"value"
-            '/(["\']?account_[a-z0-9_]*["\']?\s*[:=]\s*["\']?)([^"\'&\s,}]+)(["\']?)/i' => '$1***REDACTED***$3',
-            // Match admin/user password fields
-            '/(["\']?(?:adminpw|userpw)["\']?\s*[:=]\s*["\']?)([^"\'&\s,}]+)(["\']?)/i' => '$1***REDACTED***$3',
-            // Match token fields: token=value or "token":"value" or tok1/tok2
-            '/(["\']?(?:token|tok1|tok2)["\']?\s*[:=]\s*["\']?)([^"\'&\s,}]+)(["\']?)/i' => '$1***REDACTED***$3',
+        $sensitiveFields = [
+            'password', 'passwd', 'pwd', 'secret',
+            'adminpw', 'userpw',
+            'token', 'tok1', 'tok2',
+            'account_[a-z0-9_]*'
         ];
-
-        foreach ($patterns as $pattern => $replacement) {
-            $payload = preg_replace($pattern, $replacement, $payload);
-        }
+        
+        $pattern = '/(["\']?(?:' . implode('|', $sensitiveFields) . ')["\']?\s*[:=]\s*["\']?)([^"\'&\s,}]+)(["\']?)/i';
+        $payload = preg_replace($pattern, '$1***REDACTED***$3', $payload);
 
         return $payload;
     }
@@ -129,12 +124,8 @@ class LoggingMiddleware implements MiddlewareInterface
      * @param string $key The key to check
      * @return bool True if the key is sensitive, false otherwise
      */
-    protected function isSensitiveKey($key)
+    protected function isSensitiveKey(string $key): bool
     {
-        if (!is_string($key)) {
-            return false;
-        }
-
         $key_lower = strtolower($key);
         
         // Check for exact matches or patterns
@@ -159,7 +150,7 @@ class LoggingMiddleware implements MiddlewareInterface
         }
 
         // Check for account_* pattern
-        if (strpos($key, 'account_') === 0) {
+        if (strpos($key_lower, 'account_') === 0) {
             return true;
         }
 
