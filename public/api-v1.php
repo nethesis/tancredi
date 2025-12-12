@@ -64,7 +64,9 @@ if (array_key_exists('auth_class',$config) and !empty($config['auth_class'])) {
 
 // Add request/response logging middleware
 $app->add(new \Tancredi\LoggingMiddleware($container->get('logger')));
-$app->addErrorMiddleware(true, true, true);
+// Use config-driven flag for error details; default to false for production safety
+$displayErrorDetails = isset($config['displayErrorDetails']) ? (bool)$config['displayErrorDetails'] : false;
+$app->addErrorMiddleware($displayErrorDetails, true, true);
 
 /*********************************
 * GET /phones
