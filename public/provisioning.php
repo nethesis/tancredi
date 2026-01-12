@@ -20,43 +20,66 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../src/init.php';
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Factory\AppFactory;
+use DI\ContainerBuilder;
+use Slim\Psr7\Stream;
 
-$app = new \Slim\App;
-$container = $app->getContainer();
-$container['config'] = $config;
-$container['logger'] = function($c) {
-    return \Tancredi\LoggerFactory::createLogger('provisioning', $c);
-};
+$containerBuilder = new ContainerBuilder();
+$containerBuilder->addDefinitions([
+    'config' => function() {
+        global $config;
+        return $config;
+    },
+    'logger' => function($c) {
+        return \Tancredi\LoggerFactory::createLogger('provisioning', $c);
+    },
+    'storage' => function($c) {
+        return new \Tancredi\Entity\FileStorage($c->get('logger'), $c->get('config'));
+    }
+]);
 
-$container['storage'] = function($c) {
-    global $config;
-    $storage = new \Tancredi\Entity\FileStorage($c['logger'],$config);
-    return $storage;
-};
+$container = $containerBuilder->build();
+AppFactory::setContainer($container);
+$app = AppFactory::create();
+$app->setBasePath(rtrim($config['provisioning_url_path'], '/'));
+$app->addRoutingMiddleware();
 
 // Register the client IP address for logging
 $upstreamProxies = array_map('trim', explode(',', isset($config['upstream_proxies']) ? $config['upstream_proxies'] : ''));
 $app->add(new \RKA\Middleware\IpAddress( ! empty($upstreamProxies), $upstreamProxies));
 
 // Add request/response logging middleware
-$app->add(new \Tancredi\LoggingMiddleware($container));
+$app->add(new \Tancredi\LoggingMiddleware($container->get('logger')));
+// Determine whether to display error details based on configuration or environment
+$displayErrorDetails = false;
+if (isset($config['debug'])) {
+    $displayErrorDetails = (bool)$config['debug'];
+} elseif (getenv('APP_DEBUG') !== false) {
+    $displayErrorDetails = filter_var(getenv('APP_DEBUG'), FILTER_VALIDATE_BOOLEAN);
+}
+$app->addErrorMiddleware($displayErrorDetails, true, true);
 
 $app->get('/check/ping', function(Request $request, Response $response, array $args) use ($app) {
-    return $response->withJson(filemtime('/etc/tancredi.conf'),200);
+    $response->getBody()->write(json_encode(filemtime('/etc/tancredi.conf')));
+    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 });
 
 $app->get('/{token}/{filetype:backgrounds|firmware|ringtones|screensavers}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     global $config;
+    $container = $app->getContainer();
+    $logger = $container->get('logger');
+
     $filename = $args['filename'];
     $token = $args['token'];
     $id = \Tancredi\Entity\TokenManager::getIdFromToken($token);
     if ($id === FALSE) {
         // Token doesn't exists
-        $this->logger->info('Invalid token request from {address} {ua}: {uri}', ['uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
+        $logger->info('Invalid token request from {address} {ua}: {uri}', ['uri' => (string) $request->getUri(), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
         $response = $response->withStatus(404);
         return $response;
     }
@@ -74,33 +97,37 @@ $app->get('/{token}/{filetype:backgrounds|firmware|ringtones|screensavers}/{file
     } elseif(isset($config['file_reader']) && $config['file_reader'] == 'nginx') {
         return $response->withHeader('X-Accel-Redirect', $realfile);
     } else {
-        return $response->withBody(new \Slim\Http\Stream(fopen($realfile, 'r')));
+        return $response->withBody(new Stream(fopen($realfile, 'r')));
     }
 });
 
 $app->get('/{token}/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     global $config;
+    $container = $app->getContainer();
+    $logger = $container->get('logger');
+    $storage = $container->get('storage');
+
     $filename = $args['filename'];
     $token = $args['token'];
     $id = \Tancredi\Entity\TokenManager::getIdFromToken($token);
     if ($id === FALSE) {
         // Token doesn't exists
-        $this->logger->info('Invalid token request from {address} {ua}: {uri}', ['uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
+        $logger->info('Invalid token request from {address} {ua}: {uri}', ['uri' => (string) $request->getUri(), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
         $response = $response->withStatus(404);
         return $response;
     }
 
-    $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $this->storage, $this->logger, TRUE);
+    $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $storage, $logger, TRUE);
     // Get template variable name from file
-    $data = getDataFromFilename($filename,$this->logger);
+    $data = getDataFromFilename($filename, $logger);
     $scope_data = array_merge($scope, $scope['variables']);
     unset($scope_data['variables']);
 
     if (empty($data['template'])) {
-        $this->logger->debug('Template not found for "{filename}". It does not match our patterns.d/ rules', $data);
+        $logger->debug('Template not found for "{filename}". It does not match our patterns.d/ rules', $data);
         return $response->withStatus(404);
     } elseif(empty($scope_data[$data['template']])) {
-        $this->logger->error('Template not found for "{filename}". The variable "{template}" from pattern "{pattern_name}" is not set properly', $data);
+        $logger->error('Template not found for "{filename}". The variable "{template}" from pattern "{pattern_name}" is not set properly', $data);
         return $response->withStatus(500);
     }
 
@@ -108,7 +135,7 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
     if (array_key_exists('runtime_filters',$config) and !empty($config['runtime_filters'])) {
         foreach (explode(',',$config['runtime_filters']) as $filter) {
             $filter = "\\Tancredi\\Entity\\" . $filter;
-            $filterObj = new $filter($config, $this->logger);
+            $filterObj = new $filter($config, $logger);
             $scope_data = $filterObj($scope_data);
         }
     }
@@ -127,11 +154,11 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
         $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
         $response->getBody()->write(renderTwigTemplate($scope_data[$data['template']], $scope_data));
-        $this->logger->debug('Rendered template "{template}" with data: {data}', ['data' => json_encode($scope_data), 'template' => $scope_data[$data['template']]]);
-        $this->logger->info('Serving request from {address} {ua}: {uri} ({mac})', ['mac' => $scope_data['mac'], 'uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
+        $logger->debug('Rendered template "{template}" with data: {data}', ['data' => json_encode($scope_data), 'template' => $scope_data[$data['template']]]);
+        $logger->info('Serving request from {address} {ua}: {uri} ({mac})', ['mac' => $scope_data['mac'], 'uri' => (string) $request->getUri(), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
         return $response;
     } catch (Exception $e) {
-        $this->logger->error($e);
+        $logger->error($e);
         $response = $response
             ->withHeader('Content-type', 'text/plain')
             ->withStatus(500)
@@ -143,12 +170,16 @@ $app->get('/{token}/{filename}', function(Request $request, Response $response, 
 
 $app->get('/{filename}', function(Request $request, Response $response, array $args) use ($app) {
     global $config;
+    $container = $app->getContainer();
+    $logger = $container->get('logger');
+    $storage = $container->get('storage');
+
     $filename = $args['filename'];
 
-    $data = getDataFromFilename($filename,$this->logger);
+    $data = getDataFromFilename($filename, $logger);
 
     if (empty($data['scopeid'])) {
-        $this->logger->debug(sprintf('Scope not found for "%s"', $filename));
+        $logger->debug(sprintf('Scope not found for "%s"', $filename));
         return $response->withStatus(404);
     }
 
@@ -159,16 +190,16 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     }
 
     // Instantiate scope
-    $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $this->storage, $this->logger, TRUE);
+    $scope = \Tancredi\Entity\Scope::getPhoneScope($id, $storage, $logger, TRUE);
     // Get template variable name from file
     $scope_data = array_merge($scope, $scope['variables']);
     unset($scope_data['variables']);
 
     if (empty($data['template'])) {
-        $this->logger->debug('Template not found for "{filename}". It does not match our patterns.d/ rules', $data);
+        $logger->debug('Template not found for "{filename}". It does not match our patterns.d/ rules', $data);
         return $response->withStatus(404);
     } elseif(empty($scope_data[$data['template']])) {
-        $this->logger->error('Template not found for "{filename}". The variable "{template}" from pattern "{pattern_name}" is not set properly', $data);
+        $logger->error('Template not found for "{filename}". The variable "{template}" from pattern "{pattern_name}" is not set properly', $data);
         return $response->withStatus(500);
     }
 
@@ -176,7 +207,7 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     if (array_key_exists('runtime_filters',$config) and !empty($config['runtime_filters'])) {
         foreach (explode(',',$config['runtime_filters']) as $filter) {
             $filter = "\\Tancredi\\Entity\\" . $filter;
-            $filterObj = new $filter($config,$this->logger);
+            $filterObj = new $filter($config, $logger);
             $scope_data = $filterObj($scope_data);
         }
     }
@@ -202,11 +233,11 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
         $response = $response->withHeader('Cache-Control', 'private');
         $response = $response->withHeader('Content-Type', $data['content_type']);
         $response->getBody()->write(renderTwigTemplate($scope_data[$data['template']], $scope_data));
-        $this->logger->debug('Rendered template "{template}" with data: {data}', ['data' => json_encode($scope_data), 'template' => $scope_data[$data['template']]]);
-        $this->logger->info('Serving request from {address} {ua}: {uri} ({mac})', ['mac' => $scope_data['mac'], 'uri' => strval($request->getUri()), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
+        $logger->debug('Rendered template "{template}" with data: {data}', ['data' => json_encode($scope_data), 'template' => $scope_data[$data['template']]]);
+        $logger->info('Serving request from {address} {ua}: {uri} ({mac})', ['mac' => $scope_data['mac'], 'uri' => (string) $request->getUri(), 'ua' => $_SERVER['HTTP_USER_AGENT'], 'address' => $request->getAttribute('ip_address')]);
         return $response;
     } catch (Exception $e) {
-        $this->logger->error($e);
+        $logger->error($e);
         $response = $response
             ->withHeader('Content-type', 'text/plain')
             ->withStatus(500)

@@ -28,6 +28,11 @@ setup () {
     find /var/lib/tancredi -type f -delete
 }
 
+@test "GET /tancredi/api/v1/models" {
+    run GET /tancredi/api/v1/models
+    assert_http_code "200"
+}
+
 @test "POST /tancredi/api/v1/models (acme19_2, success)" {
     run POST /tancredi/api/v1/models <<EOF
 {

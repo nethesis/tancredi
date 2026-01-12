@@ -20,18 +20,21 @@
  * along with Tancredi.  If not, see COPYING.
  */
 
+use Monolog\Level;
+use Psr\Container\ContainerInterface;
+
 /**
- * Instantiate and configure a Monolog\Logger instancea
+ * Instantiate and configure a Monolog\Logger instance
  *
  */
 class LoggerFactory 
 {
-    public static function createLogger($channel, \ArrayAccess $dc)
+    public static function createLogger($channel, ContainerInterface $dc)
     {
         $logger = new \Monolog\Logger($channel);
         $logger->pushProcessor(new \Monolog\Processor\PsrLogMessageProcessor());
 
-        $config = $dc['config'];
+        $config = $dc->get('config');
         if( ! empty($config['logfile'])) {
             $handler = new \Monolog\Handler\StreamHandler($config['logfile']);
             $formatter = new \Monolog\Formatter\LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
@@ -43,17 +46,17 @@ class LoggerFactory
         $handler->setFormatter($formatter);
 
         if($config['loglevel'] == 'ERROR') {
-            $handler->setLevel($logger::ERROR);
+            $handler->setLevel(Level::Error);
         } elseif ($config['loglevel'] == 'WARNING') {
-            $handler->setLevel($logger::WARNING);
+            $handler->setLevel(Level::Warning);
         } elseif ($config['loglevel'] == 'INFO') {
-            $handler->setLevel($logger::INFO);
+            $handler->setLevel(Level::Info);
         } else {
-            $handler->setLevel($logger::DEBUG);
+            $handler->setLevel(Level::Debug);
         }
 
         $logger->pushHandler($handler);
-        \Monolog\ErrorHandler::register($logger);
+        // \Monolog\ErrorHandler::register($logger); // Removed in Monolog 3
         return $logger;
     }
 
