@@ -15,7 +15,9 @@ jobs:
 
     # Install packages needed on runner
     - name: Install required packages
-      run: sudo apt-get install -y apache2 libapache2-mod-xsendfile bats libapache2-mod-php
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y apache2 libapache2-mod-xsendfile bats libapache2-mod-php
 
 
     # download and explode tancredi tarball
