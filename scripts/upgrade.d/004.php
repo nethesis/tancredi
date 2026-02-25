@@ -20,10 +20,10 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-$models = $container['storage']->listScopes('model');
+$models = $container->get('storage')->listScopes('model');
 foreach ($models as $id) {
     if(substr($id, 0, 6) == 'fanvil') {
-        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        $scope = new \Tancredi\Entity\Scope($id, $container->get('storage'), $container->get('logger'));
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
@@ -42,11 +42,11 @@ foreach ($models as $id) {
             'cap_backlight_time_blacklist' => '',
             'cap_screensaver_time_blacklist' => '',
         ]);
-        $container['logger']->info("Fixed background and screensaver settings for model $id");
+        $container->get('logger')->info("Fixed background and screensaver settings for model $id");
 
     } elseif(substr($id, 0,7) == 'yealink') {
         $model = preg_replace('/yealink-([A-Z0-9]*)$/','$1',$id);
-        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        $scope = new \Tancredi\Entity\Scope($id, $container->get('storage'), $container->get('logger'));
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
@@ -63,11 +63,11 @@ foreach ($models as $id) {
             'cap_backlight_time_blacklist' => $model == 'T19' ? '0,3,5,7,10,15,30,60,120,300,600,1200,1800,2400,3000,3600' : '3,5,7,10,1200,2400,3000,3600',
             'cap_screensaver_time_blacklist' => $model == 'T19' ? '0,3,5,7,10,15,30,60,120,300,600,1200,1800,2400,3000,3600' : '3,5,7,10,1200,2400,3000,3600',
         ]);
-        $container['logger']->info("Fixed background and screensaver settings for model $id");
+        $container->get('logger')->info("Fixed background and screensaver settings for model $id");
 
     } elseif(substr($id, 0, 15) == 'gigaset-Maxwell') {
         $model = substr($id, 15, 1);
-        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        $scope = new \Tancredi\Entity\Scope($id, $container->get('storage'), $container->get('logger'));
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
@@ -84,11 +84,11 @@ foreach ($models as $id) {
             'cap_backlight_time_blacklist' => '3,5,7,10,15,30',
             'cap_screensaver_time_blacklist' => '3,5,7,10,1200,2400,3000,3600',
         ]);
-        $container['logger']->info("Fixed background and screensaver settings for model $id");
+        $container->get('logger')->info("Fixed background and screensaver settings for model $id");
 
     } elseif(substr($id, 0, 7) == 'sangoma') {
         $model = substr($id, 9, 1);
-        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        $scope = new \Tancredi\Entity\Scope($id, $container->get('storage'), $container->get('logger'));
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
@@ -111,11 +111,11 @@ foreach ($models as $id) {
             'softkey_type_3' => 'pickup',
             'softkey_type_4' => ($model == '2' || $model == '3') ? 'menu' : 'dnd',
         ]);
-        $container['logger']->info("Fixed display and line keys settings for model $id");
+        $container->get('logger')->info("Fixed display and line keys settings for model $id");
 
     } elseif(substr($id, 0, 4) == 'snom') {
         $model = substr($id, 5, 4);
-        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        $scope = new \Tancredi\Entity\Scope($id, $container->get('storage'), $container->get('logger'));
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 4) {
             continue;
         }
@@ -132,12 +132,12 @@ foreach ($models as $id) {
             'cap_brightness' => '1',
             'brightness' => '9',
         ]);
-        $container['logger']->info("Fixed background and screensaver settings for model $id");
+        $container->get('logger')->info("Fixed background and screensaver settings for model $id");
 
     }
 }
 
-$defaults = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
+$defaults = new \Tancredi\Entity\Scope('defaults', $container->get('storage'), $container->get('logger'));
 if($defaults->metadata['version'] < 4) {
     $defaults->metadata['version'] = 4;
     $defaults->setVariables([
@@ -156,5 +156,5 @@ if($defaults->metadata['version'] < 4) {
         'cap_backlight_time_blacklist' => '',
         'cap_screensaver_time_blacklist' => '',
     ]);
-    $container['logger']->info("Fixed display and ringtone variables in defaults scope");
+    $container->get('logger')->info("Fixed display and ringtone variables in defaults scope");
 }

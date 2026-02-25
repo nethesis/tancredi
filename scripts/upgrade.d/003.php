@@ -20,10 +20,10 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-$models = $container['storage']->listScopes('model');
+$models = $container->get('storage')->listScopes('model');
 foreach ($models as $id) {
     if(substr($id, 0, 6) == 'fanvil') {
-        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        $scope = new \Tancredi\Entity\Scope($id, $container->get('storage'), $container->get('logger'));
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 3) {
             continue;
         }
@@ -31,10 +31,10 @@ foreach ($models as $id) {
         $scope->setVariables([
             'cap_ringtone_blacklist' => '-1',
         ]);
-        $container['logger']->info("Fixed cap_ringtone_blacklist for model $id");
+        $container->get('logger')->info("Fixed cap_ringtone_blacklist for model $id");
 
     } elseif(substr($id, 0, 7) == 'yealink') {
-        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        $scope = new \Tancredi\Entity\Scope($id, $container->get('storage'), $container->get('logger'));
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 3) {
             continue;
         }
@@ -42,10 +42,10 @@ foreach ($models as $id) {
         $scope->setVariables([
             'cap_ringtone_count' => '10',
         ]);
-        $container['logger']->info("Fixed cap_ringtone_count for model $id");
+        $container->get('logger')->info("Fixed cap_ringtone_count for model $id");
 
     } elseif(substr($id, 0, 7) == 'gigaset') {
-        $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+        $scope = new \Tancredi\Entity\Scope($id, $container->get('storage'), $container->get('logger'));
         if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 3) {
             continue;
         }
@@ -53,6 +53,6 @@ foreach ($models as $id) {
         $scope->setVariables([
             'cap_ringtone_blacklist' => '"-1,0"',
         ]);
-        $container['logger']->info("Fixed cap_ringtone_blacklist for model $id");
+        $container->get('logger')->info("Fixed cap_ringtone_blacklist for model $id");
     }
 }
