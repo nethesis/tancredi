@@ -21,7 +21,7 @@
  */
 
 # Upgrade only if current version isn't set
-$defaults = $container['storage']->storageRead('defaults', false);
+$defaults = $container->get('storage')->storageRead('defaults', false);
 if (!empty($defaults['metadata']['version'])) {
     return;
 }
@@ -45,17 +45,17 @@ $names = array(
 
 # Rename scope files
 foreach ($names as $oldname => $newname) {
-    $container['logger']->info("Renaming $oldname => $newname");
-    if (file_exists($container['config']['rw_dir'] . 'scopes/' . $oldname . '.ini')) {
-        rename ($container['config']['rw_dir'] . 'scopes/' . $oldname . '.ini' , $container['config']['rw_dir'] . 'scopes/' . $newname . '.ini');
+    $container->get('logger')->info("Renaming $oldname => $newname");
+    if (file_exists($container->get('config')['rw_dir'] . 'scopes/' . $oldname . '.ini')) {
+        rename ($container->get('config')['rw_dir'] . 'scopes/' . $oldname . '.ini' , $container->get('config')['rw_dir'] . 'scopes/' . $newname . '.ini');
     }
 }
 
 # Rename scope parents
-foreach ($container['storage']->listScopes($typeFilter = 'phone') as $id) {
-    $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+foreach ($container->get('storage')->listScopes($typeFilter = 'phone') as $id) {
+    $scope = new \Tancredi\Entity\Scope($id, $container->get('storage'), $container->get('logger'));
     if (array_key_exists($scope->metadata['inheritFrom'], $names)) {
-        $container['logger']->info("Set inheritFrom to $id");
+        $container->get('logger')->info("Set inheritFrom to $id");
         $scope->metadata['inheritFrom'] = $names[$scope->metadata['inheritFrom']];
         $scope->setVariables();
     }
@@ -81,9 +81,9 @@ $displaynames = array(
 
 # Fix display name
 foreach ($displaynames as $id => $new_displayname) {
-    $scope = new \Tancredi\Entity\Scope($id, $container['storage'], $container['logger']);
+    $scope = new \Tancredi\Entity\Scope($id, $container->get('storage'), $container->get('logger'));
     if (empty($scope->metadata['version']) && $scope->metadata['displayName'] != $new_displayname) {
-        $container['logger']->info("Set displayName to $id");
+        $container->get('logger')->info("Set displayName to $id");
         $scope->metadata['displayName'] = $new_displayname;
         $scope->metadata['version'] = 1;
         $scope->setVariables();
@@ -91,7 +91,7 @@ foreach ($displaynames as $id => $new_displayname) {
 }
 
 # Increment defaults version
-$scope = new \Tancredi\Entity\Scope('defaults', $container['storage'], $container['logger']);
+$scope = new \Tancredi\Entity\Scope('defaults', $container->get('storage'), $container->get('logger'));
 $scope->metadata['version'] = 1;
 $scope->setVariables();
-$container['logger']->info("Set version 1 to defaults");
+$container->get('logger')->info("Set version 1 to defaults");

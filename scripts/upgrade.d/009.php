@@ -32,11 +32,11 @@ $fixes = [
 ];
 
 foreach ($fixes as $model_id => $variables) {
-    $scope = new \Tancredi\Entity\Scope($model_id, $container['storage'], $container['logger']);
+    $scope = new \Tancredi\Entity\Scope($model_id, $container->get('storage'), $container->get('logger'));
     if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 9) {
         continue;
     }
     $scope->metadata['version'] = 9;
     $scope->setVariables($variables);
-    $container['logger']->info("Add Fanvil sidekey pages and update Fanvil line key number and pages for template X-5 models");
+    $container->get('logger')->info("Add Fanvil sidekey pages and update Fanvil line key number and pages for template X-5 models");
 }

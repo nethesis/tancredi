@@ -28,11 +28,11 @@ $fixes = [
 ];
 
 foreach ($fixes as $model_id => $variables) {
-    $scope = new \Tancredi\Entity\Scope($model_id, $container['storage'], $container['logger']);
+    $scope = new \Tancredi\Entity\Scope($model_id, $container->get('storage'), $container->get('logger'));
     if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 10) {
         continue;
     }
     $scope->metadata['version'] = 10;
     $scope->setVariables($variables);
-    $container['logger']->info("Add Yealink T43 expansion module configuration");
+    $container->get('logger')->info("Add Yealink T43 expansion module configuration");
 }
