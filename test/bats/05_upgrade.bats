@@ -65,11 +65,11 @@ setup () {
     assert_http_body '"cap_screensaver_time_blacklist":"3,5,7,10,15,30,60,120,300"'
 }
 
-@test "Upgrade sets yealink-T43 expansion module (010, 011)" {
+@test "Upgrade sets yealink-T43 expansion module (010)" {
     run GET /tancredi/api/v1/models/yealink-T43
     assert_http_code "200"
     assert_http_body '"cap_expmodule_count":"3"'
-    assert_http_body '"cap_expkey_count":"40"'
+    assert_http_body '"cap_expkey_count":"60"'
 }
 
 @test "Upgrade sets snom expansion key modules (006)" {
@@ -108,7 +108,7 @@ setup () {
     run GET /tancredi/api/v1/models/yealink-T43
     assert_http_code "200"
     assert_http_body '"cap_expmodule_count":"3"'
-    assert_http_body '"cap_expkey_count":"40"'
+    assert_http_body '"cap_expkey_count":"60"'
 }
 
 @test "Reset storage dir after upgrade tests" {
