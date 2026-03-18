@@ -78,9 +78,10 @@
         <http_pass perm="">{{ adminpw |  default('admin') }}</http_pass>
         <http_scheme perm="">off</http_scheme>
 
+        {% set snom_backlight_brightness = (brightness | default('')) matches '/^-?[0-9]+(?:\.[0-9]+)?$/' ? brightness : 5 %}
         <setting_server perm="RW">{{ provisioning_url2 }}</setting_server>
         {# snom allowed values: 3..15. active_backlight_level values: 1..10 #}
-        <backlight perm="">{{ (1.2 * brightness + 3)|round  }}</backlight>
+        <backlight perm="">{{ (1.2 * snom_backlight_brightness + 3)|round  }}</backlight>
         <backlight_idle perm="">8</backlight_idle>
         <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
         <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
@@ -201,14 +202,17 @@
     </phone-settings>
     <functionKeys>
         {# line keys #}
-        {% if cap_linekey_count > 0 %}
-            {% for number in 1..(cap_linekey_count) %}
+        {% set linekey_count = (cap_linekey_count | default('')) matches '/^\d+$/' ? cap_linekey_count : 0 %}
+        {% set expmodule_count = (cap_expmodule_count | default('')) matches '/^\d+$/' ? cap_expmodule_count : 0 %}
+        {% set expkey_count = (cap_expkey_count | default('')) matches '/^\d+$/' ? cap_expkey_count : 0 %}
+        {% if linekey_count > 0 %}
+            {% for number in 1..linekey_count %}
                     {{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number, queuetoggle, pickup_direct)}}
             {% endfor %}
         {% endif %}
-        {% set expkey_max = cap_expmodule_count * cap_expkey_count %}
+        {% set expkey_max = expmodule_count * expkey_count %}
         {% for expkey in (expkey_max > 0 ? range(1,expkey_max) : []) %}
-            {{snom.linekey_type_map(_context['expkey_type_' ~ expkey], _context['expkey_value_' ~ expkey], _context['expkey_label_' ~ expkey], dndtoggle, pickup_group, cap_linekey_count + expkey, queuetoggle, pickup_direct)}}
+            {{snom.linekey_type_map(_context['expkey_type_' ~ expkey], _context['expkey_value_' ~ expkey], _context['expkey_label_' ~ expkey], dndtoggle, pickup_group, linekey_count + expkey, queuetoggle, pickup_direct)}}
         {% endfor %}
     </functionKeys>
 {% endautoescape %}
