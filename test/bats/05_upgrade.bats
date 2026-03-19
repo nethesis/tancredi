@@ -33,6 +33,11 @@ setup () {
     cp /usr/share/tancredi/data/scopes/nethesis-NPX5v2.ini /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
     sed -i 's/^version = .*/version = 1/' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
     sed -i 's/^tmpl_firmware = .*/tmpl_firmware = "nethesis-firmware.tmpl"/' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+
+    # Verify that the scope file was correctly seeded
+    [[ -f /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini ]]
+    grep -q '^version = 1$' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+    grep -q '^tmpl_firmware = "nethesis-firmware.tmpl"$' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
 }
 
 @test "Run upgrade script" {
