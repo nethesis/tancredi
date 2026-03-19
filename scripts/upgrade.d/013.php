@@ -15,5 +15,5 @@ foreach ($fixes as $model_id => $variables) {
     }
     $scope->metadata['version'] = 13;
     $scope->setVariables($variables);
-    $container->get('logger')->info("Update firmware template for NPX5v2");
+    $container->get('logger')->info(sprintf('Update firmware template for NPX5v2 for model "%s" in script %s', $model_id, basename(__FILE__)));
 }
