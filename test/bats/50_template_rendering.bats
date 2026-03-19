@@ -1,11 +1,13 @@
 #!/usr/bin/env bats
 
+TEMPLATE_CUSTOM_FILE="/var/lib/tancredi/data/templates-custom/nethesis-firmware-v2.tmpl"
+
 setup () {
     load tancredi_client
 }
 
 teardown_file () {
-    rm -f /var/lib/tancredi/data/templates-custom/nethesis-firmware-v2.tmpl
+    rm -f "$TEMPLATE_CUSTOM_FILE"
 }
 
 @test "POST /tancredi/api/v1/phones (00-15-65-AA-BB-CC, Yealink T46, success)" {
