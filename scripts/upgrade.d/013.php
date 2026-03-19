@@ -1,0 +1,19 @@
+<?php namespace upgrade13;
+
+/*
+Update firmware template for NPX5v2
+*/
+
+$fixes = [
+    'nethesis-NPX5v2' => ['tmpl_firmware' => 'nethesis-firmware-v2.tmpl'],
+];
+
+foreach ($fixes as $model_id => $variables) {
+    $scope = new \Tancredi\Entity\Scope($model_id, $container->get('storage'), $container->get('logger'));
+    if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 13) {
+        continue;
+    }
+    $scope->metadata['version'] = 13;
+    $scope->setVariables($variables);
+    $container->get('logger')->info("Update firmware template for NPX5v2");
+}
