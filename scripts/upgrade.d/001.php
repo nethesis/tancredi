@@ -26,6 +26,8 @@ if (!empty($defaults['metadata']['version'])) {
     return;
 }
 
+$config = $container->get('config');
+
 # Rename models
 $names = array(
     "yealink-T19P_E2" => "yealink-T19",
@@ -46,8 +48,8 @@ $names = array(
 # Rename scope files
 foreach ($names as $oldname => $newname) {
     $container->get('logger')->info("Renaming $oldname => $newname");
-    if (file_exists($container->get('config')['rw_dir'] . 'scopes/' . $oldname . '.ini')) {
-        rename ($container->get('config')['rw_dir'] . 'scopes/' . $oldname . '.ini' , $container->get('config')['rw_dir'] . 'scopes/' . $newname . '.ini');
+    if (file_exists($config['rw_dir'] . 'scopes/' . $oldname . '.ini')) {
+        rename ($config['rw_dir'] . 'scopes/' . $oldname . '.ini' , $config['rw_dir'] . 'scopes/' . $newname . '.ini');
     }
 }
 
