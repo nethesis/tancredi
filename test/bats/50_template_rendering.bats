@@ -4,6 +4,10 @@ setup () {
     load tancredi_client
 }
 
+teardown_file () {
+    rm -f /var/lib/tancredi/data/templates-custom/nethesis-firmware-v2.tmpl
+}
+
 @test "POST /tancredi/api/v1/phones (00-15-65-AA-BB-CC, Yealink T46, success)" {
     run POST /tancredi/api/v1/phones <<EOF
 {
@@ -234,6 +238,47 @@ EOF
 
 @test "DELETE /tancredi/api/v1/phones/00-04-13-AA-BB-CC (cleanup)" {
     run DELETE /tancredi/api/v1/phones/00-04-13-AA-BB-CC
+    assert_http_code "204"
+    assert_http_body_empty
+}
+
+@test "GET /provisioning/{tok2}/nethesis_np_x5_hwv2_0.txt (NPX5 v2 firmware template rendering)" {
+    local custom_template="/var/lib/tancredi/data/templates-custom/nethesis-firmware-v2.tmpl"
+
+    mkdir -p /var/lib/tancredi/data/templates-custom
+    cat > "$custom_template" <<'EOF'
+NPX5v2 firmware template selected
+EOF
+
+    run POST /tancredi/api/v1/phones <<EOF
+{
+    "mac": "E0-E6-56-AA-BB-EE",
+    "model": "nethesis-NPX5v2",
+    "display_name": "Nethesis NPX5 v2 Test Phone",
+    "variables": {
+        "hostname": "voice.example.com",
+        "provisioning_url_scheme": "https"
+    }
+}
+EOF
+    assert_http_code "201"
+
+    run GET /tancredi/api/v1/phones/E0-E6-56-AA-BB-EE
+    assert_http_code "200"
+
+    tok2=$(extract_field "tok2")
+
+    if [[ -z "$tok2" ]]; then
+        echo "Failed to extract tok2 token" 1>&2
+        return 1
+    fi
+
+    run GET_PROVISIONING "Nethesis NPX5 v2 2.0.0.0 E0:E6:56:AA:BB:EE" "/provisioning/${tok2}/nethesis_np_x5_hwv2_0.txt"
+    assert_http_code "200"
+    assert_http_header "Content-Type" "text/plain; charset=utf-8"
+    assert_http_body "NPX5v2 firmware template selected"
+
+    run DELETE /tancredi/api/v1/phones/E0-E6-56-AA-BB-EE
     assert_http_code "204"
     assert_http_body_empty
 }
