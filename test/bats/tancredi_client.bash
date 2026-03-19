@@ -20,7 +20,7 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-tancredi_base_url=http://127.0.0.1
+tancredi_base_url="${TANCREDI_BASE_URL:-http://127.0.0.1}"
 
 xcurl () {
     local argv
