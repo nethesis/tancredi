@@ -28,6 +28,13 @@ setup () {
     find /var/lib/tancredi -type f -delete
 }
 
+@test "Seed outdated nethesis-NPX5v2 scope before upgrade" {
+    mkdir -p /var/lib/tancredi/data/scopes
+    cp /usr/share/tancredi/data/scopes/nethesis-NPX5v2.ini /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+    sed -i 's/^version = .*/version = 1/' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+    sed -i 's/^tmpl_firmware = .*/tmpl_firmware = "nethesis-firmware.tmpl"/' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+}
+
 @test "Run upgrade script" {
     run php /usr/share/tancredi/scripts/upgrade.php
     [[ $status -eq 0 ]]
@@ -91,6 +98,18 @@ setup () {
     assert_http_body '"fanvil_lkpages_count":"0"'
 }
 
+@test "Upgrade rewrites nethesis-NPX5v2 firmware template (013)" {
+    run grep -F 'version = 13' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+    [[ $status -eq 0 ]]
+
+    run grep -F 'tmpl_firmware = "nethesis-firmware-v2.tmpl"' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+    [[ $status -eq 0 ]]
+
+    run GET /tancredi/api/v1/models/nethesis-NPX5v2
+    assert_http_code "200"
+    assert_http_body '"tmpl_firmware":"nethesis-firmware-v2.tmpl"'
+}
+
 @test "Upgrade is idempotent (second run succeeds)" {
     run php /usr/share/tancredi/scripts/upgrade.php
     [[ $status -eq 0 ]]
@@ -109,6 +128,10 @@ setup () {
     assert_http_code "200"
     assert_http_body '"cap_expmodule_count":"3"'
     assert_http_body '"cap_expkey_count":"60"'
+
+    run GET /tancredi/api/v1/models/nethesis-NPX5v2
+    assert_http_code "200"
+    assert_http_body '"tmpl_firmware":"nethesis-firmware-v2.tmpl"'
 }
 
 @test "Reset storage dir after upgrade tests" {
