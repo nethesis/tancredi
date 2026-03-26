@@ -21,6 +21,40 @@
 #
 
 tancredi_base_url="${TANCREDI_BASE_URL:-http://127.0.0.1}"
+tancredi_ro_dir="${TANCREDI_RO_DIR:-/usr/share/tancredi/data/}"
+tancredi_rw_dir="${TANCREDI_RW_DIR:-/var/lib/tancredi/data/}"
+tancredi_scripts_dir="${TANCREDI_SCRIPTS_DIR:-/usr/share/tancredi/scripts/}"
+tancredi_template_custom_dir="${TANCREDI_TEMPLATE_CUSTOM_DIR:-${tancredi_rw_dir}templates-custom/}"
+tancredi_artifact_dir="${TANCREDI_ARTIFACT_DIR:-/tmp/fixtures}"
+
+tancredi_ensure_rw_layout () {
+    mkdir -p \
+        "${tancredi_rw_dir}backgrounds" \
+        "${tancredi_rw_dir}firmware" \
+        "${tancredi_rw_dir}first_access_tokens" \
+        "${tancredi_rw_dir}ringtones" \
+        "${tancredi_rw_dir}scopes" \
+        "${tancredi_rw_dir}screensavers" \
+        "${tancredi_template_custom_dir}" \
+        "${tancredi_rw_dir}tokens"
+}
+
+tancredi_reset_rw_dir () {
+    tancredi_ensure_rw_layout
+    find "${tancredi_rw_dir}" -type f -delete
+}
+
+tancredi_scope_path () {
+    printf '%sscopes/%s.ini\n' "${tancredi_rw_dir}" "$1"
+}
+
+tancredi_shipped_scope_path () {
+    printf '%sscopes/%s.ini\n' "${tancredi_ro_dir}" "$1"
+}
+
+tancredi_upgrade_script () {
+    printf '%supgrade.php\n' "${tancredi_scripts_dir}"
+}
 
 xcurl () {
     local argv
@@ -117,14 +151,14 @@ assert_http_body_empty () {
 
 assert_template_matches_fixture () {
     local fixture_file="${1}"
-    mkdir -p /tmp/fixtures
-    local test_output_file="/tmp/fixtures/${fixture_file##*/}"
+    mkdir -p "${tancredi_artifact_dir}"
+    local test_output_file="${tancredi_artifact_dir}/${fixture_file##*/}"
 
     echo "$output" > "$test_output_file"
 
     if [[ ! -f "$fixture_file" ]]; then
         echo "Fixture file not found: $fixture_file" 1>&2
-        echo "It can be found in artifacts. Put it in /test/bats/fixtures directory" 1>&2
+        echo "It can be found in artifacts. Put it in test/fixtures." 1>&2
         return 1
     fi
 

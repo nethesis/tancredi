@@ -39,7 +39,8 @@ Tancredi is a file-backed IP phone provisioning engine. Runtime code is in `publ
 ## Build / test / dev workflow
 
 * Syntax/quality CI: `composer validate`, `composer install`, PHP lint on `public/ src/ scripts/`, Twig syntax checks on `data/*.tmpl|*.macros`, INI syntax checks on `data/*.ini`.
-* End-to-end CI: Apache on Ubuntu, deployed layout under `/usr/share/tancredi` + `/var/lib/tancredi/data`, then Bats suite via `test/run.sh`.
+* Local Bats workflow: `./test/run.sh` now defaults to a low-privilege local harness that uses `var/test-runtime/`, a generated `tancredi.conf`, repo-local writable data, and PHP's built-in web server while preserving the public `/provisioning/` and `/tancredi/api/v1/` paths.
+* End-to-end CI/system workflow: Apache on Ubuntu, deployed layout under `/usr/share/tancredi` + `/var/lib/tancredi/data`, then Bats suite via `./test/run.sh system`.
 * Bats coverage is repo-specific: upgrades, models, phones, defaults, file uploads, golden-fixture rendering, and template operand safety across vendor families.
 * Docs site is Jekyll/Just-the-Docs, with variable metadata in `docs/_data/*.tsv`.
 
@@ -56,6 +57,7 @@ Tancredi is a file-backed IP phone provisioning engine. Runtime code is in `publ
 * Provisioning render changes: validate both normal rendering and operand-safety scenarios, especially for Snom/Fanvil/Yealink/Nethesis families.
 * API/storage changes: keep `api-v1.php`, `FileStorage`, `Scope`, `TokenManager`, and Bats helpers aligned.
 * Auth changes: use `auth_class` plug-in style under `src/Entity`; API does not own auth itself.
+* Testing changes: keep `./test/run.sh` as the canonical entrypoint. Local mode should stay repo-local and low-privilege; CI/system mode must keep compatibility with Apache aliases, `/usr/share/tancredi`, `/var/lib/tancredi/data`, and `/tmp/fixtures` artifact output.
 
 ## Repo-specific conventions
 
@@ -74,7 +76,7 @@ Tancredi is a file-backed IP phone provisioning engine. Runtime code is in `publ
 ## Definition of done
 
 * Relevant PHP/Twig/INI lint checks pass in the same scope as `.github/workflows/php.yml`.
-* Relevant Bats scenarios pass; if provisioning output changed, fixtures and/or rendering tests are updated deliberately.
+* Relevant Bats scenarios pass in the appropriate mode: `./test/run.sh` for local development changes and `./test/run.sh system` for CI/system-layout-sensitive changes. If provisioning output changed, fixtures and/or rendering tests are updated deliberately.
 * Stored-data changes have an upgrade story when needed and remain idempotent.
 * Public API/provisioning/docs behavior stays consistent with deployed path/config expectations.
 
