@@ -202,9 +202,9 @@
     </phone-settings>
     <functionKeys>
         {# line keys #}
-        {% set linekey_count = (cap_linekey_count | default('')) matches '/^\d+$/' ? cap_linekey_count : 0 %}
-        {% set expmodule_count = (cap_expmodule_count | default('')) matches '/^\d+$/' ? cap_expmodule_count : 0 %}
-        {% set expkey_count = (cap_expkey_count | default('')) matches '/^\d+$/' ? cap_expkey_count : 0 %}
+        {% set linekey_count = cap_linekey_count is empty ? 0 : cap_linekey_count %}
+        {% set expmodule_count = cap_expmodule_count is empty ? 0 : cap_expmodule_count %}
+        {% set expkey_count = cap_expkey_count is empty ? 0 : cap_expkey_count %}
         {% if linekey_count > 0 %}
             {% for number in 1..linekey_count %}
                     {{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number, queuetoggle, pickup_direct)}}

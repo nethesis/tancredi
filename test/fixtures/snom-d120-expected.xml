@@ -151,5 +151,9 @@
                                 <gui_fkey4 perm="">keyevent F_REDIAL</gui_fkey4>
                     </phone-settings>
     <functionKeys>
+                                                                            <fkey idx="0" context="1" label="" lp="on" perm="">line </fkey>
+
+                                    <fkey idx="1" context="1" label="" lp="on" perm="">line </fkey>
+
                                                             </functionKeys>
 </settings>
