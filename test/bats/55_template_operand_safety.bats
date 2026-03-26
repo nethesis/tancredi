@@ -129,6 +129,29 @@ assert_provisioning_render_ok () {
     assert_http_body_re "[[:graph:]]"
 }
 
+assert_linekey_render_ok () {
+    local mac="$1"
+    local user_agent="$2"
+    local filename="$3"
+    local linekey_index="$4"
+    local linekey_label="$5"
+    local linekey_value="$6"
+
+    run GET "/tancredi/api/v1/phones/${mac}"
+    assert_http_code "200"
+
+    local tok1
+    tok1=$(extract_field "tok1")
+    if [[ -z "$tok1" ]]; then
+        echo "Failed to extract tok1 token for ${mac}" 1>&2
+        return 1
+    fi
+
+    run GET_PROVISIONING "$user_agent" "/provisioning/${tok1}/${filename}"
+    assert_http_code "200"
+    assert_http_body "<fkey idx=\"${linekey_index}\" context=\"1\" label=\"${linekey_label}\" lp=\"on\" perm=\"\">blf ${linekey_value}|**</fkey>"
+}
+
 delete_phone_under_test () {
     local mac="$1"
     run DELETE "/tancredi/api/v1/phones/${mac}"
@@ -183,4 +206,36 @@ delete_phone_under_test () {
         "snom-D812 10.1.54.15 00:04:13:aa:bb:dd" \
         "000413aabbdd.xml" \
         "text/xml; charset=utf-8"
+}
+
+@test "snom.tmpl renders configured BLF line keys" {
+    create_phone "00-04-13-AA-BB-DE" "snom-D120" '        "brightness": "5",
+        "cap_linekey_count": "3",
+        "linekey_type_3": "blf",
+        "linekey_value_3": "203",
+        "linekey_label_3": "Alice"'
+
+    assert_linekey_render_ok \
+        "00-04-13-AA-BB-DE" \
+        "snom-D120 10.1.54.15 00:04:13:aa:bb:de" \
+        "000413aabbde.xml" \
+        "2" \
+        "Alice" \
+        "203"
+}
+
+@test "snomD8XX.tmpl renders configured BLF line keys" {
+    create_phone "00-04-13-AA-BB-DF" "snom-D812" '        "brightness": "5",
+        "cap_linekey_count": "3",
+        "linekey_type_3": "blf",
+        "linekey_value_3": "203",
+        "linekey_label_3": "Alice"'
+
+    assert_linekey_render_ok \
+        "00-04-13-AA-BB-DF" \
+        "snom-D812 10.1.54.15 00:04:13:aa:bb:df" \
+        "000413aabbdf.xml" \
+        "2" \
+        "Alice" \
+        "203"
 }
