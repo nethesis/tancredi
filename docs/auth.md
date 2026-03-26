@@ -2,36 +2,60 @@
 parent: Tancredi API v1
 ---
 
-## API authentication
+# API authentication
 
-The Tancredi administrative API does not implement an authentication method by
-itself, but it is possible to plug in a custom one:
+The Tancredi administrative API does not implement authentication by itself,
+but it can load a custom middleware class.
 
-1. In the `/etc/tancredi.conf` configuration file specify the authentication
-class name. For instance type `auth_class = "MyAuth"`.
+1. In the configuration file, set `auth_class` to the PHP class name placed in
+   `src/Entity/`. For example:
 
-2. Put a file `MyAuth.php` in the `src/Entity` directory. This is an example
-class:
+   ```ini
+   auth_class = "MyAuth"
+   ```
+
+1. Create `src/Entity/MyAuth.php`. The class can implement PSR-15 middleware,
+   which matches the current Slim 4 stack:
+
    ```php
    <?php
+
    namespace Tancredi\Entity;
-   
-   class MyAuth
+
+   use Psr\Http\Message\ResponseInterface;
+   use Psr\Http\Message\ServerRequestInterface;
+   use Psr\Http\Server\MiddlewareInterface;
+   use Psr\Http\Server\RequestHandlerInterface;
+   use Slim\Psr7\Response;
+
+   class MyAuth implements MiddlewareInterface
    {
-       private $config;
-   
-       public function __construct($config = null) {
-           // You can use configuration file variables here
-           $this->config = $config;
-       }
-   
-       public function __invoke($request, $response, $next)
+       public function __construct(private array $config = [])
        {
-           if ($request->hasHeader('foo') and $request->getHeaderLine('foo') === 'bar') {
-               $response = $next($request, $response);
-           } else {
-               return $response->withStatus(403);
+       }
+
+       public function process(
+           ServerRequestInterface $request,
+           RequestHandlerInterface $handler
+       ): ResponseInterface {
+           if ($request->getHeaderLine('foo') === 'bar') {
+               return $handler->handle($request);
            }
+
+           $response = new Response(403);
+           $response->getBody()->write(json_encode([
+               'type' => 'https://nethesis.github.io/tancredi/problems/#forbidden',
+               'title' => 'Access to resource is forbidden with current client privileges',
+               'detail' => 'Wrong credentials',
+           ]));
+
+           return $response
+               ->withHeader('Content-Type', 'application/problem+json')
+               ->withHeader('Content-Language', 'en');
        }
    }
    ```
+
+The configured middleware is applied only to the administrative API entrypoint.
+Provisioning requests are not protected by `auth_class`; they rely on the
+token-based mechanism documented in [Provisioning flow and security]({{ '/provisioning' | relative_url }}).

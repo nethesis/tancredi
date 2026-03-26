@@ -5,34 +5,48 @@ nav_order: 0
 
 # Tancredi
 
-Tancredi is a *phone provisioning engine* ideal for internet deployments,
-released under the *GNU Affero General Public License v3.0*.
+Tancredi is a file-backed IP phone provisioning engine for internet and LAN
+deployments, released under the GNU Affero General Public License v3.0.
+
+The current runtime stack is PHP 8.1+, Slim 4, Twig 3 and Monolog 3.
 
 ## Phone provisioning
 
-An IP phone connects to Tancredi over **HTTP** and fetches some files containing
-its configuration.
+An IP phone connects to Tancredi over HTTP and fetches one or more files
+containing its configuration.
 
-- The **phone** provisioning URL is protected by a **temporary random secret
-  token** and is unique to each phone.
+- The provisioning entrypoint maps a requested file name to a scope and a
+  template through the rules under `data/patterns.d/`.
 
-- Configuration files are generated dynamically starting from a set of
-  **template files** specific to the phone **model** and from phone and model
-  **variables**.
+- The rendered configuration is built from merged defaults, model and phone
+  variables, then optionally processed by one or more runtime filters.
+
+- Each phone has two provisioning tokens: `tok1` for first access and `tok2`
+  for steady-state provisioning. A successful request authenticated with
+  `tok2` invalidates `tok1`.
+
+- Some vendors start with a tokenless bootstrap request. In that path,
+  Tancredi strips secrets from the rendered payload and instructs the phone to
+  reconnect through the tokenized URL.
+
+See [Provisioning flow and security]({{ '/provisioning' | relative_url }}) for
+details.
 
 ## Administrative API
 
-The phone and model variables can be managed with a private API endpoint.
-Tancredi does not provide an administrative user interface, however you can
-build one based on its management endpoint.
+The administrative API manages defaults, models, phones and uploaded assets.
+It also exposes the token values and derived provisioning URLs for each phone.
+
+Tancredi does not provide an administrative user interface, but you can build
+one on top of the API.
 
 See [Tancredi API v1](./API) for details.
 
 ## Template files for phone provisioning
 
-The variables defined with the administrative API can be used in the template
-files along with other run-time defined variables. The provided template files 
-can be easily overridden for specific needs
+The variables defined with the administrative API can be used in template files
+along with additional runtime variables. Shipped templates can be overridden in
+the writable template directory for site-specific needs.
 
 See [Templates](./templates) for details.
 

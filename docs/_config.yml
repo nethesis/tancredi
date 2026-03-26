@@ -20,7 +20,9 @@ description: IP phones provisioning engine
 remote_theme: pmarsceill/just-the-docs
 
 permalink: pretty
-exclude: []
+exclude:
+  - vendor/
+  - .bundle/
 
 # Set a path/url to a logo that will be displayed instead of the title
 #logo: "/assets/images/just-the-docs.png"
@@ -59,3 +61,5 @@ compress_html:
   startings: []
   blanklines: false
   profile: false
+
+theme: jekyll-theme-minimal
