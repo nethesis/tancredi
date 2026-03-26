@@ -187,7 +187,7 @@ case "${MODE}" in
         run_system_mode
         ;;
     *)
-        echo "Usage: $0 [local|system]" >&2
+        echo "Usage: $0 [local|system|ci]" >&2
         exit 1
         ;;
 esac
