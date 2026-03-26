@@ -41,6 +41,24 @@ tancredi_ensure_rw_layout () {
 
 tancredi_reset_rw_dir () {
     tancredi_ensure_rw_layout
+
+    # Safety checks: refuse to delete if tancredi_rw_dir is unsafe.
+    case "${tancredi_rw_dir}" in
+        ""|"/")
+            echo "Refusing to delete files: tancredi_rw_dir is empty or '/'" >&2
+            return 1
+            ;;
+    esac
+
+    # Ensure tancredi_rw_dir is within the expected prefix.
+    case "${tancredi_rw_dir}" in
+        /var/lib/tancredi/*)
+            ;;
+        *)
+            echo "Refusing to delete files: tancredi_rw_dir '${tancredi_rw_dir}' is outside allowed prefix '/var/lib/tancredi/'" >&2
+            return 1
+            ;;
+    esac
     find "${tancredi_rw_dir}" -type f -delete
 }
 
