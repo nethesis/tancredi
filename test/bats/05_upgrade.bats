@@ -25,23 +25,26 @@ setup () {
 }
 
 @test "Reset storage dir before upgrade" {
-    find /var/lib/tancredi -type f -delete
+    tancredi_reset_rw_dir
 }
 
 @test "Seed outdated nethesis-NPX5v2 scope before upgrade" {
-    mkdir -p /var/lib/tancredi/data/scopes
-    cp /usr/share/tancredi/data/scopes/nethesis-NPX5v2.ini /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
-    sed -i 's/^version = .*/version = 1/' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
-    sed -i 's/^tmpl_firmware = .*/tmpl_firmware = "nethesis-firmware.tmpl"/' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+    local scope_path
+    scope_path="$(tancredi_scope_path nethesis-NPX5v2)"
+
+    mkdir -p "$(dirname "$scope_path")"
+    cp "$(tancredi_shipped_scope_path nethesis-NPX5v2)" "$scope_path"
+    sed -i 's/^version = .*/version = 1/' "$scope_path"
+    sed -i 's/^tmpl_firmware = .*/tmpl_firmware = "nethesis-firmware.tmpl"/' "$scope_path"
 
     # Verify that the scope file was correctly seeded
-    [[ -f /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini ]]
-    grep -q '^version = 1$' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
-    grep -q '^tmpl_firmware = "nethesis-firmware.tmpl"$' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+    [[ -f "$scope_path" ]]
+    grep -q '^version = 1$' "$scope_path"
+    grep -q '^tmpl_firmware = "nethesis-firmware.tmpl"$' "$scope_path"
 }
 
 @test "Run upgrade script" {
-    run php /usr/share/tancredi/scripts/upgrade.php
+    run php "$(tancredi_upgrade_script)"
     [[ $status -eq 0 ]]
 }
 
@@ -77,7 +80,7 @@ setup () {
     assert_http_body '"cap_screensaver_time_blacklist":"3,5,7,10,15,30,60,120,300"'
 }
 
-@test "Upgrade sets yealink-T43 expansion module (010)" {
+@test "Upgrade keeps yealink-T43 expansion settings" {
     run GET /tancredi/api/v1/models/yealink-T43
     assert_http_code "200"
     assert_http_body '"cap_expmodule_count":"3"'
@@ -104,10 +107,10 @@ setup () {
 }
 
 @test "Upgrade rewrites nethesis-NPX5v2 firmware template (013)" {
-    run grep -F 'version = 13' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+    run grep -F 'version = 13' "$(tancredi_scope_path nethesis-NPX5v2)"
     [[ $status -eq 0 ]]
 
-    run grep -F 'tmpl_firmware = "nethesis-firmware-v2.tmpl"' /var/lib/tancredi/data/scopes/nethesis-NPX5v2.ini
+    run grep -F 'tmpl_firmware = "nethesis-firmware-v2.tmpl"' "$(tancredi_scope_path nethesis-NPX5v2)"
     [[ $status -eq 0 ]]
 
     run GET /tancredi/api/v1/models/nethesis-NPX5v2
@@ -116,7 +119,7 @@ setup () {
 }
 
 @test "Upgrade is idempotent (second run succeeds)" {
-    run php /usr/share/tancredi/scripts/upgrade.php
+    run php "$(tancredi_upgrade_script)"
     [[ $status -eq 0 ]]
 }
 
@@ -140,5 +143,5 @@ setup () {
 }
 
 @test "Reset storage dir after upgrade tests" {
-    find /var/lib/tancredi -type f -delete
+    tancredi_reset_rw_dir
 }

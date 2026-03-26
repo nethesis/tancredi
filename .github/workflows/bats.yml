@@ -68,7 +68,7 @@ jobs:
     - name: run bats
       run: |
         cd test
-        sudo ./run.sh
+        sudo ./run.sh system
 
     - name: print apache logs
       if: failure()

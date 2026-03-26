@@ -16,6 +16,7 @@ parent: Tancredi API v1
 * [POST /phones]({{ "/paths/phonesPost" | relative_url }}) add a phone to inventory specifying mac, model and variables
 * [PATCH /phones/{mac}]({{ "/paths/phonesMacPatch" | relative_url }}) change `variables` of phone with given `mac`
 * [DELETE /phones/{mac}]({{ "/paths/phonesMacDelete" | relative_url }}) delete the phone with given `mac` from inventory
+* [POST /phones/{mac}/tok1]({{ "/paths/phonesTok1Post" | relative_url }}) rotate the first-access token for the phone
 
 ### models/
 

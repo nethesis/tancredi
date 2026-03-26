@@ -25,7 +25,7 @@ setup () {
 }
 
 @test "Reset storage dir" {
-    find /var/lib/tancredi -type f -delete
+    tancredi_reset_rw_dir
 }
 
 @test "GET /tancredi/api/v1/models" {

@@ -1,6 +1,7 @@
 #!/usr/bin/env bats
 
-TEMPLATE_CUSTOM_FILE="/var/lib/tancredi/data/templates-custom/nethesis-firmware-v2.tmpl"
+TEMPLATE_CUSTOM_DIR="${TANCREDI_TEMPLATE_CUSTOM_DIR:-/var/lib/tancredi/data/templates-custom/}"
+TEMPLATE_CUSTOM_FILE="${TEMPLATE_CUSTOM_DIR%/}/nethesis-firmware-v2.tmpl"
 
 setup () {
     load tancredi_client
@@ -245,9 +246,9 @@ EOF
 }
 
 @test "GET /provisioning/{tok2}/nethesis_np_x5_hwv2_0.txt (NPX5 v2 firmware template rendering)" {
-    local custom_template="/var/lib/tancredi/data/templates-custom/nethesis-firmware-v2.tmpl"
+    local custom_template="${TANCREDI_TEMPLATE_CUSTOM_DIR:-/var/lib/tancredi/data/templates-custom/}nethesis-firmware-v2.tmpl"
 
-    mkdir -p /var/lib/tancredi/data/templates-custom
+    mkdir -p "${tancredi_template_custom_dir}"
     cat > "$custom_template" <<'EOF'
 NPX5v2 firmware template selected
 EOF

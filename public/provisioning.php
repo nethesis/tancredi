@@ -65,7 +65,8 @@ if (isset($config['debug'])) {
 $app->addErrorMiddleware($displayErrorDetails, true, true);
 
 $app->get('/check/ping', function(Request $request, Response $response, array $args) use ($app) {
-    $response->getBody()->write(json_encode(filemtime('/etc/tancredi.conf')));
+    $cfgFile = getenv('tancredi_conf') ?: '/etc/tancredi.conf';
+    $response->getBody()->write(json_encode(filemtime($cfgFile)));
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 });
 
