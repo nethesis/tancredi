@@ -65,14 +65,14 @@ pick_local_port() {
 
 create_rw_layout() {
     mkdir -p \
-        "${TANCREDI_RW_DIR}backgrounds" \
-        "${TANCREDI_RW_DIR}firmware" \
-        "${TANCREDI_RW_DIR}first_access_tokens" \
-        "${TANCREDI_RW_DIR}ringtones" \
-        "${TANCREDI_RW_DIR}scopes" \
-        "${TANCREDI_RW_DIR}screensavers" \
-        "${TANCREDI_RW_DIR}templates-custom" \
-        "${TANCREDI_RW_DIR}tokens"
+        "${TANCREDI_RW_DIR%/}/backgrounds" \
+        "${TANCREDI_RW_DIR%/}/firmware" \
+        "${TANCREDI_RW_DIR%/}/first_access_tokens" \
+        "${TANCREDI_RW_DIR%/}/ringtones" \
+        "${TANCREDI_RW_DIR%/}/scopes" \
+        "${TANCREDI_RW_DIR%/}/screensavers" \
+        "${TANCREDI_RW_DIR%/}/templates-custom" \
+        "${TANCREDI_RW_DIR%/}/tokens"
 }
 
 write_local_config() {
