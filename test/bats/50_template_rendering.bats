@@ -1,6 +1,7 @@
 #!/usr/bin/env bats
 
-TEMPLATE_CUSTOM_FILE="${TANCREDI_TEMPLATE_CUSTOM_DIR:-/var/lib/tancredi/data/templates-custom/}nethesis-firmware-v2.tmpl"
+TEMPLATE_CUSTOM_DIR="${TANCREDI_TEMPLATE_CUSTOM_DIR:-/var/lib/tancredi/data/templates-custom/}"
+TEMPLATE_CUSTOM_FILE="${TEMPLATE_CUSTOM_DIR%/}/nethesis-firmware-v2.tmpl"
 
 setup () {
     load tancredi_client
