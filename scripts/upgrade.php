@@ -21,21 +21,29 @@
  */
 
 require_once __DIR__.'/../vendor/autoload.php';
-$container = new \Pimple\Container();
-$container['config'] = $config;
-$container['logger'] = function($c) {
-    return \Tancredi\LoggerFactory::createLogger('upgrade', $c);
-};
+require_once __DIR__.'/../src/init.php';
 
-$container['storage'] = function($c) {
-    global $config;
-    $storage = new \Tancredi\Entity\FileStorage($c['logger'],$config);
-    return $storage;
-};
+use DI\ContainerBuilder;
+
+$containerBuilder = new ContainerBuilder();
+$containerBuilder->addDefinitions([
+    'config' => function() {
+        global $config;
+        return $config;
+    },
+    'logger' => function($c) {
+        return \Tancredi\LoggerFactory::createLogger('upgrade', $c);
+    },
+    'storage' => function($c) {
+        return new \Tancredi\Entity\FileStorage($c->get('logger'), $c->get('config'));
+    }
+]);
+
+$container = $containerBuilder->build();
 
 # Launch update scripts
 $filesArray=glob(__DIR__ . "/upgrade.d/*.php");
 foreach ($filesArray as $file) {
-    $container['logger']->debug("Launching upgrade script $file");
+    $container->get('logger')->debug("Launching upgrade script $file");
     include $file;
 }

@@ -31,11 +31,11 @@ $fixes = [
 ];
 
 foreach ($fixes as $model_id => $variables) {
-    $scope = new \Tancredi\Entity\Scope($model_id, $container['storage'], $container['logger']);
+    $scope = new \Tancredi\Entity\Scope($model_id, $container->get('storage'), $container->get('logger'));
     if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 5) {
         continue;
     }
     $scope->metadata['version'] = 5;
     $scope->setVariables($variables);
-    $container['logger']->info("Fixed cap_linekey_count in model $model_id");
+    $container->get('logger')->info("Fixed cap_linekey_count in model $model_id");
 }

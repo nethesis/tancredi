@@ -47,11 +47,11 @@ $variables = [
 ];
 
 foreach ($scopes as $model_id) {
-    $scope = new \Tancredi\Entity\Scope($model_id, $container['storage'], $container['logger']);
+    $scope = new \Tancredi\Entity\Scope($model_id, $container->get('storage'), $container->get('logger'));
     if(isset($scope->metadata['version']) && $scope->metadata['version'] >= 12) {
         continue;
     }
     $scope->metadata['version'] = 12;
     $scope->setVariables($variables);
-    $container['logger']->info("Fix ldap filter in model $model_id");
+    $container->get('logger')->info("Fix ldap filter in model $model_id");
 }

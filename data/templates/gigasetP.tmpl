@@ -1,10 +1,10 @@
-{% import 'snom.macros' as snom %}
+{% import 'gigasetP.macros' as gigasetp %}
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
 {% autoescape %}
     <phone-settings>
-        <language perm="">{{ snom.language(language) }}</language>
-        <ring_sound>{{ snom.ringtone_map(ringtone, cap_ringtone_count) | replace({'Custom':'Ringer1'}) }}</ring_sound>
+        <language perm="">{{ gigasetp.language(language) }}</language>
+        <ring_sound>{{ gigasetp.ringtone_map(ringtone, cap_ringtone_count) | replace({'Custom':'Ringer1'}) }}</ring_sound>
         <internal_ringer_text idx="0" perm="">ring1</internal_ringer_text>
         <internal_ringer_text idx="1" perm="">ring2</internal_ringer_text>
         <internal_ringer_text idx="2" perm="">ring3</internal_ringer_text>
@@ -44,7 +44,7 @@
         <guess_number perm="">off</guess_number>
 
         <ntp_server perm="">{{ ntp_server ?: 'pool.ntp.org' }}</ntp_server>
-        <date_us_format perm="">{{ snom.date_format(date_format) }}</date_us_format>
+        <date_us_format perm="">{{ gigasetp.date_format(date_format) }}</date_us_format>
         <time_24_format perm="">{{ time_format == '12' ? 'off' : 'on' }}</time_24_format>
         <ldap_base perm="">{{ ldap_base }}</ldap_base>
         <ldap_port perm="">{{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}</ldap_port>
@@ -74,23 +74,19 @@
 
         <admin_mode_password perm="">{{ adminpw | default('admin') }}</admin_mode_password>
         <admin_mode_password_confirm perm="">{{ adminpw | default('admin') }}</admin_mode_password_confirm>
-        <webserver_admin_name perm="">admin</webserver_admin_name>
-        <webserver_admin_password perm="">{{ adminpw |  default('admin') }}</webserver_admin_password>
-        <webserver_user_name perm="">user</webserver_user_name>
-        <webserver_user_password perm="">{{ userpw | default('1234') }}</webserver_user_password>
+        <http_user perm="">admin</http_user>
+        <http_pass perm="">{{ adminpw |  default('admin') }}</http_pass>
         <http_scheme perm="">off</http_scheme>
 
-        {% set snom_backlight_brightness = (brightness | default('')) matches '/^-?[0-9]+(?:\.[0-9]+)?$/' ? brightness : 5 %}
         <setting_server perm="RW">{{ provisioning_url2 }}</setting_server>
-        {# snom allowed values: 3..15. active_backlight_level values: 1..10 #}
-        <backlight perm="">{{ (1.2 * snom_backlight_brightness + 3)|round  }}</backlight>
+        {# gigasetp allowed values: 3..15. active_backlight_level values: 1..10 #}
+        <backlight perm="">{{ (1.2 * brightness + 3)|round  }}</backlight>
         <backlight_idle perm="">8</backlight_idle>
-        <timezone perm="">{{ snom.timezone(timezone) }}</timezone>
-        <tone_scheme perm="">{{ snom.tonezone(tonezone) }}</tone_scheme>
-        <locale perm="">{{ snom.locale(tonezone) }}</locale>
+        <timezone perm="">{{ gigasetp.timezone(timezone) }}</timezone>
+        <tone_scheme perm="">{{ gigasetp.tonezone(tonezone) }}</tone_scheme>
         <update_policy perm="">auto_update</update_policy>
-        <firmware_status perm="">{{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/snom-firmware.xml" : "" }}</firmware_status>
-        <web_language perm="">{{ snom.language(language) }}</web_language>
+        <firmware_status perm="">{{ firmware_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/gigasetP-firmware.xml" : "" }}</firmware_status>
+        <web_language perm="">{{ gigasetp.language(language) }}</web_language>
         <eth_pc perm="">auto</eth_pc>
 
         <idle_status_btn_index perm="">4</idle_status_btn_index>
@@ -161,7 +157,7 @@
                 <user_custom idx="{{ identity }}" perm="">{{ ringtone_file ? "#{provisioning_url_scheme}://#{hostname}/#{provisioning_url_path}#{tok2}/ringtones/#{ringtone_file}?" : "" }}</user_custom>
                 <user_dtmf_info idx="{{ identity }}" perm="">{{ _context['account_dtmf_type_' ~ identity] == 'sip_info' ? 'sip_info_only' : 'off' }}</user_dtmf_info>
                 <user_realname idx="{{ identity }}" perm="">{{ _context['account_display_name_' ~ identity] }}</user_realname>
-                <user_ringer idx="{{ identity }}" perm="">{{ snom.ringtone_map(ringtone, cap_ringtone_count) }}</user_ringer>
+                <user_ringer idx="{{ identity }}" perm="">{{ gigasetp.ringtone_map(ringtone, cap_ringtone_count) }}</user_ringer>
                 <user_ringer_private_line idx="{{ identity }}" perm="">Ringer2</user_ringer_private_line>
                 <user_ringer_forwarded_calls idx="{{ identity }}" perm="">Ringer3</user_ringer_forwarded_calls>
             {% endif %}
@@ -205,16 +201,14 @@
     </phone-settings>
     <functionKeys>
         {# line keys #}
-        {% set linekey_count = cap_linekey_count is empty ? 0 : cap_linekey_count %}
-        {% set expmodule_count = cap_expmodule_count is empty ? 0 : cap_expmodule_count %}
-        {% if linekey_count > 0 %}
-            {% for number in 1..linekey_count %}
-                    {{snom.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number, queuetoggle, pickup_direct)}}
+        {% if cap_linekey_count > 0 %}
+            {% for number in 1..(cap_linekey_count) %}
+                    {{gigasetp.linekey_type_map(_context['linekey_type_' ~ number], _context['linekey_value_' ~ number], _context['linekey_label_' ~ number], dndtoggle, pickup_group, number, queuetoggle, pickup_direct)}}
             {% endfor %}
         {% endif %}
-        {% set expkey_max = expmodule_count * 18 %}
+        {% set expkey_max = cap_expmodule_count * cap_expkey_count %}
         {% for expkey in (expkey_max > 0 ? range(1,expkey_max) : []) %}
-            {{snom.linekey_type_map(_context['expkey_type_' ~ expkey], _context['expkey_value_' ~ expkey], _context['expkey_label_' ~ expkey], dndtoggle, pickup_group, linekey_count + expkey, queuetoggle, pickup_direct)}}
+            {{gigasetp.linekey_type_map(_context['expkey_type_' ~ expkey], _context['expkey_value_' ~ expkey], _context['expkey_label_' ~ expkey], dndtoggle, pickup_group, cap_linekey_count + expkey, queuetoggle, pickup_direct)}}
         {% endfor %}
     </functionKeys>
 {% endautoescape %}
