@@ -21,10 +21,14 @@
 #
 
 tancredi_base_url="${TANCREDI_BASE_URL:-http://127.0.0.1}"
-tancredi_ro_dir="${TANCREDI_RO_DIR:-/usr/share/tancredi/data/}"
-tancredi_rw_dir="${TANCREDI_RW_DIR:-/var/lib/tancredi/data/}"
-tancredi_scripts_dir="${TANCREDI_SCRIPTS_DIR:-/usr/share/tancredi/scripts/}"
-tancredi_template_custom_dir="${TANCREDI_TEMPLATE_CUSTOM_DIR:-${tancredi_rw_dir}templates-custom/}"
+tancredi_ro_dir="${TANCREDI_RO_DIR:-/usr/share/tancredi/data}"
+tancredi_ro_dir="${tancredi_ro_dir%/}/"
+tancredi_rw_dir="${TANCREDI_RW_DIR:-/var/lib/tancredi/data}"
+tancredi_rw_dir="${tancredi_rw_dir%/}/"
+tancredi_scripts_dir="${TANCREDI_SCRIPTS_DIR:-/usr/share/tancredi/scripts}"
+tancredi_scripts_dir="${tancredi_scripts_dir%/}/"
+tancredi_template_custom_dir="${TANCREDI_TEMPLATE_CUSTOM_DIR:-${tancredi_rw_dir}templates-custom}"
+tancredi_template_custom_dir="${tancredi_template_custom_dir%/}/"
 tancredi_artifact_dir="${TANCREDI_ARTIFACT_DIR:-/tmp/fixtures}"
 
 tancredi_ensure_rw_layout () {
@@ -46,16 +50,6 @@ tancredi_reset_rw_dir () {
     case "${tancredi_rw_dir}" in
         ""|"/")
             echo "Refusing to delete files: tancredi_rw_dir is empty or '/'" >&2
-            return 1
-            ;;
-    esac
-
-    # Ensure tancredi_rw_dir is within the expected prefix.
-    case "${tancredi_rw_dir}" in
-        /var/lib/tancredi/*)
-            ;;
-        *)
-            echo "Refusing to delete files: tancredi_rw_dir '${tancredi_rw_dir}' is outside allowed prefix '/var/lib/tancredi/'" >&2
             return 1
             ;;
     esac
