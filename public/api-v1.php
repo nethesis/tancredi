@@ -169,6 +169,20 @@ $app->post('/phones', function (Request $request, Response $response, $args) use
 });
 
 /*********************************
+* PATCH /phones[/]
+**********************************/
+$app->patch('/phones[/]', function (Request $request, Response $response) {
+    $results = array(
+        'type' => 'https://nethesis.github.io/tancredi/problems/#malformed-data',
+        'title' => 'Missing MAC address'
+    );
+    $response = withJson($response, $results, 400, JSON_FLAGS);
+    $response = $response->withHeader('Content-Type', 'application/problem+json');
+    $response = $response->withHeader('Content-Language', 'en');
+    return $response;
+});
+
+/*********************************
 * PATCH /phones/{mac}
 **********************************/
 $app->patch('/phones/{mac}', function (Request $request, Response $response, $args) use ($app) {

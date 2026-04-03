@@ -92,6 +92,20 @@ EOF
     assert_http_body '"var1":"value1-changed"'
 }
 
+@test "PATCH /tancredi/api/v1/phones/ (failed/missing mac)" {
+    run PATCH /tancredi/api/v1/phones/ <<EOF
+{
+    "variables": {
+        "var1": "value1-changed"
+    }
+}
+EOF
+    assert_http_code "400"
+    assert_http_header "Content-Type" "application/problem+json"
+    assert_http_header "Content-Language" "en"
+    assert_http_body "Missing MAC address"
+}
+
 @test "DELETE /tancredi/api/v1/phones/01-23-45-67-89-AB (success)" {
     run DELETE /tancredi/api/v1/phones/01-23-45-67-89-AB
     assert_http_code "204"
