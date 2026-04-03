@@ -27,7 +27,7 @@ jobs:
         rm -v src/Entity/SampleFilter.php
         sudo mkdir -p /usr/share/tancredi/data/
         sudo cp -a {public,scripts,src,vendor}/ /usr/share/tancredi/
-        sudo cp -a data/{templates,patterns.d,scopes} /usr/share/tancredi/data/
+        sudo cp -a data/{backgrounds,firmware,patterns.d,ringtones,scopes,screensavers,templates} /usr/share/tancredi/data/
         sudo mkdir -p /var/lib/tancredi/data/{first_access_tokens,scopes,templates-custom,tokens,backgrounds,firmware,ringtones,screensavers}
         sudo chown -R www-data:www-data /var/lib/tancredi
         sudo tee /etc/tancredi.conf <<'EOF' 
@@ -57,6 +57,10 @@ jobs:
         echo 'Require all granted' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo '</Directory>' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo 'XSendFile on' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'XSendFilePath /usr/share/tancredi/data/backgrounds' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'XSendFilePath /usr/share/tancredi/data/firmware' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'XSendFilePath /usr/share/tancredi/data/ringtones' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
+        echo 'XSendFilePath /usr/share/tancredi/data/screensavers' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo 'XSendFilePath /var/lib/tancredi/data/backgrounds' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo 'XSendFilePath /var/lib/tancredi/data/firmware' | sudo tee -a /etc/apache2/sites-available/tancredi.conf
         echo 'XSendFilePath /var/lib/tancredi/data/ringtones' | sudo tee -a /etc/apache2/sites-available/tancredi.conf

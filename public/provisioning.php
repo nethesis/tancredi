@@ -85,8 +85,8 @@ $app->get('/{token}/{filetype:backgrounds|firmware|ringtones|screensavers}/{file
         return $response;
     }
 
-    $realfile = realpath($config['rw_dir'] . $args['filetype'] . '/' . $filename);
-    if( ! $realfile || dirname($realfile) != ($config['rw_dir'] . $args['filetype'])) {
+    $realfile = resolveStaticAssetPath($args['filetype'], $filename);
+    if ($realfile === FALSE) {
         // File not found
         return $response->withStatus(404);
     }
@@ -261,6 +261,24 @@ function renderTwigTemplate($template, $scope_data) {
     $twig->addFilter($preg_replace_filter);
     $payload = $twig->render($template, $scope_data);
     return $payload;
+}
+
+function resolveStaticAssetPath($filetype, $filename) {
+    global $config;
+
+    foreach ([$config['rw_dir'], $config['ro_dir']] as $base_dir) {
+        $directory = rtrim($base_dir, '/') . '/' . $filetype;
+        $realdirectory = realpath($directory);
+        if ($realdirectory === FALSE) {
+            continue;
+        }
+        $realfile = realpath($directory . '/' . $filename);
+        if ($realfile !== FALSE && dirname($realfile) === $realdirectory) {
+            return $realfile;
+        }
+    }
+
+    return FALSE;
 }
 
 function getDataFromFilename($filename,$logger) {

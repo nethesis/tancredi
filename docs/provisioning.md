@@ -84,11 +84,40 @@ These variables are not persisted in scope files.
 ## Protected asset delivery
 
 Assets under `backgrounds/`, `firmware/`, `ringtones/` and `screensavers/` are
-served only through the tokenized route. Invalid tokens and missing files both
-result in `404 Not Found`.
+served only through the tokenized route. Tancredi checks
+`rw_dir/{filetype}/` first and falls back to `ro_dir/{filetype}/`, so packaged
+assets can be served while writable overrides still take precedence. Invalid
+tokens and missing files both result in `404 Not Found`.
+
+The administrative API continues to upload and delete only the writable copy
+under `rw_dir/`.
 
 The `file_reader` configuration controls how files are returned:
 
 - `native`: stream the file from PHP.
 - `apache`: return an `X-Sendfile` header.
 - `nginx`: return an `X-Accel-Redirect` header.
+
+When `file_reader` is `apache` or `nginx`, the web server must be configured
+to serve protected assets from both `rw_dir/{filetype}/` and
+`ro_dir/{filetype}/`. Since Tancredi now falls back to packaged assets under
+`ro_dir/`, an Apache `XSendFilePath` allowlist or nginx internal redirect
+mapping that covers only `rw_dir/` can cause `403` or `404` responses for
+existing packaged files.
+
+For Apache with `mod_xsendfile`, add `XSendFilePath` entries for every
+protected asset directory under both roots, for example:
+
+```apache
+XSendFilePath /usr/share/tancredi/data/backgrounds
+XSendFilePath /usr/share/tancredi/data/firmware
+XSendFilePath /usr/share/tancredi/data/ringtones
+XSendFilePath /usr/share/tancredi/data/screensavers
+XSendFilePath /var/lib/tancredi/data/backgrounds
+XSendFilePath /var/lib/tancredi/data/firmware
+XSendFilePath /var/lib/tancredi/data/ringtones
+XSendFilePath /var/lib/tancredi/data/screensavers
+```
+
+For nginx with `X-Accel-Redirect`, define internal locations or aliases that
+cover the equivalent directories under both `ro_dir/` and `rw_dir/`.

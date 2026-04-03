@@ -75,7 +75,17 @@ create_rw_layout() {
         "${TANCREDI_RW_DIR%/}/tokens"
 }
 
+seed_packaged_test_assets() {
+    local filetype
+
+    for filetype in backgrounds firmware ringtones screensavers; do
+        mkdir -p "${TANCREDI_RO_DIR%/}/${filetype}"
+        printf 'packaged %s asset\n' "${filetype}" > "${TANCREDI_RO_DIR%/}/${filetype}/packaged-test.txt"
+    done
+}
+
 write_local_config() {
+    seed_packaged_test_assets
     cat > "${TANCREDI_CONFIG}" <<EOF
 [config]
 rw_dir = "${TANCREDI_RW_DIR}"
@@ -174,6 +184,7 @@ run_system_mode() {
     export TANCREDI_ARTIFACT_DIR="${TANCREDI_ARTIFACT_DIR:-/tmp/fixtures}"
 
     mkdir -p "${TANCREDI_ARTIFACT_DIR}"
+    seed_packaged_test_assets
     run_bats
 }
 

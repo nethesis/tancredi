@@ -26,7 +26,7 @@
 * `scopes/`: shipped scope inventory; contains `defaults.ini` plus many model `.ini` files for Akuvox, Fanvil, Gigaset, Nethesis, Sangoma, Snom, Yealink.
 * `templates/`: Twig templates/macros for each vendor family plus shared helpers (`fallback.tmpl`, `variables.tmpl`, `*.macros`).
 * `templates-custom/`: writable override layer; repo ships only `.gitignore`.
-* `backgrounds/`, `firmware/`, `ringtones/`, `screensavers/`, `first_access_tokens/`, `tokens/`: writable runtime directories; repo ships placeholders only where applicable.
+* `backgrounds/`, `firmware/`, `ringtones/`, `screensavers/`, `first_access_tokens/`, `tokens/`: writable runtime directories; packaged deployments may also ship read-only assets in the corresponding `ro_dir` paths.
 
 ### `docs/`
 
