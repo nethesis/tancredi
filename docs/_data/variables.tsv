@@ -88,8 +88,8 @@ rw	linekey_label	linekey	Line key label string. Some [linekey_type](#linekey_typ
 rw	expkey_type	expkey	Expansion key type. See the [softkey_type](#softkey_type) description for more information.	string	
 rw	expkey_label	expkey	Expansion label. See the [softkey_type](#softkey_type) description for more information.	string	
 rw	expkey_value	expkey	Expansion key value. See the [softkey_type](#softkey_type) description for more information.	string	
-rw	background_file		Name of a file under the `backgrounds/` directory, e.g. `mywallpaper.png`. If the file does not exist under `rw_dir/` or `ro_dir/`, an empty string is forcibly returned.	string	 must match the regexp `[a-z0-9A-Z_-\.]+
-rw	screensaver_file		Name of a file under the `screensavers/` directory, e.g. `mywallpaper.png`. If the file does not exist under `rw_dir/` or `ro_dir/`, an empty string is forcibly returned.	string	must match the regexp `[a-z0-9A-Z_-\.]+
+rw	background_file		Name of a file under the `backgrounds/` directory, e.g. `mywallpaper.png`. If the file does not exist under `rw_dir/` or `ro_dir/`, an empty string is forcibly returned.	string	 must match the regexp `[a-z0-9A-Z_-\.]+`
+rw	screensaver_file		Name of a file under the `screensavers/` directory, e.g. `mywallpaper.png`. If the file does not exist under `rw_dir/` or `ro_dir/`, an empty string is forcibly returned.	string	must match the regexp `[a-z0-9A-Z_-\.]+`
 rw	backlight_time		Seconds before the phone backlight goes off. 	integer	0 = never goes off, N > 0 is the number of seconds to wait among the allowed values: 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600.
 rw	screensaver_time		Seconds the screen saver starts. 	integer	0 = never starts, N > 0 is the number of seconds to wait among the allowed values: 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600.
 rw	contrast		Set a custom contrast for phone display.	integer	 range 0-9
