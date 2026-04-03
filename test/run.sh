@@ -85,6 +85,7 @@ seed_packaged_test_assets() {
 }
 
 write_local_config() {
+    seed_packaged_test_assets
     cat > "${TANCREDI_CONFIG}" <<EOF
 [config]
 rw_dir = "${TANCREDI_RW_DIR}"
