@@ -248,7 +248,7 @@ EOF
 @test "GET /provisioning/{tok2}/nethesis_np_x5_hwv2_0.txt (NPX5 v2 firmware template rendering)" {
     local custom_template="${TANCREDI_TEMPLATE_CUSTOM_DIR:-/var/lib/tancredi/data/templates-custom/}nethesis-firmware-v2.tmpl"
 
-    mkdir -p "${tancredi_template_custom_dir}"
+    mkdir -p "$(dirname "$custom_template")"
     cat > "$custom_template" <<'EOF'
 NPX5v2 firmware template selected
 EOF
@@ -256,7 +256,7 @@ EOF
     run POST /tancredi/api/v1/phones <<EOF
 {
     "mac": "E0-E6-56-AA-BB-EE",
-    "model": "nethesis-NPX5v2",
+    "model": "nethesis-NPX5",
     "display_name": "Nethesis NPX5 v2 Test Phone",
     "variables": {
         "hostname": "voice.example.com",
