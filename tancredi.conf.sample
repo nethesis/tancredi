@@ -34,6 +34,9 @@ samplefilter_format = "d M Y H:i:s"
 ; - native - use PHP itself (default)
 ; - apache - return X-Sendfile header
 ; - nginx - return X-Accel-Redirect
+; When using apache or nginx, configure the web server to allow protected
+; assets from both rw_dir/{backgrounds,firmware,ringtones,screensavers}/ and
+; ro_dir/{backgrounds,firmware,ringtones,screensavers}/ too.
 file_reader = "native"
 
 ; Comma-separated list of IP addresses for trusted upstream proxies.

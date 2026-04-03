@@ -42,6 +42,12 @@ Review at least these settings:
 - `upstream_proxies`: trusted reverse proxies for client IP logging.
 - `auth_class`: optional administrative API authentication middleware.
 
+If `file_reader` is set to `apache` or `nginx`, also configure the web server
+to allow protected asset delivery from both `rw_dir/{backgrounds,firmware,
+ringtones,screensavers}/` and `ro_dir/{backgrounds,firmware,ringtones,
+screensavers}/`. Otherwise packaged assets served from `ro_dir/` can fail with
+`403` or `404` even when the file exists.
+
 1. Set up write access permissions on the writable directories under `rw_dir`.
 
 These directories are always used by the application:
