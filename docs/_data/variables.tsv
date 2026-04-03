@@ -10,7 +10,7 @@ rw	tonezone		Local tones code for the call state (busy, ringing, off-hook?). Mus
 rw	language		Phone UI language. Must be an ISO 639-1 language code (e.g. `it`, `en`...) 	string	
 rw	ntp_server		Host name or IP address of the network time (NTP) server.	string	IP/host name
 rw	ringtone		Ringtone type selector. See also [cap_ringtone_count](#cap_ringtone_count).	integer	0 == silent, -1 => use ringtone_file, N>0 phone builtin ringtone N
-rw	ringtone_file		Name of a file under the `ringtones/` directory, e.g. `mymusic.wav`. If the file does not exist an empty string is forcibly returned.	string	must match the regexp `[a-z0-9A-Z_-\.]+`
+rw	ringtone_file		Name of a file under the `ringtones/` directory, e.g. `mymusic.wav`. If the file does not exist under `rw_dir/` or `ro_dir/`, an empty string is forcibly returned.	string	must match the regexp `[a-z0-9A-Z_-\.]+`
 rw	account_dtmf_type	account	Type of DTMF transport.	string	one of `inband`, `rfc4733`, `sip_info`
 rw	account_encryption	account	If true, use SIPS and RTP encryption.	boolean	
 rw	account_display_name	account	SIP line and account label for the phone UI	string	
@@ -78,7 +78,7 @@ ro	provisioning_url1		This is a complete provisioning URI, obtained from the sch
 ro	provisioning_url2		This is a complete provisioning URI, obtained from the scheme, hostname, path, tok1 and filename parts.	string	
 ro	tok1		Temporary authentication token. It is invalidated once tok2 is used for the first time.	string	
 ro	tok2		Final authentication token. Once it is used, tok1 is invalidated.	string	
-rw	firmware_file		Name of a file under the `firmware/` directory, e.g. `myrom-1.2.3b.z`. If the file does not exist an empty string is forcibly returned.	string	must match the regexp `[a-z0-9A-Z_-\.]+`
+rw	firmware_file		Name of a file under the `firmware/` directory, e.g. `myrom-1.2.3b.z`. If the file does not exist under `rw_dir/` or `ro_dir/`, an empty string is forcibly returned.	string	must match the regexp `[a-z0-9A-Z_-\.]+`
 rw	softkey_type	softkey	Soft key type/function code. See the appropriate [Soft key types](#soft-key-types) section.	string	
 rw	softkey_label	softkey	Soft key label string. Some [softkey_type](#softkey_type) may allow to customize the soft key label.	string	
 rw	softkey_value	softkey	Soft key value string. The meaning and the fact of being compulsory depends on the [softkey_type](#softkey_type).	string	
@@ -88,8 +88,8 @@ rw	linekey_label	linekey	Line key label string. Some [linekey_type](#linekey_typ
 rw	expkey_type	expkey	Expansion key type. See the [softkey_type](#softkey_type) description for more information.	string	
 rw	expkey_label	expkey	Expansion label. See the [softkey_type](#softkey_type) description for more information.	string	
 rw	expkey_value	expkey	Expansion key value. See the [softkey_type](#softkey_type) description for more information.	string	
-rw	background_file		Name of a file under the `backgrounds/` directory, e.g. `mywallpaper.png`. If the file does not exist an empty string is forcibly returned.	string	 must match the regexp `[a-z0-9A-Z_-\.]+
-rw	screensaver_file		Name of a file under the `screensavers/` directory, e.g. `mywallpaper.png`. If the file does not exist an empty string is forcibly returned.	string	must match the regexp `[a-z0-9A-Z_-\.]+
+rw	background_file		Name of a file under the `backgrounds/` directory, e.g. `mywallpaper.png`. If the file does not exist under `rw_dir/` or `ro_dir/`, an empty string is forcibly returned.	string	 must match the regexp `[a-z0-9A-Z_-\.]+
+rw	screensaver_file		Name of a file under the `screensavers/` directory, e.g. `mywallpaper.png`. If the file does not exist under `rw_dir/` or `ro_dir/`, an empty string is forcibly returned.	string	must match the regexp `[a-z0-9A-Z_-\.]+
 rw	backlight_time		Seconds before the phone backlight goes off. 	integer	0 = never goes off, N > 0 is the number of seconds to wait among the allowed values: 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600.
 rw	screensaver_time		Seconds the screen saver starts. 	integer	0 = never starts, N > 0 is the number of seconds to wait among the allowed values: 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600.
 rw	contrast		Set a custom contrast for phone display.	integer	 range 0-9

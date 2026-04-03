@@ -84,8 +84,13 @@ These variables are not persisted in scope files.
 ## Protected asset delivery
 
 Assets under `backgrounds/`, `firmware/`, `ringtones/` and `screensavers/` are
-served only through the tokenized route. Invalid tokens and missing files both
-result in `404 Not Found`.
+served only through the tokenized route. Tancredi checks
+`rw_dir/{filetype}/` first and falls back to `ro_dir/{filetype}/`, so packaged
+assets can be served while writable overrides still take precedence. Invalid
+tokens and missing files both result in `404 Not Found`.
+
+The administrative API continues to upload and delete only the writable copy
+under `rw_dir/`.
 
 The `file_reader` configuration controls how files are returned:
 
