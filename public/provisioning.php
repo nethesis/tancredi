@@ -268,8 +268,12 @@ function resolveStaticAssetPath($filetype, $filename) {
 
     foreach ([$config['rw_dir'], $config['ro_dir']] as $base_dir) {
         $directory = rtrim($base_dir, '/') . '/' . $filetype;
+        $realdirectory = realpath($directory);
+        if ($realdirectory === FALSE) {
+            continue;
+        }
         $realfile = realpath($directory . '/' . $filename);
-        if ($realfile !== FALSE && dirname($realfile) === $directory) {
+        if ($realfile !== FALSE && dirname($realfile) === $realdirectory) {
             return $realfile;
         }
     }
