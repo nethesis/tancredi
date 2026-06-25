@@ -2,13 +2,17 @@
 
 TEMPLATE_CUSTOM_DIR="${TANCREDI_TEMPLATE_CUSTOM_DIR:-/var/lib/tancredi/data/templates-custom/}"
 TEMPLATE_CUSTOM_FILE="${TEMPLATE_CUSTOM_DIR%/}/nethesis-firmware-v2.tmpl"
+PATTERN_CUSTOM_FILE="${TANCREDI_RW_DIR:-/var/lib/tancredi/data/}"
+PATTERN_CUSTOM_FILE="${PATTERN_CUSTOM_FILE%/}/patterns.d/zz-yealink-override.ini"
+PATTERN_OVERRIDE_FILE="${TANCREDI_RW_DIR:-/var/lib/tancredi/data/}"
+PATTERN_OVERRIDE_FILE="${PATTERN_OVERRIDE_FILE%/}/patterns.d/yealink.ini"
 
 setup () {
     load tancredi_client
 }
 
 teardown_file () {
-    rm -f "$TEMPLATE_CUSTOM_FILE"
+    rm -f "$TEMPLATE_CUSTOM_FILE" "$PATTERN_CUSTOM_FILE" "$PATTERN_OVERRIDE_FILE"
 }
 
 @test "POST /tancredi/api/v1/phones (00-15-65-AA-BB-CC, Yealink T46, success)" {
@@ -131,6 +135,56 @@ EOF
     # Compare against fixture
     fixture_file="${BATS_TEST_DIRNAME}/../fixtures/yealink-t46-expected.cfg"
     assert_template_matches_fixture "$fixture_file"
+}
+
+@test "GET /provisioning/{tok1}/001565aabbcc.cfg prefers rw patterns.d over ro patterns.d" {
+    mkdir -p "$(dirname "$PATTERN_CUSTOM_FILE")"
+    cat > "$PATTERN_CUSTOM_FILE" <<'EOF'
+[yealink-rw-override]
+pattern = "001565aabbcc\.cfg"
+scopeid = "ignored"
+template = "tmpl_phone"
+content_type = "application/x-rw-pattern"
+EOF
+
+    run GET /tancredi/api/v1/phones/00-15-65-AA-BB-CC
+    assert_http_code "200"
+
+    tok1=$(extract_field "tok1")
+
+    if [[ -z "$tok1" ]]; then
+        echo "Failed to extract tok1 token" 1>&2
+        return 1
+    fi
+
+    run GET_PROVISIONING "Yealink SIP-T46G 41.0.0.0 00:15:65:aa:bb:cc" "/provisioning/${tok1}/001565aabbcc.cfg"
+    assert_http_code "200"
+    assert_http_header "Content-Type" "application/x-rw-pattern"
+}
+
+@test "GET /provisioning/{tok1}/001565aabbcc.cfg allows rw patterns.d to replace a shipped file" {
+    mkdir -p "$(dirname "$PATTERN_OVERRIDE_FILE")"
+    cat > "$PATTERN_OVERRIDE_FILE" <<'EOF'
+[yealink-rw-file-override]
+pattern = "001565aabbcc\.cfg"
+scopeid = "ignored"
+template = "tmpl_phone"
+content_type = "application/x-rw-pattern-override"
+EOF
+
+    run GET /tancredi/api/v1/phones/00-15-65-AA-BB-CC
+    assert_http_code "200"
+
+    tok1=$(extract_field "tok1")
+
+    if [[ -z "$tok1" ]]; then
+        echo "Failed to extract tok1 token" 1>&2
+        return 1
+    fi
+
+    run GET_PROVISIONING "Yealink SIP-T46G 41.0.0.0 00:15:65:aa:bb:cc" "/provisioning/${tok1}/001565aabbcc.cfg"
+    assert_http_code "200"
+    assert_http_header "Content-Type" "application/x-rw-pattern-override"
 }
 
 @test "DELETE /tancredi/api/v1/phones/00-15-65-AA-BB-CC (cleanup)" {

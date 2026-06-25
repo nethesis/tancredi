@@ -30,7 +30,16 @@ At render time Tancredi loads templates in this order:
 
 When a phone requests a file, Tancredi establishes what template has to be
 interpolated to build the response by looking at the `.ini` files under the
-`data/patterns.d` directory.
+`patterns.d` directories.
+
+At match time Tancredi loads request rules in this order:
+
+1. `rw_dir/patterns.d/`
+1. `ro_dir/patterns.d/`
+
+If a writable pattern file has the same name as a shipped one, the writable
+file replaces it. Because the first matching rule wins, rules from `rw_dir`
+can both add new matches and override shipped matches.
 
 Each `.ini` file in that directory defines one or more request matching rules.
 The rule definition has the following lines:

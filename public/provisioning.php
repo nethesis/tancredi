@@ -281,24 +281,75 @@ function resolveStaticAssetPath($filetype, $filename) {
     return FALSE;
 }
 
-function getDataFromFilename($filename,$logger) {
+function getPatternFiles($logger) {
     global $config;
+
+    $pattern_files = array();
+    $rw_pattern_files = glob(rtrim($config['rw_dir'], '/') . '/patterns.d/*.ini');
+    $ro_pattern_files = glob(rtrim($config['ro_dir'], '/') . '/patterns.d/*.ini');
+    $rw_pattern_files = $rw_pattern_files === FALSE ? array() : $rw_pattern_files;
+    $ro_pattern_files = $ro_pattern_files === FALSE ? array() : $ro_pattern_files;
+    $overridden_pattern_files = array();
+    $ro_pattern_files_by_name = array();
+
+    foreach ($ro_pattern_files as $pattern_file) {
+        $ro_pattern_files_by_name[basename($pattern_file)] = $pattern_file;
+    }
+
+    foreach ($rw_pattern_files as $pattern_file) {
+        $pattern_basename = basename($pattern_file);
+        if (isset($ro_pattern_files_by_name[$pattern_basename])) {
+            $logger->debug(
+                'Writable pattern file "{rw_pattern_file}" overrides shipped pattern file "{ro_pattern_file}"',
+                array(
+                    'rw_pattern_file' => $pattern_file,
+                    'ro_pattern_file' => $ro_pattern_files_by_name[$pattern_basename],
+                )
+            );
+        } else {
+            $logger->debug('Using writable pattern file "{rw_pattern_file}"', array(
+                'rw_pattern_file' => $pattern_file,
+            ));
+        }
+
+        $pattern_files[] = $pattern_file;
+        $overridden_pattern_files[$pattern_basename] = TRUE;
+    }
+
+    foreach ($ro_pattern_files as $pattern_file) {
+        if (!isset($overridden_pattern_files[basename($pattern_file)])) {
+            $logger->debug('Using shipped pattern file "{ro_pattern_file}"', array(
+                'ro_pattern_file' => $pattern_file,
+            ));
+            $pattern_files[] = $pattern_file;
+        }
+    }
+
+    return $pattern_files;
+}
+
+function getDataFromFilename($filename,$logger) {
     $result = array(
         'filename' => $filename,
     );
-    $patterns = array();
-    foreach (glob($config['ro_dir'] . 'patterns.d/*.ini') as $pattern_file) {
-        $patterns = array_merge($patterns, parse_ini_file($pattern_file, true));
-    }
-    foreach ($patterns as $pattern_name => $pattern) {
-        if (preg_match('/^'.$pattern['pattern'].'$/', $filename, $tmp)) {
-            $result['pattern_name'] = $pattern_name;
-            $result['template'] = $pattern['template'];
-            $result['scopeid'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
-            $result['content_type'] = empty($pattern['content_type']) ? 'text/plain; charset=utf-8' : $pattern['content_type'];
-            break;
+
+    foreach (getPatternFiles($logger) as $pattern_file) {
+        $patterns = parse_ini_file($pattern_file, true);
+        if ($patterns === FALSE) {
+            continue;
+        }
+
+        foreach ($patterns as $pattern_name => $pattern) {
+            if (preg_match('/^'.$pattern['pattern'].'$/', $filename, $tmp)) {
+                $result['pattern_name'] = $pattern_name;
+                $result['template'] = $pattern['template'];
+                $result['scopeid'] = preg_replace('/'.$pattern['pattern'].'/', $pattern['scopeid'] , $filename );
+                $result['content_type'] = empty($pattern['content_type']) ? 'text/plain; charset=utf-8' : $pattern['content_type'];
+                return $result;
+            }
         }
     }
+
     return $result;
 }
 
