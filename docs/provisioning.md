@@ -25,7 +25,9 @@ The provisioning entrypoint exposes these routes:
 For provisioning payload requests, Tancredi resolves the response in five
 steps:
 
-1. Match the requested filename against the rules from `data/patterns.d/*.ini`.
+1. Match the requested filename against the rules from
+  `rw_dir/patterns.d/*.ini` and then `ro_dir/patterns.d/*.ini`, with writable
+  files taking precedence over shipped files with the same name.
 1. Read the selected rule `scopeid`, template variable name and content type.
 1. Load the scope and merge variables in the order `defaults` → `model` →
    `phone`.

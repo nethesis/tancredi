@@ -36,6 +36,7 @@ tancredi_ensure_rw_layout () {
         "${tancredi_rw_dir}backgrounds" \
         "${tancredi_rw_dir}firmware" \
         "${tancredi_rw_dir}first_access_tokens" \
+    "${tancredi_rw_dir}patterns.d" \
         "${tancredi_rw_dir}ringtones" \
         "${tancredi_rw_dir}scopes" \
         "${tancredi_rw_dir}screensavers" \

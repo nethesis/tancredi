@@ -68,6 +68,7 @@ create_rw_layout() {
         "${TANCREDI_RW_DIR%/}/backgrounds" \
         "${TANCREDI_RW_DIR%/}/firmware" \
         "${TANCREDI_RW_DIR%/}/first_access_tokens" \
+    "${TANCREDI_RW_DIR%/}/patterns.d" \
         "${TANCREDI_RW_DIR%/}/ringtones" \
         "${TANCREDI_RW_DIR%/}/scopes" \
         "${TANCREDI_RW_DIR%/}/screensavers" \
