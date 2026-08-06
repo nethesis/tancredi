@@ -223,6 +223,7 @@ $app->get('/{filename}', function(Request $request, Response $response, array $a
     }
     // Use token 1 instead of token 2
     $scope_data['tok2'] = $scope_data['tok1'];
+    $scope_data['provisioning_url2'] = $scope_data['provisioning_url1'];
 
     // Add provisioning_complete variable
     $scope_data['provisioning_complete'] = '';

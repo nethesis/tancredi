@@ -111,6 +111,30 @@ EOF
     assert_http_body "yealink-T46"
 }
 
+@test "GET /provisioning/001565aabbcc.cfg uses tok1 and strips secrets" {
+    run GET /tancredi/api/v1/phones/00-15-65-AA-BB-CC
+    assert_http_code "200"
+
+    tok1=$(extract_field "tok1")
+    tok2=$(extract_field "tok2")
+
+    if [[ -z "$tok1" || -z "$tok2" ]]; then
+        echo "Failed to extract provisioning tokens" 1>&2
+        return 1
+    fi
+
+    run GET_PROVISIONING "Yealink SIP-T46G 41.0.0.0 00:15:65:aa:bb:cc" "/provisioning/001565aabbcc.cfg"
+    assert_http_code "200"
+    assert_http_body "static.auto_provision.server.url = https://voice.example.com/provisioning/${tok1}"
+    ! assert_http_body "$tok2"
+    ! assert_http_body "testpass123"
+    ! assert_http_body "admin,1234"
+    ! assert_http_body "user,1234"
+
+    run GET_PROVISIONING "Yealink SIP-T46G 41.0.0.0 00:15:65:aa:bb:cc" "/provisioning/${tok1}/001565aabbcc.cfg"
+    assert_http_code "200"
+}
+
 @test "GET /provisioning/{tok1}/001565aabbcc.cfg (template rendering)" {
     # First, get the phone data to extract tok1
     run GET /tancredi/api/v1/phones/00-15-65-AA-BB-CC
@@ -339,4 +363,3 @@ EOF
     assert_http_code "204"
     assert_http_body_empty
 }
-
