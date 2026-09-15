@@ -963,10 +963,12 @@ Enable diffServ    :0
 Singalling DSCP    :46
 Voice DSCP         :46
 Video DSCP         :46
-LLDP Transmit      :1
+{% if lldp_enable is defined and (lldp_enable is same as('0') or lldp_enable is same as('1')) %}
+LLDP Transmit      :{{ lldp_enable }}
 LLDP Refresh Time  :60
-LLDP Learn Policy  :1
+LLDP Learn Policy  :{{ lldp_enable }}
 LLDP Save Learn Data:0
+{% endif %}
 CDP Enable         :0
 CDP Refresh Time   :60
 DHCP Option Vlan   :0

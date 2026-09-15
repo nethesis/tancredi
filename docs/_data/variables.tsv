@@ -109,3 +109,4 @@ ro	cap_background_file		Capability to use a custom background. boolean	boolean
 ro	cap_backlight_time_blacklist		Comma separated list of [backlight_time](#backlight_time) values not supported by the phone	string	one of: 0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600
 ro	cap_screensaver_time_blacklist		Comma separated list of [screensaver_time](#screensaver_time) values not supported by the phone.	string	one of: 0, 3, 5, 7, 10, 15, 30, 60, 120, 300, 600, 1200 ,1800, 2400, 3000, 3600
 ro	cap_brightness		Capability to set a custom brightness.	boolean	
+rw	lldp_enable		Enable LLDP on supported phones. Shipped defaults enable it; a scope can override its parent, and removing the override restores inheritance. If the resolved value is absent or blank, no LLDP settings are emitted.	string	`1` = enabled, `0` = disabled

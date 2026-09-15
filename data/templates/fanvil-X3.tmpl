@@ -416,9 +416,11 @@ Account2 Level     :5
 <QOS CONFIG MODULE>
 Enable VLAN        :{{ vlan_id_phone > 0 ? '1' : '0' }}
 Enable diffServ    :0
-LLDP Transmit      :1
+{% if lldp_enable is defined and (lldp_enable is same as('0') or lldp_enable is same as('1')) %}
+LLDP Transmit      :{{ lldp_enable }}
 LLDP Refresh Time  :60
-LLDP Learn Policy  :1
+LLDP Learn Policy  :{{ lldp_enable }}
+{% endif %}
 CDP Enabled        :0
 CDP Refresh Time   :60
 Singalling DSCP    :46
