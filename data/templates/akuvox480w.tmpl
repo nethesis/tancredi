@@ -94,10 +94,9 @@ Config.Network.RTPPORT.Min = 11800
 Config.Network.QOS.SignalTos = 0
 Config.Network.QOS.RtpTos = 0
 
-{% if lldp_enable is defined and (lldp_enable is same as('0') or lldp_enable is same as('1')) %}
-Config.Network.LLDP.LLDPEnable = {{ lldp_enable }}
+{% set effective_lldp_enable = lldp_enable is defined and (lldp_enable is same as('0') or lldp_enable is same as('1')) ? lldp_enable : '0' %}
+Config.Network.LLDP.LLDPEnable = {{ effective_lldp_enable }}
 Config.Network.LLDP.Interval = 30
-{% endif %}
 
 Config.Network.VLAN.LanVlanEnable = {{ vlan_id_phone > 0 ? '1' : '0' }}
 Config.Network.VLAN.LanVid = {{ vlan_id_phone > 0 and vlan_id_phone < 4095 ? vlan_id_phone : '1' }}
@@ -1047,5 +1046,4 @@ Config.Multicast.LISTEN8.IP =
 
 Config.Multicast.LISTEN9.Label = 
 Config.Multicast.LISTEN9.IP = 
-
 

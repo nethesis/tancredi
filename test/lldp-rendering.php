@@ -27,6 +27,21 @@ $models = [
     'nethesis-NPX5' => ['LLDP Transmit      :%s', 'LLDP Learn Policy  :%s'],
     'sangoma-S500' => ['<P5438 para="Active">%s</P5438>'],
 ];
+$legacy_defaults = [
+    'yealink-T46' => '0',
+    'snom-D120' => '0',
+    'snom-D862' => '0',
+    'gigaset-P710' => '0',
+    'gigaset-P810' => '0',
+    'akuvox-SPR50P' => '0',
+    'akuvox-WP410' => '0',
+    'akuvox-WP480' => '0',
+    'fanvil-X3' => '1',
+    'fanvil-X5' => '1',
+    'fanvil-V67' => '1',
+    'nethesis-NPX5' => '1',
+    'sangoma-S500' => '1',
+];
 $checks = 0;
 foreach ($models as $model => $settings) {
     $scope = parse_ini_file($root . '/data/scopes/' . $model . '.ini', true);
@@ -37,18 +52,19 @@ foreach ($models as $model => $settings) {
         'provisioning_url_path' => '/provisioning/',
         'tok2' => 'test-token',
     ]);
-    foreach (['1', '0', '', null] as $value) {
+    foreach (['1', '0', '', '2', 1, null] as $value) {
         $variables['lldp_enable'] = $value;
         if ($value === null) {
             unset($variables['lldp_enable']);
         }
         $output = $twig->render($variables['tmpl_phone'], $variables);
+        $effective_value = $value === '0' || $value === '1' ? $value : $legacy_defaults[$model];
         foreach ($settings as $setting) {
             $is_xml_boolean = strpos($setting, '<lldp_enable') === 0;
             foreach (['1', '0'] as $candidate) {
                 $encoded = $is_xml_boolean ? ($candidate === '1' ? 'on' : 'off') : $candidate;
                 $expected = sprintf($setting, $encoded);
-                if (str_contains($output, $expected) !== ($value === $candidate)) {
+                if (str_contains($output, $expected) !== ($effective_value === $candidate)) {
                     throw new \RuntimeException("Unexpected LLDP output for $model, value " . var_export($value, true) . ": $expected");
                 }
                 ++$checks;

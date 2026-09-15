@@ -48,8 +48,10 @@ Gigaset Maxwell has no LLDP mapping in its current template.
 The shipped defaults enable LLDP. Values follow the usual defaults → model →
 phone inheritance; setting a model or phone variable to JSON `null` through the
 API removes the override and restores the inherited value. If the resolved
-variable is absent or blank, templates omit LLDP settings entirely. A blank
-value is therefore different from the explicitly disabled value `"0"`.
+variable is absent or is any value other than the strings `"0"` and `"1"`, each
+template uses its behavior from before this variable was introduced: Yealink,
+Snom, Gigaset P-series, and Akuvox disable LLDP, while Fanvil, NethPhone, and
+Sangoma enable it.
 
 An existing writable defaults file shadows the shipped defaults. Integrators
 must preserve the old configuration when introducing this setting: older

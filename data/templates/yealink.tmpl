@@ -114,10 +114,9 @@ static.network.redundancy.failback.timeout = 55
 #######################################################################################
 ##                                   Network LLDP                                    ##
 #######################################################################################
-{% if lldp_enable is defined and (lldp_enable is same as('0') or lldp_enable is same as('1')) %}
-static.network.lldp.enable = {{ lldp_enable }}
+{% set effective_lldp_enable = lldp_enable is defined and (lldp_enable is same as('0') or lldp_enable is same as('1')) ? lldp_enable : '0' %}
+static.network.lldp.enable = {{ effective_lldp_enable }}
 static.network.lldp.packet_interval = 60
-{% endif %}
 
 #######################################################################################
 ##                                   Network VLAN                                    ##
