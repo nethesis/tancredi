@@ -114,7 +114,8 @@ static.network.redundancy.failback.timeout = 55
 #######################################################################################
 ##                                   Network LLDP                                    ##
 #######################################################################################
-static.network.lldp.enable = 0
+{% set effective_lldp_enable = lldp_enable is defined and (lldp_enable is same as('0') or lldp_enable is same as('1')) ? lldp_enable : '0' %}
+static.network.lldp.enable = {{ effective_lldp_enable }}
 static.network.lldp.packet_interval = 60
 
 #######################################################################################

@@ -37,6 +37,31 @@ steps:
 
 If no pattern matches, Tancredi returns `404 Not Found`.
 
+## LLDP settings
+
+The `lldp_enable` scope variable controls LLDP in the shipped Yealink, Snom,
+Gigaset P-series, Akuvox, Fanvil, NethPhone, and Sangoma templates. Set it to the
+string `"1"` to enable LLDP or `"0"` to disable it. Fanvil and NethPhone apply
+the value to both LLDP transmission and learning the advertised network policy.
+Gigaset Maxwell has no LLDP mapping in its current template.
+
+The shipped defaults enable LLDP. Values follow the usual defaults → model →
+phone inheritance; setting a model or phone variable to JSON `null` through the
+API removes the override and restores the inherited value. If the resolved
+variable is absent or is any value other than the strings `"0"` and `"1"`, each
+template uses its behavior from before this variable was introduced: Yealink,
+Snom, Gigaset P-series, and Akuvox disable LLDP, while Fanvil, NethPhone, and
+Sangoma enable it.
+
+An existing writable defaults file shadows the shipped defaults. Integrators
+must preserve the old configuration when introducing this setting: older
+Yealink, Snom, Gigaset P-series, and Akuvox templates disabled LLDP, while
+Fanvil, NethPhone, and Sangoma enabled it. NethVoice performs this compatibility
+migration before serving provisioning requests, preserving explicit values and
+recording defaults metadata version `16`. New installations copy the shipped
+version `16` defaults and skip that migration. Custom templates must implement
+`lldp_enable` themselves to respond to this setting.
+
 ## Token model
 
 Each phone has two provisioning tokens:

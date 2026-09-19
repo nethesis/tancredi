@@ -27,7 +27,7 @@
         <internal_ringer_file idx="10" perm="">Silent</internal_ringer_file>
         <auto_redial perm="">off</auto_redial>
 
-        <lldp_enable perm="">off</lldp_enable>
+        <lldp_enable perm="">on</lldp_enable>
         <vlan_id perm=""></vlan_id>
         <vlan_qos perm=""></vlan_qos>
         <vlan_port_tagging perm="">off</vlan_port_tagging>
