@@ -3,8 +3,8 @@
 <settings>
 {% autoescape %}
     <phone-settings>
-        <language perm="">{{ gigasetP.language(language) }}</language>
-        <ring_sound>{{ gigasetP.ringtone_map(ringtone, cap_ringtone_count) | replace({'Custom':'Ringer1'}) }}</ring_sound>
+        <language perm="">{{ gigasetp.language(language) }}</language>
+        <ring_sound>{{ gigasetp.ringtone_map(ringtone, cap_ringtone_count) | replace({'Custom':'Ringer1'}) }}</ring_sound>
         <internal_ringer_text idx="0" perm="">ring1</internal_ringer_text>
         <internal_ringer_text idx="1" perm="">ring2</internal_ringer_text>
         <internal_ringer_text idx="2" perm="">ring3</internal_ringer_text>
@@ -44,7 +44,7 @@
         <guess_number perm="">off</guess_number>
 
         <ntp_server perm="">{{ ntp_server ?: 'pool.ntp.org' }}</ntp_server>
-        <date_us_format perm="">{{ gigasetP.date_format(date_format) }}</date_us_format>
+        <date_us_format perm="">{{ gigasetp.date_format(date_format) }}</date_us_format>
         <time_24_format perm="">{{ time_format == '12' ? 'off' : 'on' }}</time_24_format>
         <ldap_base perm="">{{ ldap_base }}</ldap_base>
         <ldap_port perm="">{{ ldap_port | default( ldap_tls == 'ldaps' ? '636' : '389' ) }}</ldap_port>
