@@ -58,8 +58,9 @@
         <!--Configure P231 PcPort from web UI-->
 {% endif %}
         <!--Network/Advance-->
+{% set effective_lldp_enable = lldp_enable is defined and (lldp_enable is same as('0') or lldp_enable is same as('1')) ? lldp_enable : '1' %}
         <!--Network/Advance/LLDP-->
-        <P5438 para="Active">1</P5438>
+        <P5438 para="Active">{{ effective_lldp_enable }}</P5438>
         <P5439 para="PackedInterval">120</P5439>
         <!--Network/Advance/Qos Set -->
         <P38 para="Layer3QoS">48</P38>
