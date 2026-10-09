@@ -239,3 +239,40 @@ delete_phone_under_test () {
         "Alice" \
         "203"
 }
+
+@test "NPV64 renders all 21 keys across three side-key pages" {
+    local variables="" index page key section
+    for index in {1..21}; do
+        variables+="${variables:+,}
+        \"linekey_type_${index}\": \"speed_dial\",
+        \"linekey_value_${index}\": \"$((200 + index))\",
+        \"linekey_label_${index}\": \"Key ${index}\""
+    done
+
+    create_phone "E0-E6-56-AA-BB-E0" "nethesis-NPV64" "$variables"
+    assert_provisioning_render_ok \
+        "E0-E6-56-AA-BB-E0" \
+        "Nethesis NPV64 2.4.1.0 E0:E6:56:AA:BB:E0" \
+        "e0e656aabbe0.cfg" \
+        "text/plain; charset=utf-8"
+
+    assert_http_body_re '^SideKey Page Num[[:space:]]*:3[[:space:]]*$'
+    assert_http_body_re '^FuncKey Page Num[[:space:]]*:0[[:space:]]*$'
+    [[ "$(grep -c '^--Sidekey Config' <<<"$output")" -eq 3 ]]
+    [[ "$(grep -c '^--Dsskey Config' <<<"$output")" -eq 0 ]]
+
+    for page in 1 2 3; do
+        section="$(awk -v page="$page" '
+            { sub(/\r$/, "") }
+            /^--/ { in_page = ($0 == "--Sidekey Config" page "--:") }
+            in_page { print }
+        ' <<<"$output")"
+        [[ "$(grep -cE '^Fkey[0-9]+ Type[[:space:]]*:' <<<"$section")" -eq 7 ]]
+
+        for key in {1..7}; do
+            index=$(((page - 1) * 7 + key))
+            grep -qE "^Fkey${key} Title[[:space:]]*:Key ${index}$" <<<"$section"
+            grep -qE "^Fkey${key} Value[[:space:]]*:$((200 + index))@1/f$" <<<"$section"
+        done
+    done
+}
