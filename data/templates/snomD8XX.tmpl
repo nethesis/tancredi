@@ -76,6 +76,7 @@
         <admin_mode_password_confirm perm="">{{ adminpw | default('admin') }}</admin_mode_password_confirm>
         <webserver_admin_name perm="">admin</webserver_admin_name>
         <webserver_admin_password perm="">{{ adminpw |  default('admin') }}</webserver_admin_password>
+        <http_pass perm="">{{ adminpw |  default('admin') }}</http_pass>
         <webserver_user_name perm="">user</webserver_user_name>
         <webserver_user_password perm="">{{ userpw | default('1234') }}</webserver_user_password>
         <http_scheme perm="">off</http_scheme>
