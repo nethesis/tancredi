@@ -174,6 +174,7 @@ delete_phone_under_test () {
         "0C-11-05-AA-BB-D9|akuvox-SPR50P|Akuvox SPR50P 1.0.0 0C:11:05:AA:BB:D9|0c1105aabbd9.cfg|text/plain; charset=utf-8"
         "0C-11-05-AA-BB-DA|akuvox-WP410|Akuvox WP410 1.0.0 0C:11:05:AA:BB:DA|0c1105aabbda.cfg|text/plain; charset=utf-8"
         "9C-75-14-AA-BB-DB|akuvox-WP480|Akuvox WP480 1.0.0 9C:75:14:AA:BB:DB|9c7514aabbdb.cfg|text/plain; charset=utf-8"
+        "7C-2F-80-AA-BB-DC|gigaset-P810|Gigaset P810 1.0.0 7C:2F:80:AA:BB:DC|7c2f80aabbdc.xml|text/xml; charset=utf-8"
     )
 
     local case mac model user_agent filename content_type
@@ -238,4 +239,55 @@ delete_phone_under_test () {
         "2" \
         "Alice" \
         "203"
+}
+
+@test "NPV64 renders all 21 keys across three side-key pages" {
+    local variables="" index page key section
+    for index in {1..21}; do
+        variables+="${variables:+,}
+        \"linekey_type_${index}\": \"speed_dial\",
+        \"linekey_value_${index}\": \"$((200 + index))\",
+        \"linekey_label_${index}\": \"Key ${index}\""
+    done
+
+    create_phone "E0-E6-56-AA-BB-E0" "nethesis-NPV64" "$variables"
+    assert_provisioning_render_ok \
+        "E0-E6-56-AA-BB-E0" \
+        "Nethesis NPV64 2.4.1.0 E0:E6:56:AA:BB:E0" \
+        "e0e656aabbe0.cfg" \
+        "text/plain; charset=utf-8"
+
+    assert_http_body_re '^SideKey Page Num[[:space:]]*:3[[:space:]]*$'
+    assert_http_body_re '^FuncKey Page Num[[:space:]]*:0[[:space:]]*$'
+    [[ "$(grep -c '^--Sidekey Config' <<<"$output")" -eq 3 ]]
+    [[ "$(grep -c '^--Dsskey Config' <<<"$output")" -eq 0 ]]
+
+    for page in 1 2 3; do
+        section="$(awk -v page="$page" '
+            { sub(/\r$/, "") }
+            /^--/ { in_page = ($0 == "--Sidekey Config" page "--:") }
+            in_page { print }
+        ' <<<"$output")"
+        [[ "$(grep -cE '^Fkey[0-9]+ Type[[:space:]]*:' <<<"$section")" -eq 7 ]]
+
+        for key in {1..7}; do
+            index=$(((page - 1) * 7 + key))
+            grep -qE "^Fkey${key} Title[[:space:]]*:Key ${index}$" <<<"$section"
+            grep -qE "^Fkey${key} Value[[:space:]]*:$((200 + index))@1/f$" <<<"$section"
+        done
+    done
+}
+
+@test "gigasetP8XX.tmpl renders language, ringtone and date format macros" {
+    create_phone "7C-2F-80-AA-BB-E1" "gigaset-P810" '        "brightness": "5"'
+
+    assert_provisioning_render_ok \
+        "7C-2F-80-AA-BB-E1" \
+        "Gigaset P810 1.0.0 7C:2F:80:AA:BB:E1" \
+        "7c2f80aabbe1.xml" \
+        "text/xml; charset=utf-8"
+
+    assert_http_body '<language perm="">English</language>'
+    assert_http_body '<ring_sound>Ringer1</ring_sound>'
+    assert_http_body '<date_us_format perm="">off</date_us_format>'
 }
